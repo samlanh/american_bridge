@@ -1,0 +1,32 @@
+<form id="exchangerate" dojoType="dijit.form.Form" method="post">
+	<fieldset style="background:#f4f4f4; height:180px; overflow: scroll;overflow-x:hidden;">
+		<legend style="font-size:14px"><strong>ពត៌មាន ទាក់ទង និង ការប្ដូរប្រាក់</strong></legend>
+		<table  width="100%" border="1" style="background:; border-collapse: collapse;">
+			<tr​>
+				<th>និមិត្តសញ្ញា</th>
+				<th>ដុល្លា</th>
+				<th>រៀល</th>
+			</tr>
+			<tr class="row1">
+				<td><label class="fullside" >ពីដុល្លា ទៅ រៀល </label><input type="hidden" name="id" id="id" dojotype="dijit.form.TextBox" type="text" value="<?php echo $this->rs['id'];?>"/></td>
+				<td><input readonly="readonly" class="fullside" tabindex="5" dojotype="dijit.form.TextBox" id="dollar" name="dollar" value="<?php echo $this->rs['dollar'];?>" type="text" /></td>
+				<td><input class="fullside" tabindex="6" dojotype="dijit.form.TextBox" id="riel" name="riel" value="<?php echo $this->rs['reil'];?>" type="text" /></td>
+			</tr>
+			<tr class="row3">
+				<td colspan="3" align="center">
+				<input  type="button" value="សំអាត" id="clear" name="clear" label="សំអាត" dojotype="dijit.form.Button"  />
+				<input type="button" value="សារដើម" id="again" name="again"  label="សារដើម" dojotype="dijit.form.Button"  />
+				<input type="submit" value="រក្សារទុក" id="save" name="save"  label="រក្សារទុក" dojotype="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave" />
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+</form>
+
+
+<style type="text/css">
+	table th { background-color:#dddddd; height: 50px; font-size: 20px;}
+	.row1 {background:#014563; }
+	.row1 .fullside{background:#014563; color:#fff; border:none; font-size: 16px;}
+	.row3{background:#dddddd;}
+</style>

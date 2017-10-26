@@ -1,0 +1,82 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Currency Smart | Transfer Report page'); 
+	echo $this->headTitle('SRMS | Student Exam Fundation Year'); 
+	
+?>	
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'foundation','controller'=>'report','action'=>'rpt-foundation')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+				<fieldset style="background: none;height: 600px;scroll;overflow-x:scroll;">
+							<legend align="center" ><strong><?php echo $tr->translate("");?></strong></legend>
+							<table style="background:#fff; margin: 0 auto; border: 1px dotted #ccc;">
+								<tr style="font-size: 13px;">
+									<td colspan="2"></td>
+									<td align="right">
+										<strong>ព្រះរាជាណាចក្រកម្ពុជា</strong><br />
+										<strong>ជាតិ សាសនា ព្រះមហាក្សត្រ</strong><br />
+									</td>
+								</tr>
+								<tr>
+									<td width="20%" align="left">
+										<strong>ក្រសួងអប់រំ យុវជន និងកីឡា</strong><br />
+										<strong>សាកលវិទ្យាល័យ វេស្ទើន</strong><br /><br ><br ><br >
+									</td>
+									<td align="center">
+										<strong>ព្រះរាជាណាចក្រកម្ពុជា</strong><br />
+										<strong>ជាតិ សាសនា ព្រះមហាក្សត្រ</strong><br />
+										<strong style="font-family: Tacteing;">7</strong><br />
+										<strong>បញ្ជីរាយនាមបេក្ខជនប្រលងជ្រើសរើស ចូលរៀនថ្នាក់ឆ្នាំសិក្សា លើកទីមួយ ជំនាន់ទីមួយ</strong><br />
+										<strong>មហាវិទ្យាល័យ សិល្បៈ មនុស្សសាស្រ្ត និងភាសា ,ជំនាញអប់រំភាសាអង់គ្លេស ឆ្នាំសិក្សា 2013-214</strong><br />
+									</td>
+									<td width="20%"></td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<table cellpadding="5"​ style="margin:0 auto;width:100%; border-collapse: collapse;"  border="1" >
+											<tr style="font-size:11px; height: 30px;" align="center" >
+												<th >ល.រ</th>
+												<th >Group Code</th>
+												<th >Room ID</th>
+												<th>From Academic</th>
+												<th >To Academic</th>	
+												<th >Semester</th>
+												<th >Session</th>
+												<th >Degree</th>
+												<th >Grade</th>
+												<th >Amount Mount</th>
+												<th >Start Date</th>					
+												<th >Expired Date</th>
+												<th >Note</th>
+												<th >Status</th>
+												
+											</tr>
+											
+											<tr style="font-size:11px; height: 30px;" align="center" >
+												<th >ល.រ</th>
+												<th >Group Code</th>
+												<th >Room ID</th>
+												<th >From Academic</th>
+												<th >To Academic</th>	
+												<th >Semester</th>
+												<th >Session</th>
+												<th >Degree</th>
+												<th >Grade</th>
+												<th >Amount Mount</th>
+												<th >Start Date</th>					
+												<th >Expired Date</th>
+												<th >Note</th>
+												<th >Status</th>
+												
+											</tr>
+											
+										</table>	
+									</td>
+								</tr>
+							</table>
+				</fieldset>		
+				</td>
+			</tr>
+		</table>			
+</form>

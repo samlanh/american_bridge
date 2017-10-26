@@ -1,0 +1,250 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm =  $this->form_search;
+	//print_r($this->rs);
+?>	
+<title><?php echo $tr->translate('របាយការណ៍លទ្ធផលចំណូល');?></title>
+	<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-result-income')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table width="70%">
+		    <tr>
+		    	<td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->search['start_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
+		    	<td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->search['end_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
+		    	<td><?php echo $frm->getElement('branch');?></td>
+		    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+		    </tr>
+		</table>
+	</form>	
+	
+	<style>
+		.hover:hover{background: #ddd;}
+	</style>
+	
+	<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+		<div id="divPrint">
+		<style>
+			table{ page-break-inside:auto }
+		    tr{ page-break-inside:avoid; page-break-after:auto }
+			#header {
+				display: table-header-group;
+				page-break-inside:avoid; page-break-after:auto;
+			}
+			.bor{
+				border-right: 1px solid #000;	
+				border-bottom: 1px solid #000;
+				font-size:13px;
+			}
+			.bor_r{
+				border-right: 1px solid #000;	
+				font-size:13px;
+			}
+			.padd{
+				padding: 3px;	
+			}
+			#row{ font-size:12px; height: 30px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		</style>
+		
+		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+			<tr>
+				<td width="15%" align="center">
+					<img style="width:60%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+				</td>
+				<td align="center" width="70%" style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​">
+					<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​"><?php echo $tr->translate("របាយការណ៍លទ្ធផលចំណូល"); ?></strong><br />
+					<strong  style="font-weight:bold;color:#000; font-size: 13px;font-family:'Khmer OS Muol';​">Income Statement (AR) <br />From <?php echo date('d-m-Y',strtotime($this->search['start_date']));?> To <?php echo date('d-m-Y',strtotime($this->search['end_date']));?></strong><br />
+				</td>
+				<td width="15%" > </td>
+			</tr>
+			<tr>
+				<td colspan="3" id="exportExcel">
+					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+						<thead>
+							<tr style=" font-size:12px; height: 20px;  line-height: 30px; font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
+								<td class="bor"><?php echo $tr->translate("លេខគណនី"); ?>/Account Code</td>
+								<td class="bor" ><?php echo $tr->translate("ឈ្មោះគណនីជាខ្មែរ"); ?>/Account in Khmer</td>
+								<td class="bor"  ><?php echo $tr->translate("ឈ្មោះគណនីជាអង់គ្គេស"); ?>/Account in English</td>
+								<td class="bor"><?php echo $tr->translate("សរុប"); ?>/Amount</td>
+						    </tr>
+						</thead>
+	 					<tr id="row" align="center" >
+							<td> </td>
+							<td  class="padd"  style="background:#4682B4;">ចំណូល</td>
+							<td  class="padd"  style="background:#81BEF7;">Revenue</td>
+							<td> </td>
+	 					</tr>
+	 					
+	 					<?php $i=0;$category_id=0;$account_no=""; $title="";$total_by_category=0; $grand_total = 0;
+	 						if(!empty($this->rs)){ foreach($this->rs as $key => $rs){ 
+		 						$i++;
+		 						
+	 					?>
+							<?php if($rs['category_id'] != $category_id){?>
+								<?php if($key>0){?>
+									<tr>
+										<td align="center">&nbsp;&nbsp;<?php echo $account_no;?></td>
+										<td>&nbsp;&nbsp;<?php echo $title;?></td>
+										<td>&nbsp;&nbsp;<?php echo $title;?></td>
+										<td align="center">&nbsp;&nbsp;<?php if(!empty($total_by_category)){echo "$ ".$total_by_category;}?></td>
+									</tr>		
+								<?php }?>
+							<?php 
+									$grand_total = $grand_total + $total_by_category;
+									$total_by_category = 0;
+	 							}
+							?>				  
+	 					
+	 					<?php 
+	 							$total_by_category = $total_by_category + $rs['subtotal'];
+	 							$account_no = $rs['account_no'];
+	 							$title = $rs['category'];
+	 							$category_id=$rs['category_id'];
+	 							
+	 						}} 
+	 						$grand_total = $grand_total + $total_by_category;
+	 					?>
+	 					<tr>
+							<td align="center">&nbsp;&nbsp;<?php echo $account_no;?></td>
+							<td>&nbsp;&nbsp;<?php echo $title;?></td>
+							<td>&nbsp;&nbsp;<?php echo $title;?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($total_by_category)){echo "$ ".$total_by_category;}?></td>
+						</tr>
+	 					
+	 					
+	 					<?php 
+	 						$total_rent_payment = 0;$i=0;
+	 					?>
+	 					<?php if(!empty($this->rent_payment)){foreach ($this->rent_payment as $rent){
+	 								$total_rent_payment = $total_rent_payment + $rent['all_total_amount'];
+	 						  }}
+	 						  
+	 						  $grand_total = $grand_total + $total_rent_payment;
+	 					?>
+	 					
+	 					<tr>
+							<td align="center">&nbsp;&nbsp;<?php echo "006";?></td>
+							<td>&nbsp;&nbsp;ចំណូលពីការជួលតូប និង ផ្ញើរកង់-ម៉ូតូ-ឡាន</td>
+							<td>&nbsp;&nbsp;Parking and Canteen Rental Fee</td>
+							<td align="center">&nbsp;&nbsp;<?php echo "$ ".$total_rent_payment;?></td>
+						</tr>
+	 					<tr style="background:#e0dddd;">
+	 						<td colspan="3" align="right">ទឹកប្រាក់សរុប/Grand Total&nbsp;&nbsp;</td>
+	 						<td align="center"><?php echo "$ ".$grand_total;?></td>
+	 					</tr>
+					</table>	
+					
+					<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
+						<tr>
+							<td width="25%">
+								Grand Total 
+							</td>
+							<td width="25%">
+								Rate
+							</td>
+							<td width="25%">
+								Amount in USD
+							</td>
+							<td width="25%">
+								Amount in Riel
+							</td>
+							
+						</tr>
+						<tr>
+							<td style="border: 1px solid #000;">
+								<?php echo "&nbsp;$ ".number_format($grand_total,2)?>
+							</td>
+							
+							<td>
+								<?php echo $this->rate." ៛";?>
+							</td>
+							
+							<td style="border: 1px solid #000;">
+								<div id="input_usd">
+									<input type="text" name="amount_usd" id="amount_usd" class="fullside" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
+								</div>
+								<div id="hide_amount_usd">
+									<label id="lb_amount_usd"></label>
+								</div>
+							</td>
+							
+							<td style="border: 1px solid #000;">
+								<label id="lb_amount_reil"></label>
+							</td>
+						</tr>
+					</table>
+					
+					<table width="100%">
+						<tr><td colspan="3">&nbsp;</td></tr>
+						<tr >
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("បានឃើញនិង ឯកភាព"); ?></span><br/>
+								<span style="font-weight:bold;color:#000; font-size: 14px;font-family:'Khmer OS Muol';​">លោកអគ្គនាយក</span>
+							</td>
+							<td  width="20%">
+								&nbsp;
+							</td>
+							<td align="center"  width="30%">
+								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("VERIFIED_BY"); ?></span><br/>
+								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("ប្រធានគណនេយ្យ"); ?></span>
+							</td>
+							<td align="center"  width="25%">
+								<span style="font-size: 14px;text-align: right;">ភ្នំពេញ, ថ្ងៃទី…..ខែ…..ឆ្នាំ……..</span><br/>
+								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("គណនេយ្យករ"); ?></span>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+		</div>		
+	</div>
+		
+<script type="text/javascript">
+	dojo.ready(function(){
+		document.getElementById('hide_amount_usd').style.display="none";
+	});
+	
+	function calculateRemainReil(){
+		total_amount = '<?php echo $grand_total;?>';
+		amount_usd = dijit.byId("amount_usd").get('value');
+		exchange_rate = '<?php echo $this->rate?>';
+		total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
+		//alert(total_reil);
+		
+		dojo.byId("lb_amount_usd").innerHTML = "&nbsp;$ " + amount_usd;
+		dojo.byId("lb_amount_reil").innerHTML = total_reil+"&nbsp;៛ ";
+	}
+	 					
+	function doPrint() {
+		document.getElementById('hide_amount_usd').style.display="block";
+		document.getElementById('amount_usd').style.display="none";
+		
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+	    window.frames["print_frame"].window.focus();
+	    window.frames["print_frame"].window.print();
+	    //hideDialog();
+	    //alert(1);
+	    document.getElementById('amount_usd').style.display="block";
+	    document.getElementById('hide_amount_usd').style.display="none";
+	}
+	function preview()
+	{ 
+	  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+	      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+	  var content_vlue = document.getElementById("divPrint").innerHTML; 
+	  
+	  var docprint=window.open("","",disp_setting); 
+	   docprint.document.open(); 
+	   docprint.document.write('<html><head>'); 
+	   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+	   docprint.document.write(content_vlue);          
+	   docprint.document.write('</center></div></html>'); 
+	   docprint.document.close(); 
+	   docprint.focus(); 
+	}
+	function exportExcel(){
+		$('#exportExcel').tableExport({type:'excel',escape:'false'});
+	}
+</script>
+
+
+
+

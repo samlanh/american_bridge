@@ -1,0 +1,416 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm =  $this->form_search;
+	//print_r($this->rs);
+?>	
+<title><?php echo $tr->translate('Summary of Total Income');?></title>
+	<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-summary-total-income')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table width="70%">
+		    <tr>
+		    	<td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->search['start_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
+		    	<td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->search['end_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
+		    	<td><?php echo $frm->getElement('branch');?></td>
+		    	<td>
+				 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
+				 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
+				 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
+				 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
+				 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+				 	</select>
+				</td>
+		    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+		    </tr>
+		</table>
+	</form>	
+	
+	<style>
+		.hover:hover{background: #ddd;}
+	</style>
+	
+	<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+		<div id="divPrint">
+		<style>
+			table{ page-break-inside:auto }
+		    tr{ page-break-inside:avoid; page-break-after:auto }
+			#header {
+				display: table-header-group;
+				page-break-inside:avoid; page-break-after:auto;
+			}
+			.bor{
+				border-right: 1px solid #000;	
+				border-bottom: 1px solid #000;
+				font-size:13px;
+			}
+			.bor_r{
+				border-right: 1px solid #000;	
+				font-size:13px;
+			}
+			.padd{
+				padding: 3px;	
+			}
+			#row{ font-size:12px; height: 30px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		</style>
+		
+	<?php 
+		$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
+	?>
+	
+		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+			<tr>
+				<td width="15%" align="center">
+					<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+				</td>
+				<td align="center" width="70%" style="font-weight:bold;color:#000;">
+					<strong style="font-size: 18px;font-family:Khmer MEF2,Times New Roman;​;​"><?php echo $tr->translate("Summary of Total Income"); ?></strong><br />
+					<strong style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 14px;">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong> <br />   
+					<?php if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
+				</td>
+				<td width="15%" > </td>
+			</tr>
+			<tr>
+				<td colspan="3" id="exportExcel">
+					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang'; border: 1px solid #000;"  border="1" >
+						<thead>
+							<tr style=" font-size:16px; height: 20px;  line-height: 30px; font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
+								<td><?php echo $tr->translate("Title"); ?></td>
+								<td><?php echo $tr->translate("Total Amount"); ?></td>
+								<td><?php echo $tr->translate("Receipt Number"); ?></td>
+						    </tr>
+						</thead>
+	 					
+	 					<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Study Khmer Fee ";?></td>
+							<?php 
+								$total_khmerft_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0; $grand_total=0;
+								if(!empty($this->khmerft)){$last_length = count($this->khmerft);	foreach ($this->khmerft as $khmerft){
+									
+									$i++;
+									
+									$total_khmerft_payment = $total_khmerft_payment + $khmerft['grand_total_payment'];
+									if($first_length==0){
+										$first_receipt = $khmerft['receipt_number'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $khmerft['receipt_number'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_khmerft_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->khmerft)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Study English Full Time Fee ";?></td>
+							<?php 
+								$total_englishft_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->englishft)){$last_length = count($this->englishft);	foreach ($this->englishft as $englishft){
+									
+									$i++;
+									
+									$total_englishft_payment = $total_englishft_payment + $englishft['grand_total_payment'];
+									if($first_length==0){
+										$first_receipt = $englishft['receipt_number'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $englishft['receipt_number'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_englishft_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->englishft)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Study English Part Time Fee & Other Program Fee";?></td>
+							<?php 
+								$total_englishpt_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->englishpt)){$last_length = count($this->englishpt); foreach ($this->englishpt as $englishpt){
+									
+									$i++;
+									
+									$total_englishpt_payment = $total_englishpt_payment + $englishpt['grand_total_payment'];
+									if($first_length==0){
+										$first_receipt = $englishpt['receipt_number'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $englishpt['receipt_number'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_englishpt_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->englishpt)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Study Material Fee ";?></td>
+							<?php 
+								$total_study_material_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->study_material)){$last_length = count($this->study_material); foreach ($this->study_material as $study_material){
+									
+									$i++;
+									
+									$total_study_material_payment = $total_study_material_payment + $study_material['grand_total_payment'];
+									if($first_length==0){
+										$first_receipt = $study_material['receipt_number'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $study_material['receipt_number'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_study_material_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->study_material)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Transportation Fee ";?></td>
+							<?php 
+								$total_transportation_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->transportation)){$last_length = count($this->transportation); foreach ($this->transportation as $transportation){
+									
+									$i++;
+									
+									$total_transportation_payment = $total_transportation_payment + $transportation['grand_total_payment'];
+									if($first_length==0){
+										$first_receipt = $transportation['receipt_number'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $transportation['receipt_number'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_transportation_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->transportation)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Food and Stay Fee ";?></td>
+							<?php 
+								$total_foodandstay_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->foodandstay)){$last_length = count($this->foodandstay); foreach ($this->foodandstay as $foodandstay){
+									
+									$i++;
+									
+									$total_foodandstay_payment = $total_foodandstay_payment + $foodandstay['grand_total_payment'];
+									if($first_length==0){
+										$first_receipt = $foodandstay['receipt_number'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $foodandstay['receipt_number'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_foodandstay_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->foodandstay)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+	 					
+	 					
+	 					<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Parking & Canteen Fee ";?></td>
+							<?php 
+								$total_rent_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->rent_payment)){$last_length = count($this->rent_payment); foreach ($this->rent_payment as $rent_payment){
+									
+									$i++;
+									
+									$total_rent_payment = $total_rent_payment + $rent_payment['all_total_amount'];
+									if($first_length==0){
+										$first_receipt = $rent_payment['rent_receipt_no'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $rent_payment['rent_receipt_no'];
+									}
+								}}
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_rent_payment,2);?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->rent_payment)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+	 					
+	 					<?php 
+	 						$grand_total = $total_englishft_payment + $total_englishpt_payment + $total_khmerft_payment + $total_foodandstay_payment + $total_rent_payment + $total_study_material_payment + $total_transportation_payment;
+	 					?>
+	 					
+	 					<tr style="font-size: 20px;font-weight: bold;background: #dadada;">
+	 						<td align="center">Grand Total</td>
+	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total,2);?></td>
+	 						<td></td>
+	 					</tr>
+					</table>	
+					
+					<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
+						<tr>
+							<td width="25%">
+								Grand Total 
+							</td>
+							<td width="25%">
+								Rate
+							</td>
+							<td width="25%">
+								Amount in USD
+							</td>
+							<td width="25%">
+								Amount in Riel
+							</td>
+							
+						</tr>
+						<tr>
+							<td style="border: 1px solid #000;">
+								<?php echo "&nbsp;$ ".number_format($grand_total,2)?>
+							</td>
+							
+							<td>
+								<?php echo $this->rate." ៛";?>
+							</td>
+							
+							<td style="border: 1px solid #000;">
+								<div id="input_usd">
+									<input type="text" name="amount_usd" id="amount_usd" class="fullside" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
+								</div>
+								<div id="hide_amount_usd">
+									<label id="lb_amount_usd"></label>
+								</div>
+							</td>
+							
+							<td style="border: 1px solid #000;">
+								<label id="lb_amount_reil"></label>
+							</td>
+						</tr>
+					</table>
+					
+					<table width="100%">
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<table width="100%" border="0" style="white-space: nowrap;font-size: 13px;">
+									<tr align="center">
+										<td width="15%">Auditor</td>
+										<td width="18%">Accountant Income</td>
+										<td width="16%">Madam</td>
+										<td width="18%">Cash Collector</td>
+										<td width="18%">School Principle</td>
+										<td width="15%">Cashier</td>
+									</tr>
+									<tr>
+										<td colspan="6">&nbsp;</td>
+									</tr>
+									<tr align="center">
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+									</tr>
+								</table>							
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+		</div>		
+	</div>
+		
+<script type="text/javascript">
+
+	dojo.ready(function(){
+		document.getElementById('hide_amount_usd').style.display="none";
+	});
+
+	function calculateRemainReil(){
+		total_amount = '<?php echo $grand_total;?>';
+		amount_usd = dijit.byId("amount_usd").get('value');
+		exchange_rate = '<?php echo $this->rate?>';
+		total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
+		//alert(total_reil);
+		
+		dojo.byId("lb_amount_usd").innerHTML = "&nbsp;$ " + amount_usd;
+		dojo.byId("lb_amount_reil").innerHTML = total_reil+"&nbsp;៛ ";
+	}
+	 					
+	function doPrint() {
+		document.getElementById('hide_amount_usd').style.display="block";
+		document.getElementById('amount_usd').style.display="none";
+		
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+	    window.frames["print_frame"].window.focus();
+	    window.frames["print_frame"].window.print();
+	    //hideDialog();
+	    //alert(1);
+	    document.getElementById('amount_usd').style.display="block";
+	    document.getElementById('hide_amount_usd').style.display="none";
+	}
+	
+	function preview()
+	{ 
+	  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+	      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+	  var content_vlue = document.getElementById("divPrint").innerHTML; 
+	  
+	  var docprint=window.open("","",disp_setting); 
+	   docprint.document.open(); 
+	   docprint.document.write('<html><head>'); 
+	   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+	   docprint.document.write(content_vlue);          
+	   docprint.document.write('</center></div></html>'); 
+	   docprint.document.close(); 
+	   docprint.focus(); 
+	}
+	function exportExcel(){
+		$('#exportExcel').tableExport({type:'excel',escape:'false'});
+	}
+</script>
+
+
+
+

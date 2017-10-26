@@ -1,0 +1,86 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('SRMS | Report Student Receivable'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-staff')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<input  dojoType="dijit.form.TextBox"   id="txtsearch" name="txtsearch" placeholder="Advance Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+		<input  name="from_date" id="from_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['start_date'];?>" type="text">
+		<input  name="to_date" id="to_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['end_date'];?>" type="text">
+		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+</form>
+<style>
+#footer{display: none;}
+</style>	
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm;">
+	<div id="divPrint">
+		<table style="background:#fff; margin: 0 auto; width: 100%; padding: 1cm; ">
+			<tr>
+				<td width="20%" align="left">
+					<img style="width: 80%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br />
+				</td>
+				<td align="center" width="60%">
+					<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><?php echo $tr->translate('STUDENT_SERVICE_PAYMENT_REPORT');?></strong><br >
+				</td>
+				<td align="right" width="20%">&nbsp;</td>
+			</tr>
+			<tr> 
+				<td colspan="3" id="exportExcel" >
+					<style> th,td{ padding:0 1px;}</style>
+						<style type="text/css">
+							body{font-family: "Times New Roman",Arial; }
+							table{ border-collapse:collapse; margin:0 auto;
+							border-color:#000; }
+							.padd tr td{  text-align:center}
+							.padd tr th{  background-color: #ccc; }
+						</style>
+
+					<table class="padd" width="99%" border="1" align="center" style="white-space:nowrap;font-family: 'Hanuman';">
+						  <tr style="font-size:12px; height: 20px;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center">
+							    <td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+							    <td>&nbsp;<?php echo $tr->translate('STAFF_CODE');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('NAME');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('SEX');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('PHONE');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('POSITION');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('SALARY');?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
+						  </tr>
+						  
+					<style> td{padding:0 3px; }</style>
+					
+						 <?php $i=0;if(!empty($this->row)){foreach($this->row as $rs){$i++;?>
+						  <tr class="hover" style="font-size:11px; height: 18px;"​ align="center">
+							    <td><?php echo $i;?></td>
+							    <td>$ <?php echo $rs['staff_code']; ?></td>
+							    <td><?php echo $rs['name']; ?></td>
+							    <td>$ <?php echo $rs['sex'];?></td>
+							    <td>$ <?php echo $rs['phone'];?></td>
+							    <td>$ <?php echo $rs['position'];?></td>
+							    <td>$ <?php echo $rs['salary'];?></td>
+							   	<td><?php echo $rs['note']; ?></td>
+						  </tr>
+						  <?php }}?>
+						</table>
+					
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr >
+					<td align="center" width="25%">
+						<span style=" font-size: 14px;"><?php echo $tr->translate('VERIFIED_BY');?></span>
+					</td>
+					<td  width="50%">
+						&nbsp;
+					</td>
+					<td align="center"  width="25%">
+						<span style=" font-size: 14px;text-align: right;"><?php echo $tr->translate('PREPARE_BY');?></span>
+					</td>
+				</tr>
+			</table>
+	</div>	
+</div>
+

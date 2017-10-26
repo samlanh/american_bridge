@@ -1,0 +1,29 @@
+
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('STUDENT_DROP_TRANSPORT')); 
+	$frm =  $this->form_search;
+?>
+
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'foundation','controller'=>'studentdroptransport','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table style="width:100%">
+	  <tr> 
+			<td> <?php echo $frm->getElement("title");?></td>
+			<td> <?php echo $frm->getElement("branch");?></td>
+			<td>
+				<select name="service" id="service" dojoType="dijit.form.FilteringSelect" class="fullside" >
+					<option value="0"> select service </option>
+					<?php if(!empty($this->transport_service)){foreach ($this->transport_service as $transport){?>
+						<option value="<?php echo $transport['id']?>" <?php if($transport['id']==$this->adv_search['service']){echo "selected='selected'";}?>><?php echo $transport['name']?></option>
+					<?php }}?>
+				</select>
+			</td>
+			<td>
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</td>
+	  </tr>
+	 </table>
+</form>
+
+
+<?php echo $this->list;?>

@@ -1,0 +1,227 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('SRMS | Report Student Payment'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>
+<form id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-paymentdetailbytype')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table width="100%" style="margin: 0 auto; background: #fff;">
+			<tr>
+				<td>
+					<input class="fullside" dojoType="dijit.form.TextBox"   id="txtsearch" name="txtsearch" placeholder="Advance search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+				</td>
+				<td>
+					<input class="fullside" name="from_date" id="from_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['start_date'];?>" type="text">
+				</td>
+				<td>
+					<input class="fullside" name="to_date" id="to_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['end_date'];?>" type="text">
+				</td>
+				
+				<td>
+					<select class="fullside" name="service" id="service" dojoType="dijit.form.FilteringSelect">
+							<option value="-1" >- - -Search by service type- - -</option>
+							<?php if(!empty($this->service)) foreach ($this->service as $row){?>
+							<option value='<?php echo $row['service_id'];?>' <?php if($row['service_id']== $this->search['service_type']) echo "selected='Selected'"?>><?php echo $row['title'];?></option>
+							<?php }?>
+					</select>
+				</td>
+				<td align="left">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</td>
+				
+			</tr>
+		</table>
+</form>
+
+<style>
+#footer{display: none;}
+.hover:hover{background:#ccc;}
+</style>	
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm;">
+		<div id="divPrint">
+			<table style="background:#fff; margin: 0 auto; width: 100%; padding: 1cm; ">
+							<tr>
+								<td colspan="3" align="left">
+									<img style="width: 155px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br />
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3"  align="center">
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><?php echo $tr->translate('STUDENT_PAYMENT_SERVICE_BY_TYPE_REPORT');?></strong><br >
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" id="exportExcel">
+									<style> th,td{ padding:0 1px;}</style>
+										<style type="text/css">
+											body{font-family: "Times New Roman",Arial; }
+											table{ border-collapse:collapse; margin:0 auto;
+											border-color:#000; }
+											.padd tr td{  text-align:center}
+											.padd tr th{  background-color: #ccc; }
+										</style>
+
+									<table class="padd" width="99%" border="1" align="center" style="white-space:nowrap;">
+										 
+										  <tr></tr>
+												<style> td{padding:0 3px; }</style>
+										<?php 
+											$total_dic=0; 
+											$grand_total =0;  
+											$service_id=0;
+											$i=0; 
+											$total=0; $total_amount=0; 
+											$total_admin_nOhter = 0;
+											$total_fee=0;
+											$grand_total_paid_amount = 0;
+											$grand_total_balance = 0;
+											$total_paid_amount=0;
+											$total_receive_amount=0;
+											$total_balance=0;
+										?>
+										  <?php if(!empty($this->row)) foreach($this->row as $key => $rs){ $i++; ?>
+										  
+										  <?php if($rs['service_categoryid']!=$service_id){	?>
+											   <?php  if($key>0 ){?>
+											   		</table>
+													<table border="1" align="right" style="margin-right: 6px;font-family: 'Open Sans', sans-serif,'Kh Battambang','Khmer Battambang'">
+														  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
+														 			<th style=" border-bottom: 1px #000 solid; background-color: #ccc; width:146px; font-weight:bold; font-size: 10px;">&nbsp;<?php echo $tr->translate('GRAND_TOTAL');?>&nbsp;</th>
+																	<td style=" border-bottom: 1px #000 solid; color:#F00; font-weight:bold; width:112px; font-size: 10px;">$ <?php echo number_format($total,2);?></td>
+														  </tr>
+														  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
+																<th style=" border-bottom: 1px #000 solid; background-color: #ccc; font-size: 10px;">&nbsp;<?php echo $tr->translate('PAID_AMOUNT');?>&nbsp;</th>
+																<td style=" border-bottom: 1px #000 solid; color:#F00; font-weight:bold; font-size: 10px;">$ <?php echo number_format($total_paid_amount,2);?></td>
+														  </tr>
+														  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
+																<th style=" border-bottom: 1px #000 solid; background-color: #ccc; font-size: 10px;">&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</th>
+																<td style=" border-bottom: 1px #000 solid; color:#F00; font-weight:bold; font-size: 10px;">$ <?php echo number_format($total_balance,2);?></td>
+														  </tr>
+													</table>
+													<table class="padd" width="99%" border="1" align="center" style="white-space:nowrap;">
+												<?php $i=1;}?>
+												
+												
+											  <tr style="font-size:10px; color:#000; height: 23px; border-left:1px solid #fff; border-right:1px solid #fff; border-top: 1px solid #fff;"​ align="center">
+											    <td colspan="16" style="text-align:left">
+											    	<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 11px;font-family:'Khmer MEF2';" ><?php echo $tr->translate('SERVICE_NAME').' : '.$rs['service_type']; ?></strong>
+											    </td>
+											  </tr>
+											   <tr class="hover" style="background-color: #ccc;line-height: 30px;font-weight: bold;font-size:10px; height: 22px;font-family: 'Open Sans', sans-serif,'Kh Battambang','Khmer Battambang';" align="center" >
+												    <td>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+												    <td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('NAME_KH');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('NAME_EN');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('PAYMENT_TERM');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('FEE');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('QTY');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('DISCOUNT');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('ADMIN_FEE');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('OTHER_FEE');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('SUBTOTAL');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('PAID_AMOUNT');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('DATE_PAY');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('USER');?>&nbsp;</td>
+													<td>&nbsp;<?php echo $tr->translate('REMARK');?>&nbsp;</td>
+											  </tr>
+											   <?php 
+											   		$total=0;
+											   		$total_paid_amount=0;
+											   		$total_receive_amount=0;
+											   		$total_balance=0;
+											 }
+										   
+										 	$service_id=$rs['service_categoryid'];
+										 	//$fee_dic = (($rs['fee']* $rs['qty']) * $rs['discount_percent'])/100;
+										 	//$after_dic= ($rs['fee']* $rs['qty']) - $fee_dic;
+										 	//$subtotal= $after_dic + $rs['admin_fee']+ $rs['other_fee'];
+										 	
+										 	$subtotal = ($rs['fee']* $rs['qty']) - (($rs['fee']* $rs['qty']) * $rs['discount_percent'])/100;
+										 	$subtotal = $subtotal+$rs['admin_fee']+$rs['other_fee'];
+										 	
+										 	$total = $subtotal + $total;
+										 	$total_paid_amount = $total_paid_amount + $rs['paid_amount'];
+										 	$total_receive_amount = $total_receive_amount + $rs['receive_amount'];
+										 	$total_balance = $total_balance + $rs['balance_due'];
+										 	 ?>
+										   <tr class="hover" style="font-size:10px; color:#000; height: 18px; border-bottom: 1px solid #000;font-family: 'Open Sans', sans-serif,'Kh Battambang','Khmer Battambang';"​ align="center">
+										  	<td><?php echo $i;?></td>
+										    <td ><?php echo $rs['receipt_number']; ?></td>
+										    <td style=" white-space:nowrap; text-align:left"><?php echo $rs['kh_name']; ?></td>
+										    <td style=" white-space:nowrap; text-align:left"><?php echo $rs['en_name']; ?></td>
+										    <td style="text-align:left"><?php echo $rs['payment_term']; ?></td>
+										    <td><?php echo number_format($rs['fee'],2); ?></td>
+										    <td><?php echo $rs['qty']; ?></td>
+										    <td><?php echo $rs['discount_percent']; ?>%</td>
+											<td><?php echo $rs['admin_fee']; ?></td>
+											<td><?php echo $rs['other_fee']; ?></td>
+										    <td><?php echo number_format($subtotal,2); ?></td>
+											
+										    <td><?php echo $rs['paid_amount']; ?></td>
+										    
+										    <td><?php echo $rs['balance_due']; ?></td>
+										    <td><?php echo date('d-M-Y', strtotime($rs['create_date']));?></td>
+										    <td><?php echo $rs['user']; ?></td>
+										   	<td><?php echo $rs['note']; ?></td>
+										  </tr>
+										  <?php 
+										  	$grand_total = $grand_total+$subtotal+$rs['admin_fee']+$rs['other_fee'];
+										  	$total_fee = $total_fee + $rs['fee'];
+										  	$total_admin_nOhter = $total_admin_nOhter + $rs['other_fee']+$rs['admin_fee'];
+										  	
+										  	
+										  	$grand_total_paid_amount = $grand_total_paid_amount + $rs['paid_amount'];
+										  	$grand_total_balance = $grand_total_balance +  $rs['balance_due'];
+										  	
+										  ?>
+										  <?php } ?>
+										  <?php if (empty($total)){}?>
+										   <?php if(!empty($total)){?>
+										   </table>
+										   <table border="1" align="right" style="margin-right: 6px; font-family: 'Open Sans', sans-serif,'Kh Battambang','Khmer Battambang'">
+											  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
+													<th style=" border-bottom: 1px #000 solid; background-color: #ccc; width:146px; font-size: 10px;">&nbsp;<?php echo $tr->translate('GRAND_TOTAL');?>&nbsp;</th>
+													<td width="100px" style=" border-bottom: 1px #000 solid; color:#F00; width:112px; font-weight:bold; font-size: 10px;">$ <?php echo number_format($total,2);?></td>
+											  </tr>
+											  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
+													<th style=" border-bottom: 1px #000 solid; background-color: #ccc; font-size: 10px;">&nbsp;<?php echo $tr->translate('PAID_AMOUNT');?>&nbsp;</th>
+													<td width="100px" style=" border-bottom: 1px #000 solid; color:#F00; font-weight:bold; font-size: 10px;">$ <?php echo number_format($total_paid_amount,2);?></td>
+											  </tr>
+											  <tr style="font-size:10px; color:#000; height: 18px;"​ align="center">
+													<th style=" border-bottom: 1px #000 solid; background-color: #ccc; font-size: 10px;">&nbsp;<?php echo $tr->translate('BALANCE');?>&nbsp;</th>
+													<td width="100px" style=" border-bottom: 1px #000 solid; color:#F00; font-weight:bold; font-size: 10px;">$ <?php echo number_format($total_balance,2);?></td>
+											  </tr>
+										 <?php }?>
+									</table>
+								</td>
+							</tr>
+							<tr><td colspan="3">&nbsp;</td></tr>
+							<tr>
+								<td colspan="3">&nbsp;</td>
+							</tr>
+							<?php if (empty($total_fee)){}?>
+							<?php if (!empty($total_fee)){?>
+							<tr>
+								<td colspan="2"></td>
+								<td>
+									<table border="1" align="right" style="  width:50%; margin-right:0.5%; white-space:nowrap;">
+										<tr style="font-size:10px; background:#ccc; height: 20px; align="center">
+											<th>&nbsp;<?php echo $tr->translate('GRAND_TOTAL');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('GRAND_TOTAL_PAID_AMOUNT');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('GRAND_TOTAL_BALANCE');?>&nbsp;</th>
+										</tr>
+										<tr align="center" style=" height:18px; font-size:10px; padding: 1px;" >
+											<td><span style="color: red;">$ <?php echo number_format($grand_total,2)?></span></td>
+											<td><span style="color: red;">$ <?php echo number_format($grand_total_paid_amount,2);?></span></td>
+											<td><span style="color: red;">$ <?php echo number_format($grand_total_balance,2)?></span></td>
+											
+										</tr>
+									  </table>
+								</td>
+							</tr>
+							<?php }?>
+					</table>
+	</div>	
+</div>
+

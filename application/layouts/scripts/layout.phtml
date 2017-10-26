@@ -1,0 +1,173 @@
+<?php 
+   
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	//$base_url = Application_Form_FrmMessage::getUrl("/");
+	$base_url = $this->baseUrl();
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<script src="<?php echo $base_url;?>/js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>/js/dojo-1.6.1/dijit/themes/soria/soria.css"/>
+	<!--  <link rel="stylesheet" type="text/css" href="<?php //echo $base_url;?>/js/dojo-1.6.1/dijit/themes/claro/claro.css"/>-->
+	<!--  <link rel="stylesheet" type="text/css" href="<?php //echo $base_url;?>/js/dojo-1.6.1/dijit/themes/tundra/tundra.css"/>-->
+	
+	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>/js/dojo-1.6.1/dojox/grid/resources/tundraGrid.css"/>
+	<script src="<?php echo $base_url;?>/js/help.js"  type="text/javascript"></script>
+	<script src="<?php echo $base_url;?>/js/pdbs_js.js"  type="text/javascript"></script>
+	<link rel="stylesheet" href="<?php echo $base_url;?>/css/template.css"/>
+	<link rel="stylesheet" href="<?php echo $base_url;?>/css/font-awesome.min.css"/>
+	<link href="<?php echo $base_url;?>/cssmenu/template.css" media="screen" rel="stylesheet" type="text/css">
+	<!-- table  -->
+	<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery.tablesorter.js"> </script>
+	<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery.tablesorter.pager.js"> </script>
+
+	<?php if($module=='allreport' OR $action=='allreports' OR $action=='studentnearlyendservice' OR 
+			$action=='studentpaymentlate' OR $controller=='allreports' OR 
+			$controller=='studentnearlyendservice' OR $controller=='studentpaymentlate' ){?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/tableExport.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jquery.base64.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/html2canvas.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/sprintf.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/jspdf.js"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl();?>/tableexport/jspdf/libs/base64.js"></script> 
+      <?php } ?>	
+      
+	<link rel="shortcut icon" href="<?php echo $base_url;?>/images/icon.ico" type="image/x-icon"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
+	<style type="text/css">
+*{ padding:0;margin:0;}
+    html, body { width: 100%; height: 100%; margin: 0; }
+		.btn{
+			height: 40px;
+			min-width: 100px;	
+		}
+		.fullside{ width:98%; height: 30px;}
+		.full{ width:100%;}
+		body, html {font-size:100%; font-family:'Khmer OS Battambang'}
+body, html,table {font-size:100%; font-family:'Khmer OS Battambang'}
+        /*body, html { font-family:helvetica,arial,sans-serif; font-size:95%; }*/
+		*{ padding: 0; margin: 0;}
+		fieldset{ font-family: inherit;}
+		
+		.addsign{color: #fff;
+			    background: #008;
+			    padding: 2px 19px;}
+	</style>	
+</head>
+<script>
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.ValidationTextBox");
+dojo.require('dijit.form.Form');
+dojo.require('dijit.form.FilteringSelect');	
+dojo.require('dijit.form.Button');
+dojo.require('dijit.form.NumberTextBox');
+dojo.require("dijit.form.CheckBox");     
+dojo.require("dojo.number");
+dojo.require('dojox.form.BusyButton');
+dojo.require("dijit.form.RadioButton");
+dojo.require("dijit.Dialog");
+
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.AccordionContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dojo.parser");
+
+</script>
+    <?php $class='soria';
+    $session_user=new Zend_Session_Namespace('auth');
+    $username = $session_user->first_name;
+    $them_style =  $session_user->theme_style;
+    $them_style='soria';
+    ?>
+    <body class="<?php echo $class;?>">
+        <table style="height: 100%;" width="100%" >
+            <tr height="45px" >
+            	<td colspan="2" valign="top"> <?php echo $this->render('header.phtml')?>
+            	 	<p style="font-size:13px !important; ">
+					    <span style="padding-left: 3px;padding-right: 3px;float: left; font-weight:600;"><?php echo $tr->translate("USING_BY");?>&nbsp;&nbsp;<a style="color: red;" href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'changepassword')); ?>"><?php echo $username;?></a></span>  
+							<a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout','value'=>'1')); ?>">&nbsp; | &nbsp;<?php echo $tr->translate("SIGN_OUT");?> <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+			                 	<?php if($action=='index' AND $module!='report' AND $module!='home'){?>
+			                 <a class='add-link addsign' style="float:right;" href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?>&nbsp;<i class="fa fa-plus-square" aria-hidden="true"></i></a>
+							<?php }elseif($action=='add' OR $action=='edit' OR $module=='report' OR $action=='copy'){?>
+						 <span style="padding-left: 3px;padding-right: 3px; float: right; font-weight:600;"><a class='add-link addsign' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> <?php echo $tr->translate('GO_BACK');?></a></span>
+							<?php }?>
+					</p>
+            	</td>
+            </tr>
+             <tr>
+             	<?php if($module!='home'){?>
+            	<td width="200px" valign="top" style="border:1px solid #ccc;"><?php echo $this->render('menuleft.phtml')?></td>
+            	<?php }?>
+            	<td valign="top" style="border:1px solid #ccc; background:#DFF7FD">
+            	<?php if($module=='allreport' ){?>
+							<div class="menureport">
+								<ul>
+									<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
+									<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
+									<li class="excel"><a href="#"  title="Export"  onclick="exportExcel();"></a></li>
+								</ul>
+							</div>
+							<div style="clear:both;"></div>
+							<?php }?>
+            	<?php echo $this->layout()->content;  ?></td>
+            </tr>
+             <tr height="30px" style="border:1px solid #ccc;background:#B9B9CC; color: #008;">
+             	<td colspan="2" align="center"><marquee behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">
+             		<?php echo $tr->translate("COPY_RIGHT")." &copy; ".$tr->translate("Cam App Technology");?>
+					<?php echo $tr->translate("VERSION");?><a target="_blank" href="http://www.cam-app.com/">
+					Developed by Cam App Technology | <?php echo $tr->translate("អភិវឌ្ឍន៏ដោយ ខេម អ៊ែប តិចណូឡូជី");?></a></marquee>
+					
+				</ul>
+             	</td>
+             </tr>
+        </table>
+    </body>
+    
+    <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+<?php if($module=='allreport' AND $action!='index' OR $action=='allreports' OR $action=='studentnearlyendservice' OR $action=='studentpaymentlate' ){ ?>
+
+<?php if($action!='rpt-daily-income-english-fulltime' AND $action!='rpt-daily-income-khmer-fulltime' AND $action!='rpt-daily-income-transport' AND $action!='rpt-daily-income-english-parttime' AND $action!='rpt-daily-income-foodandstay' AND $action!='rpt-daily-income-material' AND $action!='rpt-daily-income-parking-canteen' AND $action!='rpt-summary-total-income' AND $action!='rpt-result-income'){?>
+
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function hideleft(){
+	(dojo.style("leftmenu","display") == "none") ? 'show':'hide'();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+
+</script>
+<?php }?>
+<?php  }?>
+
+
+</html>
+

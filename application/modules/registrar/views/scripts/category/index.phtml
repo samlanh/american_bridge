@@ -1,0 +1,27 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("GRADE"));
+	//print_r($this->search); 
+?>	
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'registrar','controller'=>'category','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+<div dojoType="dijit.layout.AccordionPane">
+  <table width="50%">
+        <tr>
+            <td><button IconClass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+            <td><input dojoType="dijit.form.ValidationTextBox"  class='full' id="category_name" name="category_name" value="<?php echo $this->search['category_name'];?>" type="text"></td>
+            <td></td>
+            <td>
+                <select name="status" id="status" dojoType="dijit.form.FilteringSelect" required="true"  class="full">
+									    <option value="1" label="ប្រើប្រាស់" <?php if($this->search['status']==1){ echo "selected='selected'";}?>>ប្រើប្រាស់</option>
+									    <option value="0" label="មិនប្រើប្រាស់" <?php if($this->search['status']==0){ echo "selected='selected'";}?>>មិនប្រើប្រាស់</option>
+									</select>
+            </td>
+        </tr>  
+  </table>
+</div>
+<?php echo $this->list;?>
+</form>
+
+
+
+

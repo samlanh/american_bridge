@@ -1,0 +1,56 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_PRODUCT')); 
+//print_r($this->service); exit();
+?>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.CheckBox"); 
+
+</script>
+<form  id='acc_item' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'bookanduniform','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table cellspacing="10" width="50%" style="margin: 0 auto;">
+			<tr>
+				<td>
+				<fieldset >
+					<legend align="center" style="font-size: 18px;"><strong><?php echo $tr->translate("EDIT_PRODUCT");?></strong></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
+							<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="title" id="title" value="<?php echo $this->row['title'];?>" ></td>
+						</tr>
+						<tr>
+							<td style="width: 5px"><?php echo $tr->translate("DISCRIPTION")?></td>
+							<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="desc" id="desc" value="<?php echo $this->row['description'];?>" ></td>
+						</tr>
+						<tr>
+							<td style="width: 5px"><?php echo $tr->translate("PRICE")?> ($) </td>
+							<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" value="<?php echo $this->row['price'];?>" name="price" id="price" ></td>
+						</tr>
+						<tr>
+							<td style="width: 5px"><?php echo $tr->translate("STATUS")?></td>
+							<td>
+								<select type="text" CLASS="fullside" dojoType="dijit.form.FilteringSelect" name="status" id="status" >
+									<option value="1" <?php if($this->row['status']==1) echo 'selected="selected"'?>><?php echo $tr->translate("ACTIVE")?></option>
+									<option value="0" <?php if($this->row['status']==0) echo 'selected="selected"'?>><?php echo $tr->translate("DEACTIVE")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+								<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('GO_EDIT');?>" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+

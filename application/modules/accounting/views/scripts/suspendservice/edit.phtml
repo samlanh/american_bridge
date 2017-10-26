@@ -1,0 +1,246 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_SUSPEND_SERVICE')); 
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>	
+<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/convertion.js"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require('dojox.form.BusyButton');
+	dojo.require("dojo.NodeList-manipulate");
+	
+	dojo.ready(function(){ 
+		initailize();
+		 getStudentInfo();
+		 dijit.byId('suspend_no').attr('value','<?php echo $this->id['suspend_no'];?>');
+		 dijit.byId('study_year').attr('value','<?php echo $this->id['year']?>');
+	});	
+
+	dojo.addOnLoad(function(){
+		   // document.musicPrefs.other.value="Afrobeat";
+			//getStudentBYId();
+		});
+	
+</script>
+<style>
+select{ width:100%;}
+fieldset{  background:none;}
+.red{ color: red; padding-left:5px;}
+</style>
+<?php $register = $this->frm_servicesuspend;
+//print_r($register);
+?>
+<form id='suspend_service' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'suspendservice','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<table  cellspacing="10" style="margin: 0 auto; width: 100%;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("EDIT_SUSPEND_SERVICE");?></strong></legend>
+					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" >
+						<tr>
+							<td><input type="hidden" id="id" name="id" value="<?php echo $this->id['id'];?>" /></td>
+						</tr>
+						<tr>
+							<td style="width: 160px"><?php echo $tr->translate("YEARS");?></td>
+							<td><?php echo $register->getElement('study_year');?></td>
+							<td><?php echo $tr->translate("RECEIPT_NO");?></td>
+							<td><?php echo $register->getElement('suspend_no');?></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STUDENT_ID");?></td>
+							<td>
+								<select class="fullside"  name="studentid" id="studentid" dojoType="dijit.form.FilteringSelect" onchange="getStudentInfo();" >
+									<?php if(!empty($this->rs))foreach ($this->rs as $row){?>
+										<option value="<?php echo $row['stu_id']?>"<?php if($row['stu_id']==$this->id['student_id']) echo "selected='Selected'"?>><?php echo $row['stu_code']?></option>
+									<?php }?>
+								</select>
+							</td>	
+							<td><?php echo $tr->translate("NAME_KH");?></td>
+							<td><?php echo $register->getElement('kh_name');?></td>
+						</tr>
+						<tr>
+						   
+							<td><?php echo $tr->translate("NAME_EN");?></td>
+							<td><?php echo $register->getElement('en_name');?></td>
+							
+							<td><?php echo $tr->translate("SEX");?></td>
+							<td><?php echo $register->getElement('sex');?></td>
+						</tr>
+						<tr>
+							<td colspan="4" align="left">
+									<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
+								 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<table id="table_row" style="border-collapse: collapse; border:1px solid #ccc;">
+										<tr id="head-title" class="head-td" align="right"></tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"><input type="hidden" id="identity" name="identity" /></td>
+						</tr>
+						<tr>
+							<td colspan="4" align="center">
+								<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+								<input iconClass="dijitIconUndo" type="button" value="back" label="<?php echo $tr->translate('GO_BACK');?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'accounting','controller'=>"suspendservice",'action'=>'index'),null,true); ?>';" />
+								<input type="submit" name="save_new" id="save_new" value="ážšáž€áŸ’ážŸáž¶áž‘áž»áž€" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
+								 iconClass="dijitEditorIcon dijitEditorIconSave" />
+								
+								
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+
+<script type="text/javascript">
+
+var template = '';
+var metion = '<?php echo $this->all_metion; ?>';
+var payment_term = '<?php echo count($this->payment_term);?>';
+var service = '<?php echo $this->all_service; ?>';
+
+var col = 0;
+var no = 0;
+var title = 0;
+tmp = '';
+temp='';
+function addRow() {
+		col++;no++;
+		template='';
+		if(title!=1){
+			temp+='<th><?php echo $tr->translate("DEL");?></th>';
+			temp+='<th><?php echo $tr->translate("N_O");?></th>';
+			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("SERVICES");?></th>';
+			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("TYPE");?></th>';
+			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("REASON");?></th>';
+			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("DATE_BACK");?></th>';
+			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("NOTE");?></th>';
+			temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("STATUS");?></th>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+			template+='<td width="47px" align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+			template+='<td width="15px" align="center">'+no+'</td>';
+			template+='<td><select style="width:100%;"  dojoType="dijit.form.FilteringSelect" id="service_'+col+'" name="service_'+col+'">'+service+'</select></td>';			
+			column = 0;
+			template+='<td><select dojoType="dijit.form.FilteringSelect" id="type_'+col+'" name="type_'+col+'" style="width:100%;"><option value="1">Suspend</option><option value="2">Stop</option></select></td>';
+			template+='<td> <input type="text" required="true" name="reason_'+col+'" id="reason_'+col+'" dojoType="dijit.form.TextBox" style="width:100%;" /><label id="subsub"></label></td>';
+			template+='<td><select style="width:100%;"  dojoType="dijit.form.DateTextBox" id="date_'+col+'" name="date_'+col+'"></select></td>';
+			template+='<td> <input type="text" required="true" name="note_'+col+'" id="note_'+col+'" dojoType="dijit.form.TextBox" style="width:100%;" /></td>';
+			template+='<td><select dojoType="dijit.form.FilteringSelect" id="status_'+col+'" name="status_'+col+'" style="width:100%;"><option value="1">Active</option><option value="0">Deactive</option></select></td>';
+		tmp='<tr id="row'+col+'">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+
+		if($("#identity").val()!="") {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+ }
+
+function initailize() {
+	<?php if(!empty($this->service)){
+		foreach($this->service as $row){
+	?>
+	col++;no++;
+	template='';
+	if(title!=1){
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th><?php echo $tr->translate("N_O");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("SERVICES");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("TYPE");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("REASON");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("DATE_BACK");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("NOTE");?></th>';
+		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("STATUS");?></th>';
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}
+		template+='<td width="47px" align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td width="15px" align="center">'+no+'</td>';
+		template+='<td><select style="width:100%;"  dojoType="dijit.form.FilteringSelect" id="service_'+col+'" name="service_'+col+'">'+service+'</select></td>';			
+		column = 0;
+		template+='<td><select dojoType="dijit.form.FilteringSelect" id="type_'+col+'" onchange="dateReadonly('+col+')" name="type_'+col+'" style="width:100%;"><option value="1">Suspend</option><option value="2">Stop</option></select></td>';
+		template+='<td> <input type="text" required="true" name="reason_'+col+'" id="reason_'+col+'" dojoType="dijit.form.TextBox" style="width:100%;" /><label id="subsub"></label></td>';
+		template+='<td><select style="width:100%;"  dojoType="dijit.form.DateTextBox" id="date_'+col+'" name="date_'+col+'"></select></td>';
+		template+='<td> <input type="text" required="true" name="note_'+col+'" id="note_'+col+'" dojoType="dijit.form.TextBox" style="width:100%;" /></td>';
+		template+='<td><select dojoType="dijit.form.FilteringSelect" id="status_'+col+'" name="status_'+col+'" style="width:100%;"><option value="1">Active</option><option value="0">Deactive</option></select></td>';
+	tmp='<tr id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+	dijit.byId('service_'+col).attr('value','<?php echo $row['service_id']?>');
+	dijit.byId('date_'+col).attr('value','<?php echo $row['date_back']?>');
+	dijit.byId('type_'+col).attr('value','<?php echo $row['type_suspend']?>');
+	dijit.byId('reason_'+col).attr('value','<?php echo $row['reason']?>');
+	dijit.byId('note_'+col).attr('value','<?php echo $row['note']?>');
+	dijit.byId('status_'+col).attr('value','<?php echo $row['suspend_status']?>');
+
+	<?php } }?>
+}
+
+function dateReadonly(key) {
+	condition = dijit.byId('type_'+key).get('value');
+	if(condition==2){
+		dijit.byId("date_"+key).set('readOnly',true);
+		$('#date_'+key).val('');
+	}else{
+		dijit.byId("date_"+key).set('readOnly',false);
+		dijit.byId('date_'+key).attr('value','<?php echo $row['date_back']?>');
+	}
+}
+
+var url_student_info = "<?php echo $this->url(array('module'=>'accounting','controller'=>'suspendservice','action'=>'get-student')); ?>";
+function getStudentInfo(){
+			studentid = dijit.byId('studentid').get('value');
+			//alert(studentid);
+			dojo.xhrPost({
+				url:url_student_info,
+				content:{
+					'studentid':studentid
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					//alert(data.sex);
+					dijit.byId("kh_name").attr("value",data.stu_khname);
+					dijit.byId("en_name").attr("value",data.stu_enname);
+					dijit.byId("sex").attr("value",data.sex);
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+}
+
+function deleteRecord(index) {
+		var identity = $('#identity').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#identity').val(strings);
+		dojo.query("#row"+index).remove();
+	}
+</script>
+
+

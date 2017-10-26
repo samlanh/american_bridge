@@ -1,0 +1,15 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("STUDENT_SUSPEND_SERVICE"));
+?>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'accounting','controller'=>'suspendservice','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+		<table style="width:60%">
+			<tr> 
+				<td> <input dojoType="dijit.form.TextBox"   id="adv_search" name="adv_search" placeholder="Search....." value="<?php echo $this->rs['txtsearch']; ?>" type="text">
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+			</tr>
+		</table>
+</form>
+<?php 
+    echo $this->list;
+?>

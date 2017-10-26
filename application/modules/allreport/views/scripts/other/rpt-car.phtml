@@ -1,0 +1,72 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Report Car'); 
+	echo $this->headTitle(''); 
+?>	
+<div style="width: 27cm;margin: 0 auto;">
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'other','action'=>'rpt-car')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<input dojoType="dijit.form.TextBox" placeholder="ស្វែងរក..." id="txtsearch" name="txtsearch" value="<?php echo $this->search['txtsearch'];?>" type="text">	
+		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+</form>	
+</div>
+<div style="border: 1px dotted #000;background: #fff;width: 26cm;margin: 0 auto;min-height: 27cm;padding: 0.5cm;">	
+		<div id="divPrint">
+					<table  style="background:#fff; margin: 0 auto;text-align: center;width: 100%;">
+						<tr>
+							<td width="28%" align="left">
+								<img style="width: 70%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br />
+							</td>
+							<td  align="center">
+								<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">របាយការណ៏រថយន្ត</strong><br /><br />
+							</td>
+							<td width="28%" align="right">
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<table cellpadding="5"​ style="margin:0 auto;width:100%; border-collapse: collapse; border: 1px solid #000;"  border="1" >
+									<tr style="font-size:11px; height: 20px;" align="center" >
+										<th >No.</th>
+										<th >Car ID</th>
+										<th >Car Name</th>
+										<th>Driver Name</th>
+										<th >Tel</th>
+										<th >Zone</th>
+										<th >Note</th>
+									</tr>
+								<?php $i=0; if(!empty($this->rs)) foreach ($this->rs AS $row) { $i++;?>
+									<tr style="font-size:11px; height: 20px;" align="center" >
+										<th ><?php echo $i;?></th>
+										<th ><?php echo $row['carid'];?></th>
+										<th align="left">&nbsp;<?php echo $row['carname'];?></th>
+										<th align="left">&nbsp;<?php echo $row['drivername'];?></th>	
+										<th ><?php echo $row['tel'];?></th>
+										<th ><?php echo $row['zone'];?></th>
+										<th align="left">&nbsp;<?php echo $row['note'];?></th>
+									</tr>
+								<?php }?>	
+							</table>	
+						</td>
+					</tr>
+					
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr >
+						<td align="center" width="25%">
+							<span style="font-weight: bold;font-size: 14px;">Verified by</span>
+						</td>
+						<td  width="50%">
+							&nbsp;
+						</td>
+						<td align="center"  width="25%">
+							<span style="font-weight: bold;font-size: 14px;text-align: right;">Prepared by</span>
+						</td>
+					</tr>
+				</table>
+				
+		</div>		
+</div>

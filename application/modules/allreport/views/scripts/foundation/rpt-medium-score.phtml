@@ -1,0 +1,72 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Currency Smart | Transfer Report page'); 
+	$this->headTitle('SRMS | Report Static Student By Year'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	print_r($this->rows_sub);
+	print_r($this->rows_acade);
+	
+?>	
+<style>
+ 
+</style>
+<form  id='rpt_static_student' action="<?php echo $this->url(array('module'=>'foundation','controller'=>'report','action'=>'rpt-static-student')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<div style="width:100%; background:none repeat scroll 0% 0% rgba(234, 255, 253, 1);">
+		<table width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+							<strong align="center"><?php echo $tr->translate("");?></strong> 
+							<table style="width:30cm;background:#fff; margin: 0 auto; ">
+							<?php $data=new Allreport_Model_DbTable_DbMediumScore();?>
+							<?php $old_group_id='';$old_student='';?>
+							<?php if(!empty($this->rows_acade)) foreach($this->rows_acade As $rs_academic){?>
+							<?php if($old_group_id != $rs_academic['group_id']){?>
+							<tr style="font-size: 18px;">
+									 
+									<td align="center">
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">ស្ថិតិនិស្សិត ជំនាន់ទី១១ ឆ្នាំទី១ ថ្នាក់បរិញ្ញាបត្រ ឆ្នាំសិក្សា ២០១៣-១៤ ចុះឈ្មោះលើកទី១</strong>
+									</td>
+							</tr>
+							<?php if(!empty($this->rows_sub)) foreach($this->rows_sub As $key=>$rs_sub){$key=$key+1;?>
+								<tr>
+									<td colspan="4" align="left" ><strong style="padding-left: 112px;" ><?php echo $key.". ".$rs_sub['subject_titleen']?></strong>
+									
+										<table cellpadding="5"​ style="margin:0 auto;width:80%; border-collapse: collapse;" border="1" >
+											<tr style="font-size:10px; height: 20px;" align="center" >
+												<th>No</th>
+												<th>Student No</th>
+												<th>Student Name</th>
+												<th>Subject Name</th>	
+												<th>Scores</th>
+											</tr>
+											
+											<?php // for ($i=1;$i<5;$i++){?>
+											 <?php foreach ($data->getSubject($rs_sub["id"]) As $k => $rs){$k=$k+1;?>
+											 <?php if($old_student != $rs['student_id']){?>
+											       <?php echo $old_student."=".$rs['student_id'];?>
+											  <tr style="font-size:12px;"​ align="center">
+											    <td><?php echo $k;?></td>
+											    <td><?php echo  $rs['stu_code'] ?></td>
+											    <td><?php echo  $rs['stu_name'] ?></td>
+												<td><?php echo  $rs['subject_name'] ?></td>
+												<td><?php echo  $rs['score'] ?></td>
+											  </tr>
+											<?php  }
+											$old_student=$rs['student_id']; echo $old_student;
+                                             }?>
+											 	
+										</table>
+								   
+									</td>
+								</tr>
+						 <?php }?>
+						 <?php }
+						 $old_group_id=$rs_academic['group_id'];
+                          }?>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</form>

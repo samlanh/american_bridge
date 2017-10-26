@@ -1,0 +1,32 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("GRADE"));
+?>	
+<?php $frm =  $this->frm_search;?>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'global','controller'=>'major','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+<div dojoType="dijit.layout.AccordionPane">
+	
+	<table>
+		<tr>
+			<td><input type="text" name="txtsearch" id="txtsearch" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" class="fullside" /></td>
+			<td>
+				<select name="degree" id="degree" dojoType="dijit.form.FilteringSelect" class="fullside">
+					<option value="0">----- select degree -----</option>
+					<?php if(!empty($this->degree)){foreach ($this->degree as $degree){?>
+						<option value="<?php echo $degree['id']?>" <?php if($degree['id']==$this->search['degree']){echo 'selected="selected"';}?>><?php echo $degree['name']?></option>
+					<?php }}?>
+				</select>			
+			</td>
+			<td>
+				<button IconClass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</td>
+		</tr>
+	</table>
+	
+</div>
+<?php echo $this->list;?>
+</form>
+
+
+
+

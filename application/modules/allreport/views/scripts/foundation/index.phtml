@@ -1,0 +1,53 @@
+  <?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  // report
+  $rpt_student=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rpt-student'), null, true);
+  $rpt_studentchangegroup=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rpt-student-change-group'), null, true);
+  $rpt_studentdrop=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rpt-student-drop'), null, true);
+  $rpt_amount_student_by_year=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rptamountstudent'), null, true);
+  $rpt_student_group=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'student-group'), null, true);
+  $rpt_group_student_change_group=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rptgroupstudentchangegroup'), null, true);
+  $student_score=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rpt-student-score'), null, true);
+  $attendent=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rpt-attendent'), null, true);
+  $rpt_medium_score=$this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rpt-medium-score'), null, true);
+  ?>
+  <style>
+  ul.link-rpt li a {
+	color: #3A3939;
+    height: 50px;
+  	width:180px;
+    display: block;
+    padding: 10px;
+    background: #D6D6D6;
+  	font-family: 'Kh Battambang','Khmer Battambang' !important;
+  	text-align: center;
+  	word-wrap: break-word;
+  } 
+    ul.link-rpt li {
+	float:left; margin:10px;
+    list-style: none;
+    border:1px solid #B1B0AF;
+    word-wrap: break-word;
+  } 
+  .dijitReset, .dijitInline  ,.dijitButton {
+	width: 200px !important;
+  }
+  </style>
+  <div style="background:#ccc; width: 100%;">
+  	<ul class="link-rpt">
+  		<li><a href="<?php echo $rpt_student;?>"><?php echo $tr->translate('RPT_STUDENT');?></a></li>
+  		<li><a href="<?php echo $rpt_amount_student_by_year;?>"><?php echo $tr->translate('RPT_AMOUNT_STUDENT');?></a></li>
+  		<li><a href="<?php echo $rpt_studentchangegroup;?>"><?php echo $tr->translate('RPT_STUDENT_CHANGE_GROUP');?></a></li>
+  		<li><a href="<?php echo $rpt_studentdrop;?>"><?php echo $tr->translate('RPT_STOP_STUDY');?></a></li>
+  		<li><a href="<?php ;?>"><?php echo $tr->translate('RPT_ATTEND');?></a></li>
+  		
+  		<li><a href="<?php echo $rpt_student_group;?>"><?php echo $tr->translate('RPT_STUDENT_GROUP');?></a></li>
+  		<li><a href="<?php echo $rpt_group_student_change_group;?>"><?php echo $tr->translate('RPT_GROUP_STUDENT_CHANGE_GROUP');?></a></li>
+  		<li><a href="<?php echo $student_score;?>"><?php echo $tr->translate('RPT_STUDENT_SCORE');?></a></li>
+  	    <li><a href="<?php echo $attendent;?>"><?php echo $tr->translate('RPT_STUDENT_ATTENDENT');?></a></li>
+  	    <li><a href="<?php echo $rpt_medium_score;?>"><?php echo $tr->translate('RPT_MEDIUM_SCORE');?></a></li>
+  	</ul>
+  </div>
+  <div style="clear: both;"></div>
+  
+  
+  

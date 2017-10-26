@@ -1,0 +1,59 @@
+<title>Register</title>
+<?php 
+    $request=Zend_Controller_Front::getInstance()->getRequest();
+    $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    $frm =  $this->form_search;
+    
+    $url_copy =$this->url(array('module'=>'accounting','controller'=>'register','action'=>'copy'));
+    $formList = new Application_Form_Frmtable();
+    
+?>
+<meta charset="utf-8">
+ <form  action="<?php echo $this->url(array('module'=>'accounting','controller'=>'register','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+					   <table style="width:90%">
+						  <tr> 
+							   <td><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->adv_search['adv_search']?>" placeholder="Search" type="text" ></td>
+							   <td> <?php echo $frm->getElement("branch");?></td>
+							   <td> <?php echo $frm->getElement("study_year");?></td>
+							   <td> <?php echo $frm->getElement("degree_ft");?></td>
+							   <td> <?php echo $frm->getElement("grade_ft");?></td>
+							   <td> <?php echo $frm->getElement("session");?></td>
+							   
+					   	  </tr>
+					   	  <tr>
+					   	  	   <td><?php echo $formList->showCopyBuntton($url_copy);?></td>
+					   	       <td> <input dojoType="dijit.form.DateTextBox" class="fullside" id="start_date" name="start_date" value="<?php echo $this->adv_search['start_date']; ?>"  type="text"></td>
+					           <td><input dojoType="dijit.form.DateTextBox"  class="fullside" id="end_date" name="end_date" value="<?php echo $this->adv_search['end_date'];?>" type="text"></td>
+							   <td> <?php echo $frm->getElement("user");?></td>
+							   <td> <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+					   	  </tr>
+					   	  <input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" />
+					   </table>
+ </form>
+<?php 
+   echo $this->list;
+?>
+
+
+<script type="text/javascript">
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 if(id!=''){
+			window.location.href = url+'/id/'+id;
+		 }else{
+			alert('Please select record you want to copy');
+			return false;
+		 }
+	}
+
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+	
+</script> 

@@ -1,0 +1,119 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('SRMS | Report Student Payment'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+?>
+<style>
+#footer{display: none;}
+table tr td strong{
+	padding-left: 10px;
+}
+</style>	
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm;">
+		<div id="divPrint">
+			<table style="background:#fff; margin: 0 auto; width: 100%; padding: 1cm;" >
+							<tr>
+								<td width="25%" align="left">
+									<img style="width: 75%;padding: 5px 0 0 10px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br />
+								</td>
+								<td width="50%" align="center">
+									<strong style=" font:bold 13px 'Khmer MEF2',Arial Black; color:#000;"><u>បង្កាន់ដៃបង់ប្រាក់របស់សិស្ស</u></strong><br >
+								</td>
+								<td align="right" width="25%">
+									&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td width="25%" align="left">
+									<strong style=" line-height:18px; font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><?php echo $tr->translate('STUDENT_NAME');?> : <?php echo $this->rr['en_name'].' / ';echo $this->rr['kh_name']?></strong><br />
+									<strong style=" line-height:18px; font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"> Sex  : <?php echo $this->rr['sex']?></strong><br />
+									<strong style=" line-height:18px; font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"> Student ID  : <?php echo $this->rr['stu_code']?></strong><br />
+								</td >
+								<td width="50%">&nbsp;</td>
+								<td width="25%" align="left" style=" padding-right: 20px;">
+									<strong style="line-height:18px; font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">Reciept N.o : <?php echo $this->rr['receipt_number'];?></strong><br />
+									<strong style="line-height:18px; font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">Date Paid : <?php echo date('d-M-Y',strtotime($this->rr['create_date']));?></strong><br />
+									<strong style="line-height:18px; font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"></strong><br />
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<style> th,td{ padding:0 1px;}</style>
+										<style type="text/css">
+											body{font-family: "Times New Roman",Arial; }
+											table{ border-collapse:collapse; margin:0 auto;
+											border-color:#000; }
+											.padd tr td{  text-align:center}
+											.padd tr th{  background-color: #ccc; }
+										</style>
+
+									<table class="padd" width="99%" border="1" align="center" style="white-space:nowrap; padding: 0px; margin: 0px;">
+										  <tr style="font-size:10px; height: 20px;" align="center" >
+										    <th>&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('SERVICE_TYPE');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('PAYMENT_TERM');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('FEE');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('QTY');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('DISCOUND');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('SUBTOTAL');?>&nbsp;</th>
+											<th>&nbsp;<?php echo $tr->translate('PAID_AMOUNT');?>&nbsp;</th>
+										  </tr>
+										  <tr></tr>
+											<style> td{padding:0 3px; }</style>
+										  <?php $i=0; $total=0; if(!empty($this->row)) foreach($this->row as $rs){ $i++;?>
+										  <tr class="hover" style="font-size:10px;height: 15px;"​ >
+										  <?php //$subtotal = $rs['fee']-$rs['discount_fix']; ?>
+										    <td><?php echo $i;?></td>
+										    <td align="left"><?php echo $rs['service'];?></td>
+										    <td><?php echo $rs['payment_term']; ?></td>
+										    <td>$ <?php echo $rs['fee']; if(empty($rs['fee'])) echo '0.00';?></td>
+										    <td><?php echo $rs['qty']; if(empty($rs['qty'])) echo '00';?></td>
+										    <td><?php echo $rs['discount_percent']; if(empty($rs['discount_percent'])) echo '';?></td>
+										    <td>$ <?php echo $rs['subtotal']; ?></td>
+										    <td>$ <?php echo $rs['paidamount'];?></td>
+										  </tr> <?php $total = $total + $rs['subtotal']; ?>
+										  <?php } ?>
+										  <tr style="font-size:10px;height: 25px;"​>
+										  	<td style=" border-bottom: 1px solid #fff; border-left: 1px solid #fff;" colspan="6"></td>
+										  	<th><?php echo $tr->translate('GRAND_TOTAL');?></th>
+										  	<td> <div style="color:red;">$ <?php echo $total;?></div></td>
+										  </tr>
+										  <tr style=" font-size:10px;height: 25px;"​>
+										  	<td style=" border-bottom: 1px solid #fff; border-left: 1px solid #fff;" colspan="6"></td>
+										  	<th><?php echo $tr->translate('PAID_AMOUNT');?></th>
+										  	<td> <div style="color:red;">$ <?php echo $this->rr['paid_amount']; if(empty($this->rr['paid_amount'])) echo '0.00';?></div></td>
+										  </tr>
+										   <tr style="font-size:10px;height: 25px;"​>
+										  	<td style=" border-bottom: 1px solid #fff; border-left: 1px solid #fff;" colspan="6"></td>
+										  	<th><?php echo $tr->translate('BALANCE');?></th>
+										  	<td> <div style="color:red;">$ <?php echo $this->rr['balance_due']; if(empty($this->rr['balance_due'])) echo '0.00';?></div></td>
+										  </tr>
+										   <tr style="font-size:10px; height: 25px; "​>
+										  	<td style=" border-bottom: 1px solid #fff; border-left: 1px solid #fff;" colspan="6"></td>
+										  	<th><?php echo $tr->translate('RETURN');?></th>
+										  	<td> <div style="color:red;">$ <?php echo $this->rr['return_amount']; if(empty($this->rr['return_amount'])) echo '0.00';?></div></td>
+										  </tr>
+										</table>
+									
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">&nbsp;</td>
+								</tr>
+								<tr>
+									<td colspan="3">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="center" width="25%">
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">អ្នកទទួល   <?php echo $this->rr['USER'];?></strong><br />
+									</td>
+									<td width="50%">&nbsp;</td>
+									<td align="center" width="25%">
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">ហត្ថលេខាអ្នកទទួល </strong><br />
+									</td>
+								</tr>
+							</table>
+	</div>	
+</div>
+

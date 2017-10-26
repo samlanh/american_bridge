@@ -1,0 +1,69 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('កែរថយន្ត')); 
+?>
+<form id="add_car" action="<?php echo $this->url(array('module'=>'global','controller'=>'car','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	
+	<script type="dojo/method" event="onSubmit">   
+   		if(this.validate()) {
+    		return true;
+   		}else {
+    		return false;
+   		}
+	</script>
+	
+	<table cellspacing="20" style="margin: 0 auto; width: 45%">
+		<tr>
+			<td>
+				<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("EDIT_CAR");?></strong></legend>
+					<table cellspacing="20" width="100%" >
+						<tr>
+							<td align="center" valign="top">
+								<table cellspacing="10" width="100%"​>
+									<tr>
+										<td><?php echo $tr->translate("CAR_ID")?><input type="hidden" name="id" value="<?php echo $this->rs['id'];?>"/></td>
+										<td><input dojoType="dijit.form.ValidationTextBox"  class="fullside" required="true" id="car_id" name="car_id" value="<?php echo $this->rs['carid'];?>" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("DRIVER_NAME")?></td>
+										<td><input dojoType="dijit.form.ValidationTextBox"  class="fullside" required="true" id="driver_name" name="driver_name" value="<?php echo $this->rs['drivername'];?>" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("PHONE")?></td>
+										<td><input dojoType="dijit.form.ValidationTextBox"  class="fullside" required="true" id="tel" name="tel" value="<?php echo $this->rs['tel'];?>" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("NOTE")?></td>
+										<td><input dojoType="dijit.form.TextBox"  class="fullside" id="note" name="note" value="<?php echo $this->rs['note'];?>" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("STATUS")?></td>
+										<td>
+											<select dojoType="dijit.form.FilteringSelect"  class="fullside"  id="status" name="status" type="text">								
+												<option value="1"<?php if($this->rs['status']==1) echo 'selected="selected"'?>>Active</option>
+												<option value="0"<?php if($this->rs['status']==0) echo 'selected="selected"'?>>Deactive</option>
+											</select>
+										</td>	
+									</tr>		
+									<tr>
+										<td colspan="2" align="center">
+											<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+											<input type="button" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
+												iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'global','controller'=>"car",'action'=>'index'),null,true); ?>';" />
+											<input type="submit" value="update" name="update" label="<?php echo $tr->translate('GO_EDIT');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+								
+										</td>
+									</tr>			
+									
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+		
+	</table>	
+</form>

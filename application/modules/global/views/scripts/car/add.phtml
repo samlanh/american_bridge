@@ -1,0 +1,67 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('បន្ថែមរថយន្ត')); 
+?>
+<form id="add_car" action="<?php echo $this->url(array('module'=>'global','controller'=>'car','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	
+	<script type="dojo/method" event="onSubmit">   
+   		if(this.validate()) {
+    		return true;
+   		}else {
+    		return false;
+   		}
+	</script>
+	
+	<table cellspacing="20" style="margin: 0 auto; width: 45%">
+		<tr>
+			<td>
+				<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("ADD_CAR");?></strong></legend>
+					<table cellspacing="20" width="100%" >
+						<tr>
+							<td align="center" valign="top">
+								<table cellspacing="10" width="100%"​>
+									<tr>
+										<td><?php echo $tr->translate("CAR_ID")?></td>
+										<td><input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="car_id" name="car_id" value="" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("DRIVER_NAME")?></td>
+										<td><input dojoType="dijit.form.ValidationTextBox"  class="fullside" required="true" id="driver_name" name="driver_name" value="" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("PHONE")?></td>
+										<td><input dojoType="dijit.form.ValidationTextBox"  class="fullside" required="true" id="tel" name="tel" value="" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("NOTE")?></td>
+										<td><input dojoType="dijit.form.TextBox"  class="fullside" id="note" name="note" value="" type="text"></td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("STATUS")?></td>
+										<td>
+											<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="status" name="status" type="text">
+												<option value="1">Active</option>
+												<option value="0">Deactive</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" align="center">
+											<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+											<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+											<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+												iconClass="dijitEditorIcon dijitEditorIconSave" />
+										</td>
+									</tr>					
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+		
+	</table>	
+</form>

@@ -1,0 +1,240 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('All Payment Report'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$session_user=new Zend_Session_Namespace('auth');
+	$user_id=$session_user->user_id;
+	$frm =  $this->form_search;
+?>
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'allreports','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<table width="100%">
+   <tr>
+       <td colspan="4">
+			<div class="menureport">
+				<ul>
+					<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
+					<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
+					<li class="excel"><a href="#"  title="Export"  onclick="exportExcel();"></a></li>
+				</ul>
+			</div>
+      </td>
+	</tr>		
+	<tr> 
+		 <td><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->search['adv_search']?>" placeholder="Search" type="text" ></td>
+		 <td> <?php echo $frm->getElement("service_and_product");?></td>
+		 <td> <input dojoType="dijit.form.DateTextBox" class="fullside" onchange="CalculateDate();" id="start_date" name="start_date" value="<?php  echo $this->search['start_date']; ?>"  type="text"></td>
+	     <td><input dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="end_date" name="end_date" value="<?php echo $this->search['end_date'];?>" type="text"></td>
+		 <td> <?php echo $frm->getElement("user");?></td>
+	</tr>
+	
+	<tr> 
+		 <td> <?php echo $frm->getElement("degree_all");?></td>
+		 <td> <?php echo $frm->getElement("grade_all");?></td>
+		 <td>
+		 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
+		 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
+		 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00</option>
+		 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>16:00</option>
+		 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>18:30</option>
+		 	</select>
+		 </td>	
+		 
+		 <td> <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+	</tr>
+	
+</table>
+</form>
+<style>
+.hover:hover{ background: #ddd;}
+</style>
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm;">
+		<div id="divPrint"  >
+			<table style="background:#fff; margin: 0 auto; width: 100%; padding: 1cm;font-family: 'Hanuman';">
+				<tr>
+					<td width="20%" align="left" valign="bottom">
+						<img style="width: 50%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
+					</td>
+					<td width="60%" align="center">
+						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><u><?php echo $tr->translate("STUDENT_PAYMENT_RECEIPT"); ?></u></strong><br />
+						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong><br />
+					</td>
+					<td align="right" width="20%">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="exportExcel">
+						<style> th,td{ padding:0 1px;}</style>
+							<style type="text/css">
+								body{font-family: "Times New Roman",Arial; }
+								table{ border-collapse:collapse; margin:0 auto;
+								border-color:#000; }
+								.padd tr td{  text-align:center}
+								.padd tr th{  background-color: #e4e4e4; }
+							</style>
+
+						<table class="padd" width="99%" border="1" align="center" style="white-space:nowrap;font-family: 'Hanuman';">
+							  <tr style="font-size:12px; height: 20px; background: #ccc !important; line-height: 30px; font-weight: bold;" align="center">
+							    <td>&nbsp;<?php echo $tr->translate("N_O"); ?>&nbsp;</td>
+							    <td>&nbsp;<?php echo $tr->translate("STUDENT_ID"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("NAME_KH"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("NAME_EN"); ?>&nbsp;</td>
+								
+								<td>&nbsp;<?php echo $tr->translate("GRADE"); ?>&nbsp;</td>
+								
+								<td>&nbsp;<?php echo $tr->translate("RECEIPT"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("SERVICE_NAME"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("PAYMENT_TERM"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("PRICE"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("QTY"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("DISCOUNT");?></td>
+								<td>&nbsp;<?php echo $tr->translate("ADMIN_FEE"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("OTHER_FEE"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("SUBTOTAL"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("PAID_AMOUNT"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("BALANCE"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("PAID_DATE"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("REMARK"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("USER"); ?>&nbsp;</td>
+							  </tr>
+							 
+							 <style> td{padding:0 3px; }</style>
+							 <?php 
+							 	   $total_expense_kh=0;$total_expense_dollar=0; $i=0; 
+							 	   $total=0;$total_paid=0;$total_balance=0;$comple_b=0;
+							 	   $isset =0;$total_income_kh=0;$total_income_dollar =0;
+							 ?>
+							 
+							 <?php 
+							 	if (!empty($this->row)){  foreach($this->row as $rs){ $i++;
+							 	if($rs['payfor_type']==3){
+							 		$stu_code = $rs['transport_code'];
+							 	}else if($rs['payfor_type']==4){
+							 		$stu_code = $rs['lunch_code'];
+							 	}else{
+							 		$stu_code = $rs['stu_code'];
+							 	}
+							 ?>
+							  <tr style="font-size:11px; height: 18px;"​ class="hover">
+							    <td><?php echo $i;?></td>
+							    <td><a style=" text-decoration: none; color:#000;" ><?php echo $stu_code; ?></a></td>
+							    <td style=" white-space:nowrap; text-align:left"><a style=" text-decoration: none; color:#000;" ><?php echo $rs['stu_khname']; ?></a></td>
+							    <td style=" white-space:nowrap; text-align:left"><a style=" text-decoration: none; color:#000;" ><?php echo $rs['stu_enname']; ?></a></td>
+							    <td><?php echo $rs['grade']; ?></td>
+							    <td><?php echo $rs['receipt_number']; ?></td>
+							    <td style="text-align:left"><?php echo $rs["service_id"]; ?></td>
+							    <td style="text-align:center"><?php echo $rs["payment_term"]; ?></td>
+							    <td>$ <?php echo number_format($rs['fee'],2); ?></td>
+							    <td> <?php echo $rs['qty'];?></td>
+							    <?php if($rs['discount_percent'] > 0 ){ ?>
+							    <td> <?php echo $rs['discount_percent']; ?>%</td>
+							    <?php }else{?>
+							    <td> <?php echo ''; ?></td>
+							    <?php }?>
+							    
+							    <?php if($rs['admin_fee'] > 0 ){ ?>
+							    <td>$ <?php echo $rs['admin_fee']; ?></td>
+							    <?php }else{?>
+							    <td> <?php echo ''; ?></td>
+							    <?php }?>
+							    
+							    <?php if($rs['other_fee'] > 0 ){ ?>
+							    <td>$ <?php echo $rs['other_fee']; ?></td>
+							    <?php }else{?>
+							    <td> <?php echo ''; ?></td>
+							    <?php }?>
+							   
+							    <td>$ <?php echo number_format($rs['subtotal'],2); ?></td>
+							    <td>$ <?php echo number_format($rs['paidamount'],2); ?></td>
+							    
+							    <?php if($rs['balance'] > 0 ){ ?>
+							    <td>$ <?php echo $rs['balance']; ?></td>
+							    <?php }else{?>
+							    <td> <?php echo ''; ?></td>
+							    <?php }?>
+							    
+							    <td><?php echo date('d-M-Y H:i:s', strtotime($rs['create_date'])); ?></td>
+							   	<td><?php echo $rs['note']; ?></td>
+							    <td><?php echo $user=$rs['user_id'];?></td>
+							  </tr>
+							  <?php 
+							        $total_paid = $rs['paidamount'] + $total_paid;
+							        //$total_balance = $rs['balance'] + $total_balance;
+							        //$total_balance = $total - $total_paid;
+							        if($rs["is_complete"] == 0){
+							        	$total_balance = $rs['balance'] + $total_balance;
+							        }
+							        $total = $total_paid + $total_balance;
+							   ?> 
+							  <?php } }?>
+							</table>
+							
+						</td>
+					</tr>
+				<?php if(!empty($total_paid)){?>
+				
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="3" align="right">
+							<table width="30%" border="1" align="right" style="white-space:nowrap;">
+								<tr style="font-size:10px; color:#000; height: 23px;"​ align="center">
+									<td style="background-color: #ccc; font-weight:bold;font-family: 'Hanuman',Arial Black; font-size: 12px;">&nbsp;<?php echo $tr->translate("CURRENCY_TYPE"); ?>&nbsp;</td>
+					 				<td style="background-color: #ccc; font-weight:bold;font-family: 'Hanuman',Arial Black; font-size: 12px;">&nbsp;<?php echo $tr->translate("STUDENT_PAYMENT_INCOME"); ?>&nbsp;</td>
+					 				<td style="background-color: #ccc; font-weight:bold;font-family: 'Hanuman',Arial Black; font-size: 12px;">&nbsp;<?php echo $tr->translate("BALANCE"); ?>&nbsp;</td>
+						  		</tr>
+						  		<tr style="font-size:10px; color:#000; height: 23px;"​ align="center">
+					  				<td style="font-weight:bold;font-family: Arial Black; font-size: 12px;"> Dollar ($)</td>
+									<td style=" color:#F00; font-weight:bold;font-family: Arial Black; font-size: 12px;"> <?php echo $total_paid;?> $ </td>
+									<td style=" color:#F00; font-weight:bold;font-family: Arial Black; font-size: 12px;"> <?php echo $total_balance;?> $ </td>
+						  		</tr>
+						  </table>
+						</td>
+					</tr>
+					
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					
+					<tr >
+						<td align="center" width="25%">
+							<span style=" font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+						</td>
+						<td  width="50%">
+							&nbsp;
+						</td>
+						<td align="center"  width="25%">
+							<span style=" font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+						</td>
+					</tr>
+				<?php }?>
+							
+			</table>
+	</div>	
+</div>
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>

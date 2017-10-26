@@ -1,0 +1,69 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("ADD_GRADE"));
+?>	
+<?php  $frm_major= $this->frm_major;?>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.CheckBox");
+
+</script>
+
+
+<form  id='edit-major' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'category','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">   
+   if(this.validate()){
+    return true;
+   }else {
+    return false;
+   }
+</script>
+<table cellspacing="10" width="40%" style="margin: 0 auto;">
+	<tr>
+		<td>
+					<fieldset>
+						<legend align="center" ><strong style="font-size: 18px;"><?php echo $tr->translate("ADD_CATEGORY")?></strong></legend>
+						<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+							<tr>
+								<td><?php echo $tr->translate("CATEGORY_NAME")?></td>
+								<td> 
+									<input dojoType="dijit.form.ValidationTextBox" required="true" class="full height-text" id="category_name" name="category_name" value="" type="text">
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("PARENT")?></td>
+								<td>
+									<select name="parent" id="parent" dojoType="dijit.form.FilteringSelect" required="true"  class="full height-text">
+									    <option value="1" label="ប្រើប្រាស់" ><?php echo $tr->translate("INCOME")?></option>
+									    <option value="0" label="មិនប្រើប្រាស់"><?php echo $tr->translate("EXPENSE")?></option>
+									</select>
+								</td>
+							</tr>
+							
+							<tr>
+								<td><?php echo $tr->translate("STATUS")?></td>
+								<td>
+									<select name="status" id="status" dojoType="dijit.form.FilteringSelect" required="true"  class="full height-text">
+									    <option value="1" label="ប្រើប្រាស់" selected="selected">ប្រើប្រាស់</option>
+									    <option value="0" label="មិនប្រើប្រាស់">មិនប្រើប្រាស់</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center">
+									<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+									<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+									<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+								</td>
+							</tr>
+						</table>	
+				</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>

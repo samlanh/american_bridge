@@ -1,0 +1,37 @@
+  <?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  // report
+  $rpt_all_student=$this->url(array('module'=>'allreport','controller'=>'allstudent','action'=>'rpt-all-student'), null, true);
+  $rpt_all_amount_student=$this->url(array('module'=>'allreport','controller'=>'allstudent','action'=>'rpt-all-amount-student'), null, true);
+  ?>
+  <style>
+  ul.link-rpt li a {
+	color: #3A3939;
+    height: 50px;
+  	width:180px;
+    display: block;
+    padding: 10px;
+    background: #D6D6D6;
+  	font-family: 'Kh Battambang','Khmer Battambang' !important;
+  	text-align: center;
+  	word-wrap: break-word;
+  } 
+    ul.link-rpt li {
+	float:left; margin:10px;
+    list-style: none;
+    border:1px solid #B1B0AF;
+    word-wrap: break-word;
+  } 
+  .dijitReset, .dijitInline  ,.dijitButton {
+	width: 200px !important;
+  }
+  </style>
+  <div style="background:#ccc; width: 100%;">
+  	<ul class="link-rpt">
+  		<li><a href="<?php echo $rpt_all_student;?>"><?php echo $tr->translate('RPT_ALL_STUDENT');?></a></li>
+  		<li><a href="<?php echo $rpt_all_amount_student;?>"><?php echo $tr->translate('RPT_ALL_AMOUNT_STUDENT');?></a></li>
+  	</ul>
+  </div>
+  <div style="clear: both;"></div>
+  
+  
+  

@@ -1,0 +1,1470 @@
+<?php
+class Allreport_AccountingController extends Zend_Controller_Action {
+	
+    public function init()
+    {    	
+    	header('content-type: text/html; charset=utf8');
+	}
+	public function indexAction(){
+	}
+	public function rptAccountRecAction(){
+		
+	}
+	function rptStudentpaymentAction(){
+		try{
+			if($this->getRequest()->isPost()){
+					$_data=$this->getRequest()->getPost();
+					$search = array(
+							'txtsearch' =>$_data['txtsearch'],
+							'start_date'=> $_data['from_date'],
+		      				'end_date'=> $_data['to_date']
+					);
+					
+				}
+				else{
+					$search = array(
+							'txtsearch' =>'',
+							'start_date'=> date('Y-m-d'),
+	                        'end_date'=>date('Y-m-d'),
+					);
+				}
+			$this->view->search = $search;
+			$db = new Allreport_Model_DbTable_DbRptPayment();
+			$this->view->row = $db->getStudentPayment($search);
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+			
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	function  rptPaymentdetailbytypeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$_data=$this->getRequest()->getPost();
+				//print_r($_data); exit();
+				$search = array(
+						'txtsearch' =>$_data['txtsearch'],
+						'start_date'=> $_data['from_date'],
+						'end_date'=> $_data['to_date'],
+						'service_type'=>$_data['service']
+				);
+		
+			}
+			else{
+				$search = array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'service_type'=>0
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayment();
+			$this->view->row = $db->getPaymentDetailByType($search);
+			$this->view->service = $db->getService();
+			$this->view->search = $search;
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+			
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
+	
+	function rptStudentpaymentdetailAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}
+			else{
+				$search = array(
+						'txtsearch' =>'',
+						'branch' =>'',
+						'start_date'=> date('Y-m-d'),
+                        'end_date'=>date('Y-m-d'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayment();
+			$this->view->row = $db->getStudentPaymentDetail($search);
+			$this->view->service = $db->getService();
+			$this->view->search = $search;
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+			
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+	}
+
+	function rptPaymentrecieptdetailAction(){
+		$id=$this->getRequest()->getParam("id");
+		$db = new Allreport_Model_DbTable_DbRptPayment();
+		$row = $db->getPaymentReciptDetail($id);
+		
+		$this->view->row = $row;
+		$this->view->rr = $db->getStudentPaymentByid($id);
+	
+	}
+	function  rptSuspendserviceAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}
+			else{
+				$search=array(
+						'txtsearch' => '',
+						'start_date'=>date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'service'=>'',
+						'study_year'=>'',
+				);
+			}
+		$this->view->search = $search;
+		$db = new Allreport_Model_DbTable_DbSuspendService();
+		$this->view->rs = $db->getStudetnSuspendServiceDetail($search);
+		}catch (Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	function rptInvoiceAction(){
+	
+	}
+	function rptStudentListDetailPart1Action(){
+	
+	}
+	function rptStudentListDetailPart2Action(){
+	
+	}
+	function rptStudentListDetailPart3Action(){
+	
+	}
+	public function rptTuitionFeeAction()
+	{
+	
+	}
+	function rptGepFeeAction(){
+	
+	}
+	function rptGepListAction(){
+	
+	}
+	function rptListOfItemAction(){
+	
+	}
+	
+	
+	
+	public function rptstudentbalanceAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				$search = array(
+						'txtsearch' => $data['txtsearch'],
+						'start_date'=> $data['from_date'],
+                        'end_date'=>$data['to_date'],
+						'service'=>$data['service'],
+				);
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'service'=>'',
+				);;
+			}
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+			
+			$db = new Allreport_Model_DbTable_DbRptStudentBalance();
+			$this->view->rs = $db->getAllStudentBalance($search);
+			$this->view->search = $search;
+// 			print_r($abc);exit();
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	public function rptexpectincomeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				$search = array(
+						'txtsearch' => $data['txtsearch'],
+						'start_date'=> $data['from_date'],
+						'end_date'=>$data['to_date']
+				);
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+				);;
+			}
+				
+			$db = new Allreport_Model_DbTable_DbRptExpectIncome();
+			$this->view->rs = $db->getAllExpectIncome($search);
+			$this->view->search = $search;
+			// 			print_r($abc);exit();
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptstudentnearlyendserviceAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				$search = array(
+						'txtsearch' => $data['txtsearch'],
+						//'start_date'=> $data['from_date'],
+						'end_date'	=>$data['to_date'],
+						'service'	=>$data['service']
+				);
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						//'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'service'	=>''
+				);;
+			}
+			$db = new Allreport_Model_DbTable_DbRptStudentNearlyEndService();
+			$abc = $this->view->row = $db->getAllStudentNearlyEndService($search);
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+			
+			$this->view->search = $search;
+			
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptstudentpaymentlateAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				$search = array(
+						'txtsearch' => $data['txtsearch'],
+						//'start_date'=> $data['from_date'],
+						'end_date'	=>$data['to_date'],
+						'service'	=>$data['service'],
+				);
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						//'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'service'	=>'',
+				);;
+			}
+			$db = new Allreport_Model_DbTable_DbRptStudentPaymentLate();
+			$abc = $this->view->row = $db->getAllStudentPaymentLate($search);
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+			
+			$this->view->search = $search;
+				
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptFeeAction(){
+	
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+		else{
+			$search=array(
+					'txtsearch' 	=>'',
+					'year' 			=>'',
+					'grade_all' 	=>0,
+					'degree_all' 	=>0,
+					'branch' 		=>'',
+			);
+		}
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+		
+		$db = new Allreport_Model_DbTable_DbRptFee();
+		$group= new Allreport_Model_DbTable_DbRptFee();
+		$rs_rows = $group->getAllTuitionFee($search);
+	
+		$year = $db->getAllYearFee();
+		$this->view->row = $year;
+		
+		$model = new Application_Model_DbTable_DbGlobal();
+		$row=0;$indexterm=1;$key=0;
+		if(!empty($rs_rows)){
+			foreach ($rs_rows as $i => $rs) {
+				$rows = $db->getFeebyOther($rs['id'],$search['grade_all'],$search['degree_all']);
+				$fee_row=1;
+				
+// 				print_r($rows);
+				
+				if(!empty($rows))foreach($rows as $payment_tran){
+					if($payment_tran['payment_term']==1){
+						$rs_rows[$key]=$this->headAddRecordTuitionFee($rs,$key);
+						$term = $model->getAllPaymentTerm(null,null,null);
+						//print_r($term);
+						$rs_rows[$key]['status'] = Application_Model_DbTable_DbGlobal::getAllStatus($payment_tran['status']);
+						$rs_rows[$key]['degree']=$payment_tran['degree'];
+						$rs_rows[$key]['class'] = $payment_tran['class'];
+						$rs_rows[$key]['remark'] = $payment_tran['remark'];
+						$rs_rows[$key]['month'] = $payment_tran['tuition_fee'];
+						$key_old=$key;
+						$key++;
+					}elseif($payment_tran['payment_term']==2){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['quarter'] = $payment_tran['tuition_fee'];
+	
+					}elseif($payment_tran['payment_term']==3){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['semester'] = $payment_tran['tuition_fee'];
+	
+					}elseif($payment_tran['payment_term']==4){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['year'] = $payment_tran['tuition_fee'];
+					}
+					elseif($payment_tran['payment_term']==5){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['day'] = $payment_tran['tuition_fee'];
+					}
+				}
+			}
+		}
+		else{
+			$rs_rows=array();
+			$result = Application_Model_DbTable_DbGlobal::getResultWarning();
+		}
+		$this->view->rs = $rs_rows;
+		$this->view->search = $search;
+	}
+	
+	public function headAddRecordTuitionFee($rs,$key){
+		$result[$key] = array(
+				'id' 	  => $rs['id'],
+				'academic'=> $rs['academic'],
+				'generation'=> $rs['generation'],
+				'degree'=>'',
+				'class'=>'',
+				'month'=>'',
+				'quarter'=>'',
+				'semester'=>'',
+				'year'=>'',
+				'day'=>'',
+				
+				'time'=>$rs['time'],
+				'date'=>$rs['create_date'],
+				'status'=>''
+		);
+		return $result[$key];
+	}
+	
+	public function rptServiceChargeAction(){
+	
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}
+		else{
+			$search=array(
+					'txtsearch' =>'',
+					'year' =>'',
+					'service_type'=>-1,
+					'service' =>-1,
+			);
+		}
+	
+		$db = new Allreport_Model_DbTable_DbRptServiceCharge();
+		$this->view->all_service = $db->getServicesAll();
+		$this->view->service_type = $db->getServicesType();
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+		
+		$db = new Allreport_Model_DbTable_DbRptServiceCharge();
+		$service = $db->getAllServiceFee($search);
+		$year = $db->getAllYearService();
+		$this->view->row = $year;
+// 		print_r($year);exit();
+	
+		$model = new Application_Model_DbTable_DbGlobal();
+		$row = 0;$indexterm = 1;$key = 0;$rs_rows = array();
+		if(!empty($service)){
+			foreach ($service as $i => $rs) {
+				$rows = $db->getServiceFeebyId($rs['id'],$search['service_type'],$search['service']);
+				$fee_row=1;
+				if(!empty($rows))foreach($rows as $payment_tran){
+					if($payment_tran['payment_term']==1){
+						$rs_rows[$key]=$this->headAddRecordServiceFee($rs,$key);
+						$term = $model->getAllPaymentTerm(null,null,null);
+						
+						$rs_rows[$key]['ser_type'] = $payment_tran['ser_type'];
+						$rs_rows[$key]['service_name'] = $payment_tran['service_name'];
+						$rs_rows[$key]['remark'] = $payment_tran['remark'];
+						$rs_rows[$key]['monthly'] = $payment_tran['price_fee'];
+						$key_old=$key;
+						$key++;
+					}
+					elseif($payment_tran['payment_term']==2){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['quarter'] = $payment_tran['price_fee'];
+							
+					}
+					elseif($payment_tran['payment_term']==3){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['semester'] = $payment_tran['price_fee'];
+					}
+					elseif($payment_tran['payment_term']==4){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['year'] = $payment_tran['price_fee'];
+					}
+					elseif($payment_tran['payment_term']==5){
+						$term = $model->getAllPaymentTerm($payment_tran['payment_term']);
+						$rs_rows[$key_old]['day'] = $payment_tran['price_fee'];
+					}
+					
+				}
+			}
+		}
+		else{
+			$rs_rows = array();
+			$result = Application_Model_DbTable_DbGlobal::getResultWarning();
+		}
+	
+		$this->view->rs = $rs_rows;
+		$this->view->search = $search;
+	}
+	
+	public function headAddRecordServiceFee($rs,$key){
+		$result[$key] = array(
+				'id' 	  => $rs['id'],
+				'academic'=> $rs['academic'],
+				'generation'=> $rs['generation'],
+				'monthly'=>'',
+				'quarter'=>'',
+				'semester'=>'',
+				'year'=>'',
+		);
+		return $result[$key];
+	}
+	
+	
+	function rptStaffAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				$search = array(
+						'txtsearch' => $data['txtsearch'],
+						'start_date'=> $data['from_date'],
+						'end_date'=>$data['to_date'],
+						'service'=>$data['service'],
+				);
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'service'=>'',
+				);;
+			}
+				
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+				
+			$db = new Allreport_Model_DbTable_DbRptStaff();
+			$this->view->rs = $db->getAllStaff($search);
+			$this->view->search = $search;
+			// 			print_r($abc);exit();
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+
+//////////////////////////////////////////////////////////////// rpt attendant ////////////////////////////////////////////////////////////////////
+	
+	function rptAttCarAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'service'=>'',
+						'carid'=>'',
+						'branch'=>'',
+				);
+			}
+		
+			$db = new Allreport_Model_DbTable_DbRptAttCar();
+			$this->view->rs = $db->getAllAttCar($search);
+			$this->view->search = $search;
+			// 			print_r($abc);exit();
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+		$db = new Allreport_Model_DbTable_DbRptAttCar();
+		$this->view->carid = $db->getAllCar();
+		$this->view->service = $db->getAllService();
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	function rptAttLunchAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'service'=>'',
+						'branch'=>'',
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptAttLunch();
+			$this->view->rs = $db->getAllAttLunch($search);
+			$this->view->search = $search;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+		$db = new Allreport_Model_DbTable_DbRptAttLunch();
+		$this->view->service = $db->getAllLunchService();
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	
+	}
+	
+	
+	function rptAttStudyAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+						'grade'=>0,
+						'session'=>0,
+						'room'=>0,
+						'branch'=>'',
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptAttStudy();
+			$this->view->rs = $db->getAllAttStudy($search);
+			$this->view->search = $search;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+		$db = new Allreport_Model_DbTable_DbRptAttStudy();
+		$this->view->grade = $db->getAllGrade();
+		$this->view->session = $db->getAllSession();
+		$this->view->room = $db->getAllRoom();
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+//////////////////////////////////////////////////////////////////// rpt payment list //////////////////////////////////////////////////////////	
+	
+	public function rptEnglishFulltimePaymentListAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				
+				$search1=array(
+						'txtsearch' 	=>$data['txtsearch'],
+						'room'			=>$data['room'],
+						'branch'		=>$data['branch'],
+						'degree'		=>$data['degree_en_ft'],
+						'grade'			=>$data['grade_en_ft'],
+						'for_month'		=>$data['for_month'],
+						'for_year'		=>$data['for_year'],
+						'service'		=>0,
+				);
+				
+				$search=$this->getRequest()->getPost();
+				
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'degree_en_ft'	=>0,
+						'grade_en_ft'	=>0,
+						'room'			=>0,
+						'branch'		=>0,
+				);
+				
+				$search1=array(
+						'txtsearch' 	=>'',
+						'degree'		=>0,
+						'grade'			=>0,
+						'room'			=>0,
+						'branch'		=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>$data['for_year'],
+						'service'		=>0,
+				);
+			}
+		
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->rs = $db->getAllEnglishFulltimePaymentList($search);
+			//print_r($this->view->rs);
+
+			$this->view->total_student = $db->getAllAmountStudentByType($search1,6); // 1 = khmer fulltime payment
+			//echo "all = ".count($this->view->total_student);
+				
+			$this->view->student_drop = $db->getAllAmountStudentDropByType($search1,6,null); // 1 = khmer fulltime payment
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search1,6,1);
+			//echo " , drop = ".count($this->view->student_drop);
+				
+			$this->view->new_student = $db->getAllAmountNewStudentByType($search1,6,null); // 1 = khmer fulltime payment
+			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search1,6,1);
+			//echo " , New = ".count($this->view->new_student_for_month);
+			
+			$this->view->amount_student_by_grade = $db->getAllAmountStudentByGrade($search1,6); // 1 = khmer fulltime payment
+			//print_r($this->view->amount_student_by_grade);
+			
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search1,6,1); // payfor_type = 6 => EFT , type = 1 => study fulltime type                
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search1,6,1); // payfor_type = 6 => EFT , type = 1 => study fulltime type
+			
+			$this->view->search = $search;
+			$this->view->search1 = $search1;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+		$db = new Allreport_Model_DbTable_DbRptPaymentList();
+		$this->view->all_month = $db->getAllMonth();
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	public function rptKhFulltimePaymentListAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				
+				$search1=array(
+						'txtsearch' 	=>$data['txtsearch'],
+						'room'			=>$data['room'],
+						'branch'		=>$data['branch'],
+						'degree'		=>$data['degree_kh_ft'],
+						'grade'			=>$data['grade_kh_ft'],
+						'for_month'		=>$data['for_month'],
+						'for_year'		=>$data['for_year'],
+						'service'		=>0,
+						);
+				
+				$search=$this->getRequest()->getPost();
+				
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'degree_kh_ft'	=>0,
+						'grade_kh_ft'	=>0,
+						'room'			=>0,
+						'branch'		=>0,
+				);
+				
+				$search1=array(
+						'txtsearch' 	=>'',
+						'degree'		=>0,
+						'grade'			=>0,
+						'room'			=>0,
+						'branch'		=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
+						'service'		=>0,
+				);
+			}
+		
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->rs = $db->getAllKhFulltimePaymentList($search);
+			
+			$this->view->total_student = $db->getAllAmountStudentByType($search1,1); // 1 = khmer fulltime payment
+			//echo "all = ".count($this->view->total_student);
+				
+			$this->view->student_drop = $db->getAllAmountStudentDropByType($search1,1,null); // 1 = khmer fulltime payment
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search1,1,1);
+			//echo " , drop = ".count($this->view->student_drop);
+				
+			$this->view->new_student = $db->getAllAmountNewStudentByType($search1,1,null); // 1 = khmer fulltime payment
+			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search1,1,1);
+			//echo " , New = ".count($this->view->new_student_for_month);
+			
+			$this->view->amount_student_by_grade = $db->getAllAmountStudentByGrade($search1,1); // 1 = khmer fulltime payment
+			//print_r($this->view->amount_student_by_grade);
+			
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search1,1,1); // payfor_type = 6 => KFT , type = 1 => study fulltime type
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search1,1,1); // payfor_type = 6 => KFT , type = 1 => study fulltime type
+				
+			$this->view->search = $search;
+			$this->view->search1 = $search1;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+		
+		$db = new Allreport_Model_DbTable_DbRptPaymentList();
+		$this->view->all_month = $db->getAllMonth();
+		
+	}
+	
+	
+	public function rptEnglishParttimePaymentListAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+				$search1=array(
+						'txtsearch' 	=>$data['txtsearch'],
+						'room'			=>$data['room'],
+						'branch'		=>$data['branch'],
+						'degree'		=>$data['degree_gep'],
+						'grade'			=>$data['grade_gep'],
+						'for_month'		=>$data['for_month'],
+						'for_year'		=>date("Y"),
+						'service'		=>0,
+				);
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'degree_gep'	=>0,
+						'grade_gep'		=>0,
+						'room'			=>0,
+						'branch'		=>0,
+				);
+				
+				$search1=array(
+						'txtsearch' 	=>'',
+						'degree'		=>0,
+						'grade'			=>0,
+						'room'			=>0,
+						'branch'		=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
+						'service'		=>0,
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->rs = $db->getAllEnglishParttimePaymentList($search);
+	
+			$this->view->total_student = $db->getAllAmountStudentByType($search1,2); // 1 = khmer fulltime payment
+			//echo "all = ".count($this->view->total_student);
+				
+			$this->view->student_drop = $db->getAllAmountStudentDropByType($search1,2,null); // 1 = khmer fulltime payment
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search1,2,1);
+			//echo " , drop = ".count($this->view->student_drop);
+				
+			$this->view->new_student = $db->getAllAmountNewStudentByType($search1,2,null); // 1 = khmer fulltime payment
+			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search1,2,1);
+			//echo " , New = ".count($this->view->new_student_for_month);
+			
+			$this->view->amount_student_by_grade = $db->getAllAmountStudentByGrade($search1,2); // 1 = khmer fulltime payment
+			//print_r($this->view->amount_student_by_grade);
+				
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search1,2,2); // payfor_type = 2 => EPT , type = 2 => study parttime type
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search1,2,2); // payfor_type = 2 => EPT , type = 2 => study parttime type
+			
+			
+			$this->view->search = $search;
+			$this->view->search1 = $search1;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+		$db = new Allreport_Model_DbTable_DbRptPaymentList();
+		$this->view->all_month = $db->getAllMonth();
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	
+	public function rptTransportPaymentListAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'service'		=>0,
+						'branch'		=>0,
+						'degree'		=>0,
+						'grade'			=>0,
+						'room'			=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
+						
+				);
+			}
+		
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->rs = $db->getAllTransportPaymentList($search);
+		
+			$this->view->total_student = $db->getAllAmountStudentByType($search,3);
+				
+			$this->view->student_drop = $db->getAllAmountStudentDropByType($search,3,null); // 3 = transport payment
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search,3,1);
+			//echo " , drop = ".count($this->view->student_drop);
+				
+			$this->view->new_student = $db->getAllAmountNewStudentByType($search,3,null); // 3 = transport payment
+			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search,3,1);
+				
+			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,3,3);
+			
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search,3,3); // payfor_type = 3 => Transport , type = 3 => Transport type
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search,3,3); // payfor_type = 3 => Transport , type = 3 => Transport type
+					
+			$this->view->search = $search;
+			
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+		$db = new Allreport_Model_DbTable_DbRptPaymentList();
+		$this->view->all_month = $db->getAllMonth();
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	public function rptStayAndLunchPaymentListAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'service'		=>0,
+						'branch'		=>0,
+						'degree'		=>0,
+						'grade'			=>0,
+						'room'			=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
+				);
+			}
+		
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->rs = $db->getAllStayAndLunchPaymentList($search);
+		
+			$this->view->total_student = $db->getAllAmountStudentByType($search,4);
+			
+			$this->view->student_drop = $db->getAllAmountStudentDropByType($search,4,null); // 1 = khmer fulltime payment
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search,4,1);
+			//echo " , drop = ".count($this->view->student_drop);
+			
+			$this->view->new_student = $db->getAllAmountNewStudentByType($search,4,null); // 1 = khmer fulltime payment
+			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search,4,1);
+			
+			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,4,5);
+			
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search,4,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search,4,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
+			
+			
+			$this->view->search = $search;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		
+		$db = new Allreport_Model_DbTable_DbRptPaymentList();
+		$this->view->all_month = $db->getAllMonth();
+		
+		$db = new Registrar_Model_DbTable_DbStudentLunchPayment();
+		$service = $db->getAllLunchService();
+		array_unshift($service, array ( 'id' => -1, 'name' => 'Select Service') );
+		$this->view->service = $service;
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	 
+	
+	public function rptBracketServicelistAction(){
+	
+	}
+	
+	
+////////////////////////////////////////////////////////////// daily income ///////////////////////////////////////////////////////////	
+	
+	
+	
+	public function rptDailyIncomeEnglishFulltimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'degree_en_ft'	=>0,
+						'grade_en_ft'	=>0,
+						'room'			=>0,
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeEnglishFulltime($search);
+	
+			// 			print_r($this->view->rs);
+				
+			$this->view->search = $search;
+			
+			$this->view->rate = $db->getRate();
+			
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	public function rptDailyIncomeEnglishParttimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'degree_gep'	=>0,
+						'grade_gep'		=>0,
+						'room'			=>0,
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeEnglishParttime($search);
+	
+			// 			print_r($this->view->rs);
+	
+			$this->view->search = $search;
+				
+			$this->view->rate = $db->getRate();
+				
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	public function rptDailyIncomeKhmerFulltimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'degree_kh_ft'	=>0,
+						'grade_kh_ft'	=>0,
+						'room'			=>0,
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeKhmerFulltime($search);
+	
+			// 			print_r($this->view->rs);
+	
+			$this->view->search = $search;
+				
+			$this->view->rate = $db->getRate();
+				
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	public function rptDailyIncomeTransportAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeTransport($search);
+	
+			// 			print_r($this->view->rs);
+	
+			$this->view->search = $search;
+	
+			$this->view->rate = $db->getRate();
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	public function rptDailyIncomeFoodandstayAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeFoodandstay($search);
+	
+			// 			print_r($this->view->rs);
+	
+			$this->view->search = $search;
+	
+			$this->view->rate = $db->getRate();
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	public function rptDailyIncomeMaterialAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeMaterial($search);
+	
+// 						print_r($this->view->rs);
+	
+			$this->view->search = $search;
+	
+			$this->view->rate = $db->getRate();
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	public function rptDailyIncomeParkingCanteenAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'branch'		=>0,
+						'shift'			=>0,
+						'start_date'	=>date("Y-m-d"),
+						'end_date'		=>date("Y-m-d"),
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rs = $db->getDailyIncomeParkingCanteen($search);
+	
+			// 						print_r($this->view->rs);
+	
+			$this->view->search = $search;
+	
+			$this->view->rate = $db->getRate();
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	
+	public function rptResultIncomeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'branch'	=>'',
+						'shift'		=>0,
+				);
+			}
+		
+			$db = new Allreport_Model_DbTable_DbRptResultIncome();
+			$this->view->rs = $db->getAllResultIncome($search);
+			
+			$this->view->rent_payment = $db->getAllRentPayment($search);
+			
+			$this->view->search = $search;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+		$this->view->rate = $db->getRate();
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	public function rptSummaryTotalIncomeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'branch'	=>'',
+						'shift'		=>0,
+				);
+			}
+	
+			$db = new Allreport_Model_DbTable_DbRptResultIncome();
+			
+			$this->view->khmerft = $db->getKhmerFullTimePayment($search);
+			$this->view->englishft = $db->getEnglishFullTimePayment($search);
+			$this->view->englishpt = $db->getEnglishPartTimePayment($search);
+			$this->view->study_material = $db->getStudyMaterialPayment($search);
+			$this->view->transportation = $db->getTransportationPayment($search);
+			$this->view->foodandstay = $db->getFoodAndStayPayment($search);
+			$this->view->rent_payment = $db->getAllRentPayment($search);
+			
+			$this->view->search = $search;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			echo $e->getMessage();
+		}
+	
+		$db = new Allreport_Model_DbTable_DbRptDailyIncome();
+		$this->view->rate = $db->getRate();
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+	}
+	
+	
+	
+	public function rptRentAndPaymentListAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+					
+			}else{
+				$search = array(
+						'title'	        =>	'',
+						'cus_name'		=>	0,
+						'start_date'	=>	date('Y-m-01'),
+						'end_date'		=>	date('Y-m-d'),
+						'status_search'	=> 1
+				);
+			}
+			$this->view->search = $search;
+			$db=new Allreport_Model_DbTable_DbRenAndPaymentList();
+			$ds=$this->view->cus=$db->getCustomer($search);
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+		$frm_major = new Accounting_Form_FrmSearchMajor();
+		$frm_search = $frm_major->FrmMajors();
+		Application_Model_Decorator::removeAllDecorator($frm_search);
+		$this->view->frm_search = $frm_search;
+	}
+	
+	public function rptCusNearlyEndServiceAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+					
+			}else{
+				$search = array(
+						'title'	        =>	'',
+						'cus_name'		=>	0,
+						'end_date'		=>	date('Y-m-d'),
+						'status_search'	=> 1
+				);
+			}
+			$this->view->search = $search;
+			$db=new Allreport_Model_DbTable_DbRenAndPaymentList();
+			$ds=$this->view->cus=$db->getNearlydayEndServiceCustomer($search);
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+		$frm_major = new Accounting_Form_FrmSearchMajor();
+		$frm_search = $frm_major->FrmMajors();
+		Application_Model_Decorator::removeAllDecorator($frm_search);
+		$this->view->frm_search = $frm_search;
+	}
+	 
+	
+	public function rptStudentDropAction(){
+	
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+		else{
+			$search=array(
+					'title' =>'',
+					'study_year' =>'',
+					'degree_all' =>'',
+					'grade_all' =>'',
+					'session' =>'',
+			);
+		}
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$forms=$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($forms);
+		$this->view->form_search=$form;
+	
+		$group= new Allreport_Model_DbTable_DbRptStudentDrop();
+		$this->view->rs = $rs_rows = $group->getAllStudentDrop($search);
+		$this->view->search=$search;
+	}
+	
+	public function rptStudentDropTransportAction(){
+	
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+		else{
+			$search=array(
+					'title' =>'',
+					'service' =>0,
+					'branch' =>'',
+			);
+		}
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$forms=$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($forms);
+		$this->view->form_search=$form;
+	
+		$db= new Allreport_Model_DbTable_DbRptStudentDrop();
+		$this->view->rs = $db->getAllStudentDropTransport($search);
+		$this->view->search=$search;
+		
+		$this->view->service = $db->getAllServiceByCategory(3); // 3 = transport service type
+		
+	}
+	
+	public function rptStudentDropLunchAndStayAction(){
+	
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}
+		else{
+			$search=array(
+					'title' =>'',
+					'service' =>0,
+					'branch' =>'',
+			);
+		}
+	
+		$form=new Registrar_Form_FrmSearchInfor();
+		$forms=$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($forms);
+		$this->view->form_search=$form;
+	
+		$db= new Allreport_Model_DbTable_DbRptStudentDrop();
+		$this->view->rs = $db->getAllStudentDropLunchAndStay($search);
+		$this->view->search=$search;
+		
+		$this->view->service = $db->getAllServiceByCategory(2); // 2 = lunch service type
+	}
+	
+}

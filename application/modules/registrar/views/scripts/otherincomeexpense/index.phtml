@@ -1,0 +1,332 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('SRMS | Report Student Receivable'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$session_user=new Zend_Session_Namespace('auth');
+	$user_id=$session_user->user_id;
+	$frm =  $this->form_search;
+?>
+<script type="text/javascript">
+	dojo.require("dojo.data.ObjectStore");
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require('dojox.form.BusyButton');
+	var cat_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->cat_all));?> );
+	dojo.ready(function(){
+	new dijit.form.FilteringSelect({
+	    store: cat_store,
+	    autoComplete: true,                        
+	    required: false,
+	    id: "cat_all",
+	    name: "cat_all",           
+	    class: 'fullside',  
+	    placeHolder:"Choose Category Name",          
+	    onChange: function() {  
+	    	 
+	    }
+	}, "cat_all");
+	
+	dijit.byId('cat_all').attr('value','<?php echo $this->rs_search['cat_all']?>');
+	});
+</script>
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'otherincomeexpense','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<table width="100%" style="margin:0;">
+   <tr>
+       <td colspan="4">
+			<div class="menureport">
+				<ul>
+					<li class="preview"><a title="Preview" href="#" onclick="preview();"></a></li>
+					<li class="print"><a href="#" title="Print" onclick="doPrint();" ></a></li>
+					<li class="excel"><a href="#"  title="Export"  onclick="exportExcel();"></a></li>
+				</ul>
+			</div>
+      </td>
+	</tr>
+	<tr>
+			<td>	
+				<input dojoType="dijit.form.TextBox" class="fullside" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+			</td>
+			
+			<td> <?php echo $frm->getElement("user");?></td>
+			<td>
+				<select  type="text"  name="type" id="type"  dojoType="dijit.form.FilteringSelect" class="fullside"  >
+					<option value="1" <?php if($this->search['type']==1){echo 'selected="selected"';}?> > Income and Expense </option>
+					<option value="2" <?php if($this->search['type']==2){echo 'selected="selected"';}?> > Income </option>
+					<option value="3" <?php if($this->search['type']==3){echo 'selected="selected"';}?> > Expense </option>
+				</select>
+			</td>
+			<td>
+				 <input id="cat_all" />
+			</td>
+		</tr>
+		<tr>
+			<td><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'dd/MM/yyyy'}" id="start_date" name="start_date" placeholder="Search....." value="<?php echo $this->search['start_date'];?>" type="text"></td>
+			<td><input dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'dd/MM/yyyy'}" id="end_date" name="end_date"  value="<?php echo $this->search['end_date'];?>" type="text"></td>
+			<td>
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</td>
+		</tr>
+</table>
+</form>
+<style>
+.hover:hover{ background: #ddd;}
+</style>
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto; ">
+		<div id="divPrint"  >
+			<table style="background:#fff; margin: 0 auto; width: 100%; padding: 1cm;font-family:'Khmer OS Battambang'">
+							<tr>
+								<td width="20%" align="left">
+									<img style="width: 50%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+								</td>
+								<td align="center">
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><u><?php echo $tr->translate("របាយការណ៏ចំណូល ចំណាយផ្សេងៗ"); ?></u></strong><br />
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong><br /> 
+								</td>
+								<td align="right" width="20%">&nbsp;</td>
+							</tr>
+							<?php 
+								$total_income_kh=0;
+								$total_income_dollar=0;
+								$total =0;
+								$total_paid =0;
+								$total_expense_kh=0;
+								$total_expense_dollar=0;
+							?>
+							
+							<?php if(!empty($this->income)){?>
+								<tr>
+								<td colspan="3" id="exportExcel">
+									<style> th,td{ padding:0 1px;}</style>
+										<style type="text/css">
+											body{font-family: "Times New Roman",Arial; }
+											table{ border-collapse:collapse; margin:0 auto;
+											border-color:#000; }
+											.padd tr td{  text-align:center}
+											.padd tr th{  background-color: #e4e4e4; }
+												td{padding:0 3px; }
+										</style>
+  
+									<table class="padd" width="100%" border="0" align="center" style="font-family:'Khmer OS Battambang'">
+										<tr style="border-left:none;">
+											<td align="center" colspan="8" ><strong><?php echo $tr->translate('OTHER_INCOME')?>  </strong> </td>
+										</tr>
+								<?php $cat_type='';?>
+								<?php $i=0;foreach($this->income as $row){ $i++;?>
+								     
+								      <?php if($cat_type !=$row['cat_id'] ){ ?> 
+								        <tr style="height: 5px;"></tr>
+								​        <tr><td colspan="7" style="text-align: left;"> 
+								         <strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 11px;font-family:'Khmer MEF2';">
+								            <?php echo $tr->translate('CATEGORY_INCOME')?>  : <?php echo $row['cat_name'];?>
+								         </strong>   
+								         </td></tr>
+										<tr style="font-size:11px; height: 20px;border: 1px solid #000;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center" >
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('N_O')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('RECEIPT_NO')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('INCOME_TITLE')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('CURRENCY_TYPE')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('TOTAL')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('DATE')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('USER')?></td>
+										</tr>
+									  <?php $cat_type=$row['cat_id']; }?>
+
+									  <tr class="hover" style="font-size:11px; height: 20px;border: 1px solid #000;"   >
+											<td style="border: 1px solid #000;"><?php echo $i;?></td>
+											<td style="border: 1px solid #000;"><?php echo $row['invoice'];?></td>
+											<td style="border: 1px solid #000;"><?php echo $row['title'];?></td>
+											<td align="canter" style="border: 1px solid #000;"><?php echo $row['curr_name'];?></td>	
+											<td style="border: 1px solid #000;"><?php echo $row['total_amount'];?><?php if($row['curr_type']==1){echo ' $';}else{echo ' រៀល​ ';}?></td>
+											<td style="border: 1px solid #000;"><?php echo date('d-M-Y',strtotime($row['for_date']));?></td>
+											<td style="border: 1px solid #000;"><?php echo $row['user_name'];?></td>
+										</tr>
+									
+											<?php 
+												if($row['curr_type']==2){
+													$total_income_kh = $total_income_kh + $row['total_amount'];
+												}else{
+													$total_income_dollar = $total_income_dollar + $row['total_amount'];
+												}
+											?> 
+								 <?php } ?>
+										</table>
+										
+										
+											<?php if(!empty($this->expense) && !empty($this->income)){ ?>
+												 
+											<?php }?>
+											
+									</td>
+								</tr>
+							<?php }?>
+								
+								
+							<?php if(!empty($this->expense)){?>
+								<tr>
+								<td colspan="3" id="exportExcel">
+									<style> th,td{ padding:0 1px;}</style>
+										<style type="text/css">
+											body{font-family: "Times New Roman",Arial; }
+											table{ border-collapse:collapse; margin:0 auto;
+											border-color:#000; }
+											.padd tr td{  text-align:center}
+											.padd tr th{  background-color: #e4e4e4; }
+											td{padding:0 3px; }
+										</style>
+
+									<table class="padd" width="100%" border="0" align="center"  style="font-family:'Khmer OS Battambang'">
+										<tr style="border-left:none;">
+											<td align="center" colspan="8" ><strong><?php echo $tr->translate('OTHER_EXPENSE')?></strong> </td>
+										</tr>
+										<?php $cat_epe='';$i=0;foreach($this->expense as $row){ $i++;?>	
+										<?php if($cat_epe!=$row['cat_id']){?>
+										<tr style="height: 5px;"></tr>
+								​        <tr><td colspan="7" style="text-align: left;"> 
+								         <strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 11px;font-family:'Khmer MEF2';">
+								            <?php echo $tr->translate('CATEGORY_INCOME')?>  : <?php echo $row['cat_name'];?>
+								         </strong>   
+								         </td></tr>
+										<tr style="font-size:11px; height: 20px;border: 1px solid #000;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center" >
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('N_O')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('RECEIPT_NO')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('EXPENSE_TITLE')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('CURRENCY_TYPE')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('TOTAL')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('DATE')?></td>
+											<td style="border: 1px solid #000;"><?php echo $tr->translate('USER')?></td>
+										</tr>
+										<?php $cat_epe=$row['cat_id'];}?>
+									
+										<tr class="hover" style="font-size:11px; height: 20px;border: 1px solid #000;"   >
+											<td style="border: 1px solid #000;"><?php echo $i;?></td>
+											<td style="border: 1px solid #000;"><?php echo $row['invoice'];?></td>
+											<td style="border: 1px solid #000;"><?php echo $row['title'];?></td>
+											<td align="canter" style="border: 1px solid #000;"><?php echo $row['curr_name'];?></td>	
+											<td style="border: 1px solid #000;"><?php echo $row['total_amount'];?><?php if($row['curr_type']==1){echo ' $';}else{echo ' រៀល​ ';}?></td>
+											<td style="border: 1px solid #000;"><?php echo date('d-M-Y',strtotime($row['for_date']));?></td>
+											<td style="border: 1px solid #000;"><?php echo $row['user_name'];?></td>
+										</tr>
+											<?php 
+												if($row['curr_type']==2){
+													$total_expense_kh = $total_expense_kh + $row['total_amount'];
+												}else{
+													$total_expense_dollar = $total_expense_dollar + $row['total_amount'];
+												}
+											?> 
+										 <?php } ?>
+										</table>
+										
+									</td>
+								</tr>
+							<?php }?>	
+							
+							<?php 
+								$total_income=0;
+								$total_expense=0;
+								
+								$total_income = $total+$total_income_dollar;
+								
+							?>
+								<tr>
+									<td colspan="3">
+										<?php if(!empty($this->expense) || !empty($this->income)){?>
+											<table width="100%" style="margin-top: 10px;">
+												<tr>
+													<td colspan="3"><br /> 
+													<?php 
+														$final_total_kh=0;
+														$final_total_dollar=0;
+														$final_total_dollar=$total_paid+$total_income_dollar-$total_expense_dollar;
+														$final_total_kh=$total_income_kh-$total_expense_kh;
+													?>
+															<table width="100%" border="1"  style="white-space:nowrap;font-family:'Khmer OS Battambang'" >
+																<tr style="font-size:10px; color:#000; height: 23px;"​ align="center">
+																		<td style="font-weight:bold;background-color: #ccc; font-size: 12px;">&nbsp;<?php echo $tr->translate("CURRENCY_TYPE"); ?>&nbsp;</td>
+														 				<td style="font-weight:bold;background-color: #ccc;  font-size: 12px;">&nbsp;<?php echo $tr->translate("OTHER_INCOME"); ?>&nbsp;</td>
+														 				<td style="font-weight:bold;background-color: #ccc;  font-size: 12px;">&nbsp;<?php echo $tr->translate("OTHER_EXPENSE"); ?>&nbsp;</td>
+														 				<td style="font-weight:bold;background-color: #ccc;   font-size: 12px;">&nbsp;<?php echo $tr->translate("GRAND_TOTAL"); ?>&nbsp;</td>
+														  		</tr>
+														  		<tr style="font-size:10px; color:#000; height: 23px;"​ align="center">
+														  				<td style="font-weight:bold;font-size: 12px;"> Dollar ($)</td>
+																		<td style=" color:#F00;font-size: 12px;"> <?php echo $total_income_dollar;?> $​ </td>
+																		<td style=" color:#F00;font-size: 12px;"> <?php echo $total_expense_dollar;?> $ </td>
+																		<td style=" color:#F00;font-size: 12px;"><?php echo $final_total_dollar;?> $ </td>
+																		
+														  		</tr>
+														  		<tr style="font-size:10px; color:#000; height: 23px;"​ align="center">
+														  				<td  style="font-weight:bold;  font-size: 12px;"> Riels (រៀល)</td>
+																		<td style=" color:#F00;font-size: 12px;"> <?php echo $total_income_kh;?> រៀល​ </td>
+																		<td style=" color:#F00;font-size: 12px;"> <?php echo $total_expense_kh;?> រៀល​  </td>
+																		<td style=" color:#F00;font-size: 12px;"><?php echo $final_total_kh;?> រៀល​  </td>
+																		
+														  		</tr>
+														  </table>
+													</td>
+												</tr>
+											
+											</table><br /><br />
+										<?php }?>
+									</td>
+								</tr>
+								<tr >
+									<td align="center" width="25%">
+										<span style=" font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+									</td>
+									<td  width="50%">
+										&nbsp;
+									</td>
+									<td align="center"  width="25%">
+										<span style=" font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+									</td>
+								</tr>
+							
+			</table>
+	</div>	
+</div>
+<script type="text/javascript">
+var url_getteacher = '<?php echo $this->url(array('module'=>'registrar','controller'=>'otherincomeexpense','action'=>'get-category')); ?>';	
+var cats_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+function getCategory(){
+	type_id=dijit.byId('type').get('value');
+	if(type_id==''){return false;}
+		dojo.xhrPost({
+			url:url_getteacher,
+			content:{
+				'type_id':type_id,
+				},
+			handleAs:"json",
+			load: function(data){
+				      //   cat_store  = getDataStorefromJSON('id','name', data);
+					//	 dijit.byId('cat_all').set('store',cat_store);  
+			},
+			error: function(err) {
+				//alert(err);
+			}
+		});
+}
+													
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>

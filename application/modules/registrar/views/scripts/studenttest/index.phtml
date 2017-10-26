@@ -1,0 +1,30 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate('STUDENT_TEST'));
+?>
+<script>
+	dojo.require('dijit.form.Button');
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'registrar','controller'=>'studenttest','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+  <table width="75%">
+   <tr>  
+        <td>
+        	<input type="text" name="txtsearch" id="txtsearch" dojoType="dijit.form.TextBox" value="<?php echo $this->adv_search['txtsearch']; ?>" placeholder="search here" class="fullside" />
+        </td>
+   		<td><input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="start_date" name="start_date" value="<?php echo $this->adv_search['start_date']; ?>"  type="text"></td>
+		<td><input dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="end_date" name="end_date" value="<?php echo $this->adv_search['end_date'];?>" type="text"></td>
+   		
+   		<td>
+   			<select name="result_status" id="result_status" class="fullside" dojoType="dijit.form.FilteringSelect" >
+   				<option value=""> Select result status </option>
+   				<option value="0"> Result not updated </option>
+   				<option value="1"> Result updated </option>
+   			</select>
+   		</td>
+   		
+   		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+   </tr>
+</table>
+</form>
+ <?php echo $this->list;?>

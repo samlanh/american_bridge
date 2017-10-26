@@ -1,0 +1,150 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Report Student Group Change Group'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$ac = null;
+	$ad = null;
+	$i=null;
+	$session='';
+	$grade='';
+	
+	$to_ad = null;
+	$to_session='';
+	$to_grade='';
+	$frm =  $this->form_search;
+	//print_r($this->rs);exit();
+?>	
+<div style="width: 28cm;margin: 0 auto;">
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rptgroupstudentchangegroup')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table width="80%">
+	       <tr>
+	           <td><?php echo $frm->getElement("title");?></td>
+	           <td> <?php echo $frm->getElement("study_year");?></td>
+	           <td> <?php echo $frm->getElement("grade_bac");?></td>
+			   <td> <?php echo $frm->getElement("session");?></td>
+			   <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+	       </tr>
+		</table>
+</form>
+</div>
+		<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm;padding: 0.5cm;">
+			<div id="divPrint">
+							<style> th{border-top:1px solid #000;border-collapse: collapse;}</style>
+							<table style="width:27cm;background:#fff; margin: 0 auto;border-collapse: collapse;">
+								<tr style="font-size: 18px;">
+									<td colspan="2"></td>
+									<td align="center">
+									</td>
+								</tr>
+								<tr>
+									<td width="28%" >
+										<img style="width: 155px;padding-left: 45px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
+									</td>
+									<td width="44%" align="center">
+										<strong​​ style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 15px;font-family:'Khmer MEF2';">របាយការណ៏  សិស្សប្តូរក្រុម</strong><br />
+										<strong></strong>
+									</td>
+									<td width="28%" align="right">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4">
+										<table cellpadding="5"​ style="margin:0 auto;width:90%; border-collapse: collapse;padding-buttom: 10px;"  border="1" >
+										
+																			
+										<?php $total_stu=0; if(!empty($this->rs))foreach ($this->rs as $key =>$stu){
+											
+											//$ac=$stu["academic_year"];
+										?>
+											<?php if((($ad!=$stu["academic_year"] OR $session!=$stu["session"] OR $grade!=$stu["grade"]) OR ($to_ad!=$stu["to_academic_year"] OR $to_session!=$stu["to_session"] OR $to_grade!=$stu["to_grade"])) AND  $key>0 ){?>
+											
+											
+											<tr> 
+												<td align="right" colspan="3" style="font-size: 12px;font-weight: bold;">Total Students &nbsp;</td>
+												<td align="center"><?php echo number_format($i,0);?></td>
+ 											</tr> 
+											</table>
+											<br/>
+											<table cellpadding="5"​ style="margin:0 auto;width:90%; border-collapse: collapse;padding-buttom: 10px;"  border="1" >
+												
+											<?php }$i++;?>
+											<?php 
+												if(($ad!=$stu["academic_year"] OR $session!=$stu["session"] OR $grade!=$stu["grade"]) OR ($to_ad!=$stu["to_academic_year"] OR $to_session!=$stu["to_session"] OR $to_grade!=$stu["to_grade"])){
+													$ac=0;$i=1;
+											?>
+											<tr style="font-size:14px; height: 20px;" align="center" border: "0" >
+												<td colspan="4" style="border: 1px solid white;border-bottom: 1px solid black;">
+													<span style="font-size: 15px;font-weight: bold;">
+														<span style="background-color: rgba(249,249,249,1);white-space: nowrap;color: red;padding: 0px 5px;border: 1px solid #efefef;border-radius: 5px;">&nbsp;<?php echo $stu["academic_year"]?> &nbsp; <?php echo $stu["grade"];?> &nbsp; <?php echo $stu["session"];?>&nbsp;</span> &nbsp; To &nbsp; <span style="color: red;background-color: rgba(249,249,249,1);padding: 0px 5px;border: 1px solid #efefef;border-radius: 5px;">&nbsp;<?php echo $stu["to_academic_year"]?> &nbsp; <?php echo $stu["to_grade"];?> &nbsp; <?php echo $stu["to_session"];?>&nbsp;</span>             
+													</span>
+												</td>
+											</tr>
+											<input type="hidden" name="academic" id="academic" value="<?php echo $stu["to_group"];?>"/>
+											<tr style="font-size:12px; height: 15px;border-collapse: collapse;" align="center" >
+												<th style="width: 10%;">N.o</th>
+												<th style="width: 30%;">Studen Code</th>
+												<th style="width: 30%;">Student Name</th>
+												<th style="width: 30%;">Sex</th>
+											</tr>
+											<?php }?>
+											<?php 
+												  $ad=$stu["academic_year"];
+											 	  $session=$stu["session"];
+											 	  $grade=$stu["grade"];
+											 	  $to_ad=$stu["to_academic_year"];
+											 	  $to_session=$stu["to_session"];
+											 	  $to_grade=$stu["to_grade"];
+											?>
+											
+											<tr style="font-size:12px;height: 15px;border: 1px solid #000;border-collapse: collapse;"​ align="center">
+												<td style="width: 10%;"><?php echo $i;?></td>
+												<td style="width: 30%;"><?php echo $stu['stu_code'];?></td>
+												<td style="width: 30%;"><?php echo $stu['stu_name'];?></td>
+												<td style="width: 30%;"><?php echo $stu['sex'];?></td>
+											</tr>
+												<?php //$ac=$ac+$stu['amount'];?>
+												<?php //$total_stu=$total_stu+$i;?>
+										<?php }?>
+										<tr>
+											<td align="right" colspan="3" style="font-size: 12px;font-weight: bold;">Total Students &nbsp;</td>
+											<td align="center"><?php echo number_format($i,0);?></td>
+										</tr>
+										</table>	
+									</td>
+								</tr>
+								<tr><td></td></tr>
+<!-- 							<tr>
+ 									<td colspan="3" align="left">
+									<style>td{height:20px;}</style>
+										<table cellpadding="5"​ style="margin:0 auto;width:20%; border-collapse: collapse;" align="left" >
+											<tr style="font-size:14px;" align="center">
+												<td>Grand Total:&nbsp;&nbsp;<span style="background-color: #fc0;">&nbsp;<?php echo $total_stu;?>&nbsp;</span></td>
+											</tr> 
+										</table> 
+									</td> 
+								</tr> -->
+								
+								<tr>
+									<td colspan="3">&nbsp;</td>
+								</tr>
+								<tr >
+									<td align="center" width="25%">
+										<span style="font-weight: bold;font-size: 14px;">Verified by</span>
+									</td>
+									<td  width="50%">
+										&nbsp;
+									</td>
+									<td align="center"  width="25%">
+										<span style="font-weight: bold;font-size: 14px;text-align: right;">Prepared by</span>
+									</td>
+								</tr>
+								
+							</table>
+						
+				</div>
+			</div>
+			
+			
+			
+			

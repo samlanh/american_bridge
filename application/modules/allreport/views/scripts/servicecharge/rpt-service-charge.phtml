@@ -1,0 +1,68 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Report Service Charge'); 
+	echo $this->headTitle(''); 
+	
+?>	
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'servicecharge','action'=>'rpt-service-charge')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<select dojoType="dijit.form.FilteringSelect"   id="searchby" name="searchby" placeholder="Search by ....." value="" type="text">
+			<option value="0">All</option>
+			<option value="1">Generation</option>
+			<option value="2">Service Name</option>
+		</select>
+		<input dojoType="dijit.form.TextBox" required="true"  id="txtsearch" name="txtsearch" placeholder="Search by....." value="" type="text">
+		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+</form>	
+<div style="border: 1px dotted #000; background: #fff;width: 26cm;margin: 0 auto;min-height: 27cm;">
+	<div id="divPrint">
+							<table style="background:#fff; margin: 0 auto;padding: 1cm;">
+								<tr style="font-size: 13px;">
+									<td colspan="2"></td>
+									<td align="right">
+										<strong></strong><br />
+										<strong></strong><br />
+									</td>
+								</tr>
+								<tr>
+									<td width="25%" align="left">
+										<img style="width: 70%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
+									</td>
+									<td align="center">
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">របាយការណ៏ តម្លៃសេវាកម្ម</strong><br /><br />
+									</td>
+									<td width="28%" align="right">
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">ក្រសួងអប់រំ យុវជន និងកីឡា</strong><br />
+										<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';margin-right: 25px;">សាលា អាស៊ាន ហ៊ែរីថេជ</strong><br /><br >
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<table cellpadding="5"​ style="margin:0 auto;width:100%;border: 1px solid #000; border-collapse: collapse;border: 1px solid #000;"  border="1" >
+											<tr style="font-size:11px; height: 30px;" align="center" >
+												<th >ល.រ</th>
+												<th >Academic</th>
+												<th >Generation</th>
+												<th>Service Name</th>
+												<th>Monthly</th>
+												<th >Quarter</th>
+												<th >Semester</th>
+												<th >Year</th>
+											</tr>
+										<?php $i=0; foreach ($this->rs AS $row) { $i++;?>
+											<tr style="font-size:11px; height: 30px;" align="center" >
+												<th ><?php echo $i;?></th>
+												<th ><?php echo $row['academic'];?></th>
+												<th ><?php echo $row['generation'];?></th>
+												<th align="left"><?php echo $row['service_name'];?></th>	
+												<th ><?php echo $row['monthly'];?></th>
+												<th ><?php echo $row['quarter'];?></th>
+												<th ><?php echo $row['semester'];?></th>
+												<th ><?php echo $row['year'];?></th>
+											</tr>
+										<?php }?>	
+										</table>	
+									</td>
+								</tr>
+							</table>
+	</div>	
+</div>	

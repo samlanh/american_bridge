@@ -1,0 +1,144 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Report Student Balance'); 
+	echo $this->headTitle(''); 
+	$frm=$this->form_search;
+?>	
+<div style="width: 28cm;margin: 0 auto;">
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rptstudentbalance')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table>	
+		<tr>
+			<td>
+				<input dojoType="dijit.form.TextBox"  id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+			</td>
+			<td>
+				<?php echo $frm->getElement('service');?>
+			</td>
+			<td>
+				<input class="fullside" name="from_date" id="from_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['start_date'];?>" type="text">
+			</td>
+			<td>
+				<input class="fullside" name="to_date" id="to_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['end_date'];?>" type="text">
+			</td>
+			<td>
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</td>
+		</tr>
+	</table>
+</form>	
+</div>
+<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm;padding: 0.5cm;">
+	<div id="divPrint">
+		<div id="exportExcel" >
+									<table  style="background:#fff; margin: 0 auto;width: 100%;">
+										<tr>
+											<td width="28%" align="left">
+												<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
+											</td>
+											<td align="center" width="44%">
+												<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';">របាយការណ៏​​ សិស្សជំពាក់ថ្លៃសេវាកម្ម</strong><br />
+												<span style="font-weight: bold;font-size: 11px;">From &nbsp;<?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;To&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));?></span><br /><br />
+											</td>
+											<td width="28%" align="right">
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">
+												<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family: 'Hanuman';"  border="1" >
+													<tr style="font-size:11px; height: 20px;border: 1px solid #000;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center" >
+														<td style="border: 1px solid #000;">&nbsp;N.o&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;Receipt No&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;Academic Year&nbsp;</td>
+														<td style="border: 1px solid #000;">Code</td>
+														<td style="border: 1px solid #000;">&nbsp;Student Name&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;Sex&nbsp;</td>
+														<td style="border: 1px solid #000;">Service Name</td>
+														<td style="border: 1px solid #000;">Total</td>
+														<td style="border: 1px solid #000;">&nbsp;Discount&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;Total Payment&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;Paid Amount&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;Balance&nbsp;</td>
+														<td style="border: 1px solid #000;">Paid Date</td>
+														<td style="border: 1px solid #000;">Validate</td>
+														<td style="border: 1px solid #000;">Note</td>
+													</tr>
+												<?php $i=0;$totalpaid=0;$totalbalance=0;if(!empty($this->rs)){ foreach ($this->rs AS $row) { $i++;?>
+													<tr style="font-size:10px; height: 20px;border: 1px solid #000;" align="center" >
+														<td style="border: 1px solid #000;"><?php echo $i;?></td>
+														<td style="border: 1px solid #000;"><?php echo $row['receipt'];?></td>
+														<td style="border: 1px solid #000;"><?php echo $row['year'];?></td>
+														<td style="border: 1px solid #000;">&nbsp;<?php echo $row['code'];?>&nbsp;</td>
+														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['name'];?></td>	
+														<td style="border: 1px solid #000;"><?php echo $row['sex'];?></td>
+														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['service'];?></td>
+														<td style="border: 1px solid #000;">&nbsp;<?php echo $row['fee'];?>&nbsp;</td>
+														<td style="border: 1px solid #000;"><?php echo $row['discount'];?></td>
+														<td style="border: 1px solid #000;"><?php echo $row['payment'];?></td>
+														<td style="border: 1px solid #000;"><?php echo $row['paid'];?></td>
+														<?php if($row['complete']==0){ ?>
+															<td style="border: 1px solid #000;color:red;"><?php echo $row['balance'];?></td>
+															<?php $totalbalance=$totalbalance + $row['balance'];?>
+														<?php }else{?>
+															<td style="border: 1px solid #000;"><?php echo $row['balance'];?></td>
+															<?php $totalpaid=$totalpaid+$row['balance'];?>
+														<?php }?>
+														<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['paid_date']));?>&nbsp;</td>
+														<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['validate']));?>&nbsp;</td>
+														<?php if($row['complete']!=0){ ?>
+															<td style="border: 1px solid #000;">&nbsp;<?php echo $row['comment'];?>&nbsp;</td>
+														<?php }else{?>
+															<td style="border: 1px solid #000;color:red;">&nbsp;<?php echo $row['comment'];?>&nbsp;</td>
+														<?php }}?>
+													</tr>
+												<?php }?>	
+												</table>	
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">&nbsp;</td>
+										</tr>
+										<?php //if (empty($total_fee)){}?>
+										<?php ///if (!empty($total_fee)){?>
+										<tr>
+											<td colspan="2"></td>
+											<td>
+												<table border="1" align="right" style="width:50%; margin-right:0.5%; white-space:nowrap;border-collapse: collapse;border: 1px #000 solid;">
+													<tr style="font-size:10px; background:#ccc; height: 20px;width: 400px;" align="center">
+														<th>&nbsp;Total Balance Paid &nbsp;</th>
+														<th>&nbsp;Total Balance Remain&nbsp;</th>
+													</tr>
+													<tr align="center" style=" height:18px; font-size:10px; padding: 1px;font-weight: bold;" >
+														<td>$ <?php echo number_format($totalpaid,2);?></td>
+														<td style="color: red;">$ <?php echo number_format($totalbalance,2);?></td>
+													</tr>
+												  </table>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">&nbsp;</td>
+										</tr>
+										<tr>
+											<td colspan="3">&nbsp;</td>
+										</tr>
+										<tr >
+											<td align="center" width="25%">
+												<span style=" font-size: 14px;">Verified by</span>
+											</td>
+											<td  width="50%">
+												&nbsp;
+											</td>
+											<td align="center"  width="25%">
+												<span style=" font-size: 14px;text-align: right;">Prepared by</span>
+											</td>
+										</tr>
+										
+										<?php //}?>
+									</table>
+				</div> 				
+			</div>		
+</div>
+
+
+
+
+

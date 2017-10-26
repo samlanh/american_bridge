@@ -1,0 +1,71 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Currency Smart | Transfer Report page'); 
+	$this->headTitle('SRMS | Report Static Student By Year'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$ac = null;
+	//print_r($this->rs);exit();
+?>	
+<div style="width: 28cm;margin: 0 auto;">
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'foundation','action'=>'rptamountstudentbyyear')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<input dojoType="dijit.form.TextBox"   id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+</form>
+</div>
+		<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm;padding: 0.5cm;">
+			<div id="divPrint">
+							<?php if(!empty($this->year)) foreach ($this->year as $year){?>
+							<table style="width:27cm;background:#fff; margin: 0 auto;">
+								<tr style="font-size: 18px;">
+									<td colspan="2"></td>
+									<td align="center">
+										<strong>ស្ថិតិសិស្ស ជំនាន់ទី<span> <?php echo $year['generation']?></span>  ឆ្នាំសិក្សា <span><?php echo $year['from_academic']?>-</span><?php echo $year['to_academic']?> ចុះឈ្មោះលើកទី <span> <?php echo $year['time']?></span></strong><br /><br />
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4">
+										<table cellpadding="5"​ style="margin:0 auto;width:90%; border-collapse: collapse;"  border="1" >
+											<tr style="font-size:14px; height: 30px;" align="center" >
+											<style> th{border-top:1px solid #000;}</style>
+												<th>N.o</th>
+												<th>Grade</th>
+												<th>Session</th>
+												<th>Total</th>
+											</tr>
+											<?php $i=0;$total_stu=0; if(!empty($this->rs))foreach ($this->rs as $stu){$i++;?>
+												<?php if($year['id']!=$stu['academic_year']){
+														
+												?>
+											<tr style="font-size:12px;border: 1px solid #000;"​ align="center">
+												<td><?php echo $i;?></td>
+												<td><?php echo $stu['grade'];?></td>
+												<td><?php echo $stu['session'];?></td>
+												<td><?php echo $stu['amount'];?></td>
+											</tr>
+												<?php $total_stu=$total_stu+$stu['amount'];?>
+												<?php }?>
+											<?php }?>
+										</table>
+										<br><br>	
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3" align="left">
+									<style>td{height:30px;}</style>
+										<table cellpadding="5"​ style="margin:0 auto;width:20%; border-collapse: collapse;" align="left" >
+										<tr style="font-size:14px;" align="center">
+											
+											<td>Grand Total:</td>
+											<td bgcolor="#fc0"><?php echo $total_stu;?></td>
+										
+										</tr>
+										</table>
+									</td>
+								</tr>
+								<tr><td><br><br><br><br></td></tr>
+								
+							</table>
+							<?php }?>
+				</div>
+			</div>

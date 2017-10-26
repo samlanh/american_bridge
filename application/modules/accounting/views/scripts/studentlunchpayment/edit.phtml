@@ -1,0 +1,712 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_STUDENT_SERVICE_PAYMENT')); 
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$hour=explode(',', $this->row['time']);
+// 	print_r($this->detail);
+?>	
+<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/convertion.js"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require('dojox.form.BusyButton');
+	dojo.require("dojo.NodeList-manipulate");
+
+	var service_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->service));?>);
+dojo.ready(function(){
+    	 dijit.byId('study_year').attr('value','<?php echo $this->row['year']?>');
+    	 getStudentInfo();
+    	 new dijit.form.FilteringSelect({
+  			store: service_store,
+  			autoComplete: true,                        
+  		    id: "service",
+  		    name: "service",  
+  		    class: 'fullside',  
+  		    onChange: function() { getservicefee();  
+  			    service = dijit.byId('service').get('value');
+  			    if(service==-2){
+  					dijit.byId('popup_add_service').show();
+  			    }
+				getServiceCate(service);
+				getStartDateService();
+  		    } 
+  		}, "service");
+    	dijit.byId('service').attr('value',<?php echo $this->detail['service_id']?>);
+    	//setServiceFee();
+});
+
+</script>
+<style>
+select{ width:100%;}
+fieldset{  background:none;}
+.red{ color: red; padding-left:5px;}
+.head-td{font-size: 12px;}
+</style>
+<?php $register = $this->frm_register;
+//print_r($register);
+?>
+<form id='office_receipt' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'studentlunchpayment','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">   
+   if(this.validate()) {
+    return true;
+   }else {
+    return false;
+   }
+</script>
+<table  cellspacing="10" style="margin: 0 auto; width: 100%;">
+	<tr>
+		<td>
+		<fieldset>
+					<legend align="center"><strong style="font-size: 18px;"><?php echo $tr->translate("EDIT_STUDENT_SERVICE_PAYMENT");?></strong></legend>
+					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" >
+						<tr>
+							<td style="width: 12%"><?php echo $tr->translate("STUDY_YEAR");?></td>
+							<td style="width: 37%"><?php echo $register->getElement('study_year');?></td>
+							<td align="right" style="width: 12%"><?php echo $tr->translate("RECEIPT_NO");?></td>
+							<td style="width: 37%"><?php echo $register->getElement('reciept_no');?></td>
+						</tr>
+						<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
+						<tr>
+							<td><?php echo $tr->translate("STUDENT_ID");?></td>
+							<td>
+								<select type="text" class="fullside" dojoType="dijit.form.FilteringSelect" name="studentid" id="studentid" onChange="getStudentInfo();setID(1);" >
+									<option value="-1">Select Student ID</option>
+									<?php if(!empty($this->rs)){foreach ($this->rs as $rs){?>
+									<option value="<?php echo $rs['id']?>" <?php if($rs['id']==$this->row['student_id']) echo 'selected="selected"' ?>><?php echo $rs['code']?></option>
+									<?php }}?>
+								</select>
+							</td>
+							<td align="right"><?php echo $tr->translate("STUDENT_NAME");?></td>
+							<td align="center">
+								<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" name="stu_name" id="stu_name" onChange="setID(2);" >
+									<option value="-1">Select Student Name</option>
+									<?php if(!empty($this->row_name)){foreach ($this->row_name as $row){?>
+									<option value="<?php echo $row['id']?>" <?php if($row['id']==$this->row['student_id']) echo 'selected="selected"' ?> ><?php echo $row['name']?></option>
+									<?php }}?>
+								</select>
+							</td>
+						</tr>
+						<input type="hidden" value="<?php echo $this->detail['is_parent'];?>"  name="is_parent" id="is_parent" dojoType="dijit.form.TextBox" />
+						<tr>
+						    <td><?php echo $tr->translate("NAME_KH");?></td>
+							<td><?php echo $register->getElement('kh_name');?></td>
+							<td align="right"><?php echo $tr->translate("NAME_EN");?></td>
+							<td ><?php echo $register->getElement('en_name');?></td>
+						</tr>
+						<tr>	
+							<td><?php echo $tr->translate("SEX");?></td>
+							<td><?php echo $register->getElement('sex');?></td>
+							
+							<td align="right"><?php echo $tr->translate("DEGREE");?></td>
+							<td align="center"><input type="text" readonly="readonly" class="fullside" name="degree" id="degree" dojoType="dijit.form.TextBox" /></td>
+						   	
+						</tr>
+						<tr>	
+							<td align="left"><?php echo $tr->translate("GRADE");?></td>
+							<td title='Ex: 20 or 10%' ><input type="text" readonly="readonly" class="fullside" name="grade" id="grade" dojoType="dijit.form.TextBox" /></td>
+							
+							<td align="right"><?php echo $tr->translate("SESSION");?></td>
+							<td><input type="text" readonly="readonly" name="session" class="fullside" id="session" dojoType="dijit.form.TextBox" /></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate('SERVICE');?></td>
+							<td> 
+								<input id="service" />
+							</td>
+							
+							<td align="right"><?php echo $tr->translate('PAYMENT_TERM');?></td>
+							<td> 
+								<select class="fullside" name="term" id="term" onchange="getservicefee();getValidate();" dojoType="dijit.form.FilteringSelect" type="text"   >
+									<?php if(!empty($this->payment_term)){foreach ($this->payment_term as $key => $term){?>
+										<option value="<?php echo $key?>" <?php if($key==$this->detail['payment_term']) echo 'selected="selected"'?>><?php echo $term;?></option>
+									<?php  }}?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate('SERVICE_FEE');?></td>
+							<td> 
+								<input class="fullside"  value="<?php echo $this->row['tuition_fee'];?>" name="service_fee" id="service_fee" dojoType="dijit.form.TextBox" type="text" >
+							</td>
+							<td align="right"><?php echo $tr->translate('QTY');?></td>
+							<td> 
+								<input class="fullside" name="qty" id="qty" onkeyup="calculateTotalPayment();getValidate();" dojoType="dijit.form.TextBox" value="<?php echo $this->detail['qty'];?>" type="text"   >
+							</td>
+							
+						</tr>
+						<tr>
+							<td ><?php echo $tr->translate('DISCOUNT');?></td>
+							<td> 
+								<input class="fullside" value="<?php echo $this->row['discount_percent'];?>" name="discount" id="discount" onkeyup="calculateTotalPayment();" dojoType="dijit.form.TextBox" value="0" type="text"   >
+							</td>
+						
+							<td align="right"><?php echo $tr->translate('TOTAL_PAYMENT');?></td>
+							<td> 
+								<input class="fullside"  value="<?php echo $this->row['total_payment'];?>" name="total_payment" id="total_payment" dojoType="dijit.form.TextBox" type="text" >
+							</td>
+							
+							
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate('PAID_AMOUNT');?></td>
+							<td> 
+								<input class="fullside" name="paid_amount" value="<?php echo $this->row['paid_amount'];?>" id="paid_amount" onkeyup="calculatBalanceAndReturn();" dojoType="dijit.form.TextBox" type="text"   >
+							</td>
+						
+							<td  align="right"><?php echo $tr->translate('BALANCE');?></td>
+							<td> 
+								<input class="fullside" readonly="readonly" value="<?php echo $this->row['balance_due'];?>" name="balance" id="balance" dojoType="dijit.form.TextBox" type="text" >
+							</td>
+							
+							
+						</tr>
+						<tr>
+							
+							
+							<td align="left"><?php echo $tr->translate('START_DATE');?></td>
+							<td> 
+								<input class="fullside" name="start_date" id="start_date" dojoType="dijit.form.DateTextBox" onchange="getValidate();" value="<?php echo $this->detail['start_date'];?>" type="text" >
+							</td>
+							<td align="right"><?php echo $tr->translate('RETURN');?></td>
+							<td> 
+								<input class="fullside" readonly="readonly" value="<?php echo $this->row['return_amount'];?>" name="return" id="return" dojoType="dijit.form.TextBox" type="text"   >
+							</td>
+							
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate('END_DATE');?></td>
+							<td> 
+								<input class="fullside" name="end_date" id="end_date" dojoType="dijit.form.DateTextBox" value="<?php echo $this->detail['validate'];?>" type="text"   >
+							</td>
+						
+							<td align="right"><?php echo $tr->translate('OTHERS');?></td>
+							<td> 
+								<input class="fullside" name="other" value="<?php echo $this->detail['note'];?>" id="other" dojoType="dijit.form.TextBox" type="text" >
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4" align="center">
+								<input type="button" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
+									iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'registrar','controller'=>"studentservicepayment",'action'=>'index'),null,true); ?>';" />
+								<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
+								 	iconClass="dijitEditorIcon dijitEditorIconSave" />
+								<input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="busyButton" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave();"/> 
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+<script type="text/javascript">
+function printSave(){		
+	if(dijit.byId('office_receipt').validate()) {
+		dojo.byId("lbl_name").innerHTML = dijit.byId("kh_name").get('value') + ' - ' + dijit.byId("en_name").get('value');
+		dojo.byId("lbl_reciept_no").innerHTML = dijit.byId("reciept_no").get('value');
+		//dojo.byId("lbl_sex").innerHTML = dijit.byId("sex").attr('displayedValue');
+		dojo.byId("lbl_stuid").innerHTML = dijit.byId("studentid").attr('displayedValue');
+		dojo.byId("lbl_grade").innerHTML = dijit.byId("grade").get('value');
+		dojo.byId("lbl_session").innerHTML = dijit.byId("session").get('value');
+		dojo.byId("lbl_service_cate").innerHTML = dijit.byId("service_cate").attr('value');
+		qty = dijit.byId("qty").get('value');
+		qty = isNaN(qty)?1:qty;
+		dojo.byId("lbl_term").innerHTML = qty + ' ' + dijit.byId("term").attr('displayedValue');
+		dojo.byId("lbl_service_fee").innerHTML = "$ "+dijit.byId("service_fee").get('value');
+		// if discount>0 show (discount%) else if discount = 0 => display blank
+		var discount = dijit.byId("discount").get('value');
+		discount = isNaN(discount)?0:discount;
+		if(discount==0){
+			discount='';
+		}else{
+			discount = discount+" %";
+		}
+		dojo.byId("lbl_discount").innerHTML = discount;
+		dojo.byId("lbl_total_payment").innerHTML = "$ "+dijit.byId("total_payment").get('value');
+		dojo.byId("lbl_paid_amount").innerHTML ="$ "+dijit.byId("paid_amount").get('value');
+		//dojo.byId("lbl_return").innerHTML = dijit.byId("return").get('value');
+		//dojo.byId("lbl_balance").innerHTML = dijit.byId("balance").get('value');
+		dojo.byId("lbl_other").innerHTML = dijit.byId("service").attr('displayedValue') + ' ' + dijit.byId("other").get('value');
+	
+		var start = dijit.byId("start_date").get('value');
+		mm = start.getMonth()+1;
+		  var dd = start.getDate();
+		   if(dd<10){
+		    dd = "0"+dd;
+		   }
+		   var mon = getMonthByNumber(mm);
+		   if(mm<10){
+		    mm = "0"+mm;
+		   }
+		  var y = start.getFullYear();
+		  var start_date = dd + '-' + mon + '-' + y ;
+		dojo.byId("lbl_start_date").innerHTML = start_date;
+	
+	
+		var end = dijit.byId("end_date").get('value');
+		mm = end.getMonth()+1;
+		  var dd = end.getDate();
+		   if(dd<10){
+		    dd = "0"+dd;
+		   }
+		   var month = getMonthByNumber(mm);
+		   if(mm<10){
+		    mm = "0"+mm;
+		   }
+		  var y = end.getFullYear();
+		  var end_date = dd + '-' + month + '-' + y ;
+		dojo.byId("lbl_end_date").innerHTML = end_date;
+		
+		dijit.byId('popup_invoice').show();
+	}
+}
+function getMonthByNumber(m){
+	var monthName=[
+		"Jan",
+		 "Feb",
+		 "Mar",
+		 "Apr",
+		 "May",
+		 "Jun",
+		 "Jul",
+		 "Aug",
+		 "Sep",
+		 "Oct",
+		 "Nov",
+		 "Dec",
+		];
+		return (monthName[m-1]);
+}
+
+var url_get_service_cate = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-service-cate')); ?>';
+function getServiceCate(service_id){
+		//alert(service_id);
+		dojo.xhrPost({
+				url:url_get_service_cate,
+				content:{
+					'service_id':service_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					dijit.byId('service_cate').attr('value',data)					 
+				},
+				error: function(err) {
+					alert(err);
+				}
+		});
+	
+}
+
+</script>
+
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" id="popup_invoice" >
+		<div id="divPrint" style=" width: 22cm; height: 12cm ; padding: 0px; margin: 0px;">
+			<style>
+			ul li{ line-height:15px; list-style: none;}
+			.h{ margin-top: -8px;/*margin-left:4px;*/ white-space:nowrap;fon}
+			.border{border: 1px solid #000;height: 25px;display: block; }
+			</style>
+				<table class="table_print" style="font-family: 'Khmer OS Battambang';font-weight:bold;white-space: nowrap;background:#fff; margin: 0 auto; width: 22cm;height: 12cm; padding: 1cm; margin: 0 auto;margin-top:-20px;" align="center">
+							<tr>
+								<td align="center" colspan="7" style="line-height:8px;">
+									<strong style=" font: bold 15px 'Khmer MEF2',Arial Black; color:#000;"><u>បង្កាន់ដៃបង់ប្រាក់សេវាកម្ម</u></strong><br >
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 15px;padding-right: 10px;">OFFICIAL RECEIPT</strong><br >
+								</td>
+							</tr>
+							<tr>
+								<td >អត្តលេខសិស្ស<div class="h">StudentID</div></td>
+								<td align="center"  colspan="2"><strong><label id="lbl_stuid" class="border"></label></strong></td>
+								<td colspan="2">&nbsp;</td>
+								<td>លេខបង្កាន់ដៃ<div class="h">Receipt No.</div></td>
+								<td  align="center" ><strong><label id="lbl_reciept_no" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td>ឈ្មោះសិស្ស<div class="h">StudentName</div></td>
+								<td align="center"  colspan="3"><strong><label id="lbl_name" class="border"></label></strong></td>
+								<td></td>
+								<td>រយះពេលនៃការបង់<div class="h">PaymentPeriod</div></td>
+								<td align="center"  ><strong><label id="lbl_term" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td style="width: 15%;">ថ្នាក់សិក្សា<div class="h">Grade</div></td>
+								<td align="center"  style="width: 25%;"><strong><label id="lbl_grade" class="border"></label></strong></td>
+								<td align="center" style="width: 10%;">វេន<div class="h">Session</div></td>
+								<td align="center"  style="width: 15%;"><strong><label id="lbl_session" class="border"></label></strong></td>
+								<td style="width: 15px;display: block;"></td>
+								<td style="width: 15%;">តម្លៃសេវាកម្ម<div class="h">Fee</div></td>
+								<td align="center"  style="width: 20%;"><strong><label id="lbl_service_fee" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td>ប្រភេទសេវាកម្ម<div class="h">Service</div></td>
+								<td align="center"  colspan="3"><strong><label id="lbl_service_cate" class="border"></label></strong></td>
+								<td></td>
+								<td>បញ្ចុះតម្លៃ<div class="h">Discount</div></td>
+								<td  align="center" ><strong><label id="lbl_discount" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td>ថ្ងៃចាប់ផ្តើម<div class="h">StartDate</div></td>
+								<td align="center"  colspan="2"><strong><label id="lbl_start_date" class="border"></label></strong></td>
+								<td colspan="2">&nbsp;</td>
+								<td>ទឹកប្រាក់ត្រូវបង់<div class="h">TotalPayment</div></td>
+								<td align="center"  ><strong><label id="lbl_total_payment" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td>មានសុពលភាពត្រឹម<div class="h">PaymentValid</div></td>
+								<td align="center"  colspan="2"><strong><label id="lbl_end_date" class="border"></label></strong></td>
+								<td colspan="2">&nbsp;</td>
+								<td>ទឹកប្រាក់បានបង់<div class="h">AmountPaid</div></td>
+								<td align="center"  ><strong><label id="lbl_paid_amount" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td>សម្គាល់<div class="h">Note</div></td>
+								<td  align="left" colspan="6" style="font-size:12px;"><strong><label id="lbl_other" class="border"></label></strong></td>
+							</tr>
+							<tr>
+								<td align="left">
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';padding-left: 50px;"></strong><br />
+								</td>
+								<td colspan="4">&nbsp;</td>
+								<td colspan="2" align="center">
+									<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 14px;font-family:'Khmer MEF2';"><?php echo Zend_Date::now();?><br />Official's Signature : <?php $session_user=new Zend_Session_Namespace('auth'); $last = $session_user->last_name;$first=$session_user->first_name;echo $last.' '.$first; ?></strong>
+								</td>
+							</tr>
+							
+						</table>
+	</div>
+	<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
+				showLabel="false" type="button" onclick="printSubmit();doPrint();">Print</button>
+		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel"
+				showLabel="false" type="button" onclick="hideDialog();">Cancel</button>
+</div>
+</div>	
+<script>
+//save daata when sub button print 
+function printSubmit(){
+	$('#office_receipt').submit();
+}
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    dijit.byId("terms").hide();	//hideDialog();
+}
+</script>
+<script type="text/javascript">
+function showPopupDept() {
+	if(dijit.byId('faculty').value==-1){
+		dijit.byId("popup_dept").show();
+	}
+}
+function hideDialog() {		
+	dijit.byId("popup_invoice").hide();
+}
+
+var url_student_info = "<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-student')); ?>";
+function getStudentInfo(){
+			studentid = dijit.byId('studentid').get('value');
+			//alert(studentid);
+			dojo.xhrPost({
+				url:url_student_info,
+				content:{
+					'studentid':studentid
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					//alert(data.sex);
+					dijit.byId("kh_name").attr("value",data.stu_khname);
+					dijit.byId("en_name").attr("value",data.stu_enname);
+					dijit.byId("sex").attr("value",data.sex);
+					dijit.byId("degree").attr("value",data.degree);
+					dijit.byId("grade").attr("value",data.grade);
+					dijit.byId("session").attr("value",data.session);
+					
+					//alert(data);
+					//dijit.byId("price_"+key).attr("value",data.price_fee);
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+}
+
+function setID(type){
+	if(type==1){
+		dijit.byId('stu_name').attr('value',dijit.byId('studentid').get('value')); 
+	}else{
+		dijit.byId('studentid').attr('value',dijit.byId('stu_name').get('value')); 
+	}
+}
+
+
+var url_get_start_date = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-start-date-service')); ?>';
+function getStartDateService(){
+	service_id = dijit.byId('service').get('value');
+	stu_id = dijit.byId('studentid').get('value');
+	dojo.xhrPost({
+		url:url_get_start_date,
+		content:{
+			'service_id':service_id,
+			'stu_id':stu_id
+			},
+		handleAs:"json",
+		load: function(data) {
+			if(data){
+				dijit.byId('start_date').attr('value',data);
+			}	
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
+
+var url_service_fee = "<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-price')); ?>";
+function getservicefee(){
+	//alert(1);
+	studentid = dijit.byId('studentid').get('value');
+	service = dijit.byId('service').get('value');
+	term = dijit.byId('term').get('value');
+	year = dijit.byId('study_year').get('value');
+	dojo.xhrPost({
+		url:url_service_fee,
+		content:{
+			'term':term,
+			'service':service,
+			'studentid':studentid,
+			'year':year,
+			},
+		handleAs:"json",
+		load: function(data) {
+			var old_service = <?php echo $this->detail['service_id'] ;?>;
+			if(service==old_service){
+				
+			}else{
+				clear();
+				dijit.byId("service_fee").attr("value",data.price_fee);
+				calculateTotalPayment();
+			}
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+function clear(){
+	dijit.byId("service_fee").attr("value",0);
+	dijit.byId("discount").attr("value",0);
+	dijit.byId("total_payment").attr("value",0);
+	dijit.byId("paid_amount").attr("value",0);
+	dijit.byId("balance").attr("value",0);
+	dijit.byId("return").attr("value",0);
+	dijit.byId("other").attr("value",'');
+}
+
+function calculateTotalPayment(){
+	service_fee = dijit.byId('service_fee').get('value');
+	qty = dijit.byId('qty').get('value');
+	qty = isNaN(qty)?1:qty;
+	service_fee = service_fee * qty;
+	discount = dijit.byId('discount').get('value');
+	discount = isNaN(discount)?0:discount;
+	dijit.byId('total_payment').attr('value',service_fee-(service_fee*discount/100));
+	dijit.byId('paid_amount').attr('value',service_fee-(service_fee*discount/100));
+	calculatBalanceAndReturn();
+}
+function calculatBalanceAndReturn(){
+	total_payment = dijit.byId('total_payment').get('value');
+	paid_amount = dijit.byId('paid_amount').get('value');
+	if(paid_amount>total_payment){
+		dijit.byId('return').attr('value',paid_amount-total_payment);
+		dijit.byId('balance').attr('value',0);
+	}
+	else{
+		dijit.byId('balance').attr('value',total_payment-paid_amount);
+		dijit.byId('return').attr('value',0);
+	}
+	//setServiceFee();
+}
+
+function setServiceFee(){
+
+	//service_fee = dijit.byId('service_fee').get('value');
+	//alert(service_fee);
+	
+	dijit.byId('service_fee').attr('value',<?php echo $this->row['tuition_fee']?>);
+	dijit.byId('total_payment').attr('value',<?php echo $this->row['total_payment']?>);
+	dijit.byId('paid_amount').attr('value',<?php echo $this->row['paid_amount']?>);
+	dijit.byId('discount').attr('value',<?php echo $this->row['discount_percent']?>);
+	dijit.byId('balance').attr('value',<?php echo $this->row['balance_due']?>);
+	dijit.byId('return').attr('value',<?php echo $this->row['return_amount']?>);
+}
+
+var no=0;
+function getValidate(){
+	 term = dijit.byId('term').get('value');
+	 start_date = dijit.byId('start_date').get('value');
+	 qty = dijit.byId('qty').get('value');
+	 qty = isNaN(qty)?1:qty;
+	 if(term==1){
+		 var a = new Date(start_date);
+		  mm = a.getMonth()+(1*qty)+1;
+
+		 var dd = a.getDate();
+		  if(dd<10){
+		   dd = "0"+dd;
+		 }
+		  if(mm<10){
+		   mm = "0"+mm;
+		 }
+		 var y = a.getFullYear();
+		 var epx_date = y + '-' + mm + '-' + dd ;
+
+		 //alert(epx_date);
+		 dijit.byId('end_date').attr('value',epx_date);
+	 }
+	 if(term==2){
+		 var a = new Date(start_date);
+		  mm = a.getMonth()+(3*qty)+1;
+
+		 var dd = a.getDate();
+		  if(dd<10){
+		   dd = "0"+dd;
+		 }
+		  if(mm<10){
+		   mm = "0"+mm;
+		 }
+		 var y = a.getFullYear();
+		 var epx_date = y + '-' + mm + '-' + dd ;
+
+		 //alert(epx_date);
+		 dijit.byId('end_date').attr('value',epx_date);
+	 }
+	 if(term==3){
+		 var a = new Date(start_date);
+		  mm = a.getMonth()+(6*qty)+1;
+
+		 var dd = a.getDate();
+		  if(dd<10){
+		   dd = "0"+dd;
+		 }
+		  if(mm<10){
+		   mm = "0"+mm;
+		 }
+		 var y = a.getFullYear();
+		 var epx_date = y + '-' + mm + '-' + dd ;
+
+		 //alert(epx_date);
+		 dijit.byId('end_date').attr('value',epx_date);
+	 }
+	 if(term==4){
+		 var a = new Date(start_date);
+		  mm = a.getMonth()+(12*qty)+1;
+
+		 var dd = a.getDate();
+		  if(dd<10){
+		   dd = "0"+dd;
+		 }
+		  if(mm<10){
+		   mm = "0"+mm;
+		 }
+		 var y = a.getFullYear();
+		 var epx_date = y + '-' + mm + '-' + dd ;
+
+		 //alert(epx_date);
+		 dijit.byId('end_date').attr('value',epx_date);
+	 }
+}
+
+
+
+var url_add_service = '<?php echo $this->url(array("module"=>"accounting","controller"=>"studentservicepayment","action"=>"add-popup-service")); ?>';
+function addService(){
+	dojo.xhrPost({
+			url:url_add_service,
+			form: dojo.byId("frm_add_service"),
+			handleAs:"json",
+			load: function(data) {
+				//alert(data); 
+				var Itemmake = { 
+				     id: data,
+					         name: dijit.byId('service_name').get('value')
+					   };
+		 	addDataToSelectbox(dijit.byId('service'), service_store, Itemmake, data);
+		    dijit.byId('frm_add_service').reset();
+		    dijit.byId("popup_add_service").hide();
+				
+			},
+			error: function(err) {
+				alert(err);
+			}
+	});
+}
+
+function hidePopup() {		
+	dijit.byId("popup_add_service").hide();
+}
+
+</script>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:40%;" id="popup_add_service" >
+		<form style="background-color: buttonface; width:100%;" id='frm_add_service' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<legend align="center" ><?php echo $tr->translate('ADD_SERVICE');?></legend><br />
+						<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+							<tr>
+								<td style="width:100px"><?php echo $tr->translate("SERVICE_TYPE")?></td>
+								<td>
+									<select dojoType="dijit.form.FilteringSelect"   class="fullside" id="service_type" name="service_type" value="" type="text">
+										<?php if(!empty($this->service_type)){ foreach ($this->service_type as $service_type){?>
+											<option value="<?php echo $service_type['id']?>"><?php echo $service_type['name']?></option>
+										<?php }}?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
+								<td>
+									<input dojoType="dijit.form.TextBox"  class="fullside" id="service_name" name="service_name" value="" type="text">
+								</td>
+							</tr>
+							<tr>
+							<tr>
+								<td style="width: 5px"><?php echo $tr->translate("DISCRIPTION")?></td>
+								<td>
+									<input dojoType="dijit.form.TextBox"  class="fullside" id="description" name="description" value="" type="text">
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 5px"><?php echo $tr->translate("STATUS")?></td>
+								<td>
+									<select name="status_popup" id="status_popup" dojoType="dijit.form.FilteringSelect"   class="fullside">
+	    								<option value="1" label="active">Active</option>
+	    								<option value="0" label="deactive">Deactive</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4" align="center">
+									<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
+									​ ​​iconClass="dijitIconUndo" onclick="hidePopup();"/>
+									<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
+									 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addService();"/>
+								</td>
+							</tr>
+							
+						</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+
+		</form>
+	</div>
+</div>
+	

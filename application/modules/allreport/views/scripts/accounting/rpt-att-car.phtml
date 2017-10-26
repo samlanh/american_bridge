@@ -1,0 +1,184 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Rpt Att Transport'); 
+	echo $this->headTitle();
+	$base_url = Application_Form_FrmMessage::getUrl("/");
+	$frm = $this->form_search;
+?>
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-att-car')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table width=80%" align="left">
+		<tr>
+			<td>
+				<input  dojoType="dijit.form.TextBox"  class="fullside"  id="txtsearch" name="txtsearch" placeholder="Advance Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+			</td>
+			<td>
+				<?php echo $frm->getElement('branch');?>
+			</td>
+			<td>
+				<select name="carid" id="carid" class="fullside" dojoType="dijit.form.FilteringSelect" >
+					<option value="0">----- select car id -----</option>
+					<?php if(!empty($this->carid)){foreach ($this->carid as $car){?>
+						<option value="<?php echo $car['id']?>" <?php if($car['id']==$this->search['carid']){echo 'selected="selected"';}?>><?php echo $car['name']?></option>
+					<?php }}?>
+				</select>
+			</td>
+			<td>
+				<select name="service" id="service" class="fullside" dojoType="dijit.form.FilteringSelect" >
+					<option value="0">----- select service -----</option>
+					<?php if(!empty($this->service)){foreach ($this->service as $service){?>
+						<option value="<?php echo $service['id']?>" <?php if($service['id']==$this->search['service']){echo 'selected="selected"';}?>><?php echo $service['name']?></option>
+					<?php }}?>
+				</select>
+			</td>
+			<td>
+				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
+			</td>
+		</tr>
+	</table>	
+</form>
+<style>
+#footer{display: none;}
+</style>	
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm;">
+	<div id="divPrint">
+		<table style="background:#fff; margin: 0 auto; width: 100%; padding: 1cm; ">
+			<tr>
+				<td width="15%" align="center">
+					<img style="width: 70%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
+				</td>
+				<td align="center" width="70%">
+					<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';"><?php echo $tr->translate('បញ្ជីវត្តមានសិស្សទទួលសេវាកម្មជិះរថយន្ត');?></strong><br >
+				</td>
+				<td align="right" width="15%">&nbsp;</td>
+			</tr>
+			<tr> 
+				<td colspan="3" id="exportExcel" >
+					<style> th,td{ padding:0 1px;}</style>
+						<style type="text/css">
+							body{font-family: "Times New Roman",Arial; }
+							table{ border-collapse:collapse; margin:0 auto;
+							border-color:#000; }
+							.padd tr td{  text-align:center}
+							.padd tr th{  background-color: #ccc; }
+							.hover:hover{background-color: #ccc;}
+							
+						</style>
+
+					<table class="padd" width="99%" border="1" align="center" style="font-size:11px;white-space:nowrap;font-family: 'Khmer OS Battambang';">
+						 
+						 <?php $i=0;$carid='';if(!empty($this->rs)){foreach($this->rs as $key => $rs){$i++;?>
+						 
+						 	 <?php 
+						 	 	if($rs['carid']!=$carid){
+						 	 		if($key>0){
+						 	 ?>			  <tr>
+										  		<td colspan="15" align="center">ហត្ថលេខាអ្នកបើករថយន្ត</td>
+										  </tr>
+										  <tr>
+										  		<td colspan="15" align="center">ហត្ថលេខាជំនួយការផ្នែកសេវាកម្មជិះរថយន្ត</td>
+										  </tr>
+										  <tr>
+										  		<td colspan="15" align="center">ហត្ថលេខាប្រធានសាខា</td>
+										  </tr>
+						 	 			</table>
+										<table class="padd" width="99%" border="1" align="center" style="white-space:nowrap;font-family: Khmer OS Battambang;font-size: 11px;margin-top: 50px;">
+						 	 		<?php }$i=1;?>
+						 <tr style="font-size:10px; color:#000; height: 23px; border-left:1px solid #fff; border-right:1px solid #fff; border-top: 1px solid #fff;"​ align="center">
+							    <td colspan="3" style="text-align:left">
+							    	<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 11px;font-family:'Khmer MEF2';" ><?php echo $tr->translate('រថយន្តលេខ').' : '.$rs['carid']; ?></strong>
+							    </td>
+							    <td colspan="6" style="text-align:left">
+							    	<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 11px;font-family:'Khmer MEF2';" ><?php echo $tr->translate('ឈ្មោះអ្នកបើកបររថយន្ត').' : '.$rs['drivername']; ?></strong>
+							    </td>
+							    <td colspan="6" style="text-align:left">
+							    	<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 11px;font-family:'Khmer MEF2';" ><?php echo $tr->translate('លេខទូរស័ព្ទអ្នកបើកបររថយន្ត').' : '.$rs['tel']; ?></strong>
+							    </td>
+						  </tr>
+						  <tr style=" height: 20px;background-color: #ccc;line-height: 20px;font-weight: bold;" align="center">
+							    <td rowspan="2">&nbsp;<?php echo $tr->translate('N_O');?>&nbsp;</td>
+							    <td rowspan="2">&nbsp;<?php echo $tr->translate('អត្តលេខ');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('ឈ្មោះ');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('ភេទ ');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('លេខទូរស័ព្ទ');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('អាស័យដ្ឋាន');?>&nbsp;</td>
+								<td colspan="4">&nbsp;<?php echo $tr->translate('វេន');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('បង់ជា');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('តម្លៃ');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('ចំនួន');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('ថ្ងៃចាប់ផ្តើម');?>&nbsp;</td>
+								<td rowspan="2">&nbsp;<?php echo $tr->translate('ថ្ងៃផុតកំណត់');?>&nbsp;</td>
+						  </tr>
+						  <tr style="height: 20px;background-color: #ccc;line-height: 20px;font-weight: bold;" align="center">
+						  		<td>7:30</td>
+						  		<td>10:30</td>
+						  		<td>1:30</td>
+						  		<td>4:30</td>
+						  </tr>
+						  <?php }
+						  	$carid = $rs['carid'];
+						  ?>
+						  
+						 <?php 
+						 	$style = 'style="width:12px;"';
+						 	$img_src = $this->baseUrl()."/images/Green_tick.png";
+						 	$time_for_car = $rs['time_for_car'];
+						 	$time_id = explode(',', $time_for_car);
+						 ?>
+						 
+						  <tr class="hover" style="font-size:11px; height: 18px;"​ align="center">
+							    <td><?php echo $i;?></td>
+							    <td><?php echo $rs['stu_code']; ?></td>
+							    <td><?php echo $rs['name']; ?></td>
+							    <td><?php echo $rs['sex'];?></td>
+							    <td><?php echo $rs['stu_phone'];?></td>
+							    <td><?php echo $rs['service_name'];?></td>
+							   	<td><?php if(!empty($time_id)){foreach ($time_id as $id){if($id==1){echo "<img ".$style." src='".$img_src."' />" ;} }}?></td>
+							   	<td><?php if(!empty($time_id)){foreach ($time_id as $id){if($id==2){echo "<img ".$style." src='".$img_src."' />" ;} }}?></td>
+							   	<td><?php if(!empty($time_id)){foreach ($time_id as $id){if($id==3){echo "<img ".$style." src='".$img_src."' />" ;} }}?></td>
+							   	<td><?php if(!empty($time_id)){foreach ($time_id as $id){if($id==4){echo "<img ".$style." src='".$img_src."' />" ;} }}?></td>
+							    <td><?php echo $rs['payment_term'];?></td>
+							    <td>$ <?php echo $rs['fee'];?></td>
+							   	<td><?php echo $rs['qty']; ?></td>
+							   	<td><?php echo date('d-m-Y',strtotime($rs['start_date'])); ?></td>
+							    <td><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
+						  </tr>
+						  <?php }}?>
+						  
+						  
+						  <tr>
+						  		<td colspan="15" align="center">ហត្ថលេខាអ្នកបើករថយន្ត</td>
+						  </tr>
+						  <tr>
+						  		<td colspan="15" align="center">ហត្ថលេខាជំនួយការផ្នែកសេវាកម្មជិះរថយន្ត</td>
+						  </tr>
+						  <tr>
+						  		<td colspan="15" align="center">ហត្ថលេខាប្រធានសាខា</td>
+						  </tr>
+						</table>
+					
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr >
+					<td colspan="3">
+						<table width="100%" style="font-family: Khmer OS Battambang;font-size: 11px;">
+							<tr>
+								<td align="center" width="25%">
+									<span style=" font-size: 14px;"><?php echo $tr->translate('VERIFIED_BY');?></span>
+								</td>
+								<td  width="50%">
+									&nbsp;
+								</td>
+								<td align="center"  width="25%">
+									<span style=" font-size: 14px;text-align: right;"><?php echo $tr->translate('PREPARE_BY');?></span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+	</div>	
+</div>
+

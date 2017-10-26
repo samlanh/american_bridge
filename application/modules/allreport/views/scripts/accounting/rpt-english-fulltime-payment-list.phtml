@@ -1,0 +1,407 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm =  $this->form_search;
+?>	
+<title><?php echo $tr->translate('Student Enrollment and Payment List');?></title>
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-english-fulltime-payment-list')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table width="70%">
+	    <tr>
+	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
+	    	<td><?php echo $frm->getElement('degree_en_ft');?></td>
+	    	<td><?php echo $frm->getElement('grade_en_ft');?></td>
+	    	<td><?php echo $frm->getElement('room');?></td>
+	    	<td><?php echo $frm->getElement('branch');?></td>
+	    	
+	    	<td>
+	    		<select name="for_month" id="for_month" dojoType="dijit.form.FilteringSelect" class="fullside" >
+	    			<option value="0"> select month </option>
+	    			<?php if(!empty($this->all_month)){foreach ($this->all_month as $month){?>
+	    				<option value="<?php echo $month['id']?>" <?php if($month['id']==$this->search1['for_month']){echo "selected='selected'";}?>> <?php echo $month['name']?> </option>
+	    			<?php }}?>
+	    		</select>
+	    	</td>
+	    	<td>
+	    		<select name="for_year" id="for_year" dojoType="dijit.form.FilteringSelect" class="fullside" >
+	    			<?php for($i=2016;$i<=date("Y")+1;$i++){?>
+	    				<option value="<?php echo $i;?>" <?php if($i==$this->search1['for_year']){echo "selected='selected'";}?>> <?php echo $i;?> </option>
+	    			<?php }?>
+	    		</select>
+	    	</td>
+	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+	    </tr>
+	</table>
+</form>	
+
+<style>
+.hover:hover{background: #ddd;}
+</style>
+
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+<div id="divPrint">
+<style>
+	table{ page-break-inside:auto }
+    tr{ page-break-inside:avoid; page-break-after:auto }
+	#header {
+		display: table-header-group;
+		page-break-inside:avoid; page-break-after:auto;
+	}
+	.bor{
+		border-right: 1px solid #000;	
+		border-bottom: 1px solid #000;
+		font-size:13px;
+	}
+	.bor_r{
+		border-right: 1px solid #000;	
+		font-size:13px;
+	}
+	.padd{
+		padding: 3px;	
+	}
+	#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+</style>
+		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+			<tr>
+				<td width="15%" align="center">
+					<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+				</td>
+				<td align="center" width="70%" style="">
+					<strong  style="font-weight:bold;color:#000; font-size: 20px;font-family: Khmer OS Battambang, Times New Roman;​​"><?php echo $tr->translate("Student Enrollment and Payment List");?></strong><br />
+					<span style="font-weight: bold;font-size: 15px; font-family: Khmer OS Battambang, Times New Roman;​​">&nbsp;<?php echo $tr->translate("English : Full Time"); ?></span><br />
+				</td>
+				<td width="15%" > </td>
+			</tr>
+			<tr>
+				<td colspan="3" id="exportExcel">
+					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+	
+					
+				<?php //////////////////////////////////////////////////////////////////////////////////////////////////////////////////?>	
+						
+						
+					<?php 
+						$student_id=0;
+						$i=0; 
+						$total=0; $total_amount=0; 
+						$total_admin_nOhter = 0;
+						$total_fee=0;
+						$grand_total_paid_amount = 0;
+						$grand_total_balance = 0;
+						$total_paid_amount=0;
+						$total_receive_amount=0;
+						$total_balance=0;
+					?>
+					  <?php if(!empty($this->rs)) foreach($this->rs as $key => $rs){  ?>
+					  
+					  <?php if($rs['student_id']!=$student_id){	$i++;?>
+						   <?php  if($key>0 ){?>
+						   			<tr>
+						   				<td colspan="25">&nbsp;</td>
+						   			</tr>
+						   		</table>
+						   		
+								<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+							<?php }?>
+							
+							
+						  <tr style=" font-size:12px; height: 25px;  font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
+							<td class="bor"><?php echo $tr->translate("N_O"); ?></td>
+							<td class="bor" colspan="2"><?php echo $tr->translate("STUDENT_ID"); ?></td>
+							<td class="bor" colspan="4"><?php echo $tr->translate("NAME_KH"); ?></td>
+							<td class="bor" colspan="4"><?php echo $tr->translate("NAME_EN"); ?></td>
+							<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
+							<td class="bor" colspan="6"><?php echo $tr->translate("PHONE"); ?></td>
+							<td  style="border-bottom: 1px solid #000;" colspan="7"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+					      </tr>
+				<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
+					      
+					      <tr style="font-size:12px; height: 25px;font-family:'Khmer OS Battambang';background: rgba(101, 177, 70, 0.82);" align="center">
+							<td class="bor_r"><?php echo $i;?></td>
+							<td class="bor_r" colspan="2"><?php echo $rs['stu_code'];?> </td>
+							<td class="bor_r" colspan="4"><?php echo $rs['stu_khname'];?> </td>
+							<td class="bor_r" colspan="4"><?php echo $rs['stu_enname'];?> </td>
+							<td class="bor_r"><?php echo $rs['sex'];?> </td>
+							<td class="bor_r" colspan="6"><?php echo $rs['tel'];?> </td>
+							<td colspan="7"><?php echo $rs['degree'];?> </td>
+	 					 </tr>
+	 					 
+	 			<?php //////////////////////////////////////////////// //////////////////////////////////////////////////////////////////?>		 
+	 					 
+	 					 <tr id="row" align="center" style="background: #ccc;">
+							<td rowspan="2" class="padd">Levels</td>
+							<td rowspan="2" class="padd">Room</td>
+							<td rowspan="2" class="padd">Time</td>
+							<td rowspan="2" class="padd">Is New Student</td>
+							<td colspan="8" class="padd">Study Fee Payment</td>
+							<td colspan="3" class="padd">Admin Fee Payment</td>
+							<td rowspan="2" class="padd">Study Material <br />Payment</td>
+							<td rowspan="2" class="padd">Other Fee</td>
+							<td rowspan="2" class="padd">Credit</td>
+							<td rowspan="2" class="padd">Total <br />Amount</td>
+							<td rowspan="2" class="padd">Paid & <br />Payable</td>
+							<td rowspan="2" class="padd">Remark</td>
+							<td rowspan="2" class="padd">Stop <br />Student</td>
+							<td rowspan="2" class="padd">Stop</td>
+	 					 </tr>
+						 <tr id="row" align="center" style="background: #ccc;">
+							<td class="padd">IssueDate</td>
+							<td class="padd">Receipt No.</td>
+							<td class="padd">Amount</td>
+							<td class="padd"> Discount</td>
+							<td class="padd">Total Amount</td>
+							<td class="padd">Start Date</td>
+							<td class="padd">End Date</td>
+							<td class="padd">Duration</td>
+							<td class="padd">Amount</td>
+							<td class="padd">Start Date</td>
+							<td class="padd"> End Date</td>
+							 
+	 					 </tr>
+	 					
+					<?php 
+						 }
+						 $student_id=$rs['student_id'];
+					?>
+				
+				<?php ////////////////////////////////// value //////////////////////////////////////////////////////////////////////////////////?>
+				
+						<?php 
+							if($rs['payment_term']==1){
+								$amount_month="1 months";
+							}else if($rs['payment_term']==2){
+								$amount_month="3 months";
+							}else if($rs['payment_term']==3){
+								$amount_month="6 months";
+							}else if($rs['payment_term']==4){
+								$amount_month="12 months";
+							}else if($rs['payment_term']==5){
+								$amount_month=$rs['qty']." Days";
+							}
+							
+							$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
+							
+						?>
+				
+	 					<tr id="row" align="center" class="hover" >
+	 					
+							<td class="padd"><?php echo $rs['grade'];?></td>
+							<td class="padd"><?php echo $rs['room'];?></td>
+							<td class="padd"><?php echo $rs['time'];?></td>
+							<td class="padd"><?php if($rs['is_new']==1){echo date('d-m-Y',strtotime($rs['create_date']));}?></td>
+							
+							
+							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['create_date']));?></td>
+							<td class="padd"><?php echo $rs['receipt_number'];?></td>
+							<td class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
+							<td class="padd"><?php echo $rs['discount_percent']." %";?></td>
+							<td class="padd"><?php echo "$ ".$rs['total_payment'];?></td>
+							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
+							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
+							<td class="padd"><?php echo $amount_month;?></td>
+							
+							
+							<td class="padd"><?php echo "$ ".$rs['admin_fee'];?></td>
+							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
+							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
+							
+							
+							<td class="padd"><?php echo "$ ".$study_material;?></td>
+							
+							<td class="padd"><?php echo "$ ".$rs['other_fee'];?></td>
+							
+							<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
+							<td class="padd"><?php echo "$ ".$rs['grand_total_payment'];?></td>
+							<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
+							
+							<td class="padd"><?php echo $rs['note'];?></td>
+							<td class="padd"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
+							<td class="padd"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
+	 					</tr>
+	 					
+	 				<?php }?>
+	 				
+					</table>	
+				
+					<table border="1" width="20%" style="border-collapse: collapse;margin-top: 25px;margin-left: 25px;text-align: center;border: 1px solid #000;">
+						<tr>
+							<td width="70%">Total Student All</td>
+							<td width="30%"><?php echo count($this->total_student);?></td>
+						</tr>
+						<tr>
+							<td>Stop Student All</td>
+							<td><?php echo count($this->student_drop);?></td>
+						</tr>
+						<tr>
+							<td style="background: #e0dfdf;"><strong>Net Total Student</strong></td>
+							<td style="background: #fff200;"><strong><?php echo count($this->total_student) - count($this->student_drop);?></strong></td>
+						</tr>
+					</table>	
+					
+					
+					
+				<?php if(!empty($this->amount_student_by_grade)){?>	
+				
+					<?php 
+						$old_grade=0;
+						$amount_student = 0;
+						$grade_name = "";
+						$total_student = 0;
+					?>
+				
+					<table border="1" width="40%" style="white-space:nowrap;border-collapse: collapse;margin: 0 auto;text-align: center;">
+						<tr style="background: #84f2d6;">
+							<td colspan="2">Summary report for <?php echo $this->search1['for_month'].'-'.date("Y")?></td>
+						</tr>
+						
+						<?php if(!empty($this->search1['degree'])){
+							$array_degree = array(
+												4=>'Kindergarten Program',
+												5=>'Young Learners Program',
+												6=>'General English Program',
+											);
+						?>
+							<tr>
+								<td colspan="2"><?php echo $array_degree[$this->search1['degree']];?></td>
+							</tr>
+						<?php }?>
+						<tr style="background: #ffd2d2;">
+							<td width="50%">Level</td>
+							<td width="50%">Student's Number</td>
+						</tr>
+						<?php  foreach($this->amount_student_by_grade as $key => $rs){?>
+							<?php if($key>0 && $old_grade!=$rs['grade']){?>
+							<tr>
+								<td><?php echo $grade_name?></td>
+								<td><?php echo $amount_student;?></td>
+							</tr>
+						<?php 
+								$amount_student = 1;
+							}else{
+								$amount_student = $amount_student + 1;
+							}
+							$old_grade=$rs['grade'];
+							$grade_name = $rs['grade_name'];
+						?>
+						
+						<?php $total_student = $total_student+1;?>
+					<?php }?>
+						<tr>
+							<td><?php echo $grade_name?></td>
+							<td><?php echo $amount_student;?></td>
+						</tr>
+						<tr>
+							<td>Total Student's Number</td>
+							<td style="background: yellow;"> <?php echo $total_student;?></td>
+						</tr>
+					</table>
+				<?php }?>
+				
+					<table border="1" width="40%" style="white-space:nowrap; border-collapse: collapse;margin: 0 auto;text-align: center;margin-top: 20px;">
+						<tr>
+							<td colspan="2" align="center">**********************</td>
+						</tr>
+						<tr style="background: #c2c2fa;">
+							<td width="75%">Total Number of Payable Students for <?php echo ($this->search1['for_month']-1)."-".date("Y")?></td>
+							<td width="25%"><?php echo count($this->student_payable_last_month);?></td>
+						</tr>
+						
+						<tr style="background: #e2f6f5;">
+							<td>Total Number of Payable Students for <?php echo $this->search1['for_month']."-".date("Y")?></td>
+							<td><?php echo count($this->student_payable_this_month);?></td>
+						</tr>
+					</table>
+				
+				<?php if(count($this->total_student)>0){?>	
+					<table border="1" width="40%" style="white-space:nowrap; border-collapse: collapse;margin: 0 auto;text-align: center;margin-top: 20px;">
+						<tr>
+							<td colspan="2" align="center">**********************</td>
+						</tr>
+					<?php 
+						$all_amount_student = count($this->total_student);
+						$all_amount_student_drop = count($this->student_drop);
+					
+						$amount_student_new_this_month = count($this->new_student_for_month);
+						$amount_student_drop_this_month = count($this->student_drop_for_month);
+						
+// 			///////////////////////////// calculate ////////////////////////////////////////////////////			
+						
+						$old_student_amount = $all_amount_student - $amount_student_new_this_month;
+						$old_student_drop_amount = $all_amount_student_drop - $amount_student_drop_this_month;
+						
+						$current_student = $all_amount_student - $all_amount_student_drop;
+					?>
+				
+						<tr style="background: #c2c2fa;">
+							<td width="50%">Total Old Students</td>
+							<td width="50%"><?php echo $old_student_amount;?></td>
+						</tr>
+						
+						<tr style="background: #e2f6f5;">
+							<td>Total Stop Old Students</td>
+							<td><?php echo $old_student_drop_amount;?></td>
+						</tr>
+						
+						<tr style="background: #fac9c9;">
+							<td>Total New Student of <?php echo $this->search1['for_month']."-".date("Y")?> </td>
+							<td><?php echo $amount_student_new_this_month;?></td>
+						</tr>
+						
+						<tr style="background: #e4e4e4;">
+							<td>Total Stopped Student of <?php echo $this->search1['for_month']."-".date("Y")?></td>
+							<td><?php echo $amount_student_drop_this_month;?></td>
+						</tr>
+						
+						<tr>
+							<td>Net Students for <?php echo $this->search1['for_month']."-".date("Y")?> </td>
+							<td style="background: yellow;"><?php echo $current_student;?></td>
+						</tr>
+					</table>
+					
+				<?php }?>
+				
+					<table width="100%">
+						<tr><td colspan="3">&nbsp;</td></tr>
+						<tr><td colspan="3">&nbsp;</td></tr>
+						<tr >
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+							</td>
+							<td  width="50%">
+								&nbsp;
+							</td>
+							<td align="center"  width="25%">
+								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>		
+</div>
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>
+ 

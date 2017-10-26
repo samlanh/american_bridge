@@ -1,0 +1,438 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm =  $this->form_search;
+?>	
+<title><?php echo $tr->translate('Daily Income Part Time Fee)');?></title>
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-english-parttime')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table width="95%">
+	    <tr>
+	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
+	    	<td><?php echo $frm->getElement('degree_gep');?></td>
+	    	<td><?php echo $frm->getElement('grade_gep');?></td>
+	    	<td><?php echo $frm->getElement('room');?></td>
+	    	<td><?php echo $frm->getElement('branch');?></td>
+	    </tr>
+	    <tr>	
+	    	<td>
+			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
+			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
+			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
+			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
+			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+			 	</select>
+			</td>
+	    	
+	    	<td><input type="text" name="start_date" id="start_date" value="<?php echo $this->search['start_date']?>" class="fullside" dojoType="dijit.form.DateTextBox" /> </td>
+	    	<td><input type="text" name="end_date" id="end_date" value="<?php echo $this->search['end_date']?>" class="fullside" dojoType="dijit.form.DateTextBox" /></td>
+	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+	    </tr>
+	</table>
+</form>	
+
+<style>
+.hover:hover{background: #ddd;}
+</style>
+
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+<div id="divPrint">
+<style>
+	table{ page-break-inside:auto }
+    tr{ page-break-inside:avoid; page-break-after:auto }
+	#header {
+		display: table-header-group;
+		page-break-inside:avoid; page-break-after:auto;
+	}
+	.bor{
+		border-right: 1px solid #000;	
+		border-bottom: 1px solid #000;
+		font-size:13px;
+	}
+	.bor_r{
+		border-right: 1px solid #000;	
+		font-size:13px;
+	}
+	.padd{
+		padding: 3px;	
+	}
+	#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+</style>
+
+	<?php 
+		$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
+	?>
+
+		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+		<tr>
+			
+			<td width="15%" align="center">
+				<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+			</td>
+			<td align="center" width="70%" style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 14px;">
+				<strong  style="font-weight:bold;color:#000; font-size: 17px;font-family: Khmer OS Battambang,Times New Roman;​"><?php echo $tr->translate("Daily Income Report(Study English Part Time Fee)");?></strong><br />
+				<strong style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 13px;">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong> <br />   
+				<?php if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
+			</td>
+			<td width="15%" > </td>
+			
+		</tr>
+		<tr>
+			<td colspan="3" id="exportExcel">
+				<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+ 			
+ 					 <tr id="row" align="center" style="background: #ccc;">
+						<td rowspan="3" class="padd">N<sup>o</sup></td>
+						<td rowspan="3" class="padd">Receipt No.</td>
+						<td rowspan="3" class="padd">Student ID</td>
+						<td rowspan="3" class="padd">Student Name</td>
+						<td rowspan="3" class="padd">Sex</td>
+						<td rowspan="3" class="padd">Level/Grade</td>
+						<td rowspan="3" class="padd">Time</td>
+						<td colspan="5" class="padd">Study Fee Income</td>
+						<td rowspan="3" class="padd">Admin <br>Fee</td>
+						<td rowspan="3" class="padd">Study <br>Material <br>fee</td>
+						<td rowspan="3" class="padd">Other <br>Fee</td>
+						<td rowspan="3" class="padd">Credit</td>
+						<td rowspan="3" class="padd">Total in <br>USD</td>
+						<td rowspan="3" class="padd">Remark</td>
+ 					 </tr>
+					 <tr id="row" align="center" style="background: #ccc;">
+						<td colspan="2" class="padd">Type</td>
+						<td rowspan="2" class="padd">Full Price</td>
+						<td rowspan="2" class="padd">Discount</td>
+						<td rowspan="2" class="padd">Amount</td>
+ 					 </tr>
+ 					 
+ 					 <tr id="row" align="center" style="background: #ccc;">
+						<td class="padd">New</td>
+						<td class="padd">Old</td>
+ 					 </tr>
+			
+			<?php ////////////////////////////////// value //////////////////////////////////////////////////////////////////////////////////?>
+			
+				<?php 
+					$i=0;
+					$amont_new_student=0;
+					$amont_old_student=0; 
+					$total_study_fee=0;
+					$total_admin_fee=0;
+					$total_study_material_fee=0;
+					$total_other_fee=0;
+					$total_balance=0;
+					$grand_total=0;
+				?>		
+						
+						
+				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
+					
+						$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
+				?>
+						
+ 					<tr id="row" align="center" class="hover" >
+ 					
+						<td class="padd"><?php echo $i;?></td>
+						<td class="padd"><?php echo $rs['receipt_number'];?></td>
+						<td class="padd"><?php echo $rs['stu_code'];?></td>
+						<td class="padd"><?php echo $rs['stu_enname']."-".$rs['stu_khname'];?></td>
+						<td class="padd"><?php echo $rs['sex'];?></td>
+						<td class="padd"><?php echo $rs['grade'];?></td>
+						<td class="padd"><?php echo $rs['time'];?></td>						
+						
+						
+						
+						<td class="padd"><?php if($rs['is_new']==1){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
+						<td class="padd"><?php if($rs['is_new']==0){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
+						
+						
+						<td class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
+						<td class="padd"><?php if($rs['discount_percent']>0){echo $rs['discount_percent']." %";}?></td>
+						<td class="padd"><?php echo "$ ".$rs['total_payment'];?></td>
+						
+						
+						<td class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
+						
+						
+						<td class="padd"><?php if($study_material>0){echo "$ ".$study_material;}?></td>
+						
+						<td class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
+						
+						<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
+						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
+						
+						<td class="padd"><?php echo $rs['note'];?></td>
+ 					</tr>
+ 					
+					<?php 
+						$total_study_fee = $total_study_fee + $rs['total_payment'];
+						$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
+						$total_study_material_fee = $total_study_material_fee + $study_material;
+						$total_other_fee = $total_other_fee + $rs['other_fee'];
+						$total_balance = $total_balance + $rs['grand_total_balance'];
+						$grand_total = $grand_total + $rs['total_payment'] + $rs['admin_fee'] + $study_material + $rs['other_fee'] + $rs['grand_total_balance'];
+					?> 					
+ 					
+ 				<?php }}?>
+ 				
+				</table>	
+				
+				<?php if(!empty($grand_total)){?>
+					<table border="0" width="100%">
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="70%" style="border: 1px solid #000;">
+								<u>Summary Report:</u>
+								<table width="100%" style="font-size: 15px;">
+									<tr class="hover">
+										<td>
+											I. Income from English program fee(English full time)
+										</td>
+										<td>
+											
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Total of new student
+										</td>
+										<td>
+											<?php echo $amont_new_student;?> student(s)
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Total of old student
+										</td>
+										<td>
+											<?php echo $amont_old_student;?> student(s)
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Total Amount of study fee
+										</td>
+										<td>
+											<?php echo "$ ".$total_study_fee;?>
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											II. Total amount of admin fee
+										</td>
+										<td>
+											<?php echo "$ ".$total_admin_fee;?>
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											III. Total amount of study material fee
+										</td>
+										<td>
+											<?php echo "$ ".$total_study_material_fee;?>
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											IV. Total amount of other fee
+										</td>
+										<td>
+											<?php echo "$ ".$total_other_fee;?>
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											V. Total amount of student credit
+										</td>
+										<td>
+											<?php echo "$ ".$total_balance;?>
+										</td>
+									</tr>
+									
+									<tr class="hover">
+										<td style="border-top:2px solid #000;">
+											Total number of new student
+										</td>
+										<td style="border-top:2px solid #000;">
+											<?php echo $amont_new_student;?> student(s)
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											Total number of old student
+										</td>
+										<td>
+											<?php echo $amont_old_student;?> student(s)
+										</td>
+									</tr>
+									<tr class="hover">
+										<td>
+											Grand Total
+										</td>
+										<td>
+											<?php echo "$ ".$grand_total;?>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td width="30%" valign="top">
+								<table width="100%" style="white-space: nowrap;">
+									<tr>
+										<td width="50%">
+											&nbsp;
+										</td>
+										<td width="50%">
+											Rate = <?php echo $this->rate;?>
+										</td>
+									</tr>
+									<tr>
+										<td >
+											Grand Total 
+										</td>
+										<td style="border: 1px solid #000;">
+											<?php echo "$ ".$grand_total?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											Amount in USD
+										</td>
+										<td style="border: 1px solid #000;">
+											<div id="input_usd">
+												<input type="text" name="amount_usd" id="amount_usd" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
+											</div>
+											<div id="hide_amount_usd">
+												<label id="lb_amount_usd"></label>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											Amount in Riel
+										</td>
+										<td style="border: 1px solid #000;">
+											<label id="lb_amount_reil"></label>
+										</td>
+									</tr>
+								</table>							
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">
+								<table width="100%" border="0">
+									<tr align="center">
+										<td width="15%">Auditor</td>
+										<td width="18%">Senior Accountant</td>
+										<td width="18%">Accountant Income</td>
+										<td width="16%">Madam</td>
+										<td width="18%">School Principle</td>
+										<td width="15%">Cashier</td>
+									</tr>
+									<tr>
+										<td colspan="6">&nbsp;</td>
+									</tr>
+									<tr align="center">
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+										<td>
+											<div style="font-size: 13px;line-height: 20px;">
+												Name:..............................<br />
+												Date:........../........../..........
+											</div>
+										</td>
+									</tr>
+									
+								</table>							
+							</td>
+						</tr>
+						
+					</table>
+				<?php }?>
+				</td>
+			</tr>
+		</table>
+	</div>		
+</div>
+<script type="text/javascript">
+dojo.ready(function(){
+	document.getElementById('hide_amount_usd').style.display="none";
+});
+					
+function calculateRemainReil(){
+	total_amount = '<?php echo $grand_total;?>';
+	amount_usd = dijit.byId("amount_usd").get('value');
+	exchange_rate = '<?php echo $this->rate?>';
+	total_reil = (total_amount - amount_usd)*exchange_rate;
+	//alert(total_reil);
+	
+	dojo.byId("lb_amount_usd").innerHTML = " $ " + amount_usd;
+	dojo.byId("lb_amount_reil").innerHTML = " ៛ " + total_reil;
+	
+}
+					
+function doPrint() {
+	//alert(1);
+	
+	document.getElementById('hide_amount_usd').style.display="block";
+	document.getElementById('amount_usd').style.display="none";
+	
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    //hideDialog();
+    //alert(1);
+    document.getElementById('amount_usd').style.display="block";
+    document.getElementById('hide_amount_usd').style.display="none";
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>
+ 

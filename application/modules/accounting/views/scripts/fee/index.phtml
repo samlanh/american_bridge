@@ -1,0 +1,82 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("FEE"));
+	$frm =  $this->form_search;
+	
+	$url_copy =$this->url(array('module'=>'accounting','controller'=>'fee','action'=>'copy'));
+	$formList = new Application_Form_Frmtable();
+	
+?>	
+
+<script type="text/javascript">
+	dojo.require("dojo.data.ObjectStore");
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require('dojox.form.BusyButton');
+	
+	
+	var aca_year= getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->rows_year));?> );
+	dojo.ready(function(){
+	new dijit.form.FilteringSelect({
+	    store: aca_year,
+	    autoComplete: true,                        
+	    required: false,
+	    id: "year",
+	    name: "year",           
+	    class: 'fullside',  
+	    placeHolder:"Selected Acdemice Year",          
+	    onChange: function() {  
+	    }
+	}, "year");
+	dijit.byId('year').attr('value','<?php echo $this->row_ace['year']?>');
+});
+</script>
+
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'accounting','controller'=>'fee','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+	<table style="width:80%" style="width:100 px;">
+						  <tr> 
+						  	 <td style="width: 95px;"><?php echo $formList->showCopyBuntton($url_copy);?></td>
+							 <td ><input dojoType="dijit.form.TextBox"   id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->adv_search['txtsearch']; ?>" type="text" class="fullside"></td>
+							 <td><input id="year" /></td>
+							 <td> <?php echo $frm->getElement("branch_id");?></td>
+							 <td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+					   	  </tr>
+					   	  <input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" />
+	</table>
+	
+	<style>
+		.btn-action{
+			background: rgba(165, 188, 193, 0.36);
+			padding: 3px 10px;
+   			border-radius: 5px;
+		}
+	
+	</style>
+	<?php echo $this->list; ?>
+</form>
+
+
+ 
+<script type="text/javascript">
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 if(id!=''){
+			window.location.href = url+'/id/'+id;
+		 }else{
+			alert('Please select record you want to copy');
+			return false;
+		 }
+	}
+
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+	
+</script> 
+ 
+ 

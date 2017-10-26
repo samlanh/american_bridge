@@ -1,0 +1,48 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('ADD_OCCUPATION')); 
+?>
+	<form  id='add_occupation' action="<?php echo $this->url(array('module'=>'global','controller'=>'occupation','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+		</script>
+		
+		<fieldset style="width: 40%;margin: 0 auto;">
+			<legend align="center"><strong><?php echo $tr->translate('ADD_OCCUPATION');?></strong></legend>
+			<table style="margin: 0 auto; width: 100%;  padding:10px;" cellspacing="7" >
+				<tr>
+					<td><?php echo $tr->translate('OCCUPATION');?></td>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="occu_name" name="occu_name" value="" type="text">
+					</td>
+				</tr>
+				
+				<tr>
+					<td><?php echo $tr->translate('STATUS');?></td>
+					<td>
+						<select name="status" id="status" dojoType="dijit.form.FilteringSelect" required="true" class="fullside">
+    						<option value="1" label="active">Active</option>
+    						<option value="0" label="deactive">Deactive</option>
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="4" align="center">
+						<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+						
+						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+							
+						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+							iconClass="dijitEditorIcon dijitEditorIconSave" />
+					</td>
+				</tr>
+				
+			</table>
+		</fieldset>
+	</form>

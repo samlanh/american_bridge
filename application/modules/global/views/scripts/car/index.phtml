@@ -1,0 +1,13 @@
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("រថយន្ត"));
+?>	
+<?php $frm =  $this->frm_search;?>
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'global','controller'=>'car','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+<div dojoType="dijit.layout.AccordionPane">
+	<input dojoType="dijit.form.TextBox" placeholder="ស្វែងរក..." id="title" name="title" value="<?php echo $this->search['title'];?>" type="text">
+	<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>	
+</div>
+<?php echo $this->list;?>
+</form>

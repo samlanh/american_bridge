@@ -1,0 +1,173 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_STUDENT_CHANGE_BRANCH')); 
+?>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.CheckBox");
+
+	dojo.ready(function(){
+		getStudentInfo(1);
+		setBranch();
+	});
+
+	function setBranch(){
+		dijit.byId('old_branch').attr('value','<?php echo $this->row['old_branch']?>');
+		dijit.byId('new_branch').attr('value','<?php echo $this->row['new_branch']?>');
+	}
+
+</script>
+<script type="dojo/method" event="onSubmit">
+	if(this.validate()) {
+		return true;
+	} else {
+		return false;
+	}
+</script>
+
+
+<form id="add_car" action="<?php echo $this->url(array('module'=>'foundation','controller'=>'studentchangebranch','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table cellspacing="20" style="margin: 0 auto; width: 100%">
+		<tr>
+			<td>
+				<fieldset>
+					<legend align="center"><strong><?php echo $tr->translate("EDIT_STUDENT_CHANGE_BRANCH");?></strong></legend>
+					<table cellspacing="20" width="100%" >
+						<tr>
+							<td align="center" valign="top">
+								<table cellspacing="10" width="100%"​>
+									<tr>
+										<td><?php echo $tr->translate("STUDENT_ID")?></td>
+										<td>
+											<select class="fullside"  name="studentid" readonly="readonly" id="studentid" dojoType="dijit.form.FilteringSelect" placeholder="Select student " onchange="getStudentInfo(1);" >
+										    	<option value="-1"> </option>
+										    	<?php if(!empty($this->stu_id))foreach ($this->stu_id as $row){?>
+													<option value="<?php echo $row['stu_id']?>" <?php if($row['stu_id']==$this->row['stu_id']){echo 'selected="selected"';}?>><?php echo $row['stu_code']?></option>
+												<?php }?>
+											</select>
+										</td>
+										<td><?php echo $tr->translate("STUDENT_NAME")?></td>
+										<td>
+											<select class="fullside"  name="studentname" readonly="readonly" id="studentname" dojoType="dijit.form.FilteringSelect" placeholder="Select student " onchange="getStudentInfo(2);" >
+										    	<option value="-1"> </option>
+										    	<?php if(!empty($this->stu_name))foreach ($this->stu_name as $row){?>
+													<option value="<?php echo $row['stu_id']?>"><?php echo $row['name']?></option>
+												<?php }?>
+											</select>
+										</td>
+										
+										<td><?php echo $tr->translate("SEX")?></td>
+										<td>
+											<select dojoType="dijit.form.FilteringSelect"  readonly="readonly" class="fullside" id="gender" name="gender" type="text">
+												<option value="1">Male</option>
+												<option value="2">Female</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td><?php echo $tr->translate("BRANCH")?></td>
+										<td>
+											<select name="old_branch" id="old_branch" readonly="readonly" class="fullside" dojoType="dijit.form.FilteringSelect"  >
+												<option value="0">branch</option>
+												<?php if(!empty($this->branch)){foreach ($this->branch as $branch){?>
+													<option value="<?php echo $branch['id']?>"><?php echo $branch['name']?></option>
+												<?php }}?>
+											</select>										
+										</td>
+									
+										<td><?php echo $tr->translate("ACADEMIC_YEAR")?></td>
+										<td>
+											<input dojoType="dijit.form.TextBox" readonly="readonly" class="fullside" id="academic_year" name="academic_year" value="" type="text">
+										</td>
+										<td><?php echo $tr->translate("GRADE")?></td>
+										<td>
+											<input dojoType="dijit.form.TextBox" readonly="readonly" class="fullside" id="grade" name="grade" value="" type="text">
+										</td>
+										
+									</tr>
+									<tr>	
+										<td><?php echo $tr->translate("SESSION")?></td>
+										<td>
+											<input dojoType="dijit.form.TextBox" readonly="readonly" class="fullside" id="session" name="session" value="" type="text">
+										</td>
+										
+										<td><?php echo $tr->translate("REASON")?></td>
+										<td><input dojoType="dijit.form.TextBox" class="fullside" id="reason" name="reason" value="<?php echo $this->row['reason']?>" type="text"></td>
+										
+									
+									</tr>
+									
+									<tr>
+						      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("CHANGE_TO_BRANCH");?></strong></td>
+						      		</tr>
+						      		<tr>
+						      			<td><?php echo $tr->translate("BRANCH")?></td>
+										<td>
+											<select name="new_branch" id="new_branch" class="fullside" dojoType="dijit.form.FilteringSelect"  >
+												<option value="0">branch</option>
+												<?php if(!empty($this->branch)){foreach ($this->branch as $branch){?>
+													<option value="<?php echo $branch['id']?>"><?php echo $branch['name']?></option>
+												<?php }}?>
+											</select>										
+										</td>
+										
+										<td><?php echo $tr->translate("STATUS")?></td>
+										<td>
+											<select name="status" id="status" class="fullside" dojoType="dijit.form.FilteringSelect"  >
+												<option value="1"><?php echo $tr->translate('ACTIVE')?></option>
+												<option value="0"><?php echo $tr->translate('DEACTIVE')?></option>
+											</select>										
+										</td>
+						      		</tr>
+									<tr>
+										<td colspan="6" align="center">
+										<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+										<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('GO_EDIT');?>" dojoType="dijit.form.Button" 
+											iconClass="dijitEditorIcon dijitEditorIconSave" />
+										</td>
+									</tr>					
+								</table>
+							</td>							
+						</tr>
+					</table>	
+				</fieldset>
+			</td>			
+		</tr>
+		
+	</table>	
+</form>
+<script type="text/javascript">
+	var url_student = '<?php echo $this->url(array('module'=>'foundation','controller'=>'studentchangebranch','action'=>'get-student')); ?>';
+	function getStudentInfo(type){
+
+		if(type==1){
+			studentid = dijit.byId('studentid').get('value');
+			dijit.byId("studentname").attr("value",studentid);
+		}else{
+			studentid = dijit.byId('studentname').get('value');
+			dijit.byId("studentid").attr("value",studentid);
+		}
+		
+		dojo.xhrPost({
+			url:url_student,
+			content:{
+				'studentid':studentid
+				},
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId("gender").attr("value",data.sex);
+				//dijit.byId("old_branch").attr("value",data.branch_id);
+				dijit.byId("academic_year").attr("value",data.academic_year);
+				dijit.byId("grade").attr("value",data.grade);
+				dijit.byId("session").attr("value",data.session);
+
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+</script>

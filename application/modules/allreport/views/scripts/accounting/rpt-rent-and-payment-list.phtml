@@ -1,0 +1,259 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm =  $this->frm_search;
+	$cusdetail=new Accounting_Model_DbTable_DbTransferstock();
+	
+	 
+?>	
+<title><?php echo $tr->translate('CUSTOMER_PAYMENT_REPORT');?></title>
+<div style="width: 28cm;margin: 0 auto; float: left;padding-left: 30px;"  >
+<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-rent-and-payment-list')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<table width="100%" >
+	    <tr>
+	         <td><?php echo $frm->getElement('title');?></td>
+	        <td><?php echo $frm->getElement('cus_name');?></td>
+	    	<td><?php echo $frm->getElement('start_date');?></td>
+	    	<td><?php echo $frm->getElement('end_date');?></td>
+	    	<td><?php echo $frm->getElement('status_search');?></td>
+	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
+	    </tr>
+	</table>
+</form>	
+</div>
+<style>
+.hover:hover{background: #ddd;}
+</style>
+<div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+<div id="divPrint">
+<style>
+	table{ page-break-inside:auto }
+    tr{ page-break-inside:avoid; page-break-after:auto }
+	#header {
+		display: table-header-group;
+		page-break-inside:avoid; page-break-after:auto;
+	}
+	.bor{
+		border-right: 1px solid #000;	
+		border-bottom: 1px solid #000;
+		font-size:13px;
+	}
+	.bor_r{
+		border-right: 1px solid #000;	
+		font-size:13px;
+	}
+	.padd{
+		padding: 3px;	
+	}
+	#row{ font-size:12px; height: 30px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+</style>
+		<table style="background:#fff;  margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+		<tr>
+			<td width="15%" align="center">
+				<img style="width:60%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+			</td>
+			<td align="center" width="70%" style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​">
+				<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​"><?php echo $tr->translate(" "); ?></strong><br />
+				<strong  style="font-weight:bold;color:#000; font-size: 14px;font-family:'Khmer OS Muol';​"><?php echo $tr->translate("បញ្ជីឈ្មោះអ្នកជួលតូប និង តាមដានការបង់ប្រាក់");?></strong><br />
+				<span style="font-weight: bold;font-size: 12px; font-family:'Khmer OS Battambang';​">&nbsp;<?php echo $tr->translate("ថ្ងៃទី "); ?>:&nbsp; <?php echo date("d-M-Y",strtotime($this->search['start_date']));?>&nbsp;ដល់&nbsp;
+				<?php echo date("d-M-Y",strtotime($this->search['end_date']));?> </span><br />
+			</td>
+			<td width="15%" > </td>
+		</tr>
+		<tr>
+			<td colspan="3" id="exportExcel">
+			
+			<?php if(!empty($this->cus)) foreach ($this->cus As $key=>$cus){
+			          if($cus['sex']==1){
+			          	$sex=$tr->translate("MALE");
+			          }else{
+			          	$sex=$tr->translate("FEMALE");
+			          }
+				?> <br/>
+			  
+				<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+				<thead>
+					<tr style=" font-size:12px;  font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
+						<td class="bor " rowspan="2"><?php echo $tr->translate("N_O"); ?></td>
+						<td class="bor" rowspan="2" colspan="2"><?php echo $tr->translate("CUS_ID"); ?></td>
+						<td class="bor" rowspan="2" colspan="5"><?php echo $tr->translate("CUS_NAME"); ?></td>
+						<td class="bor"  rowspan="2"><?php echo $tr->translate("SEX"); ?></td>
+						<td class="bor"  rowspan="2" colspan="5"><?php echo $tr->translate("PHONE"); ?></td>
+						<td class="bor" rowspan="2" colspan="10"><?php echo $tr->translate("ADDRESS"); ?></td>
+						<td class="bor" colspan="11"><?php echo $tr->translate("CONTRACT_DATE"); ?></td>
+				    </tr>
+				    <tr style="font-size:12px; height: 30px;font-family:'Khmer OS Battambang';background: rgba(101, 177, 70, 0.82);" align="center">
+						<td class="bor_r bor" colspan="6">ចាប់ផ្តើម</td>
+						<td class="bor_r bor" colspan="5"> ផុតកំណត់</td>
+ 					</tr>
+				</thead>
+					<tr style="font-size:12px; height: 30px;font-family:'Khmer OS Battambang';background: rgba(101, 177, 70, 0.82);" align="center">
+						<td class="bor_r"><?php echo $key+1?></td>
+						<td class="bor_r" colspan="2"><?php echo $cus['customer_code']?> </td>
+						<td class="bor_r" colspan="5"><?php echo $cus['first_name']?> </td>
+						<td class="bor_r"><?php echo $sex?> </td>
+						<td class="bor_r" colspan="5"><?php echo $cus['phone']?> </td>
+						<td class="bor_r" colspan="10"><?php echo $cus['address']?> </td>
+						<td class="bor_r" colspan="6"> <?php echo date("d-M-Y",strtotime($cus['start_date']));?>  </td>
+						<td class="bor_r" colspan="5"><?php echo date("d-M-Y",strtotime($cus['end_date']));?></td>
+ 					</tr>
+ 					<tr id="row" align="center" style="background: #ccc;">
+						<td colspan="5" class="padd" style="background: #4682B4	;">ទូទាត់សេវាជួលតូប</td>
+						<td colspan="7" class="padd" style="background: #FFBF00	;">ទូទាត់សេវាកម្មប្រើប្រាស់ទឹក</td>
+						<td colspan="7" class="padd" style="background: #F5F6CE;">ទូទាត់សេវាកម្មប្រើប្រាស់ភ្លើង</td>
+						<td colspan="3" class="padd" style="background: #FE9A2E;">ទូទាត់សេវាអនាម័យ</td>
+						<td colspan="3" class="padd" style="background: #feea2e;">ទូទាត់ថ្លៃផ្ញើរកង់ ម៉ូតូ ឡាន</td>
+						<td colspan="3" class="padd" style="background: #2edcfe;">ទូទាត់ថ្លៃសេវាផ្សេងៗ</td>
+						<td rowspan="2" class="padd" style="background: #FFFFFF;">ទឹកប្រាក់សរុប</td>
+						<td rowspan="2" class="padd" style="background: #FFFFFF;">ប្រាក់បានបង់</td>
+						<td rowspan="2" class="padd" style="background: #FFFFFF;">ប្រាក់ជំពាក់</td>
+						<td rowspan="2" class="padd" style="background: #FFFFFF;"><?php echo $tr->translate("អ្នកប្រើប្រាស់"); ?></td>
+						<td rowspan="2" class="padd" style="background: #FFFFFF;"><?php echo $tr->translate("STATUS"); ?></td>
+ 					</tr>
+					<tr id="row" align="center"  style="background:#4682B4;">
+						<td class="padd" >ថ្ងៃបង់ប្រាក់</td>
+						<td class="padd">លេខបង្កាន់ដៃ</td>
+						<td class="padd">ទឹកប្រាក់</td>
+						<td class="padd"> ថ្ងៃចាប់ផ្តើម</td>
+						<td class="padd">ថ្ងៃផុតកំណត់</td>
+						
+						<td class="padd" style="background: #FFBF00	;">កុងទ័រចាស់</td>
+						<td class="padd" style="background: #FFBF00	;">កុងទ័រថ្មី</td>
+						<td class="padd" style="background: #FFBF00	;"> តម្លៃរាយ</td>
+						<td class="padd" style="background: #FFBF00	;">តម្លៃសរុប</td>
+						<td class="padd" style="background: #FFBF00	;">អត្រា​ប្តូ​រ​ប្រាក់</td>
+						<td class="padd" style="background: #FFBF00	;">ថ្ងៃចាប់ផ្តើម</td>
+						<td class="padd" style="background: #FFBF00	;">ថ្ងៃផុតកំណត់</td>
+						
+						<td class="padd" style="background: #F5F6CE	;">កុងទ័រចាស់</td>
+						<td class="padd" style="background: #F5F6CE	;">កុងទ័រថ្មី</td>
+						<td class="padd" style="background: #F5F6CE	;"> តម្លៃរាយ</td>
+						<td class="padd" style="background: #F5F6CE	;">តម្លៃសរុប</td>
+						<td class="padd" style="background: #F5F6CE	;">អត្រា​ប្តូ​រ​ប្រាក់</td>
+						<td class="padd" style="background: #F5F6CE	;">ថ្ងៃចាប់ផ្តើម</td>
+						<td class="padd" style="background: #F5F6CE	;">ថ្ងៃផុតកំណត់</td>
+						
+						<td class="padd" style="background: #FE9A2E	;">តម្លៃ</td>
+						<td class="padd" style="background: #FE9A2E	;">ថ្ងៃចាប់ផ្តើម</td>
+						<td class="padd" style="background: #FE9A2E	;">ថ្ងៃផុតកំណត់</td>
+						
+						<td class="padd" style="background: #feea2e	;">តម្លៃ</td>
+						<td class="padd" style="background: #feea2e	;">ថ្ងៃចាប់ផ្តើម</td>
+						<td class="padd" style="background: #feea2e	;">ថ្ងៃផុតកំណត់</td>
+						
+						<td class="padd" style="background: #2edcfe	;">តម្លៃ</td>
+						<td class="padd" style="background: #2edcfe	;">ថ្ងៃចាប់ផ្តើម</td>
+						<td class="padd" style="background: #2edcfe	;">ថ្ងៃផុតកំណត់</td>
+ 					</tr>
+ 					 
+ 					<?php foreach($cusdetail->getCusPaymentDetail($cus['id']) As $k=>$c_detail){
+	 						$date1=date_create($c_detail['water_start_date']);
+	 						$date2=date_create($c_detail['water_end_date']);
+	 						
+	 						$fire_date1=date_create($c_detail['fire_start_date']);
+	 						$fire_date2=date_create($c_detail['fire_end_date']);
+	 						
+	 						$hygiene_date1=date_create($c_detail['hygiene_start_date']);
+	 						$hygiene_date2=date_create($c_detail['hygiene_end_date']);
+	 						
+	 						if($c_detail['status']){
+	 							$status=$tr->translate('ACTIVE');
+	 						}else{
+	 							$status=$tr->translate('DEACTIVE');
+	 						}
+ 						?>
+ 					<tr id="row" align="center" class="hover" >
+						<td class="padd"><?php echo $c_detail['rent_date_paid']?></td>
+						<td class="padd"><?php echo $c_detail['rent_receipt_no'];?></td>
+						<td class="padd"  >($)&nbsp;<?php echo $c_detail['rent_paid']?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($c_detail['rent_start_date']));?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($c_detail['rent_end_date']));?></td>
+						<td class="padd"> <?php echo $c_detail['water_old_congtor']?></td>
+						<td class="padd"> <?php echo $c_detail['water_new_congtor']?> </td>
+						<td class="padd">(៛)&nbsp; <?php echo $c_detail['water_cost']?></td>
+						<td class="padd">(៛)&nbsp; <?php echo $c_detail['water_total'] ?></td>
+						<td class="padd">($)&nbsp; <?php echo $c_detail['water_exc_rate'] ?></td>
+						
+						
+						<td class="padd"> <?php echo date("d-M-Y",strtotime($c_detail['water_start_date']));?></td>
+						<td class="padd"> <?php echo date("d-M-Y",strtotime($c_detail['water_end_date']));?></td>
+						<td class="padd"><?php echo $c_detail['fire_old_congtor']?></td>
+						<td class="padd" ><?php echo $c_detail['fire_new_congtor']?> </td>
+						<td class="padd">(៛)&nbsp;<?php echo $c_detail['fire_cost']?></td>
+						<td class="padd">(៛)&nbsp;<?php echo $c_detail['fire_total'] ?></td>
+						<td class="padd">($)&nbsp; <?php echo $c_detail['fire_exc_rate'] ?></td>
+						<td class="padd"> <?php echo date("d-M-Y",strtotime($c_detail['fire_start_date']));?></td>
+						<td class="padd"> <?php echo date("d-M-Y",strtotime($c_detail['fire_end_date']));?></td>
+						
+						<td class="padd" >($)&nbsp;<?php echo $c_detail['hygiene_price']?> </td>
+						<td class="padd" > <?php echo date("d-M-Y",strtotime($c_detail['hygiene_start_date']));?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($c_detail['hygiene_end_date']));?></td>
+						
+						<td class="padd" >($)&nbsp;<?php echo $c_detail['parking_price']?> </td>
+						<td class="padd" > <?php echo date("d-M-Y",strtotime($c_detail['parking_start_date']));?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($c_detail['parking_end_date']));?></td>
+						
+						<td class="padd" >($)&nbsp;<?php echo $c_detail['other_price']?> </td>
+						<td class="padd" > <?php echo date("d-M-Y",strtotime($c_detail['other_start_date']));?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($c_detail['other_end_date']));?></td>
+						
+						<td class="padd" style="font-weight: 900">($)&nbsp;<?php echo $c_detail['all_total_amount']?> </td>
+						<td class="padd" style="font-weight: 900">($)&nbsp;<?php echo $c_detail['paid']?> </td>
+						<td class="padd" style="font-weight: 900">($)&nbsp;<?php echo $c_detail['balance']?> </td>
+						<td class="padd"><?php echo $c_detail['user_name']?></td>
+						<td class="padd"><?php echo $status?></td>
+ 					</tr>
+ 					<?php }?>
+				 </table>
+				 
+				 <?php }?>
+				 	
+				<table width="100%">
+					<tr><td colspan="3">&nbsp;</td></tr>
+					<tr><td colspan="3">&nbsp;</td></tr>
+					<tr >
+						<td align="center" width="25%">
+							<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+						</td>
+						<td  width="50%">
+							&nbsp;
+						</td>
+						<td align="center"  width="25%">
+							<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+	</div>		
+</div>
+<script type="text/javascript">
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+function exportExcel(){
+	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+}
+</script>
+
+
+
+

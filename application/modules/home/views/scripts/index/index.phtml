@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<head>
+   <meta charset="utf-8" />
+   <title>Enrollment Management System</title>
+   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+   <meta content="" name="description" />
+   <meta content="" name="author" />
+   <link href="<?php echo $this->baseUrl()?>/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+   <link href="<?php echo $this->baseUrl()?>/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+   <link href="<?php echo $this->baseUrl()?>/assets/bootstrap/css/bootstrap-fileupload.css" rel="stylesheet" />
+   <link href="<?php echo $this->baseUrl()?>/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+   <link href="<?php echo $this->baseUrl()?>/css/style.css" rel="stylesheet" />
+   <link href="<?php echo $this->baseUrl()?>/css/style-responsive.css" rel="stylesheet" />
+   <link href="<?php echo $this->baseUrl()?>/css/style-default.css" rel="stylesheet" id="style_color" />
+   <link rel="shortcut icon" href="<?php echo $this->baseUrl()?>/images/icon.ico" type="image/x-icon"/>
+<style>
+
+ul, ol {
+    padding: 0;
+     margin: 0px !important;}
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+</style>
+<?php 
+$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+$register=$this->url(array('module'=>'registrar','controller'=>'register','action'=>'add'), null, true);
+$shortcoursereg=$this->url(array('module'=>'registrar','controller'=>'coursestudy','action'=>'add'), null, true);
+$servicepayment=$this->url(array('module'=>'registrar','controller'=>'studentservicepayment','action'=>'add'), null, true);
+$studnetpaymentreport=$this->url(array('module'=>'registrar','controller'=>'allreports','action'=>'index'), null, true);
+$nearlypaymentalert=$this->url(array('module'=>'registrar','controller'=>'studentnearlyendservice','action'=>'index'), null, true);
+$paymentlate=$this->url(array('module'=>'registrar','controller'=>'studentpaymentlate','action'=>'index'), null, true);
+
+$student_register=$this->url(array('module'=>'foundation','controller'=>'register','action'=>'add'), null, true);
+$tuition_fee=$this->url(array('module'=>'accounting','controller'=>'fee','action'=>'index'), null, true);
+$service_fee=$this->url(array('module'=>'accounting','controller'=>'servicecharge','action'=>'index'), null, true);
+$service_name=$this->url(array('module'=>'accounting','controller'=>'service','action'=>'index'), null, true);
+$stopservice=$this->url(array('module'=>'accounting','controller'=>'suspendservice','action'=>'index'), null, true);
+
+$rpt_dailypayment=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-studentpayment'), null, true);
+$rpt_paymentdetail=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-studentpaymentdetail'), null, true);
+
+$rpt_servicefee=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-service-charge'), null, true);
+$rpt_service_fee=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fee'), null, true);
+$rpt_paymentdetailby=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-paymentdetailbytype'), null, true);
+
+$rpt_suspend =$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-suspendservice'), null, true);
+$rpt_studentbalance=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rptstudentbalance'), null, true);
+$rpt_expectincome=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rptexpectincome'), null, true);
+
+$rpt_nearly=$this->url(array('module'=>'allreport','controller'=>'loan','action'=>'rptstudentnearlyendservice'), null, true);
+$rpt_paymenlate=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rptstudentpaymentlate'), null, true);
+$rpt_calculate = $this->url(array('module'=>'registrar','controller'=>'calculator','action'=>'index'), null, true);
+?>
+<style type="text/css">
+.metro-nav {
+    font-family: 'Kh Battambang','Khmer Battambang' !important;
+}
+</style>
+</head>
+<body class="fixed-top" style="font-family:'Kh Battambang','Khmer Battambang' !important;">
+   <div id="container" class="row-fluid" style="margin: 0 auto; background: #cfddf5;height: 100%; padding:10px 0px;">
+         <div class="container-fluid">
+            <!-- BEGIN PAGE CONTENT-->
+            <div class="row-fluid">
+                <!--BEGIN METRO STATES-->
+                <div class="metro-nav metro-fix-view">
+                     <div class="metro-nav-block double" style="background:#ec920e;">
+                        <a href="<?php echo $register;?>" style="text-align: center;" class="text-center" data-original-title="">
+                            <span class="value">
+                                <i class="icon-user"></i>
+                            </span>
+                        </a>
+                         <div class="status" align="center"><?php echo $tr->translate('STUDENT_REGISTRATION');?></div>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#8d3e03;">
+                        <a href="<?php echo $shortcoursereg;?>" data-original-title="">
+                            <i class="icon-user"></i>
+                            <div class="info"></div>
+                            <div class="status"><?php echo $tr->translate('STUDENT_COURSE');?></div>
+                        </a>
+                    </div>
+                   <div class="metro-nav-block double" style="background:#ec920e;">
+                       <a href="<?php echo $servicepayment;?>" data-original-title="">
+                           <i class="icon-comments-alt"></i>
+                           <div class="info"></div>
+                           <div class="status"><?php echo $tr->translate('STUDENT_SERVICE_PAYMENT');?></div>
+                       </a>
+                   </div>
+                    <div class="metro-nav-block double" style="background:#f65108;">
+                        <a href="<?php echo $studnetpaymentreport;?>" data-original-title="">
+                            <i class="icon-tasks"></i>
+                            <div class="info">$37624</div>
+                            <div class="status"><?php echo $tr->translate('RPT_CASHPAYMENT');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#0233eb;">
+                        <a href="<?php echo $nearlypaymentalert;?>" data-original-title="">
+                            <i class="icon-tags"></i>
+                            <div class="info"></div>
+                            <div class="status"><?php echo $tr->translate('STUDENT_NEARLY_END_SERVICE');?></div>
+                        </a>
+                    </div>
+                     <div class="metro-nav-block double" style="background: #8f001c;">
+                        <a href="<?php echo $paymentlate;?>" data-original-title="">
+                            <i class="icon-shopping-cart"></i>
+                            <div class="info"></div>
+                            <div class="status"><?php echo $tr->translate('STUDENT_PAYMENT_LATE');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block" style="background: #cd0c32;">
+                        <a href="<?php echo $student_register;?>" data-original-title="" class="text-center">
+                            <i class="icon-star-empty"></i>
+                            <div class="status"><?php echo $tr->translate('REGISTER');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block nav-block-blue" style="background:#be00aa;">
+                        <a href="<?php echo $tuition_fee;?>" class="text-center" data-original-title="">
+                            <i class="icon-bar-chart"></i>
+                            <div class="status"><?php echo $tr->translate('TUITION_FEE');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#84089e">
+                        <a href="<?php echo $service_fee;?>" data-original-title="">
+                            <i class="icon-bar-chart"></i>
+                            <div class="status"><?php echo $tr->translate('SERVICE_FEE');?></div>
+                        </a>
+                    </div>
+                    
+                    <div class="metro-nav-block nav-block-purple">
+                        <a href="<?php echo $service_name;?>" data-original-title="">
+                            <i class="icon-eye-open"></i>
+                            <div class="info"></div>
+                            <div class="status"><?php echo $tr->translate('SERVICES_CHARGE');?> </div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#1746f7;">
+                        <a href="<?php echo $stopservice;?>" data-original-title="">
+                            <i class="icon-remove-sign"></i>
+                            <div class="info"></div>
+                            <div class="status"><?php echo $tr->translate('STUDENT_SUSPEND_SERVICE');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block nav-block-blue" style="background:#530be6;">
+                        <a href="<?php echo $rpt_calculate;?>" class="text-center" data-original-title="">
+                            <i class="icon-dashboard"></i>
+                            <div class="status"><?php echo $tr->translate('CALCULATE_LIST');?></div>
+                        </a>
+                    </div>
+                     <div class="metro-nav-block double" style="background:#693d8d;">
+                        <a href="<?php echo $rpt_dailypayment;?>" data-original-title="">
+                            <i class="icon-external-link"></i>
+                            <div class="info">$53412</div>
+                            <div class="status"><?php echo $tr->translate('STUDENT_SERVICE_PAYMENT_REPORT');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#107b02;">
+                        <a href="<?php echo $rpt_paymentdetail;?>" data-original-title="" class="text-center">
+                            <i class="icon-cogs"></i>
+                            <div class="status"><?php echo $tr->translate('STUDENT_SERVICE_PAYMENT_DETAIL_REPORT');?></div>
+                        </a>
+                    </div>
+
+                    <div class="metro-nav-block double" style="background:#dc0068">
+                        <a href="<?php echo $rpt_servicefee;?>" data-original-title="">
+                            <i class="icon-shopping-cart"></i>
+                            <div class="info"></div>
+                            <div class="status"><?php echo $tr->translate('STUDENT_SERVICE_PAYMENT_REPORT');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#b14d03;">
+                        <a href="<?php echo $rpt_service_fee;?>" data-original-title="">
+                            <i class="icon-external-link"></i>
+                            <div class="info">$53412</div>
+                            <div class="status"><?php echo $tr->translate('RPT_FEE');?></div>
+                        </a>
+                    </div>
+                   
+                    <div class="metro-nav-block double" style="background:#f65108">
+                        <a href="<?php echo $rpt_paymentdetailby;?>" class="text-center" data-original-title="">
+                            <i class="icon-dashboard"></i>
+                            <div class="status"><?php echo $tr->translate('STUDENT_PAYMENT_SERVICE_BY_TYPE_REPORT');?></div>
+                        </a>
+                    </div>
+                     <div class="metro-nav-block double" style="background:#84089e">
+                        <a href="<?php echo $stopservice?>" class="text-center" data-original-title="">
+                            <i class=" icon-puzzle-piece"></i>
+                           <div class="status"><?php echo $tr->translate('STUDENT_STOP_SERVICE_REPORT');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block double" style="background:#8d3e03;">
+                        <a href="<?php echo $rpt_studentbalance;?>" class="text-center" data-original-title="">
+                            <i class="icon-signout"></i>
+                            <div class="status"><?php echo $tr->translate('STUDENT_BALANCE_REPORT');?></div>
+                        </a>
+                    </div>
+                     <div class="metro-nav-block double" style="background: #cd0c32;"> 
+                        <a href="<?php echo $rpt_expectincome;?>" data-original-title="">
+                            <i class="icon-external-link"></i>
+                            <div class="info">$53412</div>
+                            <div class="status"><?php echo $tr->translate('EXPECT_INCOME_REPORT');?></div>
+                        </a>
+                    </div>
+                    <div class="metro-nav-block nav-block-purple double">
+                        <a href="<?php echo $rpt_nearly;?>" data-original-title="" class="text-center">
+                            <i class="icon-cogs"></i>
+                            <div class="status"><?php echo $tr->translate('STUDENT_NEARLY_END_SERVICE_REPORT');?></div>
+                        </a>
+                    </div>
+                     <div class="metro-nav-block double" style="background:#107b02;">
+                        <a href="<?php echo $rpt_paymenlate;?>" data-original-title="" class="text-center">
+                            <i class="icon-cogs"></i>
+                            <div class="status"><?php echo $tr->translate('RPT_STUDENT_PAYMENT_LATE');?></div>
+                        </a>
+                    </div>
+                </div>
+                <!--END METRO STATES-->
+            </div>
+            <!-- END PAGE CONTENT-->
+         </div>
+         <!-- END PAGE CONTAINER-->
+     
+      <!-- END PAGE -->  
+   </div>
+   <!-- END CONTAINER -->
+   <!-- BEGIN JAVASCRIPTS -->
+   <!-- Load javascripts at bottom, this will reduce page load time -->
+   <script src="<?php echo $this->baseUrl()?>/js/jquery-1.8.3.min.js"></script>
+   <script src="<?php echo $this->baseUrl()?>/js/jquery.nicescroll.js" type="text/javascript"></script>
+   <script src="<?php echo $this->baseUrl()?>/assets/bootstrap/js/bootstrap.min.js"></script>
+   <script src="<?php echo $this->baseUrl()?>/js/common-scripts.js"></script>
+</body>
+<!-- END BODY -->
+</html>

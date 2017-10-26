@@ -1,0 +1,199 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('UPDATE_SERVICE')); 
+?>	
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.CheckBox"); 
+	
+var service_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->service));?> );
+dojo.ready(function(){	
+	new dijit.form.FilteringSelect({
+		store: service_store,
+		autoComplete: true,                        
+		required: true,                      
+	    id: "title",
+	    name: "title",  
+	    tabindex: "1",         
+	    class: 'fullside',  
+	    placeHolder:"Selected language", 
+	    onChange: function() {          
+		   	service_id = dijit.byId('title').get('value');
+		    if(service_id==-1){
+		   		 dijit.byId("popup_dept").show();
+		    }
+	
+		    showCar();
+		} 
+	}, "title");
+	dijit.byId('title').attr('value',"<?php echo $this->row['ser_cate_id'];?>");
+
+	showCar();
+	
+}); 
+</script>
+<?php  $item= $this->frm;?>
+<form  id='acc_item' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'service','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table cellspacing="10" width="50%" style="margin: 0 auto;">
+			<tr>
+				<td>
+				<fieldset >
+					<legend align="center" ><?php echo $tr->translate("UPDATE_SERVICE");?></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("SERVICE_TYPE")?></td>
+							<td>
+								<input id="title" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td style="width:100px">
+								<div id="show_car_label">
+									<?php echo $tr->translate("CAR")?>
+								</div>
+							</td>
+							<td>
+								<div id="show_car">
+									<select name="car" id="car"  dojoType="dijit.form.FilteringSelect" class="fullside"  >
+										<option value="-1">----- select car ------</option>
+										<?php if(!empty($this->all_car)){foreach ($this->all_car as $car){?>
+										<option value="<?php echo $car['id']?>" <?php if($car['id']==$this->row['car_id']){echo 'selected="selected"';}?>><?php echo $car['name']?></option>
+										<?php }}?>
+									</select>
+								</div>
+							</td>
+						</tr>							
+						
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
+							<td><?php  echo $item->getElement('add_title');?></td>
+						</tr>
+						<tr>
+							<td style="width: 5px"><?php echo $tr->translate("DISCRIPTION")?></td>
+							<td><?php  echo $item->getElement('description');?></td>
+						</tr>
+						<tr>
+							<td style="width: 5px"><?php echo $tr->translate("STATUS")?></td>
+							<td><?php  echo $item->getElement('status');?></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+							<input iconClass="dijitIconUndo" type="button" value="<?php echo $tr->translate("ត្រលប់ក្រោយ");?>" 
+											label="<?php echo $tr->translate("GO_BACK");?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'accounting','controller'=>"service",'action'=>'index'),null,true); ?>';"/>
+							<input type="submit" label="<?php echo $tr->translate('GO_EDIT');?>"​​​​ value="<?php echo $tr->translate('GO_SAVE');?>" id="submitButton" dojoType="dijit.form.Button" 
+								 iconClass="dijitEditorIcon dijitEditorIconSave"/>
+							</td>
+						</tr>
+					</table>	
+		</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
+
+<script>
+
+function showCar(){
+	service_type = dijit.byId('title').get('value');
+	//alert(service_type);
+	if(service_type==5){
+		document.getElementById('show_car').style.display="block";
+		document.getElementById('show_car_label').style.display="block";
+	}else{
+		document.getElementById('show_car').style.display="none";
+		document.getElementById('show_car_label').style.display="none";
+	}
+}
+
+var url_add_lang = '<?php echo $this->url(array("module"=>"accounting","controller"=>"service","action"=>"submit")); ?>';
+function addService(){
+	language = dijit.byId('p_title').get('value');
+	dojo.xhrPost({
+			url:url_add_lang,
+			form: dojo.byId("frm_add_tran"),
+			handleAs:"json",
+			load: function(data) {
+				//alert(data); 
+				var Itemmake = { 
+				     id: data,
+					         name: dijit.byId('p_title').get('value')
+					   };
+		 	addDataToSelectbox(dijit.byId('title'), service_store, Itemmake, data);
+		   dijit.byId('frm_add_tran').reset();
+		   dijit.byId("popup_dept").hide();
+				
+			},
+			error: function(err) {
+				alert(err);
+			}
+	});
+}
+function hideDialog() {		
+	dijit.byId("popup_dept").hide();
+}
+function popupgroup(){
+	//alert(2);
+	dijit.byId("popup_dept").show();
+}
+</script>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:40%;" id="popup_dept" >
+		<form style="background-color: buttonface; width:100%;" id='frm_add_tran' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<legend align="center" ><?php echo $tr->translate("បន្ថែមប្រភេទសេវាកម្ម");?></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("ចំណងជើង")?></td>
+							<td><input class="fullside" tabindex="1" value="" dojoType="dijit.form.ValidationTextBox" name="p_title" id="p_title" type="text" required="required" /></td>
+						</tr>
+						<tr>
+							<td>ពណ៌នា</td>
+							<td>
+								<textarea class="fullside"   style=" height: 60px !important;"
+										tabindex="2" dojoType=""  id="note" name=note ></textarea>
+									
+							</td>
+						</tr>
+							<tr>
+							<td style="width:100px"><?php echo $tr->translate("Type")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="type" id="type" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1"><?php echo $tr->translate("SERVICE")?></option>
+									    <option value="2"><?php echo $tr->translate("PROGRAM")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("status")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="status_p" id="status_p" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1"><?php echo $tr->translate("Active")?></option>
+									    <option value="0"><?php echo $tr->translate("Deactive")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconUndo" type="button" value="close" label="Close" dojoType="dijit.form.Button" onclick="hideDialog();"/>
+								<input type="button" value="save" name="save" label="Save" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addService();"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+
+		</form>
+	</div>
+</div>

@@ -1,0 +1,46 @@
+  <?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+  // report
+  $rpt_car=$this->url(array('module'=>'allreport','controller'=>'other','action'=>'rpt-car'), null, true);
+  $rpt_lecturer=$this->url(array('module'=>'allreport','controller'=>'other','action'=>'rpt-lecturer'), null, true);
+  $rpt_group=$this->url(array('module'=>'allreport','controller'=>'other','action'=>'rpt-group'), null, true);
+  $rpt_academic_year=$this->url(array('module'=>'allreport','controller'=>'other','action'=>'rpt-academic-year'), null, true);
+  ?>
+  <style>
+  ul.link-rpt li a {
+	color: #3A3939;
+    height: 50px;
+  	width:180px;
+    display: block;
+    padding: 10px;
+    background: #D6D6D6;
+  	font-family: 'Kh Battambang','Khmer Battambang' !important;
+  	text-align: center;
+  	word-wrap: break-word;
+  } 
+    ul.link-rpt li {
+	float:left; margin:10px;
+    list-style: none;
+    border:1px solid #B1B0AF;
+    word-wrap: break-word;
+  } 
+  .dijitReset, .dijitInline  ,.dijitButton {
+	width: 200px !important;
+  }
+  </style>
+  <div style="background:#ccc; width: 100%;">
+  	<ul class="link-rpt">
+  	
+  		<li><a href="<?php echo $rpt_academic_year;?>"><?php echo $tr->translate('RPT_YEAR');?></a></li>
+  		<li><a href="<?php echo $rpt_lecturer;?>"><?php echo $tr->translate('RPT_LECTURER');?></a></li>
+  		<li><a href="<?php echo $rpt_car;?>"><?php echo $tr->translate('RPT_CAR');?></a></li>
+  		<li><a href="<?php echo $rpt_group;?>"><?php echo $tr->translate('RPT_GROUP_STUDY');?></a></li>
+  		
+  		
+  		
+  		<!--<li><a href="#"><?php //echo $tr->translate('LOAN_DISBURSE');?></a></li> -->
+  	</ul>
+  </div>
+  <div style="clear: both;"></div>
+  
+  
+  
