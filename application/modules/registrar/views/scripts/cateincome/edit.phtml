@@ -1,0 +1,52 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_expense;
+//print_r($this->row);exit();
+?>
+<title><?php echo $tr->translate("EDIT_CATE_INCOME");?></title>
+ <script>
+		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
+ </script>
+<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'cateincome','action'=>'edit')); ?>" 
+				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+	</script>
+	<table cellspacing="10" width="40%" style="margin: 0 auto;">
+		<tr>
+			<td>
+				<fieldset style="background-color:menu;">
+					<legend align="center" ><strong><?php echo $tr->translate("EDIT_CATE_INCOME");?></strong></legend>
+					<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+						<tr>
+							<td><?php echo $tr->translate("TITLE")?></td>
+							<td><input type="text" name="title" id="title" value="<?php echo $this->rs['category_name'];?>" dojoType="dijit.form.ValidationTextBox" class="fullside" /></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("STATUS")?></td>
+							<td>
+								<select name="status" id="status" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="1" <?php if($this->rs['status']==1){echo 'selected="selected"';}?>>Active</option>
+									<option value="0" <?php if($this->rs['status']==0){echo 'selected="selected"';}?>>Deactive</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('GO_EDIT');?>" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />
+							</td>
+						</tr>
+					</table>	
+				</fieldset>		
+			</td>
+		</tr>
+	</table>
+</form>
+
+
+
