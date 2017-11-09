@@ -29,12 +29,12 @@ class Accounting_ProductPaymentController extends Zend_Controller_Action {
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllProductPayment($search);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH","NAME","SEX","RECEIPT_NO","TOTAL_PAYMENT","PAID_AMOUNT","DATE_PAY","USER");
+    		$collumns = array("BRANCH","NAME","SEX","RECEIPT_NO","TOTAL_PAYMENT","PAID_AMOUNT","DATE_PAY","USER","STATUS");
     				         
     		$link=array(
     				'module'=>'accounting','controller'=>'productpayment','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('branch'=>$link,'receipt_number'=>$link,'name'=>$link,'service_name'=>$link,'code'=>$link));
+    		$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('branch'=>$link,'receipt_number'=>$link,'name'=>$link,'service_name'=>$link,'code'=>$link));
     	}catch (Exception $e){
     		//Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -95,7 +95,10 @@ class Accounting_ProductPaymentController extends Zend_Controller_Action {
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
-     		$_data['id']=$id;
+     		$_data['payment_id']=$id;
+     		
+     		//print_r($_data);exit();
+     		
     		try {
     			$db = new Accounting_Model_DbTable_DbProductPayment();
     			$db->updateStudentServicePayment($_data);
@@ -132,6 +135,9 @@ class Accounting_ProductPaymentController extends Zend_Controller_Action {
     	
     	$db = new Accounting_Model_DbTable_DbProductPayment();
         $this->view->all_service = $db->getAllServiceItemOption();
+        
+        $_db = new Application_Model_DbTable_DbGlobal();
+        $this->view->branch = $_db->getAllBranch();
     }
     
     function getGradeAction(){

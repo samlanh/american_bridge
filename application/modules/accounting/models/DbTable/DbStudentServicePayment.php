@@ -64,10 +64,21 @@ function addStudentServicePayment($data){
 				);
 			$this->insert($array);
 		}else{
+			
+			if($data['student_type']==3){
+				$is_comeback = 0;
+				$stu_id = $data['student_name_old'];
+			}else{
+				$is_comeback = 1;
+				$stu_id = $data['stu_drop_name'];
+			}
+			
 			$array = array(
 				'service_id'=>$data['service'],
+				'is_suspend'=>0,
+				'is_comeback'=>$is_comeback,
 			);
-			$where = " stu_id = ".$data['student_name_old'];
+			$where = " type=4 and stu_id = ".$stu_id;
 			$this->update($array, $where);
 		}
 		
@@ -75,9 +86,9 @@ function addStudentServicePayment($data){
 		
 	////////////////////////////////  ទាល់តែសិស្សចាស់បានចូលធ្វើ   //////////////////////////////////////////////////////////////////////////////
 				
-		if($data['student_type']==2){
+		if($data['student_type']!=1){
 			//get id service ដែលយើងបង់ ដើម្បី update វាទៅ Finish រួចចាំ insert new service and new validate
-			$finish = $this->setServiceToFinish($data['student_name_old'], $data['service'],0);
+			$finish = $this->setServiceToFinish($stu_id, $data['service'],0);
 			if(!empty($finish)){
 				$this->_name = "rms_student_paymentdetail";
 				$array=array(
@@ -103,8 +114,13 @@ function addStudentServicePayment($data){
 		
 		if($data['student_type']==1){
 			$student_id = $data['student_name_new'];	
-		}else{
+			$is_new = 1;
+		}else if($data['student_type']==3){
 			$student_id = $data['student_name_old'];	
+			$is_new = 0;
+		}else{
+			$student_id = $data['stu_drop_name'];
+			$is_new = 1;
 		}
 		
 		if(!empty($data['buy_product'])){
@@ -139,10 +155,11 @@ function addStudentServicePayment($data){
 					'grand_total_paid_amount'		=>$data['total_received'],
 					'grand_total_balance'			=>$data['total_balance'],
 					
+					'is_new'			=>$is_new,
+					'student_type'		=>$data['student_type'],
 					'payfor_type'		=>3 , // for service
 					'create_date'		=>date("Y-m-d H:i:s"),
 					'user_id'			=>$this->getUserId(),
-					
 					
 					'branch_id'			=>$data['branch'],
 					
@@ -215,6 +232,62 @@ function addStudentServicePayment($data){
 	function updateStudentServicePayment($data){
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
+		
+		
+		try{
+			if($data['is_void']==1){
+		
+				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
+					
+				$this->_name='rms_student_payment';
+					
+				$arr = array(
+						'is_void'=>$data['is_void'],
+				);
+				$where = " id = ".$data['payment_id'];
+				$this->update($arr, $where);
+		
+				///////////////////////////////// rms_student_paymentdetail ////////////////////////////////////////////
+		
+				if(!empty($data['parent_id'])){
+					$arr = array(
+							'is_start'=>1
+					);
+					$this->_name='rms_student_paymentdetail';
+					$where=" id = ".$data['parent_id'];
+					$this->update($arr,$where);
+				}
+		
+		
+				///////////////////////////////// rms_service ////////////////////////////////////////////
+		
+				if($data['student_type']==4){
+					$this->_name='rms_service';
+		
+					$arr = array(
+							'is_suspend'=>2,
+					);
+					$where = " type = 4 and stu_id = ".$data['student_name_old'];
+					$this->update($arr, $where);
+				}
+		
+				////////////////////////////////////////////////////////////////////////////////////////////
+		
+				$db->commit();
+				return 0;
+					
+			}else{
+				$db->commit();
+				return 0;
+			}
+		}catch (Exception $e){
+			echo $e->getMessage();
+			$db->rollBack();
+		}
+		
+		return 0;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 		
 		// update service មុនទៅជាប្រើប្រាស់វិញសិន
 		if(!empty($data['is_parent'])){
@@ -308,18 +381,21 @@ function addStudentServicePayment($data){
     	$user=$this->getUserId();
     	$db=$this->getAdapter();
     	$sql="select sp.id,
-    		(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch,
-			(select sv.stu_code from rms_service as sv where sv.stu_id=sp.student_id and sv.type=4 limit 1)AS code,
-	    	(select CONCAT(stu_khname,' - ',stu_enname) from rms_student where rms_student.stu_id=sp.student_id limit 1)AS name,
-	    	(select name_kh from rms_view where rms_view.type=2 and rms_view.key_code=(select sex from rms_student where rms_student.stu_id=sp.student_id limit 1) limit 1)AS sex,
-	    	receipt_number,
-	    	sp.grand_total_payment,
-	    	sp.grand_total_paid_amount,
-	    	sp.grand_total_balance,
-	    	create_date,
-	    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user
-	    	from rms_student_payment as sp where 1 and
-	    	(select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 ";
+	    		(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch,
+				(select sv.stu_code from rms_service as sv where sv.stu_id=sp.student_id and sv.type=4 limit 1)AS code,
+		    	(select CONCAT(stu_khname,' - ',stu_enname) from rms_student where rms_student.stu_id=sp.student_id limit 1)AS name,
+		    	(select name_kh from rms_view where rms_view.type=2 and rms_view.key_code=(select sex from rms_student where rms_student.stu_id=sp.student_id limit 1) limit 1)AS sex,
+		    	receipt_number,
+		    	sp.grand_total_payment,
+		    	sp.grand_total_paid_amount,
+		    	sp.grand_total_balance,
+		    	create_date,
+		    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user,
+		    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status 
+	    	from 
+	    		rms_student_payment as sp 
+	    	where 1 
+	    		and (select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 ";
     	
     	$from_date =(empty($search['start_date']))? '1': " sp.create_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " sp.create_date <= '".$search['end_date']." 23:59:59'";
@@ -346,13 +422,39 @@ function addStudentServicePayment($data){
     }
     function getStudentServicePaymentByID($id){
     	$db=$this->getAdapter();
-    	$sql="select * from rms_student_payment where id=".$id;
+    	$sql="select 
+    				*,
+    				(select stu_code from rms_service where student_id = stu_id and rms_service.type=4 limit 1) as code 
+    			from 
+    				rms_student_payment AS sp,
+    				rms_student_paymentdetail as spd
+    			where 
+    				sp.id = spd.payment_id	
+    				and spd.type=3
+    				and sp.id=".$id;
     	return $db->fetchRow($sql);
+    }
+    function getStudentBuyProductById($id){
+    	$db=$this->getAdapter();
+    	$sql=" SELECT
+			    	spd.service_id,
+			    	spd.fee,
+			    	spd.qty,
+			    	spd.discount_percent,
+			    	spd.subtotal,
+			    	spd.note
+			    FROM
+			    	rms_student_paymentdetail AS spd
+			    WHERE
+			    	spd.type = 4
+			    	AND spd.payment_id = ".$id;
+    
+    	return $db->fetchAll($sql);
     }
     
     function getStudentServicePaymentDetailByID($id){
     	$db=$this->getAdapter();
-    	$sql="select * from rms_student_paymentdetail where payment_id=".$id;
+    	$sql="select * from rms_student_paymentdetail where type=3 and payment_id=".$id;
     	return $db->fetchRow($sql);
     }
     
@@ -463,11 +565,19 @@ function addStudentServicePayment($data){
     
     public function getAllStudentInfo($studentid){
     	$db=$this->getAdapter();
-    	$sql="select stu_enname,stu_khname,sex,tel,
-	    		(select CONCAT(major_enname,' - ',major_khname) from rms_major where major_id=grade) as grade , 
-	    		(select kh_name from rms_dept where dept_id=degree) as degree , 
-	    		(select name_en from rms_view where type=4 and key_code = session) as session
-    		 from rms_student where stu_id=$studentid limit 1";
+    	$sql="select 
+	    			stu_enname,
+	    			stu_khname,
+	    			sex,
+		    		tel,
+		    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as service_id
+	    		 from 
+	    			rms_student as s
+	    		 where
+	    		 	s.stu_id=$studentid 
+	    		 limit 
+	    			1
+    		";
     	return $db->fetchRow($sql);
     }
     
@@ -599,16 +709,53 @@ function addStudentServicePayment($data){
     	$db=$this->getAdapter();
     	
     	$sql="SELECT s.stu_id as id, CONCAT(s.stu_khname,'-',s.stu_enname) as name from rms_student as s,rms_service as sv
-    	where sv.stu_id = s.stu_id and sv.type=4 and sv.status=1 and s.is_subspend=0 and sv.branch_id = $branch_id ";
+    	where sv.stu_id = s.stu_id and sv.type=4 and sv.status=1 and sv.is_suspend=0 and sv.branch_id = $branch_id ";
     	$stu_name = $db->fetchAll($sql);
     	
     	$sql="SELECT s.stu_id as id, sv.stu_code as name from rms_student as s,rms_service as sv
-    	where sv.stu_id = s.stu_id and sv.type=4 and sv.status=1 and s.is_subspend=0 and sv.branch_id = $branch_id  ";
+    	where sv.stu_id = s.stu_id and sv.type=4 and sv.status=1 and sv.is_suspend=0 and sv.branch_id = $branch_id  ";
     	$stu_id = $db->fetchAll($sql);
     	
     	$result = array(0=>$stu_id,1=>$stu_name);
     	return $result;
-    	
+    }
+    
+    
+    function getAllDropStudent($branch_id){
+    	$db=$this->getAdapter();
+    	 
+    	$sql="SELECT 
+    				sv.stu_id as id,
+    				CONCAT(s.stu_khname,'-',s.stu_enname) as name 
+    			from 
+    				rms_student as s,
+    				rms_service as sv
+    			where 
+    				sv.stu_id = s.stu_id 
+    				and sv.type=4 
+    				and sv.status=1 
+    				and sv.is_suspend != 0
+    				and sv.branch_id = $branch_id
+    		";
+    	$stu_name = $db->fetchAll($sql);
+    	 
+    	$sql="SELECT 
+    				sv.stu_id as id,
+    				sv.stu_code as name
+    			from 
+    				rms_student as s,
+    				rms_service as sv
+    			where 
+    				sv.stu_id = s.stu_id 
+    				and sv.type=4 
+    				and sv.status=1 
+    				and sv.is_suspend != 0
+    				and sv.branch_id = $branch_id ";
+    	$stu_id = $db->fetchAll($sql);
+    	 
+    	$result = array(0=>$stu_id,1=>$stu_name);
+    	return $result;
+    	 
     }
     
     

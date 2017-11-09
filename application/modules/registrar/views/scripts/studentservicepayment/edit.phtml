@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('ADD_STUDENT_SERVICE_PAYMENT')); 
+	echo $this->headTitle($tr->translate('EDIT_STUDENT_SERVICE_PAYMENT')); 
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 // 	print_r($this->service);exit();
 ?>	
@@ -106,17 +106,24 @@ fieldset{  background:none;}
 		<tr>
 			<td>
 			<fieldset>
-				<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_SERVICE_PAYMENT");?></strong></legend>
+				<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("EDIT_STUDENT_SERVICE_PAYMENT");?></strong></legend>
 				<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
-				
-					&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" <?php if($this->row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
-					
+					<tr>
+						<td>
+							<input type="checkbox" value="1" <?php if($this->row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+						</td>
+						<td colspan="2"></td>
+						<td>
+							<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['buy_product']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
+						</td>
+					</tr>
 					<tr>
 						<td style="width: 12%"><?php echo $tr->translate("STUDENT_TYPE");?></td>
 						<td style="width: 37%">
 							<select name="student_type" id="student_type" onchange="changeControl();getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 								<option value="1" <?php if($this->row['student_type']==1){echo 'selected="selected"';}?>>New Student</option>
 								<option value="3" <?php if($this->row['student_type']==3){echo 'selected="selected"';}?>>Old Student</option>
+								<option value="4" <?php if($this->row['student_type']==4){echo 'selected="selected"';}?>>Drop Student</option>
 							</select>
 						</td>
 						
@@ -125,13 +132,14 @@ fieldset{  background:none;}
 					</tr>
 					<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
 					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
+					<input type="hidden" name="parent_id" id="parent_id" value="<?php echo $this->row['is_parent'];?>" dojoType="dijit.form.TextBox" />
 					<tr>
 						<td><?php echo $tr->translate("STUDENT_NAME");?></td>
 						<td>
 							<div id="new_name">
 								<select name="student_name_new" id="student_name_new" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
-									<?php if($this->row['student_type']==1 && !empty($this->all_stu_name)){foreach($this->all_stu_name as $all_stu_name){?>
+									<?php if(!empty($this->all_stu_name)){foreach($this->all_stu_name as $all_stu_name){?>
 										<option value="<?php echo $all_stu_name['stu_id']?>" <?php if($all_stu_name['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $all_stu_name['stu_name']?></option>
 									<?php }}?>
 								</select>
@@ -139,11 +147,20 @@ fieldset{  background:none;}
 							<div id="old_name">
 								<select name="student_name_old" id="student_name_old" onChange="setID();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
-									<?php if($this->row['student_type']==3 && !empty($this->old_stu_name)){foreach($this->old_stu_name as $old_stu_name){?>
+									<?php if(!empty($this->old_stu_name)){foreach($this->old_stu_name as $old_stu_name){?>
 										<option value="<?php echo $old_stu_name['stu_id']?>" <?php if($old_stu_name['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $old_stu_name['stu_name']?></option>
 									<?php }}?>
 								</select>
 							</div>	
+							
+							<div id="drop_name">
+								<select name="drop_name" id="drop_name" onChange="setID(2);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select name -----</option>
+									<?php if(!empty($this->drop_stu_name)){foreach($this->drop_stu_name as $drop_stu_name){?>
+										<option value="<?php echo $drop_stu_name['stu_id']?>" <?php if($drop_stu_name['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $drop_stu_name['stu_name']?></option>
+									<?php }}?>
+								</select>
+							</div>
 						</td>
 						
 						<td align="right"><?php echo $tr->translate("STUDENT_ID");?></td>
@@ -154,8 +171,17 @@ fieldset{  background:none;}
 							<div id="old_id">
 								<select name="old_car_id" id="old_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select id -----</option>
-									<?php if($this->row['student_type']==3 && !empty($this->old_car_id)){foreach($this->old_car_id as $old_car_id){?>
+									<?php if(!empty($this->old_car_id)){foreach($this->old_car_id as $old_car_id){?>
 										<option value="<?php echo $old_car_id['stu_id']?>" <?php if($old_car_id['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $old_car_id['stu_code']?></option>
+									<?php }}?>
+								</select>
+							</div>
+							
+							<div id="drop_id">
+								<select name="drop_car_id" id="drop_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select id -----</option>
+									<?php if(!empty($this->drop_car_id)){foreach($this->drop_car_id as $drop_car_id){?>
+										<option value="<?php echo $drop_car_id['stu_id']?>" <?php if($drop_car_id['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $drop_car_id['stu_code']?></option>
 									<?php }}?>
 								</select>
 							</div>
@@ -320,9 +346,11 @@ fieldset{  background:none;}
 					
 					<tr>
 						<td colspan="4" align="center">
-							<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
 							<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
-							 iconClass="dijitEditorIcon dijitEditorIconSave" />
+								iconClass="dijitEditorIcon dijitEditorIconSave" />
+								
+							<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
+								iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave('','');"/> 
 						</td>
 					</tr>
 				</table>	
@@ -407,7 +435,7 @@ fieldset{  background:none;}
 		dijit.byId('qty_'+col).attr('value',<?php echo $row['qty'];?>);
 		dijit.byId('discount_'+col).attr('value',<?php echo $row['discount_percent'];?>);
 		dijit.byId('subtotal_'+col).attr('value',<?php echo $row['subtotal'];?>);
-		dijit.byId('remark'+col).attr('value',<?php echo $row['note'];?>);
+		dijit.byId('remark'+col).attr('value',"<?php echo $row['note'];?>");
 		
 		<?php }}?>
 	}
@@ -439,19 +467,12 @@ fieldset{  background:none;}
 
 
 	function changeControl(){
-		stu_type = dijit.byId('student_type').get('value');
-		// alert(stu_type);
-		if(stu_type==1){
-			document.getElementById('new_id').style.display="block";
-			document.getElementById('new_name').style.display="block";
-			document.getElementById('old_id').style.display="none";
-			document.getElementById('old_name').style.display="none";
-		}else{
-			document.getElementById('new_id').style.display="none";
-			document.getElementById('new_name').style.display="none";
-			document.getElementById('old_id').style.display="block";
-			document.getElementById('old_name').style.display="block";
-		}
+		document.getElementById('new_id').style.display="none";
+		document.getElementById('new_name').style.display="none";
+		document.getElementById('old_id').style.display="block";
+		document.getElementById('old_name').style.display="block";
+		document.getElementById('drop_name').style.display="none";
+		document.getElementById('drop_id').style.display="none";
 	}
 		
 	var url_get_new_car_id = '<?php echo $this->url(array('module'=>'registrar','controller'=>'studentservicepayment','action'=>'get-new-car-id')); ?>';
@@ -1000,13 +1021,13 @@ function readMoneyInKhmer(netTotal){
 	str_cent = 'សេន';
 	first_decimal = str.substr(-2);
 	last_decimal = str.substr(-1);
-	if(first_decimal>0){string='និង';}else{string="";str_cent=""}
+	if(first_decimal>0){string='ក្បៀស';}else{string="";str_cent=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
 	first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
 	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal)
 	money_khmer=read_money_in_khmer(netTotal);
 
-	if(first_decimal>0){string_en='និង';}else{string_en="";str_cent_en=""}
+	if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
 	first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
 	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal)
@@ -1059,9 +1080,568 @@ function getCarIdByService(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+function printSave(new_stu_id,new_receipt_no){		
+	if(dijit.byId('office_receipt').validate()) {
+		 
+		 //degree = dijit.byId('dept').get('value');
+
+		 stu_type = dijit.byId('student_type').get('value');
+		 
+		 if(stu_type==1){
+			 dojo.byId("lb_stu_type").innerHTML = "សិស្សថ្មី/New Student";
+		 }else{
+			 dojo.byId("lb_stu_type").innerHTML = "សិស្សចាស់/Old Student";;
+		 }
+		 
+		 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("reciept_no").get('value');
+		 dojo.byId("lb_stu_id").innerHTML = dijit.byId("old_car_id").attr('displayedValue');
+		
+		dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');
+		dojo.byId("lb_en_name").innerHTML = dijit.byId("en_name").get('value');
+		dojo.byId("lb_sex").innerHTML = dijit.byId("sex").attr('displayedValue');
+		 
+		dojo.byId("lb_phone").innerHTML = dijit.byId("phone").attr('displayedValue');
+		dojo.byId("lb_address").innerHTML = dijit.byId("service").attr('displayedValue');
+		
+		dojo.byId("lb_car_id").innerHTML = dijit.byId('car_id').attr('displayedValue');
+		
+		dojo.byId("lb_receipt_type").innerHTML = "Transportation";
+		 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		 
+		
+		time1 = dijit.byId("time1").get('value');
+		if(time1==false){
+			dojo.byId("checkbox1").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		}else{
+			dojo.byId("checkbox1").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		}
+		
+		time2 = dijit.byId("time2").get('value');
+		if(time2==false){
+			dojo.byId("checkbox2").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		}else{
+			dojo.byId("checkbox2").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		}
+		
+		time3 = dijit.byId("time3").get('value');
+		if(time3==false){
+			dojo.byId("checkbox3").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		}else{
+			dojo.byId("checkbox3").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		}
+		
+		time4 = dijit.byId("time4").get('value');
+		if(time4==false){
+			dojo.byId("checkbox4").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		}else{
+			dojo.byId("checkbox4").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		}
+		
+		dojo.byId("lb_grand_total").innerHTML = "$ "+dijit.byId('grand_total').get('value');
+		 
+		dojo.byId("lb_total_balance").innerHTML = "$ "+dijit.byId('total_balance').get('value');
+		
+		dojo.byId("lb_total_paid").innerHTML = " &nbsp;&nbsp;$ "+dijit.byId('total_received').get('value');
+		
+		dojo.byId("lb_read_money").innerHTML = dijit.byId('readmoney').get('value');
+
+		dojo.byId("lb_discount").innerHTML = dijit.byId('discount').get('value')+" %";
+		
+		total_product_fee = 0;
+		
+		checkbox = dijit.byId('buy_product').get('value');
+		
+		if(checkbox==1){
+			var rowId = $('#identity').val();
+			if(rowId==""){
+				return false;
+			}
+			var rowIDArray = rowId.split(',');
+			for(var n = 0; n < rowIDArray.length; n++) {
+				total_product_fee += dijit.byId('subtotal_'+rowIDArray[n]).get('value');
+			}
+		}
+		dojo.byId("lb_total_product_fee").innerHTML ="$ "+total_product_fee;
+		
+		
+		pay_term = dijit.byId('qty').get('value') + dijit.byId('term').attr('displayedValue');
+		dojo.byId("lb_payment_term").innerHTML = pay_term;
+		
+		var b = new Date(dijit.byId("start_date").get('value'));
+			mm = b.getMonth()+1;
+			var dd = b.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = b.getFullYear();
+			var start_date = dd + '-' + mon + '-' + y ;
+			
+		dojo.byId("lb_start_date").innerHTML = start_date;	
+		
+		var a = new Date(dijit.byId("end_date").get('value'));
+			mm = a.getMonth()+1;
+			var dd = a.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var months = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = a.getFullYear();
+			var epx_date = dd + '-' +months + '-' + y ;
+			
+		dojo.byId("lb_epx_date").innerHTML = epx_date;
+		
+		
+		
+		
+		
+		dijit.byId("terms").show();	
+	}
+	
+}
 
 
+
+
+function getMonthByNumber(m){
+	var monthName=[
+		"Jan",
+		 "Feb",
+		 "Mar",
+		 "Apr",
+		 "May",
+		 "Jun",
+		 "Jul",
+		 "Aug",
+		 "Sep",
+		 "Oct",
+		 "Nov",
+		 "Dec",
+		];
+		return (monthName[m-1]);
+}
+
+function hideDialog() {		
+	dijit.byId("terms").hide();
+}
+function printSubmit(){
+	//$('#office_receipt').submit();
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+}
 </script>
+
+
+<div class="dijitHidden" style="width: 23cm !important; height: 13cm ; padding: 0px; margin: 0px;">
+<?php $keycode = $this->keycode;?>
+	<div data-dojo-type="dijit.Dialog" style="width:24cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("");?>'" id="terms" >
+		
+		<div id="divPrint" style="width: 23cm !important; height: 13cm ; padding: 0px; margin: 0px;">
+			<style>
+				.fontbig{
+					font-size: 15px;	
+				}
+				.fonttel{
+					font-size: 18px;	
+				}
+				.pleft{
+					width: 110px;	
+				}
+				.label{ font-weight: bold;font-size: 22px;}
+				.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 25px; padding: 0 2px;width: 98%; display: block;
+						margin-top: -25px; line-height: 25px;
+					    text-align: center;
+						}
+				.values{ border: 1px solid rgba(14, 0, 107, 1);; height: 25px; padding: 0 10px;display: block;
+						line-height: 25px;}
+				.h{ margin-top: -8px;/*margin-left:4px;*/}
+​​               .print td{ font:bold 12px 'Khmer OS Battambang';}
+			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
+			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .one{white-space:nowrap;}
+			   
+				.underline{margin-top: -19px;text-align:left;}
+				.data{font-size:13px;font-weight:bold;}
+				.data1{font-size:12px;font-weight:bold;}
+				.receiptno{font-size:15px;font-weight:bold;}
+				.tab_row{ margin-top: -8px;}
+				.fonteng{font-size:12px;}
+				
+			</style>	
+			<table border="0"  class="print" cellspacing="0"  cellpadding="0" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+				<tr>
+				    <td colspan="8"  align="center" style="">
+						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-15px;font-weight:bold;line-height: 20px;">
+							<tr>
+								<td width="25%" align="left" style="font-size:11px;">
+									<div style="font-size:15px;">Branch 17 </div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+								</td>
+								<td width="50%" align="center">
+									<img style="width: 20%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
+								</td>
+								<td width="25%" align="center" style="font-size:17px;color:red;"><label id="lb_receipt_type" style="color:#000;font-size:16px;"> </label><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
+							</tr>
+						</table>
+				    </td>
+				</tr>
+				
+				<tr>
+					<td width="15%"></td>
+					<td width="20%"></td>
+					<td width="15%"></td>
+					<td width="20%"></td>
+					<td width="5%"></td>
+					<td width="10%"></td>
+					<td width="5%"></td>
+					<td width="10%"></td>
+				</tr>
+				<tr >
+					<td colspan="8">
+						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;margin-top: -25px;">
+							<tr>
+								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
+								<td width="20%" align="center" style="font-size:16px;">បង្កាន់ដៃទទួលប្រាក់ RECEIPT</td>
+								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
+							</tr>
+						</table>
+					</td>
+					
+				</tr>
+				<tr>
+					<td> ឈ្មោះភាសាខ្មែរ/Name in Khmer</td>
+					<td>
+						&nbsp;:&nbsp; <label id="lb_kh_name"  class="data" ></label>
+						<div class="underline">&nbsp;&nbsp;................................................</div>
+					</td>
+					<td align="center"> អក្សរឡាតាំង/Latin&nbsp;</td>
+					<td>
+						:&nbsp; <label id="lb_en_name" class="data" ></label>
+						<div class="underline">&nbsp;&nbsp;...............................................</div>
+					</td>
+					<td align="center">ភេទ/Sex</td>
+					<td>
+						&nbsp;:&nbsp; <label id="lb_sex" class="data" ></label>
+						<div class="underline">&nbsp;&nbsp;....................</div>
+					</td>
+					
+					<td align="center">&nbsp;អត្តលេខ/ID&nbsp;</td>
+					<td>
+						:&nbsp; <label id="lb_stu_id" class="data" ></label>
+						<div class="underline">&nbsp;&nbsp;.................</div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="8">
+						<table width="100%" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+							<tr>
+								<td width="15%">ជិះរថយន្តលេខ/Car Number</td>
+								<td width="50%">
+									&nbsp;:&nbsp; <label id="lb_car_id" class="data" ></label>
+									<div class="underline">
+										&nbsp;&nbsp;................................................................................................................................
+									</div>
+								</td>
+								<td width="15%">
+									ប្រភេទសិស្ស/Student Type
+								</td>
+								<td width="20%">
+									&nbsp;:&nbsp; <label id="lb_stu_type" class="data" ></label>
+									<div class="underline">
+										&nbsp;&nbsp;..........................................
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="8">
+						<table width="100%" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+							<tr>
+								<td width="10%">អាសយដ្ឋាន/Address</td>
+								<td width="90%">
+									&nbsp;:&nbsp; <label id="lb_address" class="data" ></label>
+									<div class="underline">
+										&nbsp;&nbsp;............................................................................................................................................................................................................................
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="8">
+						<table width="100%" border="0" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+							<tr>
+								<td width="15%">លេខទូរស័ព្ទ/Phone Number</td>
+								<td width="85%">
+									&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
+									<div class="underline">
+										&nbsp;&nbsp;..................................................................................................................................................................................................................
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+					
+				<tr>
+					<td colspan="8" style="border:1px solid #000;">
+						<table width="100%" border="0" class="data2" style="white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
+							<tr>
+								<td width="8%"></td>
+								<td width="3%"></td>
+								<td width="4%"></td>
+								<td width="7%"></td>
+								<td width="7%"></td>
+								<td width="7%"></td>
+								<td width="8%"></td>
+								<td width="7%"></td>
+								<td width="8%"></td>
+								<td width="6%"></td>
+								<td width="10%"></td>
+								<td width="6%"></td>
+							</tr>
+							
+							<tr>
+								<td colspan="8">
+									<table width="100%" style="white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:12px;line-height: 21px;">
+										<tr>
+											<td>វេន/Shift</td>
+											<td>
+												<label id="checkbox1"></label> 7:30am 
+											</td>
+											<td>
+												<label id="checkbox2"></label> 10:30am 
+											</td>
+											<td>
+												<label id="checkbox3"></label> 1:30pm
+											</td>
+											<td>
+												<label id="checkbox4"></label> 4:30pm 
+											</td>
+										</tr>
+									</table>
+								</td>
+								
+								<td >បញ្ចុះថ្លៃ/Discount</td>
+								<td>
+									: <label id="lb_discount" class="data1" ></label>
+									<div class="underline">................</div>
+								</td>
+								
+								
+								<td >ថ្លៃសម្ភារៈ/Material Fee</td>
+								<td>
+									: <label id="lb_total_product_fee" class="data1" ></label>
+									<div class="underline">..............</div>
+								</td>
+							</tr>
+							
+							<tr>
+								
+								<td colspan="12">
+									<table width="100%" border="0" style="margin-top: -5px;white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
+										<tr>
+											<td width="15%">ទឹកប្រាក់សរុប/Total Amount : </td>
+											<td width="15%" align="center">
+												<label id="lb_grand_total" class="data1" ></label>
+												<div class="underline">.......................................</div>
+											</td>
+											
+											<td width="12%" align="center">ទឹកប្រាក់ជំពាក់/Credit : </td>
+											<td width="15%" align="center">
+												<label id="lb_total_balance" class="data1" > </label>
+												<div class="underline">........................................</div>
+											</td>
+											
+											<td width="25%">ទឹកប្រាក់ទទួលបានសរុប/Total Received Amount</td>
+											<td width="18%" style="border:1px solid #000;" align="center">
+												<label id="lb_total_paid" class="data1" > </label>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="12">
+									<table width="100%" border="0" style="margin-top: -5px;white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
+										<tr>
+											<td width="18%">ទឹកប្រាក់ទទួលបានជាអក្សរ/In Words : </td>
+											<td width="82%" align="center">
+												&nbsp;<label id="lb_read_money" class="data1" ></label>
+												<div class="underline">.......................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>	
+							</tr>
+							
+							<tr>
+								<td colspan="12">
+									<table  width="100%" border="0" style="margin-top: -5px;white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
+										<tr>
+											<td width="18%">មានសុពលភាពរយៈពេល/Payment Period : </td>
+											<td width="21%" align="center">
+												<label id="lb_payment_term" class="data1" ></label>
+												<div class="underline">...................................................</div>
+											</td>
+											
+											<td width="10%">ចាប់ពីថ្ងៃទី/Start Date : </td>
+											<td width="21%" align="center">
+												<label id="lb_start_date" class="data1" ></label>
+												<div class="underline">...................................................</div>
+											</td>
+											
+											<td width="9%">ដល់ថ្ងៃទី/End Date : </td>
+											<td width="21%" align="center">
+												<label id="lb_epx_date" class="data1" ></label>
+												<div class="underline">.......................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="12">
+						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
+							<tr>
+								<td width="70%">&nbsp;</td>
+								<td width="30%"align="right" >រាជធានីភ្នំពេញ.ថ្ងៃទី <?php echo date('d');?> / <?php echo date('m');?> / <?php echo date('Y');?></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="12">
+						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Muol;font-weight:bold;">
+							<tr>
+								<td width="25%" align="center">ប្រធានគណនេយ្យ/Accounting Manager</td>
+								<td width="25%" align="center">អ្នកបង់ប្រាក់/Payer</td>
+								<td width="25%" align="center">បេឡា/Cashier</td>
+								<td width="25%" align="center">អ្នកផ្តល់ព័ត៌មាន​/Receiptionist</td>
+							</tr>
+							
+							
+							<tr>
+								<td colspan="4" align="center">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="center" style="font-size:12px;"></td>
+								<td align="center"></td>
+								<td align="center">
+									<div style=" font-size: 12px;"> 
+										<?php 
+										   $session_user=new Zend_Session_Namespace('auth');
+										   $last_name=$session_user->last_name;
+										   $username = $session_user->first_name;
+										   echo $last_name." ".$username;
+										?>
+									</div>
+								</td>
+								<td align="center"></td>
+							</tr>
+							
+							<tr>
+								<td colspan="4" align="center" style="border-top: 1px solid #000;">&nbsp;</td>
+							</tr>
+
+						</table>
+					</td>
+				</tr>	
+				<tr>
+					<td colspan="12" >
+						<table width="100%" style="margin-top:-25px; font-family:Khmer OS Battambang, Times New Roman; font-size:10px;white-space:nowrap;line-height: 15px;">
+							<tr>
+								<td colspan="2" valign="top" style="font-family:Khmer OS Muol;"><u>បញ្ជាក់ៈ Note</u></td>
+							</tr>
+							
+							<tr>
+								<td width="70%">
+									<table width="100%" style="white-space:nowrap; font-size:10px;font-family:Khmer OS Battambang,Times New Roman;line-height: 14px;">
+										<tr>
+											<td>
+												<div>- សូមអញ្ជើញមកបង់ប្រាក់ម្តងទៀតនៅថ្ងៃទី........................./The next payment will be on....................</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div>- ការបង់ប្រាក់យឺតចាប៉ពី........ថ្ងៃ សាលានឹងពិន័យស្មើទឹកប្រាក់ ប្រាំដុល្លាមួយថ្ងៃ/Late payment after......days of the valid date will be fined 5$ per day.</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div>- ប្រា់ដែលបង់ហើយមិនអាចដកវិញបានឡើយ/Your payment is non-returnable.</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div>- ប្រា់ដែលបានបង់មិនអាចផ្ទេរអោយអ្នកផ្សេងបានឡើយ/Your payment is not transferable.</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div>- រាល់ការបង់ប្រាក់ត្រូវទទួលបង្កាន់ដៃទទួលប្រាក់/We are responsible for all payment with receipt.</div>
+											</td>
+										</tr>
+										
+										<tr>
+											<td>
+												<div>- តម្លៃសិក្សាខាងលើ សម្រាប់តែសេវាជិះរថយន្តតែប៉ុណ្ណោះ/This fee is for​ school bus service only.</div>
+											</td>
+										</tr>
+										
+										<tr>
+											<td>
+												<div>- មតិអាណាព្យាបាល សូមទំនាក់ទំនងតាមលេខទូរស័ព្ទ/  Parent/Guadian's comment, Please call : 016 59 9999</div>
+											</td>
+										</tr>
+										
+										<tr>
+											<td>
+												<div>- Facebook: American Bridge International School</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td width="30%" valign="top" align="center"> 
+									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office <br />
+									- 085 591 007 <br />
+									- 069 25 6666 <br />
+									- 097 81 88888 <br />
+								</td>
+								
+							</tr>
+						</table>
+					</td>
+				</tr>
+						
+			</table>
+		</div>
+		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
+		<button dojoType="dijit.form.Button" label="Cancel" iconClass="dijitEditorIcon dijitEditorIconCancel"
+				showLabel="true" type="button" onclick="hideDialog();">Cancel</button>
+		<button dojoType="dijit.form.Button" label="Print" iconClass="dijitEditorIcon dijitEditorIconPrint"
+				showLabel="true" type="button" onclick="printSubmit();">Print</button>
+	</div>
+</div>
+
+
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:40%;" id="popup_add_service" >
 		<form style="background-color: buttonface; width:100%;" id='frm_add_service' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">

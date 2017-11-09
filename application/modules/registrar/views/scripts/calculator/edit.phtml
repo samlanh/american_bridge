@@ -97,6 +97,13 @@ echo $this->headTitle();
 						<td align="<?php echo CENTER;?>" width="40%"><?php echo $frm_cal->getElement("rs_fiftyhousend");?></td>
 					</tr>
 					<tr>
+						<td>R 20,000</td>
+						<td>x</td>
+						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("r_tweentyhousend");?></td>
+						<td>=</td>
+						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("rs_tweentyhousend");?></td>
+					</tr>
+					<tr>
 						<td>R 10,000</td>
 						<td>x</td>
 						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("r_tenthousend");?></td>
@@ -113,9 +120,9 @@ echo $this->headTitle();
 					<tr>
 						<td>R 2,000</td>
 						<td>x</td>
-						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("r_tweentyhousend");?></td>
+						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("r_twothousend");?></td>
 						<td>=</td>
-						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("rs_tweentyhousend");?></td>
+						<td align="<?php echo CENTER;?>"><?php echo $frm_cal->getElement("rs_twothousend");?></td>
 					</tr>
 					<tr>
 						<td>R 1,000 </td>
@@ -178,9 +185,10 @@ dojo.ready(function(){
 	subTotalDollar();
 	
 	Calfiftyhousend();
+	Caltweentyhousend();
 	Caltenthousend();
 	Calfivehousend();
-	Caltweentyhousend();
+	Caltwohousend();
 	Calthousend();
 	Calfivehundred();
 	Calonehundred();
@@ -266,6 +274,12 @@ function Calfiftyhousend(){
 	dojo.byId("rs_fiftyhousend").value = dojo.number.format(r_fiftyhousend);
 	subTotalkh();
 }
+function Caltweentyhousend(){
+	r_twentythousend=dijit.byId('r_tweentyhousend').get('value')
+	r_twentythousend=r_twentythousend*20000;
+	dojo.byId("rs_tweentyhousend").value = dojo.number.format(r_twentythousend);	
+	subTotalkh();
+}
 function Caltenthousend(){
 	r_tenthousend=dijit.byId('r_tenthousend').get('value')
 	r_tenthousend=r_tenthousend*10000;
@@ -278,10 +292,10 @@ function Calfivehousend(){
 	dojo.byId("rs_fivehousend").value = dojo.number.format(rs_tweenty);	
 	subTotalkh();
 }
-function Caltweentyhousend(){
-	r_tweentyhousend=dijit.byId('r_tweentyhousend').get('value')
-	r_tweentyhousend=r_tweentyhousend*2000;
-	dojo.byId("rs_tweentyhousend").value = dojo.number.format(r_tweentyhousend);	
+function Caltwohousend(){
+	r_twothousend=dijit.byId('r_twothousend').get('value')
+	r_twothousend=r_twothousend*2000;
+	dojo.byId("rs_twothousend").value = dojo.number.format(r_twothousend);	
 	subTotalkh();
 }
 function Calthousend(){
@@ -304,14 +318,19 @@ function Calonehundred(){
 }
 function subTotalkh(){
 	rs_fiftyhousend=parseFloat(dijit.byId('rs_fiftyhousend').get('value'));
+	rs_twentythousend=parseFloat(dijit.byId('rs_tweentyhousend').get('value'));
 	rs_tenthousend=parseFloat(dijit.byId('rs_tenthousend').get('value'));
 	rs_fivehousend=parseFloat(dijit.byId('rs_fivehousend').get('value'));
-	rs_tweentyhousend=parseFloat(dijit.byId('rs_tweentyhousend').get('value'));
+	rs_twothousend=parseFloat(dijit.byId('rs_twothousend').get('value'));
 	rs_thousend=parseFloat(dijit.byId('rs_thousend').get('value'));
 	rs_fivehundred=parseFloat(dijit.byId('rs_fivehundred').get('value'));
 	rs_onehundred=parseFloat(dijit.byId('rs_onehundred').get('value'));
+
 	if(isNaN(rs_fiftyhousend)){
 		rs_fiftyhousend=0;
+	}
+	if(isNaN(rs_twentythousend)){
+		rs_twentythousend=0;
 	}
 	if(isNaN(rs_tenthousend)){
 		rs_tenthousend=0;
@@ -319,8 +338,8 @@ function subTotalkh(){
 	if(isNaN(rs_fivehousend)){
 		rs_fivehousend=0;
 	}
-	if(isNaN(rs_tweentyhousend)){
-		rs_tweentyhousend=0;
+	if(isNaN(rs_twothousend)){
+		rs_twothousend=0;
 	}
 	if(isNaN(rs_thousend)){
 		rs_thousend=0;
@@ -331,15 +350,24 @@ function subTotalkh(){
 	if(isNaN(rs_onehundred)){
 		rs_onehundred=0;
 	}
-	sub_totalkh=rs_fiftyhousend+rs_tenthousend+rs_fivehousend+rs_tweentyhousend+rs_thousend+rs_fivehundred+rs_onehundred;
+	sub_totalkh=rs_fiftyhousend+rs_twentythousend+rs_tenthousend+rs_fivehousend+rs_twothousend+rs_thousend+rs_fivehundred+rs_onehundred;
 	dojo.byId("rs_kh_total").value = dojo.number.format(sub_totalkh);	
 	//rs_kh_total=parseFloat(dijit.byId('rs_kh_total').get('value'));
+
+	convertRielToDollar();
+}
+
+function convertRielToDollar(){
+	sub_totalkh = parseFloat(dijit.byId('rs_kh_total').get('value'));
+	if(isNaN(sub_totalkh)){
+		sub_totalkh=0;
+	}
 	rate=parseFloat(dijit.byId('rate').get('value'));
 	covertfromreil = sub_totalkh/rate;
 	dojo.byId("total_reil_dollar").value = dojo.number.format(covertfromreil);
 	AllAmountTotal();
-	
 }
+
 function AllAmountTotal(){
 	rs_total_dollar=parseFloat(dijit.byId('rs_dollar_total').get('value'));
 	rs_total_reil=parseFloat(dijit.byId('total_reil_dollar').get('value'));
@@ -404,6 +432,11 @@ function printCashCount(){
 		rs_fiftyhousend=dijit.byId('rs_fiftyhousend').get('value');
 		dojo.byId("lb_fiftythousend").innerHTML =isNaN(r_fiftyhousend)?0:r_fiftyhousend;
 		dojo.byId("rr_fiftythousend").innerHTML =isNaN(rs_fiftyhousend)?'0':rs_fiftyhousend; 
+		//R20000
+		r_twentythousend=dijit.byId('r_tweentyhousend').get('value');
+		rs_twentythousend=dijit.byId('rs_tweentyhousend').get('value');
+		dojo.byId("lb_twentythousend").innerHTML =isNaN(r_twentythousend)?0:r_twentythousend;
+		dojo.byId("rr_twentythousend").innerHTML =isNaN(rs_twentythousend)?'0':rs_twentythousend;  
 		//R10000
 		r_tenthousend=dijit.byId('r_tenthousend').get('value');
 		rs_tenthousend=dijit.byId('rs_tenthousend').get('value');
@@ -479,6 +512,11 @@ function printCashCount(){
 		rs_fiftyhousend=dijit.byId('rs_fiftyhousend').get('value');
 		dojo.byId("lb_fiftythousend1").innerHTML =isNaN(r_fiftyhousend)?0:r_fiftyhousend;
 		dojo.byId("rr_fiftythousend1").innerHTML =isNaN(rs_fiftyhousend)?'0':rs_fiftyhousend; 
+		//R20000
+		r_twentythousend=dijit.byId('r_tweentyhousend').get('value');
+		rs_twentythousend=dijit.byId('rs_tweentyhousend').get('value');
+		dojo.byId("lb_twentythousend1").innerHTML =isNaN(r_twentythousend)?0:r_twentythousend;
+		dojo.byId("rr_twentythousend1").innerHTML =isNaN(rs_twentythousend)?'0':rs_twentythousend; 
 		//R10000
 		r_tenthousend=dijit.byId('r_tenthousend').get('value');
 		rs_tenthousend=dijit.byId('rs_tenthousend').get('value');
@@ -536,7 +574,7 @@ function hideDialog(){
 }
 </script>
 <div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" style="width:25cm" align="center" data-dojo-props="title:'<?php echo $tr->translate("STUDENT_PAYMENT_RECEIPT");?>'" id="inv_cash" >
+	<div data-dojo-type="dijit.Dialog" style="width:25cm;top:-10px;" align="center" data-dojo-props="title:'<?php echo $tr->translate("តារាងប្រាក់ចំណូលប្រចាំថ្ងៃ");?>'" id="inv_cash" >
 		<div id="printcashcount" style="font-family:'Khmer OS Battambang';width: 20cm; height: 15cm ; padding: 0px; margin: 0px;">
 			<table border="1"  width="100%" style="font-family:'Khmer OS Battambang'; font-size:10pt;border-collapse: collapse;border:none">
 				<tr>
@@ -552,99 +590,106 @@ function hideDialog(){
 				<tr> 
 					<td width="50%" valign="top">
 						<table border="1"  cellspacing="0" style="width:100%;line-height:5px; height:170px; font-size:8pt; color:rgba(14, 0, 107, 1); padding: 0px; margin: 0px;border-collapse: collapse;border:none ">
-							<tr style=" height: 18px;">
+							<tr style=" height: 16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; $100</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_hundred"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rd_hundred"></label></td>
 						   	</tr >
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; $50</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_fifty"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rd_fifty"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td>&nbsp;&nbsp;&nbsp;&nbsp; $20</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_tweenty"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rd_tweenty"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td>&nbsp;&nbsp;&nbsp;&nbsp; $10</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_ten"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rd_ten"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td>&nbsp;&nbsp;&nbsp;&nbsp; $5</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_five"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rd_five"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td>&nbsp;&nbsp;&nbsp;&nbsp; $1</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_one"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rd_one"></label></td>
 						   	</tr>
-							<tr style="height: 23px;">
+							<tr style="height: 20px;">
 								<td colspan="3" style="text-align: right;font-size: 12px;"><strong>All Total Dollars &nbsp;&nbsp;&nbsp;&nbsp;</strong>
-								<strong style="font-size: 14px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_total2"></strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<strong style="font-size: 12px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_total2"></strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 							</tr>
-							<tr style=" height: 18px;">
+							<tr style=" height: 16px;">
 								<td>&nbsp;&nbsp;&nbsp;&nbsp; R50,000</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_fiftythousend"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_fiftythousend"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
+								<td>&nbsp;&nbsp;&nbsp;&nbsp; R20,000</td>
+					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_twentythousend"></label></td>
+					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_twentythousend"></label></td>
+						   	</tr>
+						   	<tr style=" height: 16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; R10,000</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_tenthousend"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_tenhousend"></label></td>
 						   	</tr>
-						   	<tr style="height:15px;">
+						   	<tr style="height:16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; R5,000</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_fivethousend"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_fivethousend"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; R2,000</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_twothousend"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_twothousend"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td>&nbsp;&nbsp;&nbsp;&nbsp; R1,000</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_thousend"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_thousend"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; R500</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_fivehundred"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_fivehundred"></label></td>
 						   	</tr>
-						   	<tr style=" height: 18px;">
+						   	<tr style=" height: 16px;">
 								<td >&nbsp;&nbsp;&nbsp;&nbsp; R100</td>
 					            <td>&nbsp;x&nbsp;&nbsp;<label id="lbr_hundred"></label></td>
 					            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_hundred"></label></td>
 						   	</tr>
-						   	<tr style="height: 23px;">
+						   	<tr style="height: 20px;">
 								<td align="right" colspan="2"><strong style="font-size: 12px;">Total in Khmer &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
 					            <td><strong style="font-size: 12px;">&nbsp;=&nbsp;&nbsp;R&nbsp;<label id="lbr_total_"></strong></label></td>
 						   	</tr>
-						   	<tr style="height: 23px;">
+						   	<tr style="height: 20px;">
 								<td align="right" colspan="2"><strong style="font-size: 12px;">Exchange Rate &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
 					            <td ><strong style="font-size: 12px;">&nbsp;= &nbsp;R <label id="lbr_exchange_rate"></strong></label></td>
 						   	</tr>
-							<tr style="height: 23px;">
-							<td colspan="2" style="text-align: right;font-size: 12px;"><strong>Dollar From Reil &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
-							<td style=""><strong style="font-size: 12px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_dollar_reil1"></strong></label></td>
-						</tr>
-							<tr style="height: 23px;">
+							<tr style="height: 20px;">
+								<td colspan="2" style="text-align: right;font-size: 12px;"><strong>Dollar From Reil &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
+								<td style=""><strong style="font-size: 12px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_dollar_reil1"></strong></label></td>
+							</tr>
+							<tr style="height: 20px;">
 								<td colspan="3" align="right" ><strong style="font-size:12px;"> All Totals :&nbsp;&nbsp;&nbsp; $<label id="lbdr_totals_amount1"></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 							</tr>
-							<tr style="height: 40px;padding:5px;border-bottom:none" >
-							    <td colspan="2" border="0">
+							<tr style="height: 35px;padding:5px;border-bottom:none" >
+								<td colspan="2" border="0">
 									<p style="width: 95%;height: 40px;margin: 0px auto;border-bottom: 1px dotted #000;"></p>
 								</td>
 								<td>
-								   <p style="width: 95%;height: 40px;margin: 0px auto;border-bottom: 1px dotted #000;"></p>
+									<p style="width: 95%;height: 40px;margin: 0px auto;border-bottom: 1px dotted #000;"></p>
 								</td>
 							</tr>
-							<tr style="height: 23px;">
+							
+							
+							<tr style="height: 20px;">
 								<td align="center" colspan="2"><strong >អ្នកប្រគល់ : 
 								<?php 
 								   $session_user=new Zend_Session_Namespace('authstu');
@@ -654,108 +699,114 @@ function hideDialog(){
 								?>
 								<label id="lbl_giver" ></label></strong></td>
 								<td >
-								   <strong style="display:block;width:50%;margin:10px;font-size:12px; white-space: nowrap;">អ្នកទទួល : <label id="lbl_receiver" ></label>
+								   <strong style="font-size:12px; white-space: nowrap;">អ្នកទទួល : <label id="lbl_receiver" ></label>
 								  </strong>
 							    </td>
 							</tr>
 							<tr style="height:30px" >
 								<td align="center" colspan="2" valign="medule"><strong style="white-space: nowrap; font-size:12px">ថ្ងៃទី..<?php echo date('D, jS/m/Y',strtotime(Zend_Date::now()));?></strong></td>
-								<td  valign="medule"><strong style="display:block;color:blank; width:50%;margin:10px 0px; font-size:12px">ថ្ងៃទី....................................</strong></td>
+								<td  valign="medule"><strong style="font-size:12px">ថ្ងៃទី....................................</strong></td>
 							</tr>
 						</table>	
 				</td>
 				<td width="1px" style="border:1px dashed #000;"></td>
 				<td width="50%" valign="top" border="0">
-					<table border="1" cellspacing="0" style="width:100%;line-height:5px; height:170px; font-size:10pt; color:rgba(14, 0, 107, 1); padding: 0px; margin: 0px;border-collapse: collapse;border:none ">
-						<tr style=" height: 18px;">
+					<table border="1" cellspacing="0" style="width:100%;line-height:5px; height:170px; font-size:8pt; color:rgba(14, 0, 107, 1); padding: 0px; margin: 0px;border-collapse: collapse;border:none ">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; $100</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_hundred1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rd_hundred1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; $50</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_fifty1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rd_fifty1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; $20</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_tweenty1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rd_tweenty1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; $10</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_ten1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rd_ten1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; $5</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_five1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rd_five1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; $1</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_one1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rd_one1"></label></td>
 						</tr>
-						<tr style="height: 23px; ">
+						<tr style="height: 20px; ">
 							<td colspan="3" style="text-align: right;font-size: 12px;"><strong>All Total Dollars &nbsp;&nbsp;&nbsp;&nbsp;</strong>
-							<strong style="font-size: 14px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_total"></strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<strong style="font-size: 12px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_total"></strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R50,000</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_fiftythousend1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_fiftythousend1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
+							<td>&nbsp;&nbsp;&nbsp;&nbsp; R20,000</td>
+				            <td>&nbsp;x&nbsp;&nbsp;<label id="lb_twentythousend1"></label></td>
+				            <td>&nbsp;=&nbsp;&nbsp;<label id="rr_twentythousend1"></label></td>
+					   	</tr>
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R10,000</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_tenthousend1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_tenhousend1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R5,000</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_fivethousend1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_fivethousend1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R2,000</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_twothousend1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_twothousend1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R1,000</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_thousend1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_thousend1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R500</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lb_fivehundred1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_fivehundred1"></label></td>
 						</tr>
-						<tr style=" height: 18px;">
+						<tr style=" height: 16px;">
 							<td>&nbsp;&nbsp;&nbsp;&nbsp; R100</td>
 							<td>&nbsp;x&nbsp;&nbsp;<label id="lbr_hundred1"></label></td>
 							<td>&nbsp;=&nbsp;&nbsp;<label id="rr_hundred1"></label></td>
 						</tr>
-						<tr style="height: 23px;">
+						<tr style="height: 20px;">
 							<td align="right" colspan="2"><strong style="font-size: 12px;">Total in Khmer &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
-							<td><strong style="font-size: 14px;">&nbsp;=&nbsp;&nbsp;R&nbsp;<label id="lbr_total_1"></strong></label></td>
+							<td><strong style="font-size: 12px;">&nbsp;=&nbsp;&nbsp;R&nbsp;<label id="lbr_total_1"></strong></label></td>
 						</tr>
-						<tr style="height: 23px;">
+						<tr style="height: 20px;">
 							<td align="right" colspan="2"><strong style="font-size: 12px;">Exchange Rate &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
-							<td ><strong style="font-size: 14px;">&nbsp;= &nbsp;R <label id="lbr_exchange_rate1"></strong></label></td>
+							<td ><strong style="font-size: 12px;">&nbsp;= &nbsp;R <label id="lbr_exchange_rate1"></strong></label></td>
 						</tr>
-						<tr style="height: 23px;">
+						<tr style="height: 20px;">
 							<td colspan="2" style="text-align: right;font-size: 12px;"><strong>Dollar From Reil &nbsp;&nbsp;&nbsp;&nbsp;</strong></td>
 							<td style=""><strong style="font-size: 12px;">&nbsp;=&nbsp;$&nbsp;<label id="lb_dollar_reil"></strong></label></td>
 						</tr>
-						<tr style="height: 23px;">
+						<tr style="height: 20px;">
 							<td colspan="3" align="right" ><strong style="font-size:12px;">All Totals :&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp; <label id="lbdr_totals_amount"></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
-						<tr style="height: 40px;padding:5px;border-bottom:none" >
+						<tr style="height: 35px;padding:5px;border-bottom:none" >
 							<td colspan="2" border="0"><p style="width: 95%;height: 40px;margin: 0px auto;border-bottom: 1px dotted #000;"></p></td>
 							<td><p style="width: 95%;height: 40px;margin: 0px auto;border-bottom: 1px dotted #000;"></p></td>
-							</tr>
-						<tr style="height: 23px;">
+						</tr>
+						<tr style="height: 20px;">
 							<td align="center" colspan="2"><strong style="font-size:12px" >អ្នកប្រគល់ : <?php 
 							   $session_user=new Zend_Session_Namespace('authstu');
 							   $last_name=$session_user->last_name;

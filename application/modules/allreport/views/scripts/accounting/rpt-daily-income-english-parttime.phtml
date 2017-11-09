@@ -119,6 +119,7 @@
 					$total_other_fee=0;
 					$total_balance=0;
 					$grand_total=0;
+					$stu_id=0;
 				?>		
 						
 						
@@ -139,8 +140,8 @@
 						
 						
 						
-						<td class="padd"><?php if($rs['is_new']==1){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
-						<td class="padd"><?php if($rs['is_new']==0){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
+						<td class="padd"><?php if($rs['is_new']==1 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
+						<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
 						
 						
 						<td class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
@@ -162,15 +163,27 @@
  					</tr>
  					
 					<?php 
-						$total_study_fee = $total_study_fee + $rs['total_payment'];
+						
+						$stu_id=$rs['student_id'];
+					
+						$total_study_fee = $total_study_fee + $rs['grand_total_paid_amount'] - $study_material - $rs['admin_fee'] - $rs['other_fee'];
+						
 						$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
+						
 						$total_study_material_fee = $total_study_material_fee + $study_material;
+						
 						$total_other_fee = $total_other_fee + $rs['other_fee'];
-						$total_balance = $total_balance + $rs['grand_total_balance'];
-						$grand_total = $grand_total + $rs['total_payment'] + $rs['admin_fee'] + $study_material + $rs['other_fee'] + $rs['grand_total_balance'];
+						
+						if($rs['is_complete']==0){
+							$total_balance = $total_balance + $rs['grand_total_balance'];
+						}
 					?> 					
  					
- 				<?php }}?>
+ 				<?php }}
+ 						
+ 						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee + $total_balance;
+ 				?>
+ 				
  				
 				</table>	
 				

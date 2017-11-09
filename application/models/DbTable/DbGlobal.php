@@ -511,7 +511,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    }
    function getCategoryName($type){ //type =1 income , type =0 expend
 	   	$db=$this->getAdapter();
-	   	$sql="SELECT id,category_name AS `name` FROM rms_category WHERE `status`=1 AND parent=$type";
+	   	$sql="SELECT id,category_name AS `name` FROM rms_cate_income_expense WHERE `status`=1 AND parent=$type";
 	   	return $db->fetchAll($sql);
    }
    

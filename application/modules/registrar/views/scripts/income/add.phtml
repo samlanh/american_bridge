@@ -1,9 +1,9 @@
-
-<title>Add Other Income</title>
 <?php
-$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$frm = $this->frm_expense;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_expense;
 ?>
+<title><?php echo $tr->translate("ADD_OTHER_INCOME")?></title>
+
 <style>	
 .fullside {
 	width: 100%;
@@ -27,29 +27,35 @@ $frm = $this->frm_expense;
 	<tr>
 		<td>
 				<fieldset>
-					<legend><strong>ចំណូលផ្សេងៗ</strong></legend>
+					<legend><strong><?php echo $tr->translate("ADD_OTHER_INCOME")?></strong></legend>
 					<table cellspacing="10"  width="100%" style="white-space: nowrap;">
 						<tr>
-							<td><?php echo $tr->translate("RECEIPT_NO")?></td>
-							<td><?php echo $frm->getElement('invoice');?></td>
+							<td><?php echo $tr->translate("BRANCH_ID")?></td>
+							<td><?php echo $frm->getElement('branch_id');?></td>
 							
 							<td><?php echo $tr->translate("INCOME_TITLE")?></td>
 							<td><?php echo $frm->getElement('title');?></td>
 							
-							<td><?php echo $tr->translate("CATEGORY_INCOME")?></td>
-							<td><?php echo $frm->getElement('cat_income');?></td>
+							<td><?php echo $tr->translate("RECEIPT_NO")?></td>
+							<td><?php echo $frm->getElement('invoice');?></td>
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate("CATEGORY_INCOME")?></td>
+							<td><input id="cate_income" /></td>
+							
 						    <td><?php echo $tr->translate("CURRENCY_TYPE")?></td>
 							<td><?php echo $frm->getElement('currency_type');?></td>
+							
 							<td><?php echo $tr->translate("TOTAL_INCOME")?></td>
 							<td><?php echo $frm->getElement('total_amount');?></td>
-							<td><?php echo $tr->translate("NOTE")?></td>
-							<td><?php echo $frm->getElement('Description');?></td>
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td><?php echo $frm->getElement('Description');?></td>
+							
 						    <td><?php echo $tr->translate("DATE")?></td>
 							<td><?php echo $frm->getElement('Date');?></td>
+							
 							<td><?php echo $tr->translate("STATUS")?></td>
 							<td><?php echo $frm->getElement('Stutas');?></td>
 						</tr>
@@ -79,51 +85,101 @@ dojo.require("dojo.store.Memory");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.SimpleTextarea");
 
+var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->cate_income));?> );
+
 dojo.ready(function(){
-	convertToDollar();
+	new dijit.form.FilteringSelect({
+		store: cate_income_store,
+		autoComplete: true,                        
+		required: true,                      
+	    id: "cate_income",
+	    name: "cate_income",  
+	    tabindex: "1",  
+	    value:0,       
+	    class: 'fullside',  
+	    placeHolder:"Selecte Category", 
+	    onChange: function() {          
+		   	service_id = dijit.byId('cate_income').get('value');
+		    if(service_id==-1){
+		   		dijit.byId("popup_cate").show();
+		    }
+	   }
+	}, "cate_income");
 });
 
-var url_get_rate = "<?php echo $this->url(array('module'=>'registrar','controller'=>'Income','action'=>'get-rate')); ?>";
-	function convertToDollar(){
+	function getValue(){
+		cate_id = dijit.byId('cat_income').get('value');
+		if(cate_id==-1){
+			dijit.byId("popup_cate").show();
+		}
+	}
 
-		currency_type = dijit.byId('currency_type').get('value');
-		
-		if(currency_type==1){
-			document.getElementById('label').style.display="none";
-			document.getElementById('convert').style.display="none";
-		}else{
-			document.getElementById('label').style.display="block";
-			document.getElementById('convert').style.display="block";
-		
-
+	var url_add_cate_income = '<?php echo $this->url(array("module"=>"registrar","controller"=>"income","action"=>"add-cate-income")); ?>';
+	function addCateIncome(){
+		if(dijit.byId('frm_add_cate_income').validate()) {
 			dojo.xhrPost({
-				url:url_get_rate,
-				content:{
-					'currency_type':currency_type
-					},
+				url:url_add_cate_income,
+				form: dojo.byId("frm_add_cate_income"),
 				handleAs:"json",
 				load: function(data) {
-					  amount_in_kh = dijit.byId('total_amount').get('value');  
-					  //alert(amount);
-					  //amount=isNaN(amount)?0:amount;
-					  if(isNaN(amount_in_kh)){
-						  
-					  }else{ 
-					  	rate = data.reil;
-					  	amount_in_dollar = amount_in_kh / rate ; 
-					  	dijit.byId('convert_to_dollar').attr('value',amount_in_dollar);
-					  }
+					//alert(data); 
+					var Itemmake = { 
+							id: data,
+							name: dijit.byId('cate_title').get('value')
+						};
+					addDataToSelectbox(dijit.byId('cate_income'), cate_income_store, Itemmake, data);
+					dijit.byId('frm_add_cate_income').reset();
+					hidePopup();
+					
 				},
 				error: function(err) {
 					alert(err);
 				}
 			});
 		}
-		
+	}
+	
+	function hidePopup(){		
+		dijit.byId("popup_cate").hide();
 	}
  
 </script>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_cate" >
+		<form style="background-color: buttonface;" id='frm_add_cate_income' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("TITLE")?></td>
+							<td><input class="fullside" tabindex="1" value="" dojoType="dijit.form.ValidationTextBox" name="cate_title" id="cate_title" type="text" required="true" /></td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("TYPE")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="type" id="type" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1"><?php echo $tr->translate("INCOME")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconUndo" type="button" name="close" id="close" value="close" label="Close" dojoType="dijit.form.Button" onclick="hidePopup();" />
+								<input type="button" value="save" name="save" label="Save" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCateIncome();"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
 
+		</form>
+	</div>
+</div>
 
 
 

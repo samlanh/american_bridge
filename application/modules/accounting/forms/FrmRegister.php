@@ -143,7 +143,7 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 				'readonly'=>'true',
 				'style'=>'color:red;'
 				));
-		$reciept=new Registrar_Model_DbTable_DbRegister();
+		$reciept=new Accounting_Model_DbTable_DbRegister();
 		$opt=$reciept->getRecieptNo(1,3);
 		$_invoice_no->setValue($opt);
 		
@@ -311,10 +311,11 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>'true',
 				'class'=>'fullside',
-				'onchange'=>'changControll();',
+				'onchange'=>'changControll();paymentTerm();',
 		));
-		$opts = array(   1=>$this->tr->translate('NEW_STUDENT'),
-				        3=>$this->tr->translate('OLD_STUDENT') 
+		$opts = array(  1=>$this->tr->translate('NEW_STUDENT'),
+				        3=>$this->tr->translate('OLD_STUDENT'),
+						4=>$this->tr->translate('DROP_STUDENT')
 				  );
 	    $student_type->setMultiOptions($opts);
 				
@@ -346,6 +347,38 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		$opts=array(-1=>$this->tr->translate("STUDENT_NAME"));
 		if(!empty($opt_ger_name))foreach($opt_ger_name AS $row) $opts[$row['stu_id']]=$row['name'];
 		$old_studen_name->setMultiOptions($opts);
+
+/////////////////////////////////////////////////// drop student ///////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		$drop_studens = new Zend_Dojo_Form_Element_FilteringSelect('drop_studens');
+		$drop_studens->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'true',
+				'class'=>'fullside',
+				'onchange'=>'getGeneralOldStudentById(2);paymentTerm();getStartDate();',
+		));
+		
+		$opt_ger=$reciept->getAllDropStudentID(1);
+		
+		$opts=array(-1=>$this->tr->translate("student id"));
+		if(!empty($opt_ger))foreach($opt_ger AS $row) $opts[$row['stu_id']]=$row['stu_code'];
+		$drop_studens->setMultiOptions($opts);
+		
+	////////////////////////////////////////////////////////////////////////////////////////
+		
+		$drop_stu_name = new Zend_Dojo_Form_Element_FilteringSelect('drop_stu_name');
+		$drop_stu_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'true',
+				'class'=>'fullside',
+				'onchange'=>'setID(2);',
+		));
+		$opt_ger_name=$reciept->getAllDropStudentName(1);
+		$opts=array(-1=>$this->tr->translate("STUDENT_NAME"));
+		if(!empty($opt_ger_name))foreach($opt_ger_name AS $row) $opts[$row['stu_id']]=$row['name'];
+		$drop_stu_name->setMultiOptions($opts);
+		
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
 		$_studname = new Zend_Dojo_Form_Element_TextBox('stu_name');

@@ -41,13 +41,13 @@
 		
 			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%;font-family: Khmer OS Battambang,Times New Roman;">
 				<tr >
-					<td width="25%" align="left">
+					<td width="20%" align="left">
 						<img style="width: 60%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
 					</td>
-					<td width="50%"  align="center">
-						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('RPT_FEE')?></strong><br /><br >
+					<td width="60%"  align="center" >
+						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate('RPT_FEE')?></strong><br />
 					</td>
-					<td width="25%" align="right">
+					<td width="20%" align="right">
 					</td>
 				</tr>
 				
@@ -100,14 +100,23 @@
 					<td colspan="3">&nbsp;</td>
 				</tr>
 				<tr >
-					<td align="center" width="25%">
-						<span style="font-weight: bold;font-size: 14px;"><?php echo $tr->translate('VERIFIED_BY');?></span>
-					</td>
-					<td  width="50%">
-						&nbsp;
-					</td>
-					<td align="center"  width="25%">
-						<span style="font-weight: bold;font-size: 14px;text-align: right;"><?php echo $tr->translate('PREPARE_BY');?></span>
+					<td colspan="3">
+						<table width="100%">
+							<tr>
+								<td align="center" width="25%">
+									<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+								</td>
+								<td align="center" width="25%">
+									<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+								</td>
+								<td align="center" width="25%">
+									<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
+								</td>
+								<td align="center"  width="25%">
+									<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>

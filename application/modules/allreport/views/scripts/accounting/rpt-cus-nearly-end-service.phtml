@@ -32,99 +32,102 @@
 					  page-break-inside:avoid; page-break-after:auto;
 					}
 		</style>
-									<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
-										<tr>
-											<td width="15%" align="center">
-												<img style="width:60%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
-											</td>
-											<td align="center" width="70%">
-												<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​"><?php echo $tr->translate(" "); ?></strong><br />
-												<strong style="font-weight:bold;color:#000; font-size: 14px;font-family:'Khmer OS Muol';​"><?php echo $tr->translate("របាយការណ៍អតិថិជនជិតដល់ថ្ងៃបញ្ចប់កុងត្រាជួលសេវាកម្ម"); ?></strong><br />
-												<span style="font-weight: bold;font-size: 12px; font-family:'Khmer OS Battambang';​">&nbsp;<?php echo $tr->translate("DATE"); ?>&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));?></span><br />
-											</td>
-											<td width="15%" >
-												&nbsp;
-											</td>
-											
-										</tr>
-										
-										<tr>
-											<td colspan="3" id="exportExcel">
-												<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
-													<thead>
-													<tr style="font-size:12px; height: 20px;border: 1px solid #000; background: #ccc; line-height: 30px; font-weight: bold;" align="center" >
-														<td>&nbsp;<?php echo $tr->translate("N_O"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("CUS_ID"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("CUS_NAME"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("PHONE"); ?>&nbsp;</td>
-														<td style="border: 1px solid #000;">&nbsp;<?php echo $tr->translate("SEX"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("EMAIL"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("ADDRESS"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("START_DATE"); ?>&nbsp;</td>
-														<td>&nbsp;<?php echo $tr->translate("END_DATE"); ?>&nbsp;</td>
-														<td style="border: 1px solid #000;"><?php echo $tr->translate("USER"); ?></td>
-														<td style="border: 1px solid #000;"><?php echo $tr->translate("STATUS"); ?></td>
-														<td style="border: 1px solid #000;"><?php echo $tr->translate("EXPIRES_DATE"); ?></td>
-													</tr>
-													</thead>
-													<?php $total=0;$stu_num=0;$old_id=0;?>
-												<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->cus)){foreach ($this->cus AS $row) { $i++;
-												
-													$date1=date_create($row['end_date']);
-													$date2=date_create($this->search['end_date']);
-													$diff=date_diff($date1,$date2);
-													$day=$diff->format("%R%a");
-													 
-												?>
-													<tr style="font-size:12px; height: 30px;border: 1px solid #000;font-family:'Khmer OS Battambang';" align="center" class="hover" >
-														<td style="border: 1px solid #000;"><?php echo $i;?></td>
-														<td>&nbsp;<?php echo $row['customer_code'];?></td>
-														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['first_name'];?></td>
-														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['phone'];?></td>
-														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['c_sex'];?></td>
-														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['email'];?></td>
-														<td style="border: 1px solid #000;">&nbsp;<?php echo $row['address'];?>&nbsp;</td>
-														<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['start_date']));?></td>	
-														<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['end_date']));?></td>
-														<td style="border: 1px solid #000;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
-														<td style="border: 1px solid #000;">&nbsp;<?php echo $row['c_status'];?>&nbsp;</td>
-														
-														<?php if($day>=0){
-															$daylate ="Late ".abs($day);
-														}else{
-															$daylate ="Remain ".abs($day);
-														}?>
-														<td align="center" style="border: 1px solid #000;color: red;font-weight: bold;">&nbsp;<?php echo ($daylate);?> days</td>
+		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+			<tr>
+				<td width="15%" align="center">
+					<img style="width:60%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+				</td>
+				<td align="center" width="70%">
+					<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​"><?php echo $tr->translate(" "); ?></strong><br />
+					<strong style="font-weight:bold;color:#000; font-size: 14px;font-family:'Khmer OS Muol';​"><?php echo $tr->translate("របាយការណ៍អតិថិជនជិតដល់ថ្ងៃបញ្ចប់កុងត្រាជួលសេវាកម្ម"); ?></strong><br />
+					<span style="font-weight: bold;font-size: 12px; font-family:'Khmer OS Battambang';​">&nbsp;<?php echo $tr->translate("DATE"); ?>&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));?></span><br />
+				</td>
+				<td width="15%" >
+					&nbsp;
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td colspan="3" id="exportExcel">
+					<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+						<thead>
+						<tr style="font-size:12px; height: 20px;border: 1px solid #000; background: #ccc; line-height: 30px; font-weight: bold;" align="center" >
+							<td>&nbsp;<?php echo $tr->translate("N_O"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("CUS_ID"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("CUS_NAME"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("PHONE"); ?>&nbsp;</td>
+							<td style="border: 1px solid #000;">&nbsp;<?php echo $tr->translate("SEX"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("EMAIL"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("ADDRESS"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("START_DATE"); ?>&nbsp;</td>
+							<td>&nbsp;<?php echo $tr->translate("END_DATE"); ?>&nbsp;</td>
+							<td style="border: 1px solid #000;"><?php echo $tr->translate("USER"); ?></td>
+							<td style="border: 1px solid #000;"><?php echo $tr->translate("STATUS"); ?></td>
+							<td style="border: 1px solid #000;"><?php echo $tr->translate("EXPIRES_DATE"); ?></td>
+						</tr>
+						</thead>
+						<?php $total=0;$stu_num=0;$old_id=0;?>
+					<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->cus)){foreach ($this->cus AS $row) { $i++;
+					
+						$date1=date_create($row['end_date']);
+						$date2=date_create($this->search['end_date']);
+						$diff=date_diff($date1,$date2);
+						$day=$diff->format("%R%a");
+						 
+					?>
+						<tr style="font-size:12px; height: 30px;border: 1px solid #000;font-family:'Khmer OS Battambang';" align="center" class="hover" >
+							<td style="border: 1px solid #000;"><?php echo $i;?></td>
+							<td>&nbsp;<?php echo $row['customer_code'];?></td>
+							<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['first_name'];?></td>
+							<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['phone'];?></td>
+							<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['c_sex'];?></td>
+							<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['email'];?></td>
+							<td style="border: 1px solid #000;">&nbsp;<?php echo $row['address'];?>&nbsp;</td>
+							<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['start_date']));?></td>	
+							<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['end_date']));?></td>
+							<td style="border: 1px solid #000;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
+							<td style="border: 1px solid #000;">&nbsp;<?php echo $row['c_status'];?>&nbsp;</td>
+							
+							<?php if($day>=0){
+								$daylate ="Late ".abs($day);
+							}else{
+								$daylate ="Remain ".abs($day);
+							}?>
+							<td align="center" style="border: 1px solid #000;color: red;font-weight: bold;">&nbsp;<?php echo ($daylate);?> days</td>
  													</tr>
 												<?php }}?>	 
-												</table>	
-												
-												<table width="100%">
-												<tr>
-													<td colspan="3">&nbsp;</td>
-												</tr>
-												<tr>
-													<td colspan="3">&nbsp;</td>
-												</tr>
-												<tr >
-													<td align="center" width="25%">
-														<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
-													</td>
-													<td  width="50%">
-														&nbsp;
-													</td>
-													<td align="center"  width="25%">
-														<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
-													</td>
-												</tr>
-												</table>
-										
-											</td>
-										</tr>
-										
-									</table>
-							
-			</div>		
+					</table>	
+					
+					<table width="100%">
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr >
+						<td align="center" width="25%">
+							<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+						</td>
+						<td align="center" width="25%">
+							<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+						</td>
+						<td align="center" width="25%">
+							<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
+						</td>
+						<td align="center"  width="25%">
+							<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+						</td>
+					</tr>
+					</table>
+			
+				</td>
+			</tr>
+			
+		</table>
+					
+	</div>		
 </div>
 <script type="text/javascript">
 function doPrint() {

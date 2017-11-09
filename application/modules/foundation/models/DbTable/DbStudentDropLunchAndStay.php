@@ -99,6 +99,10 @@ class Foundation_Model_DbTable_DbStudentDropLunchAndStay extends Zend_Db_Table_A
 			$where .=' AND ( '.implode(' OR ',$s_where).')';
 		}
 		
+		$from_date =(empty($search['start_date']))? '1': "sd.date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': "sd.date <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		
 		if(!empty($search['branch'])){
 			$where.=" AND s.branch_id = ".$search['branch'];
 		}

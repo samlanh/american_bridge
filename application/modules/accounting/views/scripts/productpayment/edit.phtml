@@ -11,7 +11,6 @@
 	dojo.require("dojo.NodeList-manipulate");
 	
 dojo.ready(function(){
-    	 dijit.byId('study_year').attr('value','<?php echo $this->row['year']?>');
     	 dijitValue();
     	 getStudentInfo();
     	 initailize();
@@ -19,8 +18,8 @@ dojo.ready(function(){
 
 function dijitValue(){
 	 dijit.byId('reciept_no').attr('value','<?php echo $this->row['receipt_number']?>');
-	 dijit.byId('not').attr('value','<?php echo $this->row['note']?>');
-	 dijit.byId('grand_total').attr('value','<?php echo $this->row['total_payment']?>');
+	 dijit.byId('grand_total').attr('value','<?php echo $this->row['grand_total_paid_amount']?>');
+	 dijit.byId('convert_to_riels').attr('value','<?php echo $this->row['grand_total_payment_in_riel']?>');
 }
 </script>
 
@@ -46,31 +45,37 @@ fieldset{  background:none;}
 		<fieldset>
 					<legend align="center"><strong style="font-size: 18px;"><?php echo $tr->translate("EDIT_STUDENT_SERVICE_PAYMENT");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" >
+						
 						<tr>
-							<td style="width: 12%"><?php echo $tr->translate("ACADEMIC_YEAR");?></td>
-							<td style="width: 37%"><?php echo $register->getElement('study_year');?></td>
-							<td align="right" style="width: 12%"><?php echo $tr->translate("RECEIPT_NO");?></td>
-							<td style="width: 37%"><?php echo $register->getElement('reciept_no');?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("STUDENT_ID");?></td>
+							<td width="12%"><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select type="text" class="fullside" dojoType="dijit.form.FilteringSelect" name="studentid" id="studentid" onChange="getStudentInfo();setID(1);" >
-									<option value="-1">Select Student ID</option>
-									<?php if(!empty($this->rs)){foreach ($this->rs as $rs){?>
-									<option value="<?php echo $rs['id']?>" <?php if($rs['id']==$this->row['student_id']) echo 'selected="selected"' ?>><?php echo $rs['code']?></option>
+								<select name="branch" id="branch" dojoType="dijit.form.FilteringSelect" class="fullside" readonly onchange="getStudentByBranch();getNewReceiptNo('');" >
+									<option value="-1">select branch</option>
+									<?php if(!empty($this->branch)){foreach ($this->branch as $branch){?>
+										<option value="<?php echo $branch['id']?>" <?php if($this->row['branch_id']==$branch['id']){echo "selected='selected'";}?>><?php echo $branch['name']?></option>
 									<?php }}?>
 								</select>
 							</td>
-							<td align="right"><?php echo $tr->translate("STUDENT_NAME");?></td>
+							<td></td>		
+							<td >
+								<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
+							</td>
+						</tr>
+						
+						<tr>
+							<td align=""><?php echo $tr->translate("STUDENT_NAME");?></td>
 							<td align="center">
-								<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" name="stu_name" id="stu_name" onChange="setID(2);" >
+								<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" readonly name="stu_name" id="stu_name" >
 									<option value="-1">Select Student Name</option>
 									<?php if(!empty($this->row_name)){foreach ($this->row_name as $row){?>
 									<option value="<?php echo $row['id']?>" <?php if($row['id']==$this->row['student_id']) echo 'selected="selected"' ?> ><?php echo $row['name']?></option>
 									<?php }}?>
 								</select>
 							</td>
+							
+							<td align="right" style="width: 12%"><?php echo $tr->translate("RECEIPT_NO");?></td>
+							<td style="width: 37%"><?php echo $register->getElement('reciept_no');?></td>
+							
 						</tr>
 						<tr>
 						    <td><?php echo $tr->translate("NAME_KH");?></td>
@@ -81,13 +86,13 @@ fieldset{  background:none;}
 						<tr>	
 							<td><?php echo $tr->translate("SEX");?></td>
 							<td><?php echo $register->getElement('sex');?></td>
-						    <td align="right"><?php echo $tr->translate("NOT");?></td>
-							<td title='Ex: 20 or 10%' ><?php echo $register->getElement('not');?></td>	
+						    <td align="right"><?php echo $tr->translate("PHONE");?></td>
+							<td align="center"><input type="text" name="phone" id="phone" class="fullside" readonly dojoType="dijit.form.TextBox" /></td>
 						</tr>
 						<tr>
 							<td colspan="4" align="left">
 								<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
-							 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+							 		iconClass="dijitIconEditProperty" onclick="" />
 							</td>
 						</tr>
 						<tr>
@@ -100,22 +105,22 @@ fieldset{  background:none;}
 						<tr>
 							<td colspan="2"><input type="hidden" id="identity" name="identity" /></td>
 							<td colspan="2" align="right">
-								<table style="width:400px;border-collapse: collapse;" cellpadding="10" cellspacing="10" >
+								<table style="width:80%;border-collapse: collapse;" cellpadding="10" cellspacing="10" >
 									<tr>
 										<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
-										<td align="right"><input class="fullside" type="text"  value="<?php //echo $this->row['total_payment'];?>" readonly="readonly" name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
+										<td align="right"><input class="fullside" type="text" readonly="readonly"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
+									</tr>
+									<tr>	
+										<td><?php echo $tr->translate("CONVERT_TO_RIELS");?> (៛)</td>
+										<td align="right"><input class="fullside"  type="text" readonly="readonly" name="convert_to_riels" id="convert_to_riels" dojoType="dijit.form.NumberTextBox" /></td>
 									</tr>
 								</table>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="4" align="center">
-								<input type="button" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" 
-									iconClass="dijitIconUndo" onclick="window.location = '<?php echo $this->url(array('module'=>'registrar','controller'=>"uniformandbook",'action'=>'index'),null,true); ?>';" />
 								<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
 								 	iconClass="dijitEditorIcon dijitEditorIconSave" />
-								<input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="busyButton" dojoType="dijit.form.Button" 
-									iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave();"/> 
 							</td>
 						</tr>
 					</table>
@@ -141,7 +146,7 @@ function printSave(){
 	var rowIDArray = rowId.split(',');
 	template="";
 		 temp='<table class="collape tablesorter" border="1" align="center" style=" width: 100%; padding: 0px; margin: 0px; border-collapse: collapse; white-space:nowrap; border: 1px solid #000; font-size:12px;  " id="table">'
-			  temp+='<tr style="background:#ccc;"><th><strong style="font-family: Khmer OS Battambang;color:#000; ">លេខ<div class="h">No.</div></strong></th>';
+			temp+='<tr style="background:#ccc;"><th><strong style="font-family: Khmer OS Battambang;color:#000; ">លេខ<div class="h">No.</div></strong></th>';
 	    	  temp+='<th><strong style="font-family: Khmer OS Battambang;color:#000;">ពណ៍នា<div class="h">Description</div></strong></th>';
 	    	  temp+='<th><strong style="font-family: Khmer OS Battambang;color:#000; ">ចំនួន<div class="h">Amount</div></strong></th>';
 	     	  temp+='<th><strong style="font-family: Khmer OS Battambang;color:#000; ">តំលៃ<div class="h">Price</div></strong></th>';
@@ -166,9 +171,9 @@ function printSave(){
 		      i++;
 		      temp+='</tr>';
 		     }
-			  temp+='<tr style="height: 23px;"​ align="left"> <td style=" border-bottom: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000;" colspan="4"></td><td align="center" style="border:1px solid #000; padding-left: 10px;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">សរុប / Total </strong></td><td align="center" style="border:1px solid #000; padding-left: 10px;">$ '+total+'</td></tr>';
-		    temp+='</table>';
-		    dojo.byId('t_amountmoneytype').innerHTML = temp;
+			 temp+='<tr style="height: 23px;"​ align="left"> <td style=" border-bottom: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000;" colspan="4"></td><td align="center" style="border:1px solid #000; padding-left: 10px;"><strong style="font-family: Khmer OS Battambang;color:#000;font-size: 12px;">សរុប / Total </strong></td><td align="center" style="border:1px solid #000; padding-left: 10px;">$ '+total+'</td></tr>';
+		temp+='</table>';
+		dojo.byId('t_amountmoneytype').innerHTML = temp;
 
 		dijit.byId("popup_invoice").show();	
 	}
@@ -344,7 +349,7 @@ function netTotal(index) {
 	dijit.byId('grand_total').attr('value',netTotal);
 }
 
-var url_price = "<?php echo $this->url(array('module'=>'registrar','controller'=>'uniformandbook','action'=>'get-price'));?>";
+var url_price = "<?php echo $this->url(array('module'=>'accounting','controller'=>'productpayment','action'=>'get-price'));?>";
 function getprice(index){
 	service_price = dijit.byId('service_'+index).get('value');
 	//alert(service_price);
@@ -365,9 +370,9 @@ function getprice(index){
 	});
 }
 
-var url_student_info = "<?php echo $this->url(array('module'=>'registrar','controller'=>'uniformandbook','action'=>'get-student')); ?>";
+var url_student_info = "<?php echo $this->url(array('module'=>'accounting','controller'=>'productpayment','action'=>'get-student')); ?>";
 function getStudentInfo(){
-			studentid = dijit.byId('studentid').get('value');
+			studentid = dijit.byId('stu_name').get('value');
 			dojo.xhrPost({
 				url:url_student_info,
 				content:{
@@ -375,13 +380,10 @@ function getStudentInfo(){
 					},
 				handleAs:"json",
 				load: function(data) {
-					//alert(data);
-					//alert(data.sex);
 					dijit.byId("kh_name").attr("value",data.stu_khname);
 					dijit.byId("en_name").attr("value",data.stu_enname);
 					dijit.byId("sex").attr("value",data.sex);
-					//alert(data);
-					//dijit.byId("price_"+key).attr("value",data.price_fee);
+					dijit.byId("phone").attr("value",data.tel);
 				},
 				error: function(err) {
 					alert(err);
@@ -413,14 +415,14 @@ function initailize(){
 		dojo.query("#head-title").append(temp);
 		title=1;
 	}
-		template+='<td width="50px" align="center"><img onclick="deleteRecord('+col+');calculateDiscount('+col+');calculatePaidAmount('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		template+='<td width="50px" align="center"><img onclick="" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="50px" align="center">'+no+'</td>';
-		template+='<td width="300px"><select onchange="setValue('+col+');" class="fullside" dojoType="dijit.form.FilteringSelect" id="service_'+col+'" name="service_'+col+'">'+service+'</select></td>';	
-		template+='<td width="600px"> <input type="text" class="fullside" name="remark'+col+'" value="" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ" /><label id="subsub"></label></td>';		
+		template+='<td width="300px"><select  readonly class="fullside" dojoType="dijit.form.FilteringSelect" id="service_'+col+'" name="service_'+col+'">'+service+'</select></td>';	
+		template+='<td width="600px"> <input type="text" class="fullside" readonly name="remark'+col+'" value="" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ" /><label id="subsub"></label></td>';		
 		column = 0;
-		template+='<td width="250px"> <input type="text" style="width: 100%;" class="fullside" onkeyup="calculateDiscount('+col+',1);getValidate('+col+');" name="qty_'+col+'" value="" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" /><label id="qty"></label></td>';
-		template+='<td width="250px"> <input type="text" style="width: 100%;" class="fullside" required="true" onkeyup="calculateDiscount('+col+',1);" name="price_'+col+'" value="" id="price_'+col+'" dojoType="dijit.form.NumberTextBox" /><label id="subsub"></label></td>';
-		template+='<td width="250px"> <input type="text" style="width: 100%;" class="fullside" onkeyup="calculateDiscount('+col+',1);" value=""  name="discount_'+col+'" id="discount_'+col+'" dojoType="dijit.form.NumberTextBox" /><label id="subsub"></label></td>';
+		template+='<td width="250px"> <input type="text" style="width: 100%;" readonly class="fullside" onkeyup="calculateDiscount('+col+',1);getValidate('+col+');" name="qty_'+col+'" value="" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" /><label id="qty"></label></td>';
+		template+='<td width="250px"> <input type="text" style="width: 100%;" readonly class="fullside" required="true" onkeyup="calculateDiscount('+col+',1);" name="price_'+col+'" value="" id="price_'+col+'" dojoType="dijit.form.NumberTextBox" /><label id="subsub"></label></td>';
+		template+='<td width="250px"> <input type="text" style="width: 100%;" readonly class="fullside" onkeyup="calculateDiscount('+col+',1);" value=""  name="discount_'+col+'" id="discount_'+col+'" dojoType="dijit.form.NumberTextBox" /><label id="subsub"></label></td>';
 		template+='<td width="250px"> <input type="text" style="width: 100%;" class="fullside" readonly="readonly" name="subtotal_'+col+'" value="" id="subtotal_'+col+'" dojoType="dijit.form.NumberTextBox"/><label id="qty"></label></td>';
 	tmp='<tr id="row'+col+'">';
 	tmp+="</tr>";

@@ -8,7 +8,7 @@
 	    <tr>
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
 	    	<td><?php echo $frm->getElement('service');?></td>
-	    	
+	    <?php /*?>	
 	    	<td>
 	    		<select name="for_month" id="for_month" dojoType="dijit.form.FilteringSelect" class="fullside" >
 	    			<option value="0"> select month </option>
@@ -20,10 +20,11 @@
 	    	<td>
 	    		<select name="for_year" id="for_year" dojoType="dijit.form.FilteringSelect" class="fullside" >
 	    			<?php for($i=2016;$i<=date("Y")+1;$i++){?>
-	    				<option value="<?php echo $i;?>" <?php if($i==$this->search1['for_year']){echo "selected='selected'";}?>> <?php echo $i;?> </option>
+	    				<option value="<?php echo $i;?>" <?php if($i==$this->search['for_year']){echo "selected='selected'";}?>> <?php echo $i;?> </option>
 	    			<?php }?>
 	    		</select>
 	    	</td>
+	    <?php */?>	
 	    	<td><?php echo $frm->getElement('branch');?></td>
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
@@ -159,7 +160,7 @@
 			
 					<?php 
 						if($rs['payment_term']==1){
-							$amount_month="1 months";
+							$amount_month=$rs['qty']." months";
 						}else if($rs['payment_term']==2){
 							$amount_month="3 months";
 						}else if($rs['payment_term']==3){
@@ -345,10 +346,13 @@
 						<tr><td colspan="3">&nbsp;</td></tr>
 						<tr >
 							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+							</td>
+							<td align="center" width="25%">
 								<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
 							</td>
-							<td  width="50%">
-								&nbsp;
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
 							</td>
 							<td align="center"  width="25%">
 								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>

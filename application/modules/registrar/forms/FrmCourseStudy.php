@@ -164,7 +164,7 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		$old_studens =  new Zend_Dojo_Form_Element_FilteringSelect('old_studens');
 		$old_studens->setAttribs(array('dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'Onchange'=>"getGepOldStudentById();getPriceBalance();getStartDate();",
+				'Onchange'=>"getGepOldStudentById(1);paymentTerm();getStartDate();",
 				));
 		$opt_gep=$reciept->getAllGepOldStudent();
 		$opts=array(-1=>$this->tr->translate("student id"));
@@ -175,12 +175,45 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		$old_studen_name =  new Zend_Dojo_Form_Element_FilteringSelect('old_stu_name');
 		$old_studen_name->setAttribs(array('dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'Onchange'=>"setID();",
+				'Onchange'=>"setID(1);",
 		));
 		$opt_gep_name=$reciept->getAllGepOldStudentName();
 		$opts=array(-1=>$this->tr->translate("STUDENT_NAME"));
 		if(!empty($opt_gep_name))foreach($opt_gep_name AS $row) $opts[$row['stu_id']]=$row['name'];
 		$old_studen_name->setMultiOptions($opts);
+		
+/////////////////////////////////////////////////// drop student ///////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		$drop_studens = new Zend_Dojo_Form_Element_FilteringSelect('drop_studens');
+		$drop_studens->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'true',
+				'class'=>'fullside',
+				'onchange'=>'getGepOldStudentById(2);paymentTerm();getStartDate();',
+		));
+		
+		$opt_ger=$reciept->getAllDropStudentID(2);
+		
+		$opts=array(-1=>$this->tr->translate("student id"));
+		if(!empty($opt_ger))foreach($opt_ger AS $row) $opts[$row['stu_id']]=$row['stu_code'];
+		$drop_studens->setMultiOptions($opts);
+		
+	////////////////////////////////////////////////////////////////////////////////////////
+		
+		$drop_stu_name = new Zend_Dojo_Form_Element_FilteringSelect('drop_stu_name');
+		$drop_stu_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'true',
+				'class'=>'fullside',
+				'onchange'=>'setID(2);',
+		));
+		$opt_ger_name=$reciept->getAllDropStudentName(2);
+		$opts=array(-1=>$this->tr->translate("STUDENT_NAME"));
+		if(!empty($opt_ger_name))foreach($opt_ger_name AS $row) $opts[$row['stu_id']]=$row['name'];
+		$drop_stu_name->setMultiOptions($opts);
+		
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 		
 		$_studname = new Zend_Dojo_Form_Element_TextBox('stu_name');
 		$_studname->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside','style'=>'color:red;','readonly'=>'true'));
@@ -348,8 +381,9 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onchange'=>'changControll();',
 		));
-		$opts = array(   1=>$this->tr->translate('NEW_STUDENT'),
-			           	3=>$this->tr->translate('OLD_STUDENT')
+		$opts = array(  1=>$this->tr->translate('NEW_STUDENT'),
+			           	3=>$this->tr->translate('OLD_STUDENT'),
+						4=>$this->tr->translate('DROP_STUDENT')
 		);
 		$student_type->setMultiOptions($opts);
 		
@@ -403,9 +437,11 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 			$student_type->setValue($data['student_type']);
 			$start_date->setValue($data['start_date']);
 			$end_date->setValue($data['validate']);
+			$drop_studens->setValue($data['stu_id']);
+			$drop_stu_name->setValue($data['stu_id']);
 		}
 		$this->addElements(array(
-			  $parent,$student_type,$old_studens,$_studname,$old_studen_name,$old_student,$room,$session,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total, $_year_one,$_new_student,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
+			  $drop_stu_name,$drop_studens,$parent,$student_type,$old_studens,$_studname,$old_studen_name,$old_student,$room,$session,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total, $_year_one,$_new_student,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
 			  $_phone,$_dept,$_major,$_batch,$_year,$_session,$_term,$_fee,$_disc,$_paid,$_paid_kh,$_remark,$_is_hold ));
 		
 		return $this;

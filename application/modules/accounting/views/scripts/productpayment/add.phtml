@@ -160,14 +160,14 @@
 								<input type="text" class="fullside" name="readmoney" readonly="readonly" id="readmoney" dojoType="dijit.form.TextBox" />
 							</td>
 							<td colspan="2" align="right">
-								<table style="width:250px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+								<table style="width:80%;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
 									<tr>
-										<td ><?php echo $tr->translate("TOTAL");?></td>
+										<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 										<td align="right"><input class="fullside" type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
 									</tr>
 									<tr>	
 										<td><?php echo $tr->translate("CONVERT_TO_RIELS");?> (៛)</td>
-										<td align="right"><input  type="text" readonly="readonly"  name="convert_to_riels" id="convert_to_riels" dojoType="dijit.form.NumberTextBox" /></td>
+										<td align="right"><input  type="text" class="fullside"  readonly="readonly"  name="convert_to_riels" id="convert_to_riels" dojoType="dijit.form.NumberTextBox" /></td>
 									</tr>
 								</table>
 							</td>

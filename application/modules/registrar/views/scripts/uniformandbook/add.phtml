@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('Add Student buy product')); 
+	echo $this->headTitle($tr->translate('ADD_STUDENT_PRODUCT_PAYMENT')); 
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 ?>	
 <script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.8.3.min.js"></script>
@@ -45,7 +45,7 @@
 	<tr>
 		<td>
 			<fieldset>
-					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_SERVICE_PAYMENT");?></strong></legend>
+					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_PRODUCT_PAYMENT");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
 						<tr>
 							<td width="12%"><?php echo $tr->translate("STUDENT_NAME");?></td>
@@ -765,13 +765,13 @@ function readMoneyInKhmer(netTotal){
 	str_cent = 'សេន';
 	first_decimal = str.substr(-2);
 	last_decimal = str.substr(-1);
-	if(first_decimal>0){string='និង';}else{string="";str_cent=""}
+	if(first_decimal>0){string='ក្បៀស';}else{string="";str_cent=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
 	first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
 	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal)
 	money_khmer=read_money_in_khmer(netTotal);
 
-	if(first_decimal>0){string_en='និង';}else{string_en="";str_cent_en=""}
+	if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
 	first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
 	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal)

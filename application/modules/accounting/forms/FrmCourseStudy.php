@@ -125,7 +125,7 @@ Class Accounting_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				'readonly'=>'true',
 				'style'=>'color:red;'
 				));
-		$reciept=new Registrar_Model_DbTable_DbRegister();
+		$reciept=new Accounting_Model_DbTable_DbRegister();
 		$opt=$reciept->getRecieptNo(2,3);
 		$_invoice_no->setValue($opt);
 		
@@ -349,8 +349,9 @@ Class Accounting_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onchange'=>'changControll();',
 		));
-		$opts = array(   1=>$this->tr->translate('NEW_STUDENT'),
-			           	3=>$this->tr->translate('OLD_STUDENT')
+		$opts = array(  1=>$this->tr->translate('NEW_STUDENT'),
+			           	3=>$this->tr->translate('OLD_STUDENT'),
+						4=>$this->tr->translate('DROP_STUDENT')
 		);
 		$student_type->setMultiOptions($opts);
 		

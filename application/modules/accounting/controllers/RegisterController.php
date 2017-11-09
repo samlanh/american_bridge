@@ -36,7 +36,7 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     		//$rs_rows = $glClass->getGetPayTerm($rs_rows, BASE_URL );
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH_ID","STUDENT_ID","NAME_KH","NAME_EN","SEX","DEGREE","CLASS","RECEIPT_NO",
-    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER");
+    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(
     				'module'=>'accounting','controller'=>'register','action'=>'edit',
     		);
@@ -97,6 +97,9 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
     		$_data['pay_id']=$id;
+    		
+    		//print_r($_data);exit();
+    		
     		try {
     			$db = new Accounting_Model_DbTable_DbRegister();
     			$db->updateRegister($_data);
@@ -284,7 +287,16 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     	}
     }
     
-    
+    function getDropStuIdByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbRegister();
+    		$student = $db->getDropStudentByBranch($data['branch_id']);
+    		
+    		print_r(Zend_Json::encode($student));
+    		exit();
+    	}
+    }
     
     
 	

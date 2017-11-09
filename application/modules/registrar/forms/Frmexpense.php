@@ -37,8 +37,14 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		$_branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>'filterClient();'
+				'onchange'=>''
 		));
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$rows = $_db->getAllBranch();
+		$opt =array(''=>$this->tr->translate("select branch"));
+		if(!empty($rows))foreach($rows AS $row) $opt[$row['id']]=$row['name'];
+		$_branch_id->setMultiOptions($opt);
+		$_branch_id->setValue($request->getParam("branch_id"));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		
@@ -80,12 +86,12 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		$_category->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'required'=>false
-				//'onchange'=>'convertToDollar();',
+				'required'=>false,
+				'onchange'=>'getValue();',
 		));
 		$_dbs = new Application_Model_DbTable_DbGlobal();
 		$rows = $_dbs->getCategoryName(1);
-		$opt =array(''=>$this->tr->translate("PLEASE_SELECTED"));
+		$opt =array(''=>$this->tr->translate("select category"),'-1'=>$this->tr->translate("ADD_NEW"));
 		if(!empty($rows))foreach($rows AS $row) $opt[$row['id']]=$row['name'];
 		$_category->setMultiOptions($opt);
 		$_category->setValue($request->getParam("cat_income"));
@@ -128,9 +134,10 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 			$_stutas->setValue($data['status']);
 			$invoice->setValue($data['invoice']);
 			$id->setValue($data['id']);
+			$_branch_id->setValue($data['branch_id']);
 		}
 		
-		$this->addElements(array($_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($_branch_id,$_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$total_amount,$convert_to_dollar,$for_date,$id,));
 		return $this;
 		

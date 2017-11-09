@@ -290,6 +290,30 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$service_product->setMultiOptions($opt_ser);
 		
 		
+		$transport_service = new Zend_Dojo_Form_Element_FilteringSelect('transport_service');
+		$transport_service->setAttribs(array('dojoType'=>$this->filter,
+				'class'=>'fullside',
+				'required'=>false
+		));
+		$transport_service->setValue($request->getParam("transport_service"));
+		$opt_ser = array(''=>$this->tr->translate("SERVICE"));
+		$ser_rows=$db_years->getTransportService();
+		if(!empty($ser_rows))foreach($ser_rows As $row)$opt_ser[$row['id']]=$row['title'];
+		$transport_service->setMultiOptions($opt_ser);
+		
+		
+		$lunch_service = new Zend_Dojo_Form_Element_FilteringSelect('lunch_service');
+		$lunch_service->setAttribs(array('dojoType'=>$this->filter,
+				'class'=>'fullside',
+				'required'=>false
+		));
+		$lunch_service->setValue($request->getParam("lunch_service"));
+		$opt_ser = array(''=>$this->tr->translate("SERVICE"));
+		$ser_rows=$db_years->getLunchService();
+		if(!empty($ser_rows))foreach($ser_rows As $row)$opt_ser[$row['id']]=$row['title'];
+		$lunch_service->setMultiOptions($opt_ser);
+		
+		
 		$pay_term = new Zend_Dojo_Form_Element_FilteringSelect('pay_term');
 		$pay_term->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("PAYMENT_TERM"),
@@ -354,7 +378,7 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_branch->setMultiOptions($opt_branch);
 		
 		
-		$this->addElements(array($_degree_ft,$_degree_kh_ft,$_degree_en_ft,$_grade_en_ft,$_grade_kh_ft,$_room,$_branch,$_degree_all,$service_product,$start_date,$user,$end_date,$sess_gep,$_title,$_degree_gep,$generation,$_session,$_time,$_grade_all,$_grade_ft,$_grade_kid,$_status,$_grade_gep,$service,$pay_term));
+		$this->addElements(array($lunch_service,$transport_service,$_degree_ft,$_degree_kh_ft,$_degree_en_ft,$_grade_en_ft,$_grade_kh_ft,$_room,$_branch,$_degree_all,$service_product,$start_date,$user,$end_date,$sess_gep,$_title,$_degree_gep,$generation,$_session,$_time,$_grade_all,$_grade_ft,$_grade_kid,$_status,$_grade_gep,$service,$pay_term));
 		return $this;
 	} 
 

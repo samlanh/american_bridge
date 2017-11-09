@@ -85,9 +85,38 @@
 		    class: 'fullside',  
 		    placeHolder:"----- select student name -----",          
 		    onChange: function() {  
-		    	setID();
+		    	setID(1);
 		    }
 		}, "old_stu_name");
+
+
+		new dijit.form.FilteringSelect({
+		    autoComplete: true,                        
+		    id: "drop_studens",
+		    name: "drop_studens", 
+		    required: false,         
+		    class: 'fullside',  
+		    placeHolder:"----- select student id -----",          
+		    onChange: function() {  
+		    	getGeneralOldStudentById();
+		    	paymentTerm();
+		    	getStartDate();
+		    }
+		}, "drop_studens");
+
+		new dijit.form.FilteringSelect({
+		    autoComplete: true,                        
+		    id: "drop_student_name",
+		    name: "drop_student_name",
+		    required: false,           
+		    class: 'fullside',  
+		    placeHolder:"----- select student name -----",          
+		    onChange: function() {  
+		    	setID(2);
+		    }
+		}, "drop_student_name");
+
+		getDropStuIdByBranch();
 		
 	});	
 
@@ -136,6 +165,34 @@
 				//alert(err);
 			}
 		});
+	}
+
+	var drop_stu_id_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var drop_stu_name_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	
+	var url_drop_stu_id = '<?php echo $this->url(array('module'=>'accounting','controller'=>'register','action'=>'get-drop-stu-id-by-branch')); ?>';
+	function getDropStuIdByBranch(){
+		branch_id = dijit.byId('branch').get('value');
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_drop_stu_id,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					drop_stu_id_store  = getDataStorefromJSON('id','name', data[0]);
+					dijit.byId('drop_studens').set('store',drop_stu_id_store);   
+	
+					drop_stu_name_store  = getDataStorefromJSON('id','name', data[1]);
+					dijit.byId('drop_student_name').set('store',drop_stu_name_store);
+				},
+				error: function(err) {
+					//alert(err);
+				}
+			});
+		}
 	}
 	
 	
@@ -592,26 +649,36 @@
 
 	var url_get_start_date = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-start-date-register')); ?>';
 	function getStartDate(){
-		service_id = 4; // 4 => get validate only student register
-		stu_id = dijit.byId('old_studens').get('value');
-		dojo.xhrPost({
-			url:url_get_start_date,
-			content:{
-				'service_id':service_id,
-				'stu_id':stu_id
-				},
-			handleAs:"json",
-			load: function(data) {
-				if(data){
-					dijit.byId('start_date').attr('value',data);
-				}else{
-					dijit.byId('start_date').attr('value','<?php echo date('Y-m-d');?>');
-				}	
-			},
-			error: function(err) {
-				alert(err);
+		stu_type=dijit.byId('student_type').get('value');
+		if(stu_type!=1){
+			if(stu_type==3){
+				stu_id = dijit.byId('old_studens').get('value');
+			}else{
+				stu_id = dijit.byId('drop_studens').get('value');
 			}
-		});
+
+			service_id=4;  // 4 => get validate only student register
+			if(stu_id>0){
+				dojo.xhrPost({
+					url:url_get_start_date,
+					content:{
+						'service_id':service_id,
+						'stu_id':stu_id
+						},
+					handleAs:"json",
+					load: function(data) {
+						if(data){
+							dijit.byId('start_date').attr('value',data);
+						}else{
+							dijit.byId('start_date').attr('value','<?php echo date('Y-m-d');?>');
+						}	
+					},
+					error: function(err) {
+						alert(err);
+					}
+				});
+			}
+		}
 	}
 	
 </script>
@@ -656,7 +723,7 @@ fieldset{  background:none;}
 					<tr>
 						<td ><?php echo $tr->translate("BRANCH");?></td>
 						<td>
-							<select type="text" name="branch" id="branch" onchange="getYearByBranch();getOldStuIdByBranch();getStudentNo(1);getNewReceiptNo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+							<select type="text" name="branch" id="branch" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(1);getNewReceiptNo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 								<option value="-1">Select branch</option>
 							<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
 								<option value="<?php echo $branch['id'];?>" <?php if($branch['id']==$this->degree_row['branch_id']){echo 'selected="selected"';}?>><?php echo $branch['name'];?></option>
@@ -689,6 +756,8 @@ fieldset{  background:none;}
 							<div id="id_stu">
 								<?php echo $register->getElement('stu_id');?>
 							</div>
+							
+							<div id="drop_stu_code"><input id="drop_studens" /></div>
 						</td>
 						
 						<td style="width: 160px"><?php echo $tr->translate("STUDENT_NAME");?></td>
@@ -699,6 +768,8 @@ fieldset{  background:none;}
 							<div id="name_stu">
 								<?php echo $register->getElement('stu_name');?>
 							</div>
+							
+							<div id="drop_stu_name"><input id="drop_student_name" /></div>
 						</td>
 					</tr>
 					<tr>
@@ -990,25 +1061,41 @@ date_format = '"dd/MM/yyyy"';
 
 	function changControll(){
 		student_type=dijit.byId('student_type').get('value');
-		 if(student_type==3){
+		if(student_type==3){
 			 document.getElementById('student_old').style.display="block";
 			 document.getElementById('student_old_name').style.display="block";
 			 document.getElementById('id_stu').style.display="none";
 			 document.getElementById('name_stu').style.display="none";
-			 //clearControll();
-		}else{
+			 document.getElementById('drop_stu_code').style.display="none";
+			 document.getElementById('drop_stu_name').style.display="none";
+			 clearControll();
+		}else if(student_type==1){
 			 document.getElementById('student_old').style.display="none";
 			 document.getElementById('student_old_name').style.display="none";
 			 document.getElementById('id_stu').style.display="block";
 			 document.getElementById('name_stu').style.display="block";
-			 //clearControll();
+			 document.getElementById('drop_stu_code').style.display="none";
+			 document.getElementById('drop_stu_name').style.display="none";
+			 clearControll();
+		}else if(student_type==4){
+			 document.getElementById('student_old').style.display="none";
+			 document.getElementById('student_old_name').style.display="none";
+			 document.getElementById('id_stu').style.display="none";
+			 document.getElementById('name_stu').style.display="none";
+			 document.getElementById('drop_stu_code').style.display="block";
+			 document.getElementById('drop_stu_name').style.display="block";
+			 clearControll();
 		} 
 	}
 
-	function setID(){
-		stu_id = dijit.byId('old_stu_name').get('value');
-		//alert(stu_id);
-		dijit.byId('old_studens').attr('value',stu_id);
+	function setID(type){
+		if(type==1){
+			stu_id = dijit.byId('old_stu_name').get('value');
+			dijit.byId('old_studens').attr('value',stu_id);
+		}else{
+			stu_id = dijit.byId('drop_student_name').get('value');
+			dijit.byId('drop_studens').attr('value',stu_id);
+		}
 	}
 
 	//
@@ -1019,49 +1106,65 @@ date_format = '"dd/MM/yyyy"';
 	///get Gerneral old student
 	function getGeneralOldStudentById(){
 		var url_getalldstudent = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-general-old-student')); ?>';
-		student_id=dijit.byId('old_studens').get('value');
+
 		dijit.byId('kh_name').attr('value','');
 		dijit.byId('en_name').attr('value','');
 		dijit.byId('sex').attr('value','');
 		dijit.byId('dept').attr('value','');
 		dijit.byId('grade').attr('value','');
-		dijit.byId('old_stu_name').attr('value',student_id);
-			dojo.xhrPost({
-				url:url_getalldstudent,
-				content:{
-					'student_id':student_id,
+
+		dijit.byId('old_degree').attr('value','');
+		dijit.byId('old_grade').attr('value','');
+
+		stu_type = dijit.byId('student_type').get('value');
+		if(stu_type!=1){
+
+			if(stu_type==3){
+				student_id=dijit.byId('old_studens').get('value');
+				dijit.byId('old_stu_name').attr('value',student_id);
+			}else{
+				student_id=dijit.byId('drop_studens').get('value');
+				dijit.byId('drop_student_name').attr('value',student_id);
+			}
+			if(student_id>0){
+				dojo.xhrPost({
+					url:url_getalldstudent,
+					content:{
+						'student_id':student_id,
+						},
+					handleAs:"json",
+					load: function(data) {
+						   if(data){
+								dijit.byId('kh_name').attr('value',data.stu_khname);
+								dijit.byId('en_name').attr('value',data.stu_enname);
+								dijit.byId('sex').attr('value',data.sex);
+								dijit.byId('dept').attr('value',data.degree);
+								dijit.byId('session').attr('value',data.session);
+	
+								dijit.byId('old_stu_code').attr('value',data.stu_code);
+								dijit.byId('old_degree').attr('value',data.degree);
+								dijit.byId('old_grade').attr('value',data.grade);
+								
+								dijit.byId('dob').attr('value',data.dob);
+								dijit.byId('phone').attr('value',data.tel);
+								dijit.byId('address').attr('value',data.address);
+								
+								dijit.byId('study_year').attr('value',data.academic_year);
+	
+								if(data.room==null){
+									room=-1;
+								}else{
+									room = data.room;
+								}
+								dijit.byId('room').attr('value',room);
+								getallModel(data.degree,data.grade);
+						  }
 					},
-				handleAs:"json",
-				load: function(data) {
-					   if(data){
-							dijit.byId('kh_name').attr('value',data.stu_khname);
-							dijit.byId('en_name').attr('value',data.stu_enname);
-							dijit.byId('sex').attr('value',data.sex);
-							dijit.byId('dept').attr('value',data.degree);
-							dijit.byId('session').attr('value',data.session);
-
-							dijit.byId('old_stu_code').attr('value',data.stu_code);
-							dijit.byId('old_degree').attr('value',data.degree);
-							dijit.byId('old_grade').attr('value',data.grade);
-							
-							dijit.byId('dob').attr('value',data.dob);
-							dijit.byId('phone').attr('value',data.tel);
-							dijit.byId('address').attr('value',data.address);
-							
-							dijit.byId('study_year').attr('value',data.academic_year);
-
-							if(data.room==null){
-								room=-1;
-							}else{
-								room = data.room;
-							}
-							dijit.byId('room').attr('value',room);
-							getallModel(data.degree,data.grade);
-					  }
-				},
-				error: function(err) {
-					//alert(err);
-				}
-			});
+					error: function(err) {
+						//alert(err);
+					}
+				});
+			}
+		}
 	}
 </script>

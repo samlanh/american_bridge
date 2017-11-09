@@ -43,8 +43,9 @@
 			    }
 		    	getservicefee();
 				getServiceCate(service);
-				if(dijit.byId('student_type').get('value')==2){
-					getStartDateService();
+				if(dijit.byId('student_type').get('value')!=1){
+					//alert("do get start date");
+					//getStartDateService();
 				}
 		    } 
 		}, "service");
@@ -73,10 +74,16 @@ fieldset{  background:none;}
 			dijit.byId('student_name_new').focus();
 			return false;
 		}
-	}else{
+	}else if(stu_type==3){
 		stu_id = dijit.byId('student_name_old').get('value');
 		if(stu_id==-1){
 			dijit.byId('student_name_old').focus();
+			return false;
+		}
+	}else if(stu_type==4){
+		stu_id = dijit.byId('drop_name').get('value');
+		if(stu_id==-1){
+			dijit.byId('drop_name').focus();
 			return false;
 		}
 	}
@@ -107,6 +114,7 @@ fieldset{  background:none;}
 							<select name="student_type" id="student_type" onchange="changeControl();getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 								<option value="1">New Student</option>
 								<option value="3">Old Student</option>
+								<option value="4">Drop Student</option>
 							</select>
 						</td>
 						
@@ -119,7 +127,7 @@ fieldset{  background:none;}
 						<td><?php echo $tr->translate("STUDENT_NAME");?></td>
 						<td>
 							<div id="new_name">
-								<select name="student_name_new" id="student_name_new" onChange="getStudentInfo(1);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="student_name_new" id="student_name_new" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
 									<?php if(!empty($this->new_stu_name)){foreach($this->new_stu_name as $new_stu_name){?>
 										<option value="<?php echo $new_stu_name['stu_id']?>"><?php echo $new_stu_name['stu_name']?></option>
@@ -127,10 +135,18 @@ fieldset{  background:none;}
 								</select>
 							</div>	
 							<div id="old_name">
-								<select name="student_name_old" id="student_name_old" onChange="setID();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="student_name_old" id="student_name_old" onChange="setID(1);" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
 									<?php if(!empty($this->old_stu_name)){foreach($this->old_stu_name as $old_stu_name){?>
 										<option value="<?php echo $old_stu_name['stu_id']?>"><?php echo $old_stu_name['stu_name']?></option>
+									<?php }}?>
+								</select>
+							</div>
+							<div id="drop_stu_name">
+								<select name="drop_name" id="drop_name" onChange="setID(2);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select name -----</option>
+									<?php if(!empty($this->drop_stu_name)){foreach($this->drop_stu_name as $drop_stu_name){?>
+										<option value="<?php echo $drop_stu_name['stu_id']?>"><?php echo $drop_stu_name['stu_name']?></option>
 									<?php }}?>
 								</select>
 							</div>	
@@ -142,10 +158,18 @@ fieldset{  background:none;}
 								<input type="text" name="new_car_id" style="color:red;" id="new_car_id" readOnly="readOnly" class="fullside" dojoType="dijit.form.TextBox" >     
 							</div>
 							<div id="old_id">
-								<select name="old_car_id" id="old_car_id" onChange="getStudentInfo(2);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="old_car_id" id="old_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select id -----</option>
 									<?php if(!empty($this->old_car_id)){foreach($this->old_car_id as $old_car_id){?>
 										<option value="<?php echo $old_car_id['stu_id']?>"><?php echo $old_car_id['stu_code']?></option>
+									<?php }}?>
+								</select>
+							</div>
+							<div id="drop_id">
+								<select name="drop_car_id" id="drop_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select id -----</option>
+									<?php if(!empty($this->drop_car_id)){foreach($this->drop_car_id as $drop_car_id){?>
+										<option value="<?php echo $drop_car_id['stu_id']?>"><?php echo $drop_car_id['stu_code']?></option>
 									<?php }}?>
 								</select>
 							</div>
@@ -308,9 +332,14 @@ fieldset{  background:none;}
 
 <script type="text/javascript">
 
-function setID(){
-	stu_id = dijit.byId('student_name_old').get('value');
-	dijit.byId('old_car_id').attr('value',stu_id);
+function setID(type){
+	if(type==1){
+		stu_id = dijit.byId('student_name_old').get('value');
+		dijit.byId('old_car_id').attr('value',stu_id);
+	}else{
+		stu_id = dijit.byId('drop_name').get('value');
+		dijit.byId('drop_car_id').attr('value',stu_id);
+	}
 }
 
 function changeControl(){
@@ -321,11 +350,23 @@ function changeControl(){
 		document.getElementById('new_name').style.display="block";
 		document.getElementById('old_id').style.display="none";
 		document.getElementById('old_name').style.display="none";
-	}else{
+		document.getElementById('drop_stu_name').style.display="none";
+		document.getElementById('drop_id').style.display="none";
+		
+	}else if(stu_type==3){
 		document.getElementById('new_id').style.display="none";
 		document.getElementById('new_name').style.display="none";
 		document.getElementById('old_id').style.display="block";
 		document.getElementById('old_name').style.display="block";
+		document.getElementById('drop_stu_name').style.display="none";
+		document.getElementById('drop_id').style.display="none";
+	}else if(stu_type==4){
+		document.getElementById('new_id').style.display="none";
+		document.getElementById('new_name').style.display="none";
+		document.getElementById('old_id').style.display="none";
+		document.getElementById('old_name').style.display="none";
+		document.getElementById('drop_stu_name').style.display="block";
+		document.getElementById('drop_id').style.display="block";
 	}
 }
 	
@@ -383,7 +424,13 @@ function printSave(new_stu_id,new_receipt_no){
 			 }
 			 
 			 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-			 dojo.byId("lb_stu_id").innerHTML = dijit.byId("old_car_id").attr('displayedValue');
+
+			if(stu_type==3){// old student
+				stu_id = dijit.byId("old_car_id").attr('displayedValue');
+			}else{ // drop student
+				stu_id = dijit.byId("drop_car_id").attr('displayedValue');
+			}
+			 dojo.byId("lb_stu_id").innerHTML = stu_id;
 		 }
 		
 		
@@ -416,6 +463,7 @@ function printSave(new_stu_id,new_receipt_no){
 			dojo.byId("checkbox3").innerHTML = uncheck;
 		}
 		
+		dojo.byId("lb_discount").innerHTML = dijit.byId('discount').get('value')+" %"; 
 		 
 		dojo.byId("lb_grand_total").innerHTML = "$ "+dijit.byId('grand_total').get('value');
 		 
@@ -424,6 +472,8 @@ function printSave(new_stu_id,new_receipt_no){
 		dojo.byId("lb_total_paid").innerHTML = " &nbsp;&nbsp;$ "+dijit.byId('total_received').get('value');
 		
 		dojo.byId("lb_read_money").innerHTML = dijit.byId('readmoney').get('value');
+
+		dojo.byId("lb_discount").innerHTML = dijit.byId('discount').get('value')+" %";
 		
 		total_product_fee = 0;
 		
@@ -670,8 +720,8 @@ function getMonthByNumber(m){
 								</td>
 								
 								<td >បញ្ចុះថ្លៃ/Discount</td>
-								<td>
-									: <label id="lb_discount" class="data1" ></label>
+								<td> 
+									: &nbsp; <label id="lb_discount" class="data1" ></label>
 									<div class="underline">................</div>
 								</td>
 								
@@ -900,29 +950,48 @@ function doPrint() {
 
 var url_get_start_date = '<?php echo $this->url(array('module'=>'registrar','controller'=>'studentlunchpayment','action'=>'get-start-date-service')); ?>';
 function getStartDateService(){
-	service_id = dijit.byId('service').get('value');
-	stu_id = dijit.byId('student_name_old').get('value');
-	dojo.xhrPost({
-		url:url_get_start_date,
-		content:{
-			'service_id':service_id,
-			'stu_id':stu_id
-			},
-		handleAs:"json",
-		load: function(data) {
-			if(data){
-				dijit.byId('start_date').attr('value',data);
-			}	
-		},
-		error: function(err) {
-			alert(err);
+	stu_type = dijit.byId('student_type').get('value');
+	if(stu_type!=1){
+		service_id = dijit.byId('service').get('value');
+		if(stu_type==3){
+			stu_id = dijit.byId('student_name_old').get('value');
+		}else{
+			stu_id = dijit.byId('drop_name').get('value');
 		}
-	});
+		
+		//alert("stu id = "+stu_id+" , service id = "+service_id);
+		
+		if(service_id>0 && stu_id>0){
+			dojo.xhrPost({
+				url:url_get_start_date,
+				content:{
+					'service_id':service_id,
+					'stu_id':stu_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					if(data){
+						//alert("have = "+data);
+						dijit.byId('start_date').attr('value',data);
+					}else{
+						dijit.byId('start_date').attr('value','<?php echo date('Y-m-d')?>');
+						//alert("dont have");
+					}
+					
+					//getValidate();
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
 }
 
 var url_get_service_cate = '<?php echo $this->url(array('module'=>'registrar','controller'=>'studentlunchpayment','action'=>'get-service-cate')); ?>';
 function getServiceCate(service_id){
-		//alert(service_id);
+	if(service>0){
 		dojo.xhrPost({
 				url:url_get_service_cate,
 				content:{
@@ -936,7 +1005,7 @@ function getServiceCate(service_id){
 					alert(err);
 				}
 		});
-	
+	}
 }
 
 
@@ -1009,27 +1078,39 @@ function getStudentInfo(){
 	stu_type = dijit.byId('student_type').get('value');
 	if(stu_type==1){
 		studentid = dijit.byId('student_name_new').get('value');
-	}else{
+	}else if(stu_type==3){
 		studentid = dijit.byId('old_car_id').get('value');
+		dijit.byId('student_name_old').attr('value',studentid);
+	}else{
+		studentid = dijit.byId('drop_car_id').get('value');
+		dijit.byId('drop_name').attr('value',studentid);
 	}
-	
-	dojo.xhrPost({
-		url:url_student_info,
-		content:{
-			'studentid':studentid
+	//alert(studentid);
+	if(studentid>0){
+		dojo.xhrPost({
+			url:url_student_info,
+			content:{
+				'studentid':studentid
+				},
+			handleAs:"json",
+			load: function(data) {
+				//alert(data.tel);
+				dijit.byId("kh_name").attr("value",data.stu_khname);
+				dijit.byId("en_name").attr("value",data.stu_enname);
+				dijit.byId("sex").attr("value",data.sex);
+				dijit.byId("phone").attr("value",data.tel);
+				if(stu_type!=1){
+					//alert("service_id = "+data.service_id);
+					dijit.byId("service").attr("value",data.service_id);
+					getStartDateService();
+					//alert("do");
+				}
 			},
-		handleAs:"json",
-		load: function(data) {
-			//alert(data.tel);
-			dijit.byId("kh_name").attr("value",data.stu_khname);
-			dijit.byId("en_name").attr("value",data.stu_enname);
-			dijit.byId("sex").attr("value",data.sex);
-			dijit.byId("phone").attr("value",data.tel);
-		},
-		error: function(err) {
-			//alert(err);
-		}
-	});
+			error: function(err) {
+				//alert(err);
+			}
+		});
+	}
 }
 var url_service_fee = "<?php echo $this->url(array('module'=>'registrar','controller'=>'studentlunchpayment','action'=>'get-price')); ?>";
 function getservicefee(){
@@ -1037,46 +1118,49 @@ function getservicefee(){
 	student_type = dijit.byId('student_type').get('value');
 	if(student_type==1){
 		studentid = dijit.byId('student_name_new').get('value');
-	}else{
+	}else if(student_type==3){
 		studentid = dijit.byId('student_name_old').get('value');
+	}else if(student_type==4){
+		studentid = dijit.byId('drop_name').get('value');
 	}
 	
 	service = dijit.byId('service').get('value');
 	term = dijit.byId('term').get('value');
 	//year = dijit.byId('study_year').get('value');
-	
-	dojo.xhrPost({
-		url:url_service_fee,
-		content:{
-			'term':term,
-			'service':service,
-			'studentid':studentid,
-		//	'year':year,
+	if(studentid>0 && service>0 && term>0){
+		dojo.xhrPost({
+			url:url_service_fee,
+			content:{
+				'term':term,
+				'service':service,
+				'studentid':studentid,
+			//	'year':year,
+				},
+			handleAs:"json",
+			load: function(data) {
+				if(data.balance>0){
+					clear();
+					dijit.byId("service_fee").attr("value",data.balance);
+					dijit.byId("other").attr("value",'លុយជំពាក់ពីមុន');
+					dijit.byId("start_date").attr("value",data.start_date);
+					dijit.byId("end_date").attr("value",data.validate);
+					dijit.byId("balance_id").attr("value",data.id);
+					calculateTotalPayment();
+					setDateReadOnly();
+					//alert(1);
+				}else{
+					clear();
+					dijit.byId("service_fee").attr("value",data.price_fee);
+					calculateTotalPayment();
+					//getCurrentDate();
+					removeDateReadOnly();
+				}
 			},
-		handleAs:"json",
-		load: function(data) {
-			if(data.balance>0){
-				clear();
-				dijit.byId("service_fee").attr("value",data.balance);
-				dijit.byId("other").attr("value",'លុយជំពាក់ពីមុន');
-				dijit.byId("start_date").attr("value",data.start_date);
-				dijit.byId("end_date").attr("value",data.validate);
-				dijit.byId("balance_id").attr("value",data.id);
-				calculateTotalPayment();
-				setDateReadOnly();
-				//alert(1);
-			}else{
-				clear();
-				dijit.byId("service_fee").attr("value",data.price_fee);
-				calculateTotalPayment();
-				getCurrentDate();
-				removeDateReadOnly();
+			error: function(err) {
+				alert(err);
 			}
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+		});
+	}
 }
 function clear(){
 	dijit.byId("balance_id").attr("value",'');
@@ -1115,6 +1199,7 @@ function getCurrentDate(){
     getValidate();
 }
 function getValidate(){
+	 //alert("do get validate");
 	 term = dijit.byId('term').get('value');
 	 qty = dijit.byId('qty').get('value');
 	 qty = isNaN(qty)?1:qty;
@@ -1410,13 +1495,13 @@ function readMoneyInKhmer(netTotal){
 	str_cent = 'សេន';
 	first_decimal = str.substr(-2);
 	last_decimal = str.substr(-1);
-	if(first_decimal>0){string='និង';}else{string="";str_cent=""}
+	if(first_decimal>0){string='ក្បៀស';}else{string="";str_cent=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
 	first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
 	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal)
 	money_khmer=read_money_in_khmer(netTotal);
 
-	if(first_decimal>0){string_en='និង';}else{string_en="";str_cent_en=""}
+	if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
 	first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
 	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal)

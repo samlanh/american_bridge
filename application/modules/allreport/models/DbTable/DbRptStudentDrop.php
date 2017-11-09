@@ -61,6 +61,10 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	
+    	$from_date =(empty($search['start_date']))? '1': "stdp.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "stdp.date <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	
     	if(!empty($search['study_year'])){
     		$where.=' AND st.academic_year='.$search['study_year'];
     	}
@@ -127,6 +131,10 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 		    $s_where[] = " (SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=5 and `rms_view`.`key_code`=`stdp`.`type`) LIKE '%{$s_search}%'";
 		    $where .=' AND ( '.implode(' OR ',$s_where).')';
 	    }
+	    
+	    $from_date =(empty($search['start_date']))? '1': "stdp.date >= '".$search['start_date']." 00:00:00'";
+	    $to_date = (empty($search['end_date']))? '1': "stdp.date <= '".$search['end_date']." 23:59:59'";
+	    $where = " AND ".$from_date." AND ".$to_date;
 	     
 	    if(!empty($search['service'])){
 	    	$where.=' AND s.service_id='.$search['service'];
@@ -186,6 +194,10 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 		    $s_where[] = " (SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=5 and `rms_view`.`key_code`=`stdp`.`type`) LIKE '%{$s_search}%'";
 		    $where .=' AND ( '.implode(' OR ',$s_where).')';
 	    }
+	    
+	    $from_date =(empty($search['start_date']))? '1': "stdp.date >= '".$search['start_date']." 00:00:00'";
+	    $to_date = (empty($search['end_date']))? '1': "stdp.date <= '".$search['end_date']." 23:59:59'";
+	    $where = " AND ".$from_date." AND ".$to_date;
 	     
 	    if(!empty($search['service'])){
 	    	$where.=' AND s.service_id='.$search['service'];

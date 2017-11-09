@@ -53,9 +53,10 @@ class Registrar_Model_DbTable_Dbcashcount extends Zend_Db_Table_Abstract
 				'dollar_1'=>$data['d_one'],
 				
 				'reil_50000'=>$data['r_fiftyhousend'],
+				'reil_20000'=>$data['r_tweentyhousend'],
 				'reil_10000'=>$data['r_tenthousend'],
 				'reil_5000'=>$data['r_fivehousend'],
-				'reil_2000'=>$data['r_tweentyhousend'],
+				'reil_2000'=>$data['r_twothousend'],
 				'reil_1000'=>$data['thousend'],
 				'reil_500'=>$data['r_fivehundred'],
 				'reil_100'=>$data['r_onehundred'],

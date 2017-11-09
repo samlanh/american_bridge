@@ -19,7 +19,9 @@ class Foundation_studentdropController extends Zend_Controller_Action {
 				'study_year'=> '',
 				'degree_all'=> '',
 				'grade_all'=> '',
-				'session'=> ''
+				'session'=> '',
+				'start_date'=> date('Y-m-d'),
+				'end_date'	=>date('Y-m-d'),
 			);
 		}
 		

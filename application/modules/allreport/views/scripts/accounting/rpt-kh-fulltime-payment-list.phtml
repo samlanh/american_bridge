@@ -11,7 +11,7 @@
 	    	<td><?php echo $frm->getElement('grade_kh_ft');?></td>
 	    	<td><?php echo $frm->getElement('room');?></td>
 	    	<td><?php echo $frm->getElement('branch');?></td>
-	    	
+	    <?php /*?>	
 	    	<td>
 	    		<select name="for_month" id="for_month" dojoType="dijit.form.FilteringSelect" class="fullside" >
 	    			<option value="0"> select month </option>
@@ -27,7 +27,7 @@
 	    			<?php }?>
 	    		</select>
 	    	</td>
-	    	
+	    <?php */?>	
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -110,7 +110,8 @@
 						<td class="bor" colspan="4"><?php echo $tr->translate("NAME_EN"); ?></td>
 						<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
 						<td class="bor" colspan="6"><?php echo $tr->translate("PHONE"); ?></td>
-						<td  style="border-bottom: 1px solid #000;" colspan="7"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+						<td  style="border-bottom: 1px solid #000;" colspan="6"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+						<td  style="border-bottom: 1px solid #000;" colspan="1"><?php echo $tr->translate("CURRENT_GRADE"); ?></td>
 				      </tr>
 			<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
 				      
@@ -121,7 +122,8 @@
 						<td class="bor_r" colspan="4"><?php echo $rs['stu_enname'];?> </td>
 						<td class="bor_r"><?php echo $rs['sex'];?> </td>
 						<td class="bor_r" colspan="6"><?php echo $rs['tel'];?> </td>
-						<td colspan="7"><?php echo $rs['degree'];?> </td>
+						<td colspan="6"><?php echo $rs['degree'];?> </td>
+						<td colspan="1"><?php echo $rs['current_grade'];?> </td>
  					 </tr>
  					 
  			<?php //////////////////////////////////////////////// //////////////////////////////////////////////////////////////////?>		 
@@ -168,7 +170,7 @@
 			
 					<?php 
 						if($rs['payment_term']==1){
-							$amount_month="1 ខែ";
+							$amount_month=$rs['qty']." ខែ";
 						}else if($rs['payment_term']==2){
 							$amount_month="3 ខែ";
 						}else if($rs['payment_term']==3){
@@ -365,10 +367,13 @@
 						<tr><td colspan="3">&nbsp;</td></tr>
 						<tr >
 							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+							</td>
+							<td align="center" width="25%">
 								<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
 							</td>
-							<td  width="50%">
-								&nbsp;
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
 							</td>
 							<td align="center"  width="25%">
 								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>

@@ -27,7 +27,8 @@ class Allreport_Model_DbTable_DbRptStudentNearlyEndService extends Zend_Db_Table
 				  `rms_program_name` AS pn
 				WHERE spd.`is_start` = 1 
 				  AND sp.id=spd.`payment_id`
-				  AND spd.`service_id`=pn.`service_id`";
+				  AND spd.`service_id`=pn.`service_id`
+    		";
     	
      	$order=" ORDER by sp.receipt_number ASC ";
      	//$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";

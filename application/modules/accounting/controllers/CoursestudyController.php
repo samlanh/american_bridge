@@ -35,7 +35,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     		//$rs_rows = $glClass->getGetPayTerm($rs_rows, BASE_URL );
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH","STUDENT_ID","NAME_KH","NAME_EN","SEX","RECEIPT_NO","DEGREE","CLASS",
-    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER");
+    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(
     				'module'=>'accounting','controller'=>'coursestudy','action'=>'edit',
     		);
@@ -66,8 +66,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
       		}
       	} catch (Exception $e) {
       		Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
-      		$err =$e->getMessage();
-      		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+      		//echo $e->getMessage();exit();
       	}
       }
        $frm = new Accounting_Form_FrmCourseStudy();
@@ -89,18 +88,21 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     }
     public function editAction()
     {
-    	$id=$this->getRequest()->getParam('id');
+    $id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
-    		$_data['id']=$id;
+    		$_data['payment_id']=$id;
+    		
+//     		print_r($_data);exit();
+    		
     		try {
     			$db = new Accounting_Model_DbTable_DbCourStudey();
     			if(isset($_data['save_new'])){
     				$db->updateStudentGep($_data);
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('EDIT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
     			}else{
     				$db->updateStudentGep($_data);
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('EDIT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
     			}
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
@@ -111,7 +113,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     	$db = new Accounting_Model_DbTable_DbCourStudey();
     	$row_gep=$db->getStuentGepById($id);
     	$is_start=$row_gep['is_start'];
-    	if($is_start==0){
+    	if($is_start==0 ){
     		Application_Form_FrmMessage::Sucessfull($this->tr->translate('Can not edit!'), self::REDIRECT_URL . '/coursestudy/index');
     	}
     	$this->view->row_gep=$row_gep;
@@ -124,7 +126,16 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     	$this->view->all_dept = $_db->getAllFecultyNamess(2);
     	$this->view->branch = $_db->getAllBranch();
     	
+    	$db = new Accounting_Model_DbTable_DbCourStudey();
+    	$this->view->all_product = $db->getAllProduct();
+    	$this->view->exchange_rate = $db->getExchangeRate();
     	
+    	
+    	$db = new Accounting_Model_DbTable_DbRegister();
+    	$this->view->room = $db->getAllRoom();
+    	if($row_gep['buy_product']==1){
+    		$this->view->row_product = $db->getStudentBuyProductById($id);
+    	}
     }
     
     public function copyAction()
@@ -256,7 +267,17 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     	}
     }
     
-    
+    function getDropStuIdByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbCourStudey();
+    		$student = $db->getAllStudentDropByBranch($data['branch_id']);
+    		//print_r($grade);exit();
+    		//array_unshift($student, array ( 'id' => -1, 'name' => '------ select student --------') );
+    		print_r(Zend_Json::encode($student));
+    		exit();
+    	}
+    }
     
     
     

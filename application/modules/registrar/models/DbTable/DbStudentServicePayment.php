@@ -48,7 +48,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 // 		}
 
 		$this->_name = "rms_service";
-		if($data['student_type']==1){
+		if($data['student_type']==1){ // new student
 			$new_car_id = $this->getNewCarId();
 			$array = array(
 				'branch_id'=>$this->getBranchId(),
@@ -57,13 +57,25 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 				'stu_code'=>$new_car_id,
 				'service_id'=>$data['service'],
 				'create_date'=>date('Y-m-d'),
+				'is_new'=>1,
 				);
 			$this->insert($array);
-		}else{
+		}else{ // old or drop 
+			if($data['student_type']==3){
+				$is_comeback = 0;
+				$stu_id = $data['student_name_old'];
+			}else{
+				$is_comeback = 1;
+				$stu_id = $data['drop_name'];
+			}
+			
 			$array = array(
 				'service_id'=>$data['service'],
+				'is_suspend'=>0,
+				'is_comeback'=>$is_comeback,
+				'is_new'=>0,
 			);
-			$where = " stu_id = ".$data['student_name_old'];
+			$where = " type=4 and stu_id = ".$stu_id;
 			$this->update($array, $where);
 		}
 		
@@ -71,9 +83,9 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		
 	////////////////////////////////  ទាល់តែសិស្សចាស់បានចូលធ្វើ   //////////////////////////////////////////////////////////////////////////////
 				
-		if($data['student_type']==2){
+		if($data['student_type']!=1){
 			//get id service ដែលយើងបង់ ដើម្បី update វាទៅ Finish រួចចាំ insert new service and new validate
-			$finish = $this->setServiceToFinish($data['student_name_old'], $data['service'],0);
+			$finish = $this->setServiceToFinish($stu_id, $data['service'],0);
 			if(!empty($finish)){
 				$this->_name = "rms_student_paymentdetail";
 				$array=array(
@@ -100,9 +112,12 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		if($data['student_type']==1){
 			$student_id = $data['student_name_new'];	
 			$is_new = 1;
-		}else{
+		}else if($data['student_type']==3){
 			$student_id = $data['student_name_old'];	
 			$is_new = 0;
+		}else{
+			$student_id = $data['drop_name'];
+			$is_new = 1;
 		}
 		
 		if(!empty($data['buy_product'])){
@@ -203,7 +218,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 			
 	    	$db->commit();
 		}catch (Exception $e){
-			echo $e->getMessage();
+			echo $e->getMessage();exit();
 			$db->rollBack();//អោយវាវិលត្រលប់ទៅដើមវីញពេលណាវាជួបErrore
 		}
 	}
@@ -212,7 +227,60 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
-		return 1;
+		try{
+			if($data['is_void']==1){
+		
+				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
+					
+				$this->_name='rms_student_payment';
+					
+				$arr = array(
+						'is_void'=>$data['is_void'],
+				);
+				$where = " id = ".$data['payment_id'];
+				$this->update($arr, $where);
+		
+				///////////////////////////////// rms_student_paymentdetail ////////////////////////////////////////////
+		
+				if(!empty($data['parent_id'])){
+					$arr = array(
+							'is_start'=>1
+					);
+					$this->_name='rms_student_paymentdetail';
+					$where=" id = ".$data['parent_id'];
+					$this->update($arr,$where);
+				}
+		
+				
+				///////////////////////////////// rms_service ////////////////////////////////////////////
+		
+				if($data['student_type']==4){
+					$this->_name='rms_service';
+		
+					$arr = array(
+							'is_suspend'=>2,
+					);
+					$where = " type = 4 and stu_id = ".$data['student_name_old'];
+					$this->update($arr, $where);
+				}
+		
+				////////////////////////////////////////////////////////////////////////////////////////////
+		
+				$db->commit();
+				return 0;
+					
+			}else{
+				$db->commit();
+				return 0;
+			}
+		}catch (Exception $e){
+			echo $e->getMessage();
+			$db->rollBack();
+		}
+		
+		return 0;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// update service មុនទៅជាប្រើប្រាស់វិញសិន
 		if(!empty($data['is_parent'])){
@@ -308,18 +376,21 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$branch_id = $_db->getAccessPermission();
     	
-    	$sql="select sp.id,
-			(select sv.stu_code from rms_service as sv where sv.stu_id=sp.student_id and sv.type=4 limit 1)AS code,
-	    	(select CONCAT(stu_khname,' - ',stu_enname) from rms_student where rms_student.stu_id=sp.student_id limit 1)AS name,
-	    	(select name_kh from rms_view where rms_view.type=2 and rms_view.key_code=(select sex from rms_student where rms_student.stu_id=sp.student_id limit 1) limit 1)AS sex,
-	    	receipt_number,
-	    	sp.grand_total_payment,
-	    	sp.grand_total_paid_amount,
-	    	sp.grand_total_balance,
-	    	create_date,
-	    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user
-	    	from rms_student_payment as sp where 1 and
-	    	(select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 and reg_from=0 $branch_id ";
+    	$sql="select 
+    			sp.id,
+				(select sv.stu_code from rms_service as sv where sv.stu_id=sp.student_id and sv.type=4 limit 1)AS code,
+		    	(select CONCAT(stu_khname,' - ',stu_enname) from rms_student where rms_student.stu_id=sp.student_id limit 1)AS name,
+		    	(select name_kh from rms_view where rms_view.type=2 and rms_view.key_code=(select sex from rms_student where rms_student.stu_id=sp.student_id limit 1) limit 1)AS sex,
+		    	receipt_number,
+		    	sp.grand_total_payment,
+		    	sp.grand_total_paid_amount,
+		    	sp.grand_total_balance,
+		    	create_date,
+		    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user,
+		    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status 
+	    	from rms_student_payment as sp 
+	    		where 1 
+	    		and (select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 and reg_from=0 $branch_id ";
     	
     	$from_date =(empty($search['start_date']))? '1': " sp.create_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " sp.create_date <= '".$search['end_date']." 23:59:59'";
@@ -346,7 +417,16 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     }
     function getStudentServicePaymentByID($id){
     	$db=$this->getAdapter();
-    	$sql="select *,(select stu_code from rms_service where student_id = stu_id limit 1) as code from rms_student_payment where id=".$id;
+    	$sql="select 
+    				*,
+    				(select stu_code from rms_service where student_id = stu_id limit 1) as code 
+    			from 
+    				rms_student_payment AS sp,
+    				rms_student_paymentdetail as spd
+    			where 
+    				sp.id = spd.payment_id	
+    				and spd.type=3
+    				and sp.id=".$id;
     	return $db->fetchRow($sql);
     }
     
@@ -479,11 +559,19 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     
     public function getAllStudentInfo($studentid){
     	$db=$this->getAdapter();
-    	$sql="select stu_enname,stu_khname,sex,
-	    		(select CONCAT(major_enname,' - ',major_khname) from rms_major where major_id=grade) as grade , 
-	    		(select kh_name from rms_dept where dept_id=degree) as degree , tel,
-	    		(select name_en from rms_view where type=4 and key_code = session) as session 
-    		 from rms_student where stu_id=$studentid limit 1";
+    	$sql="select 
+    			stu_enname,
+    			stu_khname,
+    			sex,
+	    		tel,
+	    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as service_id
+    		 from 
+    			rms_student as s
+    		 where
+    		 	s.stu_id=$studentid 
+    		 limit 
+    			1
+    		";
     	return $db->fetchRow($sql);
     }
     
@@ -554,8 +642,10 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 				WHERE sp.id = spd.payment_id 
 				  AND sp.student_id = $stu_id 
 				  AND spd.service_id = $service_id 
-				  AND is_start = 1
-				  and is_complete=1 LIMIT 1 
+				  AND spd.is_start = 1
+				  and spd.is_complete=1 
+				  and sp.is_void = 0
+				  LIMIT 1 
 			";	
     	return $db->fetchOne($sql);
     }
@@ -609,7 +699,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     	if($action == "edit"){
     		$is_suspend = "";
     	}else{
-    		$is_suspend = " and s.is_subspend=0 ";
+    		$is_suspend = " and sv.is_suspend=0 ";
     	}
     	
     	$sql="SELECT s.stu_id , CONCAT(s.stu_khname,'-',s.stu_enname) as stu_name from rms_student as s,rms_service as sv  
@@ -628,7 +718,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     	if($action == "edit"){
     		$is_suspend = "";
     	}else{
-    		$is_suspend = " and s.is_subspend=0 ";
+    		$is_suspend = " and sv.is_suspend=0 ";
     	}
     	
     	$sql="SELECT s.stu_id , sv.stu_code from rms_student as s,rms_service as sv where sv.stu_id = s.stu_id and sv.type=4 and sv.status=1 
@@ -636,6 +726,69 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     	return $db->fetchAll($sql);
     }
     
+    function getAllDropCarId(){
+    	$db=$this->getAdapter();
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal;
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	 
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$action = $request->getActionName();
+    	
+    	if($action == "edit"){
+    		$is_comeback = " ";
+    	}else{
+    		$is_comeback = " and sv.is_comeback = 0 ";
+    	}
+    	 
+    	$sql="SELECT 
+    				s.stu_id ,
+    				sv.stu_code
+    			from 
+    				rms_student as s,
+    				rms_service as sv
+    			where 
+    				sv.stu_id = s.stu_id 
+    				and sv.type=4 
+    				and sv.status=1 
+    				and sv.is_suspend != 0
+    				and s.reg_from=0 
+    				$branch_id 
+    		";
+    	return $db->fetchAll($sql);
+    }
+    function getAllDropStudentName(){
+    	$db=$this->getAdapter();
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal;
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	 
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$action = $request->getActionName();
+    	
+    	if($action == "edit"){
+    		$is_comeback = " ";
+    	}else{
+    		$is_comeback = " and sv.is_comeback = 0 ";
+    	}
+    	 
+    	$sql="SELECT 
+    				s.stu_id ,
+    				CONCAT(s.stu_khname,'-',s.stu_enname) as stu_name 
+    			from 
+    				rms_student as s,
+    				rms_service as sv
+    			where 
+    				sv.stu_id = s.stu_id 
+    				and sv.type=4 
+    				and sv.status=1 
+    				and sv.is_suspend != 0
+    				and s.reg_from=0 
+    				$branch_id 
+    		";
+//     	echo $sql;//exit();
+    	return $db->fetchAll($sql);
+    }
     
     function getCarIdByService($service){
     	$db=$this->getAdapter();

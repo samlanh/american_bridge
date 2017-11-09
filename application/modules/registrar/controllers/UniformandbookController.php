@@ -29,7 +29,7 @@ class Registrar_uniformandbookController extends Zend_Controller_Action {
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllProductPayment($search);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("NAME","SEX","RECEIPT_NO","TOTAL_PAYMENT","PAID_AMOUNT","DATE_PAY","USER");
+    		$collumns = array("NAME","SEX","RECEIPT_NO","TOTAL_PAYMENT","PAID_AMOUNT","DATE_PAY","USER","STATUS");
     				         
     		$link=array(
     				'module'=>'registrar','controller'=>'uniformandbook','action'=>'edit',
@@ -90,7 +90,8 @@ class Registrar_uniformandbookController extends Zend_Controller_Action {
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
-     		$_data['id']=$id;
+     		$_data['payment_id']=$id;
+//      		print_r($_data);exit();
     		try {
     			$db = new Registrar_Model_DbTable_DbUniformAndBook();
     			$db->updateStudentServicePayment($_data);

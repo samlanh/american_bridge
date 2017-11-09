@@ -104,13 +104,21 @@ fieldset{  background:none;}
 			<fieldset>
 				<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_SERVICE_PAYMENT");?></strong></legend>
 				<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
-					&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" <?php if($this->row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+					<td>
+						<input type="checkbox" value="1" <?php if($this->row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+					</td>
+					<td colspan="2"></td>
+					<td>
+						<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
+					</td>
+					
 					<tr>
 						<td style="width: 12%"><?php echo $tr->translate("STUDENT_TYPE");?></td>
 						<td style="width: 37%">
 							<select name="student_type" id="student_type" onchange="changeControl();getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 								<option value="1" <?php if($this->row['student_type']==1){echo 'selected="selected"';}?>>New Student</option>
 								<option value="3" <?php if($this->row['student_type']==3){echo 'selected="selected"';}?>>Old Student</option>
+								<option value="4" <?php if($this->row['student_type']==4){echo 'selected="selected"';}?>>Drop Student</option>
 							</select>
 						</td>
 						
@@ -119,13 +127,14 @@ fieldset{  background:none;}
 					</tr>
 					<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
 					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
+					<input type="hidden" name="parent_id" id="parent_id" value="<?php echo $this->row['is_parent'];?>" dojoType="dijit.form.TextBox" />
 					<tr>
 						<td><?php echo $tr->translate("STUDENT_NAME");?></td>
 						<td>
 							<div id="new_name">
 								<select name="student_name_new" id="student_name_new" onChange="getStudentInfo(1);" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
-									<?php if($this->row['student_type']==1 && !empty($this->all_stu_name)){foreach($this->all_stu_name as $all_stu_name){?>
+									<?php if(!empty($this->all_stu_name)){foreach($this->all_stu_name as $all_stu_name){?>
 										<option value="<?php echo $all_stu_name['stu_id']?>" <?php if($all_stu_name['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?> ><?php echo $all_stu_name['stu_name']?></option>
 									<?php }}?>
 								</select>
@@ -133,11 +142,19 @@ fieldset{  background:none;}
 							<div id="old_name">
 								<select name="student_name_old" id="student_name_old" onChange="setID();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
-									<?php if($this->row['student_type']==3 && !empty($this->old_stu_name)){foreach($this->old_stu_name as $old_stu_name){?>
+									<?php if(!empty($this->old_stu_name)){foreach($this->old_stu_name as $old_stu_name){?>
 										<option value="<?php echo $old_stu_name['stu_id']?>" <?php if($old_stu_name['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $old_stu_name['stu_name']?></option>
 									<?php }}?>
 								</select>
 							</div>	
+							<div id="drop_name">
+								<select name="drop_name" id="drop_name" onChange="setID(2);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select name -----</option>
+									<?php if(!empty($this->drop_stu_name)){foreach($this->drop_stu_name as $drop_stu_name){?>
+										<option value="<?php echo $drop_stu_name['stu_id']?>" <?php if($drop_stu_name['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $drop_stu_name['stu_name']?></option>
+									<?php }}?>
+								</select>
+							</div>
 						</td>
 						
 						<td align="right"><?php echo $tr->translate("STUDENT_ID");?></td>
@@ -148,8 +165,16 @@ fieldset{  background:none;}
 							<div id="old_id">
 								<select name="old_car_id" id="old_car_id" onChange="getStudentInfo(2);" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select id -----</option>
-									<?php if($this->row['student_type']==3 && !empty($this->old_car_id)){foreach($this->old_car_id as $old_car_id){?>
+									<?php if(!empty($this->old_car_id)){foreach($this->old_car_id as $old_car_id){?>
 										<option value="<?php echo $old_car_id['stu_id']?>"  <?php if($old_car_id['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $old_car_id['stu_code']?></option>
+									<?php }}?>
+								</select>
+							</div>
+							<div id="drop_id">
+								<select name="drop_car_id" id="drop_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select id -----</option>
+									<?php if(!empty($this->drop_car_id)){foreach($this->drop_car_id as $drop_car_id){?>
+										<option value="<?php echo $drop_car_id['stu_id']?>"  <?php if($drop_car_id['stu_id']==$this->row['student_id']){echo 'selected="selected"';}?>><?php echo $drop_car_id['stu_code']?></option>
 									<?php }}?>
 								</select>
 							</div>
@@ -290,9 +315,11 @@ fieldset{  background:none;}
 					
 					<tr>
 						<td colspan="4" align="center">
-							<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
 							<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
-							 iconClass="dijitEditorIcon dijitEditorIconSave" />
+								iconClass="dijitEditorIcon dijitEditorIconSave" />
+							
+							<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
+								iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave('','');"/>
 						</td>
 					</tr>
 				</table>	
@@ -379,7 +406,7 @@ fieldset{  background:none;}
 		dijit.byId('qty_'+col).attr('value',<?php echo $row['qty'];?>);
 		dijit.byId('discount_'+col).attr('value',<?php echo $row['discount_percent'];?>);
 		dijit.byId('subtotal_'+col).attr('value',<?php echo $row['subtotal'];?>);
-		dijit.byId('remark'+col).attr('value',<?php echo $row['note'];?>);
+		dijit.byId('remark'+col).attr('value',"<?php echo $row['note'];?>");
 		
 		<?php }}?>
 	}
@@ -409,19 +436,12 @@ fieldset{  background:none;}
 	}
 
 	function changeControl(){
-		stu_type = dijit.byId('student_type').get('value');
-		// alert(stu_type);
-		if(stu_type==1){
-			document.getElementById('new_id').style.display="block";
-			document.getElementById('new_name').style.display="block";
-			document.getElementById('old_id').style.display="none";
-			document.getElementById('old_name').style.display="none";
-		}else{
-			document.getElementById('new_id').style.display="none";
-			document.getElementById('new_name').style.display="none";
-			document.getElementById('old_id').style.display="block";
-			document.getElementById('old_name').style.display="block";
-		}
+		document.getElementById('new_id').style.display="none";
+		document.getElementById('new_name').style.display="none";
+		document.getElementById('old_id').style.display="block";
+		document.getElementById('old_name').style.display="block";
+		document.getElementById('drop_name').style.display="none";
+		document.getElementById('drop_id').style.display="none";
 	}
 		
 	var url_get_new_lunch_id = '<?php echo $this->url(array('module'=>'registrar','controller'=>'studentlunchpayment','action'=>'get-new-lunch-id')); ?>';
@@ -465,22 +485,8 @@ function printSave(new_stu_id,new_receipt_no){
 			 dojo.byId("lb_stu_type").innerHTML = "សិស្សចាស់/Old Student";;
 		 }
 		 
-		 if(stu_type==1){
-			 if(new_stu_id==''){
-				 getNewLunchId(1);
-			 }else{
-				 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-				 dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-			 }
-		 }else{
-			 if(new_receipt_no==''){
-				getNewReceiptNo(1,1); 
-			 }
-			 
-			 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-			 dojo.byId("lb_stu_id").innerHTML = dijit.byId("old_car_id").attr('displayedValue');
-		 }
-		
+		 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt_no").get('value');
+		 dojo.byId("lb_stu_id").innerHTML = dijit.byId("old_car_id").attr('displayedValue');
 		
 		dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');
 		dojo.byId("lb_en_name").innerHTML = dijit.byId("en_name").get('value');
@@ -511,6 +517,7 @@ function printSave(new_stu_id,new_receipt_no){
 			dojo.byId("checkbox3").innerHTML = uncheck;
 		}
 		
+		dojo.byId("lb_discount").innerHTML = dijit.byId('discount').get('value')+" %"; 
 		 
 		dojo.byId("lb_grand_total").innerHTML = "$ "+dijit.byId('grand_total').get('value');
 		 
@@ -1164,7 +1171,7 @@ function getservicefee(){
 				clear();
 				dijit.byId("service_fee").attr("value",data.price_fee);
 				calculateTotalPayment();
-				getCurrentDate();
+				//getCurrentDate();
 				removeDateReadOnly();
 			}
 		},
@@ -1505,13 +1512,13 @@ function readMoneyInKhmer(netTotal){
 	str_cent = 'សេន';
 	first_decimal = str.substr(-2);
 	last_decimal = str.substr(-1);
-	if(first_decimal>0){string='និង';}else{string="";str_cent=""}
+	if(first_decimal>0){string='ក្បៀស';}else{string="";str_cent=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
 	first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
 	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal)
 	money_khmer=read_money_in_khmer(netTotal);
 
-	if(first_decimal>0){string_en='និង';}else{string_en="";str_cent_en=""}
+	if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
 	first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
 	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal)

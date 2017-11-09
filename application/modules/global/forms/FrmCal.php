@@ -74,6 +74,10 @@ Class Global_Form_FrmCal extends Zend_Dojo_Form {
 		$_tweentyhousend->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
 				'onkeyup'=>'Caltweentyhousend()'));
 		
+		$_twothousend = new Zend_Dojo_Form_Element_TextBox('r_twothousend');
+		$_twothousend->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
+				'onkeyup'=>'Caltwohousend()'));
+		
 		$_thousend = new Zend_Dojo_Form_Element_TextBox('thousend');
 		$_thousend->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
 				'onkeyup'=>'Calthousend()'));
@@ -103,6 +107,10 @@ Class Global_Form_FrmCal extends Zend_Dojo_Form {
 		$rs_tweentyhousend->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
 				'readonly'=>true));
 		
+		$rs_twothousend = new Zend_Dojo_Form_Element_TextBox('rs_twothousend');
+		$rs_twothousend->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
+				'readonly'=>true));
+		
 		$rs_thousend = new Zend_Dojo_Form_Element_TextBox('rs_thousend');
 		$rs_thousend->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
 				'readonly'=>true));
@@ -128,8 +136,8 @@ Class Global_Form_FrmCal extends Zend_Dojo_Form {
 				'readonly'=>true));
 		
 		$_rate = new Zend_Dojo_Form_Element_TextBox('rate');
-		$_rate->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside',
-				'readonly'=>true));
+		$_rate->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox','class'=>'fullside','onkeyup'=>'convertRielToDollar()',
+				'readonly'=>false));
 		$db = new Registrar_Model_DbTable_Dbcashcount();
 		$ex_rate = $db->getExchangeRate();
 		$_rate->setValue($ex_rate);
@@ -148,9 +156,10 @@ Class Global_Form_FrmCal extends Zend_Dojo_Form {
 			
 			
 			$_fiftyhousend->setValue($data['reil_50000']);
+			$_tweentyhousend->setValue($data['reil_20000']);
 			$_tenthousend->setValue($data['reil_10000']);
 			$_fivehousend->setValue($data['reil_5000']);
-			$_tweentyhousend->setValue($data['reil_2000']);
+			$_twothousend->setValue($data['reil_2000']);
 			$_thousend->setValue($data['reil_1000']);
 			$_fivehundred->setValue($data['reil_500']);
 			$_onehundred->setValue($data['reil_100']);
@@ -160,8 +169,8 @@ Class Global_Form_FrmCal extends Zend_Dojo_Form {
 		$this->addElements(array(
 			  $_hundred, $_fifty, $_tweenty, $_ten,$_five, $_one,
 			  $rs_hundred, $rs_fifty, $rs_tweenty, $rs_ten,$rs_five, $rs_one,
-			  $_fiftyhousend,$_tenthousend, $_fivehousend, $_tweentyhousend, $_thousend, $_fivehundred, $_onehundred,
-			  $rs_fiftyhousend,$rs_tenthousend, $rs_fivehousend, $rs_tweentyhousend, $rs_thousend, $rs_fivehundred, $rs_onehundred,
+			  $_fiftyhousend,$_tweentyhousend,$_tenthousend, $_fivehousend, $_twothousend, $_thousend, $_fivehundred, $_onehundred,
+			  $rs_fiftyhousend,$rs_tweentyhousend,$rs_tenthousend, $rs_fivehousend, $rs_twothousend, $rs_thousend, $rs_fivehundred, $rs_onehundred,
 			  $rs_totalkh, $rs_dollar_total,$reil_to_dollar,$_rate,$amount_total
 			  ));
 		

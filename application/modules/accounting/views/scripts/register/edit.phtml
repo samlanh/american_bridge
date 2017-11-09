@@ -57,6 +57,7 @@
 		    	paymentTerm();
 		    }
 		}, "study_year");
+		
 		getYearByBranch();
 		
 		setReadonlyPageEdit();
@@ -439,7 +440,16 @@ fieldset{  background:none;}
 						</td>
 						<td></td>
 						<td>
-							<input type="checkbox" value="1" <?php if($this->degree_row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+							<table width="100%">
+								<tr>
+									<td width="50%">
+										<input type="checkbox" value="1" <?php if($this->degree_row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+									</td>
+									<td width="50%">
+										<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->degree_row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
+									</td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 					<tr>
@@ -447,20 +457,23 @@ fieldset{  background:none;}
 						<td><?php  echo $register->getElement('student_type');?>
 							<?php echo $register->getElement('ids'); ?>
 						</td>
+						
+						<td><?php echo $tr->translate("RECEIPT_NO");?></td>
+						<td><?php echo $register->getElement('reciept_no');?>
+							<?php echo $register->getElement('id');?><?php echo $register->getElement('parent_id');?>
+						</td>
+						
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("STUDENT_ID");?></td>
+						<td><div id="student_old"><?php echo $register->getElement('old_studens');?></div><div id="id_stu"><?php echo $register->getElement('stu_id');?></div></td>
+						
 						<td style="width: 160px"><?php echo $tr->translate("STUDENT_NAME");?></td>
 						<td>
 							<div id="student_old_name"><?php echo $register->getElement('old_stu_name');?></div>
 							<div id="name_stu"><?php echo $register->getElement('stu_name');?></div>
 							<?php //echo $register->getElement('old_stu_name'); ?>
 							<?php //$register->getElement('stu_name');?>
-						</td>
-					</tr>
-					<tr>
-						<td><?php echo $tr->translate("STUDENT_ID");?></td>
-						<td><div id="student_old"><?php echo $register->getElement('old_studens');?></div><div id="id_stu"><?php echo $register->getElement('stu_id');?></div></td>
-						<td><?php echo $tr->translate("RECEIPT_NO");?></td>
-						<td><?php echo $register->getElement('reciept_no');?>
-							<?php echo $register->getElement('id');?><?php echo $register->getElement('parent_id');?>
 						</td>
 					</tr>
 					<tr>
@@ -833,20 +846,10 @@ fieldset{  background:none;}
 
 
 	function changControll(){
-		student_type=dijit.byId('student_type').get('value');
-		 if(student_type==3){
-			 document.getElementById('student_old').style.display="block";
-			 document.getElementById('student_old_name').style.display="block";
-			 document.getElementById('id_stu').style.display="none";
-			 document.getElementById('name_stu').style.display="none";
-			 //clearControll();
-		}else{
-			 document.getElementById('student_old').style.display="none";
-			 document.getElementById('student_old_name').style.display="none";
-			 document.getElementById('id_stu').style.display="block";
-			 document.getElementById('name_stu').style.display="block";
-			 //clearControll();
-		} 
+		 document.getElementById('student_old').style.display="block";
+		 document.getElementById('student_old_name').style.display="block";
+		 document.getElementById('id_stu').style.display="none";
+		 document.getElementById('name_stu').style.display="none";
 	}
 
 	function setID(){

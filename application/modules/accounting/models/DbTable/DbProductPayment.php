@@ -55,6 +55,7 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 					'payfor_type'		=>5 , // product payment
 					
 					'buy_product'		=>1 ,
+					'reg_from'			=>1 ,
 					
 					'grand_total_payment'			=>$data['grand_total'],
 					'grand_total_payment_in_riel'	=>$data['convert_to_riels'],
@@ -107,7 +108,36 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 	function updateStudentServicePayment($data){
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
-			try{
+		
+		try{
+			if(!empty($data['is_void'])){
+		
+				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
+					
+				$this->_name='rms_student_payment';
+					
+				$arr = array(
+					'is_void'=>$data['is_void'],
+				);
+				$where = " id = ".$data['payment_id'];
+		
+				$this->update($arr, $where);
+		
+				$db->commit();
+				return 0;
+			}else{
+				return 0;
+			}
+		}catch (Exception $e){
+			echo $e->getMessage();
+			$db->rollBack();
+		}
+		
+		return 0;	
+			
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+		
+		try{
 			$arr=array(
 					'student_id'		=>$data['studentid'],
 					'receipt_number'	=>$data['reciept_no'],
@@ -179,7 +209,8 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 		    	sp.grand_total_payment,
 		    	sp.grand_total_paid_amount,
 		    	create_date,
-		    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user
+		    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user,
+		    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status 
 	    	 from 
 	    		rms_student_payment as sp 
 	    	 where 
@@ -311,7 +342,7 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
     
     public function getAllStudentInfo($studentid){
     	$db=$this->getAdapter();
-    	$sql="select stu_enname,stu_khname,sex from rms_student where stu_id=$studentid limit 1";
+    	$sql="select * from rms_student where stu_id=$studentid limit 1";
     	return $db->fetchRow($sql);
     }
     

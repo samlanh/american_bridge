@@ -26,6 +26,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     			WHERE 
     				s.`stu_id`=sp.`student_id` 
     				AND sp.payfor_type=$type 
+    				and sp.is_void=0
     				$branch_id
     		";
     	
@@ -36,18 +37,22 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	 
 //     	$where = " AND ".$from_date." AND ".$to_date;
     	
-    	if(!empty($search['for_month'])){
-    		$first_day = 1;
-    		$last_day = 31;
-    		$year=$search['for_year'];
-    		$for_month = $search['for_month'];
+//     	if(!empty($search['for_month'])){
+//     		$first_day = 1;
+//     		$last_day = 31;
+//     		$year=$search['for_year'];
+//     		$for_month = $search['for_month'];
     	
-    		$end = $year.'-'.$for_month.'-'.$last_day;
+//     		$end = $year.'-'.$for_month.'-'.$last_day;
     		
-    		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+//     		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
     		
-    		$where = " AND ".$to_date;
-    	}
+//     		$where = " AND ".$to_date;
+//     	}
+    	
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
     	
     	$group_by = " GROUP BY student_id ";
     	
@@ -93,34 +98,39 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     	 
     	$sql="SELECT 
-    				COUNT(sp.student_id) 
+    				COUNT(s.stu_id) 
     			FROM 
     				`rms_student_payment` AS sp,
     				`rms_student` AS s 
     			WHERE 
     				s.`stu_id`=sp.`student_id` 
     				AND sp.`payfor_type`=$type 
-    				AND sp.`is_subspend`!=0
+    				AND s.`is_subspend`!=0
+    				and sp.is_void=0
 			    	$branch_id
     		";
     	 
     	$where = " ";
     	
     	 
-    	if(!empty($search['for_month'])){
-    		$first_day = 1;
-    		$last_day = 31;
-    		$year=$search['for_year'];
-    		$for_month = $search['for_month'];
+//     	if(!empty($search['for_month'])){
+//     		$first_day = 1;
+//     		$last_day = 31;
+//     		$year=$search['for_year'];
+//     		$for_month = $search['for_month'];
     		 
-    		$end = $year.'-'.$for_month.'-'.$last_day;
+//     		$end = $year.'-'.$for_month.'-'.$last_day;
     	
-    		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+//     		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
     		
-    		$suspend_date = "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id order by id DESC limit 1) <= '".$end." 23:59:59'";
+//     		$suspend_date = "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id order by id DESC limit 1) <= '".$end." 23:59:59'";
     		
-    		$where .= " AND ".$to_date." and ".$suspend_date ;
-    	}
+//     		$where .= " AND ".$to_date." and ".$suspend_date ;
+//     	}
+    	
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
     	
     	$group_by = " GROUP BY student_id ";
     	 
@@ -155,14 +165,12 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 	    
 	    if(!empty($this_month)){
 	    	$first_day = 1;
-	    	$last_day = 31;
+    		$last_day = date("t");
 	    	$year=date("Y");
-	    	if(!empty($search['for_month'])){
-	    		$for_month = $search['for_month'];
-	    		
-	    		$start = $year.'-'.$for_month.'-'.$first_day;
-	    		$end = $year.'-'.$for_month.'-'.$last_day;
-	    	}
+	    	$for_month = date("m");
+    		
+    		$start = $year.'-'.$for_month.'-'.$first_day;
+    		$end = $year.'-'.$for_month.'-'.$last_day;
 	    	
 	    	$from_date =(empty($start))? '1': "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id and sd.status=1 order by id DESC limit 1) >= '".$start." 00:00:00'";
 	    	$to_date = (empty($end))? '1': "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id order by id DESC limit 1) <= '".$end." 23:59:59'";
@@ -170,12 +178,357 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 	    	$where .= " AND ".$from_date." AND ".$to_date;
 	    	//echo $sql.$where;
 	    }
+	    
+	    
 	    //echo $sql.$where.$group_by;
 	    
 	    return $db->fetchAll($sql.$where.$group_by);
     }
     
     
+///////////////////////////////////////////////////// service type /////////////////////////////////////////////////////////////////////////////////////////////////    
+    
+    function getAllAmountServiceStudentByType($search,$payfor_type,$service_type){
+    	$db = $this->getAdapter();
+    
+    	//print_r($search);
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    	 
+    	$sql="SELECT
+			    	sp.id,COUNT(sp.student_id)
+			    FROM
+			    	`rms_student_payment` AS sp,
+			    	rms_service AS st
+			    WHERE
+			    	st.`stu_id`=sp.`student_id`
+			    	AND sp.payfor_type=$payfor_type
+			    	and sp.is_void=0
+			    	and st.type=$service_type
+    				$branch_id
+    		";
+    	 
+    	$where = " ";
+    	 
+    	//     	$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
+    	//     	$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
+    
+    	//     	$where = " AND ".$from_date." AND ".$to_date;
+    	 
+    	//     	if(!empty($search['for_month'])){
+    	//     		$first_day = 1;
+    	//     		$last_day = 31;
+    	//     		$year=$search['for_year'];
+    	//     		$for_month = $search['for_month'];
+    			 
+    	//     		$end = $year.'-'.$for_month.'-'.$last_day;
+    
+    	//     		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+    
+    			//     		$where = " AND ".$to_date;
+    	//     	}
+    	 
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
+    			 
+    	$group_by = " GROUP BY student_id ";
+    			 
+    	if(empty($search)){
+    		return $db->fetchAll($sql.$group_by);
+    	}
+	    if(!empty($search['txtsearch'])){
+	    	$s_where = array();
+	    	$s_search = addslashes(trim($search['txtsearch']));
+	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+	    }
+	    
+    	if(!empty($search['degree'])){
+    		$where.= " AND sp.`degree` = ".$search['degree'];
+    	}
+    	if(!empty($search['grade'])){
+    		$where.= " AND sp.`grade` = ".$search['grade'];
+	    }
+    	if(!empty($search['room'])){
+    		$where.= " AND sp.`room_id` = ".$search['room'];
+	    }
+	    if(!empty($search['branch'])){
+	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
+	    }
+	     
+	    if($search['service']>0){
+	    	$where.= " AND (select spd.service_id from rms_student_paymentdetail as spd where spd.payment_id=sp.id order by spd.id ASC limit 1) = ".$search['service'];
+	    }
+	     
+	    //echo $sql.$where.$group_by;
+	    
+	    return $db->fetchAll($sql.$where.$group_by);
+    }
+    
+    function getAllAmountStudentDropServiceByType($search,$type,$this_month,$service_type){
+    	//     	print_r($search);
+    	 
+    	$db = $this->getAdapter();
+    
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    
+    	$sql="SELECT
+			    	COUNT(s.stu_id)
+			    FROM
+			    	`rms_student_payment` AS sp,
+			    	`rms_service` AS s
+			    WHERE
+			    	s.`stu_id`=sp.`student_id`
+			    	AND sp.`payfor_type`=$type
+			    	AND s.`is_suspend`!=0
+			    	and s.type = $service_type
+			    	$branch_id
+		    ";
+    
+    	$where = " ";
+    	 
+    
+//     	if(!empty($search['for_month'])){
+// 	    	$first_day = 1;
+// 	    	$last_day = 31;
+// 	    	$year=$search['for_year'];
+// 	    	$for_month = $search['for_month'];
+	    	 
+// 	    	$end = $year.'-'.$for_month.'-'.$last_day;
+	    	 
+// 	    	$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+	    
+// 	    	$suspend_date = "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id order by id DESC limit 1) <= '".$end." 23:59:59'";
+	    
+// 	    	$where .= " AND ".$to_date." and ".$suspend_date ;
+//     	}
+
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
+    	 
+    	$group_by = " GROUP BY student_id ";
+    
+    	//     	if(empty($search)){
+    	//     		return $db->fetchAll($sql.$group_by);
+    	// 	    }
+    	if(!empty($search['txtsearch'])){
+	    	$s_where = array();
+	    	$s_search = addslashes(trim($search['txtsearch']));
+	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	 
+    	if(!empty($search['degree'])){
+    		$where.= " AND sp.`degree` = ".$search['degree'];
+    	}
+    	if(!empty($search['grade'])){
+    		$where.= " AND sp.`grade` = ".$search['grade'];
+    	}
+    	if(!empty($search['room'])){
+    		$where.= " AND sp.`room_id` = ".$search['room'];
+    	}
+    	if(!empty($search['branch'])){
+    		$where.= " AND sp.`branch_id` = ".$search['branch'];
+    	}
+    	if($search['service']>0){
+    		$where.= " AND (select spd.service_id from rms_student_paymentdetail as spd where spd.payment_id=sp.id order by spd.id ASC limit 1) = ".$search['service'];
+    	}
+    	 
+    	if(!empty($this_month)){
+	    	$first_day = 1;
+	    	$last_day = date("t");
+	    	$year=date("Y");
+	    	$for_month=date("m");
+    		
+	    	$start = $year.'-'.$for_month.'-'.$first_day;
+    		$end = $year.'-'.$for_month.'-'.$last_day;
+	    
+	    	$from_date =(empty($start))? '1': "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id and sd.status=1 order by id DESC limit 1) >= '".$start." 00:00:00'";
+	    	$to_date = (empty($end))? '1': "(select sd.date from rms_student_drop as sd where sd.stu_id=sp.student_id order by id DESC limit 1) <= '".$end." 23:59:59'";
+	    	 
+	    	$where .= " AND ".$from_date." AND ".$to_date;
+	    	//echo $sql.$where;
+    	}
+    	//echo $sql.$where.$group_by;
+    	 
+    	return $db->fetchAll($sql.$where.$group_by);
+    }
+    
+    function getAllAmountNewServiceStudentByType($search,$payfor_type,$this_month,$service_type){
+    	$db = $this->getAdapter();
+    
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    
+    	$sql="SELECT
+			    	COUNT(sp.student_id)
+			    FROM
+			    	`rms_student_payment` AS sp,
+			    	`rms_service` AS s
+			    WHERE
+			    	s.`stu_id`=sp.`student_id`
+			    	AND sp.`payfor_type` = $payfor_type
+			    	AND sp.`is_new` = 1
+			    	and sp.is_void=0
+			    	and s.type=$service_type
+			    	$branch_id
+    		";
+    
+    	$where = " ";
+    	 
+    	//     	$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
+    	//     	$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
+    
+    	//     	$where = " AND ".$from_date." AND ".$to_date;
+    
+    	$group_by = " GROUP BY student_id ";
+    
+    	if(empty($search)){
+    		return $db->fetchAll($sql.$group_by);
+    	}
+    	if(!empty($search['txtsearch'])){
+	    	$s_where = array();
+	    	$s_search = addslashes(trim($search['txtsearch']));
+	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    
+    	if(!empty($search['degree'])){
+    		$where.= " AND sp.`degree` = ".$search['degree'];
+	    }
+	    if(!empty($search['grade'])){
+	    	$where.= " AND sp.`grade` = ".$search['grade'];
+	    }
+	    if(!empty($search['room'])){
+	    	$where.= " AND sp.`room_id` = ".$search['room'];
+	    }
+	    if(!empty($search['branch'])){
+	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
+	    }
+	    if(!empty($search['service'])){
+	    	$where.= " AND (select spd.service_id from rms_student_paymentdetail as spd where spd.payment_id=sp.id order by spd.id ASC limit 1) = ".$search['service'];
+	    }
+     
+	    if(!empty($this_month)){
+		    $first_day = 1;
+		    $last_day = date("t");
+		    $year=date("Y");
+		    $for_month = date("m");
+		    
+		    $start = $year.'-'.$for_month.'-'.$first_day;
+		    $end = $year.'-'.$for_month.'-'.$last_day;
+		    
+		     
+		    $from_date =(empty($start))? '1': " sp.create_date >= '".$start." 00:00:00'";
+		    $to_date = (empty($end))? '1': " sp.create_date <= '".$end." 23:59:59'";
+		     
+		    $where .= " AND ".$from_date." AND ".$to_date;
+		     
+		    //echo $sql.$where;
+	    }
+    
+     
+    	return $db->fetchAll($sql.$where.$group_by);
+    }
+    
+    
+    function getAllAmountStudentByService($search,$type,$detail_type,$service_type){
+    
+    	$db = $this->getAdapter();
+    
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    
+    	$sql="SELECT
+			    	sp.id,
+			    	spd.service_id,
+			    	(select pn.title from rms_program_name as pn where pn.service_id = spd.service_id) as service_name
+			    FROM
+			    	`rms_student_payment` AS sp,
+			    	`rms_service` AS s,
+			    	rms_student_paymentdetail as spd
+			    WHERE
+			    	s.`stu_id`=sp.`student_id`
+			    	and sp.id = spd.payment_id
+			    	AND sp.`payfor_type` = $type
+			    	and spd.type = $detail_type
+			    	and s.is_suspend=0
+			    	and s.type = $service_type
+			    	and spd.is_start=1
+			    	and sp.is_void=0
+			    	$branch_id
+    		";
+    
+    	$where = " ";
+    
+    	//     	$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
+    	//     	$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
+    
+    	//     	$where = " AND ".$from_date." AND ".$to_date;
+    
+    	//     	if(!empty($search['for_month'])){
+    	// 	    	$first_day = 1;
+    	// 	    	$last_day = 31;
+    	// 	    	$year=date("Y");
+    			// 	    	$for_month = $search['for_month'];
+    	 
+    	// 	    	$end = $year.'-'.$for_month.'-'.$last_day;
+    	 
+    	// 	    	$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+    	   
+    			// 	    	$where = " AND ".$to_date;
+    			//     	}
+    
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
+    
+    	$order=" ORDER BY spd.`service_id` ASC";
+    
+    	$group_by = " GROUP BY student_id ";
+    
+    	if(empty($search)){
+    		return $db->fetchAll($sql.$where.$group_by.$order);
+    	}
+    
+    	if(!empty($search['txtsearch'])){
+    	$s_where = array();
+    	$s_search = addslashes(trim($search['txtsearch']));
+    		$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+    		$where .= ' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	 
+    	if($search['service'] > 0){
+    		$where.= " AND spd.`service_id` = ".$search['service'];
+    	}
+    	if($search['branch'] > 0){
+    		$where.= " AND sp.`branch_id` = ".$search['branch'];
+    	}
+    		//echo $sql.$where.$order;
+    
+    	return $db->fetchAll($sql.$where.$group_by.$order);
+    }
+    
+    
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    		
     function getAllAmountNewStudentByType($search,$type,$this_month){
     	$db = $this->getAdapter();
     
@@ -191,6 +544,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	s.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type` = $type
 			    	AND sp.`is_new` = 1
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     
@@ -234,14 +588,12 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	
     	if(!empty($this_month)){
     		$first_day = 1;
-    		$last_day = 31;
-    		$year=$search['for_year'];
-    		if(!empty($search['for_month'])){
-    			$for_month = $search['for_month'];
-    			
-    			$start = $year.'-'.$for_month.'-'.$first_day;
-    			$end = $year.'-'.$for_month.'-'.$last_day;
-    		}
+    		$last_day = date("t");
+	    	$year=date("Y");
+	    	$for_month = date("m");
+    		
+    		$start = $year.'-'.$for_month.'-'.$first_day;
+    		$end = $year.'-'.$for_month.'-'.$last_day;
     		
     	
     		$from_date =(empty($start))? '1': " sp.create_date >= '".$start." 00:00:00'";
@@ -252,7 +604,6 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     		//echo $sql.$where;
     	}
     
-//     	echo "skjfhgisjb , ".$sql.$where.$group_by;
     	
     	return $db->fetchAll($sql.$where.$group_by);
     }
@@ -268,10 +619,10 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.id,
 			    	s.stu_enname,
 			    	s.stu_khname,
-			    	sp.grade,
-			    	sp.session,
-			    	(select major_enname from rms_major where major_id = sp.grade) as grade_name,
-			    	(select en_name from rms_dept where dept_id = sp.degree) as degree_name
+			    	s.grade,
+			    	s.session,
+			    	(select major_enname from rms_major where major_id = s.grade) as grade_name,
+			    	(select en_name from rms_dept where dept_id = s.degree) as degree_name
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student` AS s,
@@ -282,6 +633,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	AND sp.`payfor_type` = $type
 			    	and spd.service_id = 4
 			    	and sp.is_subspend=0
+			    	and sp.is_void=0
 			    	and spd.is_start=1
 			    	$branch_id
     		";
@@ -293,20 +645,24 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     
     	//     	$where = " AND ".$from_date." AND ".$to_date;
     
-    	if(!empty($search['for_month'])){
-    		$first_day = 1;
-    		$last_day = 31;
-    		$year=$search['for_year'];
-    		$for_month = $search['for_month'];
+//     	if(!empty($search['for_month'])){
+//     		$first_day = 1;
+//     		$last_day = 31;
+//     		$year=$search['for_year'];
+//     		$for_month = $search['for_month'];
     		 
-    		$end = $year.'-'.$for_month.'-'.$last_day;
+//     		$end = $year.'-'.$for_month.'-'.$last_day;
     	
-    		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+//     		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
     	
-    		$where = " AND ".$to_date;
-    	}
+//     		$where = " AND ".$to_date;
+//     	}
     	
-    	$order=" ORDER BY sp.`grade` ASC";
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
+    	
+    	$order=" ORDER BY s.`grade` ASC";
     	
     	$group_by = " GROUP BY student_id ";
     
@@ -325,16 +681,16 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	}
     
     	if($search['degree'] > 0){
-    		$where.= " AND sp.`degree` = ".$search['degree'];
+    		$where.= " AND s.`degree` = ".$search['degree'];
     	}
     	if($search['grade'] > 0){
-    		$where.= " AND sp.`grade` = ".$search['grade'];
+    		$where.= " AND s.`grade` = ".$search['grade'];
     	}
     	if($search['room'] > 0){
-    		$where.= " AND sp.`room_id` = ".$search['room'];
+    		$where.= " AND s.`room_id` = ".$search['room'];
     	}
     	if($search['branch'] > 0){
-    		$where.= " AND sp.`branch_id` = ".$search['branch'];
+    		$where.= " AND s.`branch_id` = ".$search['branch'];
     	}
     
     	//echo $sql.$where.$group_by.$order;exit();
@@ -343,81 +699,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     }
     
     
-    function getAllAmountStudentByService($search,$type,$detail_type){
-    	 
-    	$db = $this->getAdapter();
     
-    	$_db = new Application_Model_DbTable_DbGlobal();
-    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
-    
-    	$sql="SELECT
-			    	sp.id,
-			    	s.stu_enname,
-			    	s.stu_khname,
-			    	spd.service_id,
-			    	(select pn.title from rms_program_name as pn where pn.service_id = spd.service_id) as service_name
-			    FROM
-			    	`rms_student_payment` AS sp,
-			    	`rms_student` AS s,
-			    	rms_student_paymentdetail as spd
-			    WHERE
-			    	s.`stu_id`=sp.`student_id`
-			    	and sp.id = spd.payment_id
-			    	AND sp.`payfor_type` = $type
-			    	and spd.type = $detail_type
-			    	and sp.is_subspend=0
-			    	and spd.is_start=1
-			    	$branch_id
-    	";
-    
-    	$where = " ";
-    
-    	//     	$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
-    	//     	$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
-    
-    	//     	$where = " AND ".$from_date." AND ".$to_date;
-    
-    	if(!empty($search['for_month'])){
-	    	$first_day = 1;
-	    	$last_day = 31;
-	    	$year=date("Y");
-	    	$for_month = $search['for_month'];
-	    	 
-	    	$end = $year.'-'.$for_month.'-'.$last_day;
-	    	 
-	    	$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
-	    	 
-	    	$where = " AND ".$to_date;
-    	}
-    	 
-    	$order=" ORDER BY spd.`service_id` ASC";
-    	 
-    	$group_by = " GROUP BY student_id ";
-    
-    	if(empty($search)){
-    		return $db->fetchAll($sql.$where.$group_by.$order);
-	    }
-	     
-	    if(!empty($search['txtsearch'])){
-		    $s_where = array();
-		    $s_search = addslashes(trim($search['txtsearch']));
-		    $s_where[] = " st.stu_code LIKE '%{$s_search}%'";
-		    $s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
-		    $s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
-		    $s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
-		    $where .= ' AND ( '.implode(' OR ',$s_where).')';
-	    }
-	    
-	    if($search['service'] > 0){
-	    	$where.= " AND spd.`service_id` = ".$search['service'];
-	    }
-	    if($search['branch'] > 0){
-	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
-	    }
-	        	//echo $sql.$where.$order;
-	     
-	    return $db->fetchAll($sql.$where.$group_by.$order);
-    }
     
     
     function getStudentPayableLastMonth($search,$payfor_type,$type){ //  
@@ -443,18 +725,20 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	
     	$where = " ";
     	
-    	if(!empty($search['for_month'])){
-    		$first_day = 1;
-    		$last_day = 31;
-    		$year=$search['for_year'];
-    		$last_month = $search['for_month'] - 1;
-    		 
-    		$end = $year.'-'.$last_month.'-'.$last_day;
-    		 
-    		$to_date = (empty($end))? '1': " spd.`validate` <= '".$end." 23:59:59'";
-    		 
-    		$where = " AND ".$to_date;
-    	}
+    		
+    	$first_day = 1;
+    	$last_day = 31;
+    	$year=date("Y");
+    	$last_month = date("m") - 1;
+    	 
+    	$end = $year.'-'.$last_month.'-'.$last_day;
+    	 
+    	$to_date = (empty($end))? '1': " spd.`validate` <= '".$end." 23:59:59'";
+    	 
+    	$where .= " AND ".$to_date;
+    	
+    	
+    	
     	
     	if(!empty($search['service'])){
     		$where.= " AND spd.`service_id` = ".$search['service'];
@@ -499,20 +783,18 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	 
     	$where = " ";
     	 
-    	if(!empty($search['for_month'])){
-	    	$first_day = 1;
-	    	$last_day = date("t");
-	    	$year=$search['for_year'];
-	    	$for_month = $search['for_month'];
-	
-	    	$start = $year.'-'.$for_month.'-'.$first_day;
-	    	$end = $year.'-'.$for_month.'-'.$last_day;
-	    	 
-	    	$from_date = (empty($start))? '1': " spd.`validate` >= '".$start." 00:00:00'";
-	    	$to_date = (empty($end))? '1': " spd.`validate` <= '".$end." 23:59:59'";
-	    	 
-	    	$where = " AND ".$from_date." AND ".$to_date;
-    	}
+    	$first_day = 1;
+    	$last_day = date("t");
+    	$year=date("Y");
+    	$for_month = date("m");
+
+    	$start = $year.'-'.$for_month.'-'.$first_day;
+    	$end = $year.'-'.$for_month.'-'.$last_day;
+    	 
+    	$from_date = (empty($start))? '1': " spd.`validate` >= '".$start." 00:00:00'";
+    	$to_date = (empty($end))? '1': " spd.`validate` <= '".$end." 23:59:59'";
+    	 
+    	$where .= " AND ".$from_date." AND ".$to_date;
     	
     	if($search['service'] > 0){
     		$where.= " AND spd.`service_id` = ".$search['service'];
@@ -547,11 +829,13 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 					st.`stu_khname`,
 					(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code = st.`sex`) AS sex,
 					st.`tel`,
+					(select major_enname from rms_major where major_id =  st.`grade`) as current_grade,
 					sp.`create_date`,
 					sp.`is_new`,
 					sp.`receipt_number`,
 					(select en_name from rms_dept where dept_id = sp.`degree`) as degree,
 					(select major_enname from rms_major where major_id =  sp.`grade`) as grade,
+					
 					(select room_name from rms_room where rms_room.room_id = sp.`room_id`) as room,
 					sp.`time`,
 					
@@ -568,6 +852,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 					sp.is_subspend,
 					(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
 					
+					spd.qty,
 					spd.`start_date`,
 					spd.`validate`,
 					spd.`payment_term`
@@ -580,6 +865,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 					AND st.`stu_id`=sp.`student_id`
 					AND sp.`payfor_type`=6
 					AND spd.`service_id`=4
+					and sp.is_void=0
 					$branch_id
     		  ";
     	
@@ -592,19 +878,22 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	
     	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
 					
-    	if(!empty($search['for_month'])){
-    		$first_day = 1;
-    		$last_day = 31;
-    		$year = $search['for_year'];
-    		$for_month = $search['for_month'];
+//     	if(!empty($search['for_month'])){
+//     		$first_day = 1;
+//     		$last_day = 31;
+//     		$year = $search['for_year'];
+//     		$for_month = $search['for_month'];
     		 
-    		$end = $year.'-'.$for_month.'-'.$last_day;
+//     		$end = $year.'-'.$for_month.'-'.$last_day;
     		 
-    		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+//     		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
     		 
-    		$where = " AND ".$to_date;
-    	}
+//     		$where .= " AND ".$to_date;
+//     	}
     	
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
     	
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);
@@ -652,6 +941,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	st.`stu_khname`,
 			    	(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code = st.`sex`) AS sex,
 			    	st.`tel`,
+			    	(select major_enname from rms_major where major_id =  st.`grade`) as current_grade,
 			    	sp.`create_date`,
 			    	sp.`is_new`,
 			    	sp.`receipt_number`,
@@ -673,6 +963,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.is_subspend,
 			    	(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
 			    		
+			    	spd.qty,
 			    	spd.`start_date`,
 			    	spd.`validate`,
 			    	spd.`payment_term`
@@ -685,24 +976,29 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=1
 			    	AND spd.`service_id`=4
+			    	and sp.is_void=0
 			    	$branch_id
     			";
     	 
     	$where = " ";
     	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
     		
-    	if(!empty($search['for_month'])){
-    		$first_day = 1;
-    		$last_day = 31;
-    		$year=$search['for_year'];
-    		$for_month = $search['for_month'];
+//     	if(!empty($search['for_month'])){
+//     		$first_day = 1;
+//     		$last_day = 31;
+//     		$year=$search['for_year'];
+//     		$for_month = $search['for_month'];
     		 
-    		$end = $year.'-'.$for_month.'-'.$last_day;
+//     		$end = $year.'-'.$for_month.'-'.$last_day;
     	
-    		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+//     		$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
     	
-    		$where = " AND ".$to_date;
-    	}
+//     		$where = " AND ".$to_date;
+//     	}
+    	
+    	$today = date("Y-m-d");
+    	$to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+    	$where .= " AND ".$to_date;
     	
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);
@@ -750,6 +1046,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	st.`stu_khname`,
 			    	(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code = st.`sex`) AS sex,
 			    	st.`tel`,
+			    	(select major_enname from rms_major where major_id =  st.`grade`) as current_grade,
 			    	sp.`create_date`,
 			    	sp.`is_new`,
 			    	sp.`receipt_number`,
@@ -771,6 +1068,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.is_subspend,
 			    	(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
 			    		
+			    	spd.qty,
 			    	spd.`start_date`,
 			    	spd.`validate`,
 			    	spd.`payment_term`
@@ -783,6 +1081,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=2
 			    	AND spd.`service_id`=4
+			    	and sp.is_void=0
 			    	$branch_id
     			";
     	 
@@ -816,18 +1115,22 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
 	    }
 	    
-	    if(!empty($search['for_month'])){
-	    	$first_day = 1;
-	    	$last_day = 31;
-	    	$year=$search['for_year'];
-	    	$for_month = $search['for_month'];
+// 	    if(!empty($search['for_month'])){
+// 	    	$first_day = 1;
+// 	    	$last_day = 31;
+// 	    	$year=$search['for_year'];
+// 	    	$for_month = $search['for_month'];
 	    	 
-	    	$end = $year.'-'.$for_month.'-'.$last_day;
+// 	    	$end = $year.'-'.$for_month.'-'.$last_day;
 	    	 
-	    	$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
+// 	    	$to_date = (empty($end))? '1': "sp.create_date <= '".$end." 23:59:59'";
 	    	 
-	    	$where .= " AND ".$to_date;
-	    }
+// 	    	$where .= " AND ".$to_date;
+// 	    }
+	    
+	    $today = date("Y-m-d");
+	    $to_date = (empty($today))? '1': "sp.create_date <= '".$today." 23:59:59'";
+	    $where .= " AND ".$to_date;
 	    
 	    return $db->fetchAll($sql.$where.$order);
     
@@ -870,6 +1173,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	 
 			    	spd.`start_date`,
 			    	spd.`validate`,
+			    	spd.qty,
 			    	spd.`payment_term`
 			    FROM
 			    	`rms_student_payment` AS sp,
@@ -880,6 +1184,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=3
 			    	AND spd.`type`=3
+			    	and sp.is_void=0
 			    	$branch_id
 		    	";
     
@@ -962,6 +1267,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	spd.service_id,
 			    	spd.`start_date`,
 			    	spd.`validate`,
+			    	spd.qty,
 			    	spd.`payment_term`
 			    FROM
 			    	`rms_student_payment` AS sp,
@@ -972,6 +1278,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=4
 			    	AND spd.`type`=5
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     

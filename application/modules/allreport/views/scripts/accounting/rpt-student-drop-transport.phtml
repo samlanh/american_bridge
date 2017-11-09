@@ -21,6 +21,9 @@
 			   		</select>
 			   </td>
 			   
+			   <td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->search['start_date'];?>" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}"/></td>
+		    	<td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->search['end_date'];?>" dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"/></td>
+			   
 			   <td>
 			   		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
 	       	   </td>
@@ -34,13 +37,15 @@
 		<div id="divPrint">
 			<table style="background:#fff; margin: 0 auto;width: 100%">
 				<tr>
-					<td width="28%" align="left">
-						<img style="width: 50%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
+					<td width="20%" align="left">
+						<img style="width: 60%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
 					</td>
-					<td  align="center">
+					<td  align="center" width="60%">
 						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 17px;font-family:'Khmer MEF2';"><?php echo $tr->translate("STUDENT_DROP_TRANSPORT_REPORT");?></strong><br />
+						<strong  style="font-weight:bold;color:#000; font-size: 13px;font-family:'Khmer OS Muol';​">From <?php echo date('d-m-Y',strtotime($this->search['start_date']));?> &nbsp;To&nbsp; <?php echo date('d-m-Y',strtotime($this->search['end_date']));?></strong>
 					</td>
-					<td width="28%" align="right">
+					<td width="20%" align="right">
+						&nbsp;
 					</td>
 				</tr>
 				
@@ -88,14 +93,23 @@
 					<td colspan="3">&nbsp;</td>
 				</tr>
 				<tr >
-					<td align="center" width="25%">
-						<span style="font-weight: bold;font-size: 14px;">Verified by</span>
-					</td>
-					<td  width="50%">
-						&nbsp;
-					</td>
-					<td align="center"  width="25%">
-						<span style="font-weight: bold;font-size: 14px;text-align: right;">Prepared by</span>
+					<td colspan="3">
+						<table width="100%">
+							<tr>
+								<td align="center" width="25%">
+									<span style="font-weight: bold;font-size: 14px;">Approved by</span>
+								</td>
+								<td align="center" width="25%">
+									<span style="font-weight: bold;font-size: 14px;">Verified by</span>
+								</td>
+								<td align="center" width="25%">
+									<span style="font-weight: bold;font-size: 14px;">Checked by</span>
+								</td>
+								<td align="center"  width="25%">
+									<span style="font-weight: bold;font-size: 14px;">Prepared by</span>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>

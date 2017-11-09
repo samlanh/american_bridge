@@ -4,14 +4,15 @@
 ?>	
 <title><?php echo $tr->translate('Student Enrollment and Payment List');?></title>
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-english-fulltime-payment-list')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-	<table width="70%">
+	<table width="90%">
 	    <tr>
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
 	    	<td><?php echo $frm->getElement('degree_en_ft');?></td>
 	    	<td><?php echo $frm->getElement('grade_en_ft');?></td>
 	    	<td><?php echo $frm->getElement('room');?></td>
 	    	<td><?php echo $frm->getElement('branch');?></td>
-	    	
+	  
+	    <?php /*?>	
 	    	<td>
 	    		<select name="for_month" id="for_month" dojoType="dijit.form.FilteringSelect" class="fullside" >
 	    			<option value="0"> select month </option>
@@ -27,6 +28,8 @@
 	    			<?php }?>
 	    		</select>
 	    	</td>
+	    <?php */?>
+	    
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -72,7 +75,7 @@
 			</tr>
 			<tr>
 				<td colspan="3" id="exportExcel">
-					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+					<table cellpadding="8" border="1"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
 	
 					
 				<?php //////////////////////////////////////////////////////////////////////////////////////////////////////////////////?>	
@@ -99,7 +102,7 @@
 						   			</tr>
 						   		</table>
 						   		
-								<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+								<table cellpadding="8"​ border="1" style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
 							<?php }?>
 							
 							
@@ -110,7 +113,8 @@
 							<td class="bor" colspan="4"><?php echo $tr->translate("NAME_EN"); ?></td>
 							<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
 							<td class="bor" colspan="6"><?php echo $tr->translate("PHONE"); ?></td>
-							<td  style="border-bottom: 1px solid #000;" colspan="7"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+							<td  style="border-bottom: 1px solid #000;" colspan="4"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+							<td  style="border-bottom: 1px solid #000;" colspan="1"><?php echo $tr->translate("CURRENT_GRADE"); ?></td>
 					      </tr>
 				<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
 					      
@@ -121,7 +125,8 @@
 							<td class="bor_r" colspan="4"><?php echo $rs['stu_enname'];?> </td>
 							<td class="bor_r"><?php echo $rs['sex'];?> </td>
 							<td class="bor_r" colspan="6"><?php echo $rs['tel'];?> </td>
-							<td colspan="7"><?php echo $rs['degree'];?> </td>
+							<td colspan="4"><?php echo $rs['degree'];?> </td>
+							<td colspan="1"><?php echo $rs['current_grade'];?> </td>
 	 					 </tr>
 	 					 
 	 			<?php //////////////////////////////////////////////// //////////////////////////////////////////////////////////////////?>		 
@@ -139,8 +144,8 @@
 							<td rowspan="2" class="padd">Total <br />Amount</td>
 							<td rowspan="2" class="padd">Paid & <br />Payable</td>
 							<td rowspan="2" class="padd">Remark</td>
-							<td rowspan="2" class="padd">Stop <br />Student</td>
-							<td rowspan="2" class="padd">Stop</td>
+							<td rowspan="2"  class="padd">Stop <br />Student</td>
+							<td colspan="2" rowspan="2" class="padd">Stop</td>
 	 					 </tr>
 						 <tr id="row" align="center" style="background: #ccc;">
 							<td class="padd">IssueDate</td>
@@ -154,7 +159,6 @@
 							<td class="padd">Amount</td>
 							<td class="padd">Start Date</td>
 							<td class="padd"> End Date</td>
-							 
 	 					 </tr>
 	 					
 					<?php 
@@ -166,7 +170,7 @@
 				
 						<?php 
 							if($rs['payment_term']==1){
-								$amount_month="1 months";
+								$amount_month=$rs['qty']." months";
 							}else if($rs['payment_term']==2){
 								$amount_month="3 months";
 							}else if($rs['payment_term']==3){
@@ -181,7 +185,7 @@
 							
 						?>
 				
-	 					<tr id="row" align="center" class="hover" >
+	 					<tr id="row" align="center"  class="hover" >
 	 					
 							<td class="padd"><?php echo $rs['grade'];?></td>
 							<td class="padd"><?php echo $rs['room'];?></td>
@@ -214,7 +218,7 @@
 							
 							<td class="padd"><?php echo $rs['note'];?></td>
 							<td class="padd"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
-							<td class="padd"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
+							<td class="padd" colspan="2"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
 	 					</tr>
 	 					
 	 				<?php }?>
@@ -363,10 +367,13 @@
 						<tr><td colspan="3">&nbsp;</td></tr>
 						<tr >
 							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+							</td>
+							<td align="center" width="25%">
 								<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
 							</td>
-							<td  width="50%">
-								&nbsp;
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
 							</td>
 							<td align="center"  width="25%">
 								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>

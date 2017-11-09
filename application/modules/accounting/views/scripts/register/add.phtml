@@ -96,9 +96,35 @@
 		    class: 'fullside',  
 		    placeHolder:"----- select student name -----",          
 		    onChange: function() {  
-		    	setID();
+		    	setID(1);
 		    }
 		}, "old_stu_name");
+
+		new dijit.form.FilteringSelect({
+		    autoComplete: true,                        
+		    id: "drop_studens",
+		    name: "drop_studens", 
+		    required: false,         
+		    class: 'fullside',  
+		    placeHolder:"----- select student id -----",          
+		    onChange: function() {  
+		    	getGeneralOldStudentById();
+		    	paymentTerm();
+		    	getStartDate();
+		    }
+		}, "drop_studens");
+
+		new dijit.form.FilteringSelect({
+		    autoComplete: true,                        
+		    id: "drop_student_name",
+		    name: "drop_student_name",
+		    required: false,           
+		    class: 'fullside',  
+		    placeHolder:"----- select student name -----",          
+		    onChange: function() {  
+		    	setID(2);
+		    }
+		}, "drop_student_name");
 		
 	});	
 
@@ -130,24 +156,53 @@
 	var url_old_stu_id = '<?php echo $this->url(array('module'=>'accounting','controller'=>'register','action'=>'get-old-stu-id-by-branch')); ?>';
 	function getOldStuIdByBranch(){
 		branch_id = dijit.byId('branch').get('value');
+		dojo.xhrPost({
+			url:url_old_stu_id,
+			content:{
+				'branch_id':branch_id
+				},
+			handleAs:"json",
+			load: function(data) {
+				//alert(data);
+				old_stu_id_store  = getDataStorefromJSON('id','name', data[0]);
+				dijit.byId('old_studens').set('store',old_stu_id_store);   
+
+				old_stu_name_store  = getDataStorefromJSON('id','name', data[1]);
+				dijit.byId('old_stu_name').set('store',old_stu_name_store);
+			},
+			error: function(err) {
+				//alert(err);
+			}
+		});
+	}
+
+
+	var drop_stu_id_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var drop_stu_name_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	
+	var url_drop_stu_id = '<?php echo $this->url(array('module'=>'accounting','controller'=>'register','action'=>'get-drop-stu-id-by-branch')); ?>';
+	function getDropStuIdByBranch(){
+		branch_id = dijit.byId('branch').get('value');
+		if(branch_id>0){
 			dojo.xhrPost({
-				url:url_old_stu_id,
+				url:url_drop_stu_id,
 				content:{
 					'branch_id':branch_id
 					},
 				handleAs:"json",
 				load: function(data) {
 					//alert(data);
-					old_stu_id_store  = getDataStorefromJSON('id','name', data[0]);
-					dijit.byId('old_studens').set('store',old_stu_id_store);   
-
-					old_stu_name_store  = getDataStorefromJSON('id','name', data[1]);
-					dijit.byId('old_stu_name').set('store',old_stu_name_store);
+					drop_stu_id_store  = getDataStorefromJSON('id','name', data[0]);
+					dijit.byId('drop_studens').set('store',drop_stu_id_store);   
+	
+					drop_stu_name_store  = getDataStorefromJSON('id','name', data[1]);
+					dijit.byId('drop_student_name').set('store',drop_stu_name_store);
 				},
 				error: function(err) {
 					//alert(err);
 				}
 			});
+		}
 	}
 
 	
@@ -243,18 +298,18 @@
 		//time=dijit.byId('time').get('value');
 		session=dijit.byId('session').get('value');
 		student_type=dijit.byId('student_type').get('value');
-		if(student_type==3){
-			old_studens=dijit.byId('old_studens').get('value');
+		
+		if(student_type!=1){
+			if(student_type==3){
+				old_studens=dijit.byId('old_studens').get('value');
+			}else{
+				old_studens=dijit.byId('drop_studens').get('value');
+			}
 			if(old_studens != -1 ){
-				getBalancePrice(4,old_studens);
-			}else
-			{
-				if(generat!='' && payment_term !='' && grade !='' && session !=''){
-					getPaymentTerms(generat,payment_term,grade,session);
-				}
+				getBalancePrice(4,old_studens);//sds
 			}
 		}else{
-			if(generat!='' && payment_term !='' && grade !='' && session !=''){
+			if(generat!='' && payment_term !='' && grade !=''){
 				getPaymentTerms(generat,payment_term,grade,session);
 			}
 		}
@@ -268,14 +323,13 @@
 		grade=dijit.byId('grade').get('value');
 		//time=dijit.byId('time').get('value');
 		session=dijit.byId('session').get('value');
-		if(generat!='' && payment_term !='' && grade !='' && session !=''){
-			getPaymentTerms(generat,payment_term,grade,session);
-			
+		if(generat!='' && payment_term !='' && grade !=''){
+			getPaymentTerms(generat,payment_term,grade);
 		}
 	}
 	var payment_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 	var url_getpaymentterm = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-payment-term')); ?>';
-	function getPaymentTerms(generat,payment_term,grade,session){//time (full/part time)
+	function getPaymentTerms(generat,payment_term,grade){//time (full/part time)
 		dijit.byId('tuitionfee').attr('value',0);
     	dijit.byId('total').attr('value',0);
     	dijit.byId('books').attr('value',0);
@@ -288,56 +342,50 @@
 			document.getElementById('amount_section').style.display="none";
 			document.getElementById('label_amount').style.display="none";
 		}
-    	
-			dojo.xhrPost({
-				url:url_getpaymentterm,
-				content:{
-					'generat_id':generat,
-					'pay_id':payment_term,
-					'grade_id':grade,
-					//'time':time,
-					'session':session
-					},
-				handleAs:"json",
-				load: function(data) {
-				      if(data !=''){
-				    	 // dijit.byId('tuitionfee').attr('value',data.price_fee);
-				    	dijit.byId('tuitionfee').attr('value',data.tuition_fee);
-				    	dijit.byId('total').attr('value',data.tuition_fee);
-				    	dijit.byId('books').attr('value',data.tuition_fee);
-				    	dijit.byId('price_per_section').attr('value',data.tuition_fee);
-				      }else {
-				    	 dijit.byId('tuitionfee').attr('value','0'); 
-				    	 dijit.byId('total').attr('value','0'); 
-				    	 dijit.byId('discount').attr('value','0');
-				    	 dijit.byId('books').attr('value','0');
-					     dijit.byId('addmin_fee').attr('value','0');
-					     dijit.byId('remaining').attr('value','0');
-					     dijit.byId('remark').attr('value','0');
-					 //    dijit.byId('char_price').attr('value','0');
-					     dijit.byId('not').attr('value','');
-				      }
-
-				      netTotal();
-				      
-				 /*     a = dojo.number.format(data.tuition_fee);
-					  money_khmer=read_money_in_khmer(a);
-					  dijit.byId('char_price').attr('value',money_khmer.trim()+'ដុល្លាគត់');
-					  */
+    	//alert(1);
+		dojo.xhrPost({
+			url:url_getpaymentterm,
+			content:{
+				'generat_id':generat,
+				'pay_id':payment_term,
+				'grade_id':grade,
+				//'time':time,
+				//'session':session
 				},
-				error: function(err) {
-					//alert(err);
-				}
-			});
+			handleAs:"json",
+			load: function(data) {
+				  if(data !=''){
+					 // dijit.byId('tuitionfee').attr('value',data.price_fee);
+					dijit.byId('tuitionfee').attr('value',data.tuition_fee);
+					dijit.byId('total').attr('value',data.tuition_fee);
+					dijit.byId('books').attr('value',data.tuition_fee);
+					dijit.byId('price_per_section').attr('value',data.tuition_fee);
+				  }else {
+					 dijit.byId('tuitionfee').attr('value','0'); 
+					 dijit.byId('total').attr('value','0'); 
+					 dijit.byId('discount').attr('value','0');
+					 dijit.byId('books').attr('value','0');
+					 dijit.byId('addmin_fee').attr('value','0');
+					 dijit.byId('remaining').attr('value','0');
+					 dijit.byId('remark').attr('value','0');
+					 dijit.byId('not').attr('value','');
+				  }
+				  netTotal();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
 	}
 	//get price balance
 	var url_balance = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-banlance-price')); ?>';
-	function getBalancePrice(servce_id,student_id){
-			type=1; // from register (k1 - g12)
+	function getBalancePrice(service_id,student_id){
+		type=1; // from register (khmer & English Fulltime)
+		if(service_id>0 && student_id>0 && type>0){
 			dojo.xhrPost({
 				url:url_balance,
 				content:{
-					'servce_id':servce_id,
+					'servce_id':service_id,
 					'student_id':student_id,
 					'type':type,
 					},
@@ -365,6 +413,7 @@
 					alert(err);
 				}
 			});
+		}
 	}
 
 	// set field to readonly when balance>0 for get all old information of student
@@ -571,26 +620,36 @@
 
 	var url_get_start_date = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-start-date-register')); ?>';
 	function getStartDate(){
-		service_id = 4; // 4 => get validate only student register
-		stu_id = dijit.byId('old_studens').get('value');
-		dojo.xhrPost({
-			url:url_get_start_date,
-			content:{
-				'service_id':service_id,
-				'stu_id':stu_id
-				},
-			handleAs:"json",
-			load: function(data) {
-				if(data){
-					dijit.byId('start_date').attr('value',data);
-				}else{
-					dijit.byId('start_date').attr('value','<?php echo date('Y-m-d');?>');
-				}	
-			},
-			error: function(err) {
-				alert(err);
+		stu_type=dijit.byId('student_type').get('value');
+		if(stu_type!=1){
+			if(stu_type==3){
+				stu_id = dijit.byId('old_studens').get('value');
+			}else{
+				stu_id = dijit.byId('drop_studens').get('value');
 			}
-		});
+
+			service_id=4;  // 4 => get validate only student register
+			if(stu_id>0){
+				dojo.xhrPost({
+					url:url_get_start_date,
+					content:{
+						'service_id':service_id,
+						'stu_id':stu_id
+						},
+					handleAs:"json",
+					load: function(data) {
+						if(data){
+							dijit.byId('start_date').attr('value',data);
+						}else{
+							dijit.byId('start_date').attr('value','<?php echo date('Y-m-d');?>');
+						}	
+					},
+					error: function(err) {
+						alert(err);
+					}
+				});
+			}
+		}
 	}
 </script>
 <style>
@@ -629,7 +688,7 @@ fieldset{  background:none;}
 					    <tr>
 							<td ><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select  type="text" name="branch" id="branch" onchange="getYearByBranch();getOldStuIdByBranch();getStudentNo(1,'');getNewReceiptNo('');" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select  type="text" name="branch" id="branch" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(1,'');getNewReceiptNo('');" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">Select branch</option>
 								<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
 									<option value="<?php echo $branch['id'];?>"><?php echo $branch['name'];?></option>
@@ -657,13 +716,17 @@ fieldset{  background:none;}
 							<td>
 								<div id="student_old"><input id="old_studens" /></div>
 								<div id="id_stu"><?php echo $register->getElement('stu_id');?></div>
+								
+								<div id="drop_stu_code"><input id="drop_studens" /></div>
 							</td>
+							
 							<td style="width: 160px"><?php echo $tr->translate("STUDENT_NAME");?></td>
+							
 							<td>
 								<div id="student_old_name"><input id="old_stu_name" /></div>
 								<div id="name_stu"><?php echo $register->getElement('stu_name');?></div>
-								<?php //echo $register->getElement('old_stu_name'); ?>
-								<?php //$register->getElement('stu_name');?>
+								
+								<div id="drop_stu_name"><input id="drop_student_name" /></div>
 							</td>
 						</tr>
 						<tr>
@@ -1034,25 +1097,41 @@ function CheckAmount(){
 
 function changControll(){
 	student_type=dijit.byId('student_type').get('value');
-	 if(student_type==3){
+	if(student_type==3){
 		 document.getElementById('student_old').style.display="block";
 		 document.getElementById('student_old_name').style.display="block";
 		 document.getElementById('id_stu').style.display="none";
 		 document.getElementById('name_stu').style.display="none";
+		 document.getElementById('drop_stu_code').style.display="none";
+		 document.getElementById('drop_stu_name').style.display="none";
 		 clearControll();
-	}else{
+	}else if(student_type==1){
 		 document.getElementById('student_old').style.display="none";
 		 document.getElementById('student_old_name').style.display="none";
 		 document.getElementById('id_stu').style.display="block";
 		 document.getElementById('name_stu').style.display="block";
+		 document.getElementById('drop_stu_code').style.display="none";
+		 document.getElementById('drop_stu_name').style.display="none";
+		 clearControll();
+	}else if(student_type==4){
+		 document.getElementById('student_old').style.display="none";
+		 document.getElementById('student_old_name').style.display="none";
+		 document.getElementById('id_stu').style.display="none";
+		 document.getElementById('name_stu').style.display="none";
+		 document.getElementById('drop_stu_code').style.display="block";
+		 document.getElementById('drop_stu_name').style.display="block";
 		 clearControll();
 	} 
 }
 
-function setID(){
-	stu_id = dijit.byId('old_stu_name').get('value');
-	//alert(stu_id);
-	dijit.byId('old_studens').attr('value',stu_id);
+function setID(type){
+	if(type==1){
+		stu_id = dijit.byId('old_stu_name').get('value');
+		dijit.byId('old_studens').attr('value',stu_id);
+	}else{
+		stu_id = dijit.byId('drop_student_name').get('value');
+		dijit.byId('drop_studens').attr('value',stu_id);
+	}
 }
 
 //
@@ -1063,52 +1142,67 @@ function clearControll(){
 ///get Gerneral old student
 function getGeneralOldStudentById(){
 	var url_getalldstudent = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-general-old-student')); ?>';
-	student_id=dijit.byId('old_studens').get('value');
+	
 	dijit.byId('kh_name').attr('value','');
 	dijit.byId('en_name').attr('value','');
 	dijit.byId('sex').attr('value','');
 	dijit.byId('dept').attr('value','');
 	dijit.byId('grade').attr('value','');
+
+	dijit.byId('old_degree').attr('value','');
+	dijit.byId('old_grade').attr('value','');
+
+	stu_type = dijit.byId('student_type').get('value');
+	if(stu_type!=1){
+
+		if(stu_type==3){
+			student_id=dijit.byId('old_studens').get('value');
+			dijit.byId('old_stu_name').attr('value',student_id);
+		}else{
+			student_id=dijit.byId('drop_studens').get('value');
+			dijit.byId('drop_student_name').attr('value',student_id);
+		}
+		if(student_id>0){
+			dojo.xhrPost({
+				url:url_getalldstudent,
+				content:{
+					'student_id':student_id,
+					},
+				handleAs:"json",
+				load: function(data) {
+					  if(data){
+				    	dijit.byId('kh_name').attr('value',data.stu_khname);
+				    	dijit.byId('en_name').attr('value',data.stu_enname);
+				    	dijit.byId('sex').attr('value',data.sex);
+				    	dijit.byId('dept').attr('value',data.degree);
+				    	dijit.byId('session').attr('value',data.session);
 	
-	dijit.byId('old_stu_name').attr('value',student_id);
-		dojo.xhrPost({
-			url:url_getalldstudent,
-			content:{
-				'student_id':student_id,
+						dijit.byId('old_stu_code').attr('value',data.stu_code);
+						dijit.byId('old_degree').attr('value',data.degree);
+						dijit.byId('old_grade').attr('value',data.grade);
+						
+				    	dijit.byId('dob').attr('value',data.dob);
+				    	dijit.byId('phone').attr('value',data.tel);
+				    	dijit.byId('address').attr('value',data.address);
+				    	
+				    	dijit.byId('study_year').attr('value',data.academic_year);
+	
+				    	if(data.room==null){
+				    		room=-1;
+				    	}else{
+							room = data.room;
+				    	}
+				    	dijit.byId('room').attr('value',room);
+				    	getallModel(data.degree,data.grade);
+				    	
+				      } 
 				},
-			handleAs:"json",
-			load: function(data) {
-				  if(data){
-			    	dijit.byId('kh_name').attr('value',data.stu_khname);
-			    	dijit.byId('en_name').attr('value',data.stu_enname);
-			    	dijit.byId('sex').attr('value',data.sex);
-			    	dijit.byId('dept').attr('value',data.degree);
-			    	dijit.byId('session').attr('value',data.session);
-
-					dijit.byId('old_stu_code').attr('value',data.stu_code);
-					dijit.byId('old_degree').attr('value',data.degree);
-					dijit.byId('old_grade').attr('value',data.grade);
-					
-			    	dijit.byId('dob').attr('value',data.dob);
-			    	dijit.byId('phone').attr('value',data.tel);
-			    	dijit.byId('address').attr('value',data.address);
-			    	
-			    	dijit.byId('study_year').attr('value',data.academic_year);
-
-			    	if(data.room==null){
-			    		room=-1;
-			    	}else{
-						room = data.room;
-			    	}
-			    	dijit.byId('room').attr('value',room);
-			    	getallModel(data.degree,data.grade);
-			    	
-			      } 
-			},
-			error: function(err) {
-				//alert(err);
-			}
-		});
+				error: function(err) {
+					//alert(err);
+				}
+			});
+		}
+	}
 }
 
 
@@ -1207,19 +1301,21 @@ function oldStudentChangeDegree(){
 	old_degree = dijit.byId('old_degree').get('value');
 	degree = dijit.byId('dept').get('value');
 	
-	if(student_type==3 ){
+	if(student_type!=1 ){
 		if(old_degree!=degree){
-		 document.getElementById('student_old').style.display="none";
-		 //document.getElementById('student_old_name').style.display="none";
-		 document.getElementById('id_stu').style.display="block";
-		 //document.getElementById('name_stu').style.display="block";
-		 //clearControll();
-		 }
-		else{
-			 document.getElementById('student_old').style.display="block";
-			 //document.getElementById('student_old_name').style.display="block";
-			 document.getElementById('id_stu').style.display="none";
-			 //document.getElementById('name_stu').style.display="none";
+			 document.getElementById('student_old').style.display="none";
+			 document.getElementById('id_stu').style.display="block";
+			 document.getElementById('drop_stu_code').style.display="none";
+		}else{
+			if(student_type==3){
+				 document.getElementById('student_old').style.display="block";
+				 document.getElementById('id_stu').style.display="none";
+				 document.getElementById('drop_stu_code').style.display="none";
+			}else{
+				 document.getElementById('student_old').style.display="none";
+				 document.getElementById('id_stu').style.display="none";
+				 document.getElementById('drop_stu_code').style.display="block"; 
+			}
 		} 
 	}
 }

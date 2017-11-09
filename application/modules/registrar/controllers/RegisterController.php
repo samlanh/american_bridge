@@ -42,7 +42,7 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     		//$rs_rows = $glClass->getGetPayTerm($rs_rows, BASE_URL );
     		$list = new Application_Form_Frmtable();
     		$collumns = array("STUDENT_ID","NAME_KH","NAME_EN","SEX","DEGREE","CLASS","RECEIPT_NO",
-    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER");
+    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'register','action'=>'edit',
     		);
@@ -126,6 +126,7 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
     		$_data['pay_id']=$id;
+    		//print_r($_data);exit();
     		try {
     			$db = new Registrar_Model_DbTable_DbRegister();
     			$db->updateRegister($_data);

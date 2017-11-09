@@ -52,7 +52,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    		
 			    	spd.`start_date`,
 			    	spd.`validate`,
-			    	spd.`payment_term`
+			    	spd.`payment_term`,
+			    	spd.is_complete,
+			    	spd.qty
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
@@ -62,6 +64,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=6
 			    	AND spd.`service_id`=4
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     	 
@@ -154,7 +157,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 					
 					spd.`start_date`,
 					spd.`validate`,
-					spd.`payment_term`
+					spd.`payment_term`,
+					spd.is_complete,
+					spd.qty
 				FROM 
 					`rms_student_payment` AS sp,
 					`rms_student_paymentdetail` AS spd,
@@ -164,6 +169,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 					AND st.`stu_id`=sp.`student_id`
 					AND sp.`payfor_type`=2
 					AND spd.`service_id`=4
+					and sp.is_void=0
 					$branch_id
     		  ";
     	
@@ -255,7 +261,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	 
 			    	spd.`start_date`,
 			    	spd.`validate`,
-			    	spd.`payment_term`
+			    	spd.`payment_term`,
+			    	spd.is_complete,
+			    	spd.qty
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
@@ -265,6 +273,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=1
 			    	AND spd.`service_id`=4
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     
@@ -359,7 +368,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	 
 			    	spd.`start_date`,
 			    	spd.`validate`,
-			    	spd.`payment_term`
+			    	spd.`payment_term`,
+			    	spd.is_complete,
+			    	spd.qty
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
@@ -369,6 +380,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=3
 			    	AND spd.`type`=3
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     
@@ -455,7 +467,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	spd.service_id,
 			    	spd.`start_date`,
 			    	spd.`validate`,
-			    	spd.`payment_term`
+			    	spd.`payment_term`,
+			    	spd.qty,
+			    	spd.is_complete
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
@@ -465,6 +479,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=4
 			    	AND spd.`type`=5
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     
@@ -555,7 +570,8 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	spd.`validate`,
 			    	spd.`payment_term`,
 			    	spd.subtotal,
-			    	spd.paidamount
+			    	spd.paidamount,
+			    	spd.qty
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
@@ -565,6 +581,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=5
 			    	AND spd.`type`=4
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     

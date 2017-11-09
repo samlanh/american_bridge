@@ -23,6 +23,7 @@ public function init()
 					'session' 		=>'',
 					'start_date'	=> date('Y-m-d'),
 					'end_date'		=> date('Y-m-d'),
+					'stu_type' 		=>-1,
 			);
 		}
 		$form=new Registrar_Form_FrmSearchInfor();

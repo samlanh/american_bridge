@@ -17,6 +17,8 @@ class Foundation_studentDropTransportController extends Zend_Controller_Action {
 				'title'		=>'',
 				'branch'	=>'',
 				'service'	=>0,
+				'start_date'=> date('Y-m-d'),
+				'end_date'	=>date('Y-m-d'),
 			);
 		}
 		

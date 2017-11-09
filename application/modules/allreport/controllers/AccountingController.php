@@ -185,6 +185,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'start_date'=> $data['from_date'],
                         'end_date'=>$data['to_date'],
 						'service'=>$data['service'],
+						'status'=>$data['status'],
+						'payfor_type'=>$data['payfor_type'],
 				);
 			}else{
 				$search=array(
@@ -192,7 +194,9 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						'service'=>'',
-				);;
+						'status'=>'',
+						'payfor_type'=>'',
+				);
 			}
 			
 			$form=new Registrar_Form_FrmSearchInfor();
@@ -651,8 +655,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>$data['branch'],
 						'degree'		=>$data['degree_en_ft'],
 						'grade'			=>$data['grade_en_ft'],
-						'for_month'		=>$data['for_month'],
-						'for_year'		=>$data['for_year'],
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
 						'service'		=>0,
 				);
 				
@@ -665,6 +669,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'grade_en_ft'	=>0,
 						'room'			=>0,
 						'branch'		=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
 				);
 				
 				$search1=array(
@@ -674,7 +680,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'room'			=>0,
 						'branch'		=>0,
 						'for_month'		=>date("m"),
-						'for_year'		=>$data['for_year'],
+						'for_year'		=>date("Y"),
 						'service'		=>0,
 				);
 			}
@@ -728,8 +734,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>$data['branch'],
 						'degree'		=>$data['degree_kh_ft'],
 						'grade'			=>$data['grade_kh_ft'],
-						'for_month'		=>$data['for_month'],
-						'for_year'		=>$data['for_year'],
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
 						'service'		=>0,
 						);
 				
@@ -742,6 +748,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'grade_kh_ft'	=>0,
 						'room'			=>0,
 						'branch'		=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
 				);
 				
 				$search1=array(
@@ -806,7 +814,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>$data['branch'],
 						'degree'		=>$data['degree_gep'],
 						'grade'			=>$data['grade_gep'],
-						'for_month'		=>$data['for_month'],
+						'for_month'		=>date("m"),
 						'for_year'		=>date("Y"),
 						'service'		=>0,
 				);
@@ -818,6 +826,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'grade_gep'		=>0,
 						'room'			=>0,
 						'branch'		=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
 				);
 				
 				$search1=array(
@@ -875,7 +885,18 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 	public function rptTransportPaymentListAction(){
 		try{
 			if($this->getRequest()->isPost()){
-				$search=$this->getRequest()->getPost();
+				$data=$this->getRequest()->getPost();
+				
+				$search=array(
+						'txtsearch' 	=>$data['txtsearch'],
+						'room'			=>0,
+						'branch'		=>$data['branch'],
+						'degree'		=>0,
+						'grade'			=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
+						'service'		=>$data['service'],
+				);
 			}else{
 				$search=array(
 						'txtsearch' 	=>'',
@@ -893,16 +914,16 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$db = new Allreport_Model_DbTable_DbRptPaymentList();
 			$this->view->rs = $db->getAllTransportPaymentList($search);
 		
-			$this->view->total_student = $db->getAllAmountStudentByType($search,3);
+			$this->view->total_student = $db->getAllAmountServiceStudentByType($search,3,4); // 3=transport payfor_type , 4 = transport type
 				
-			$this->view->student_drop = $db->getAllAmountStudentDropByType($search,3,null); // 3 = transport payment
-			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search,3,1);
+			$this->view->student_drop = $db->getAllAmountStudentDropServiceByType($search,3,null,4); // 3 = transport payment , 4=transport type
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropServiceByType($search,3,1,4);
 			//echo " , drop = ".count($this->view->student_drop);
 				
-			$this->view->new_student = $db->getAllAmountNewStudentByType($search,3,null); // 3 = transport payment
-			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search,3,1);
+			$this->view->new_student = $db->getAllAmountNewServiceStudentByType($search,3,null,4); // 3 = transport payment , 4=transport service
+			$this->view->new_student_for_month = $db->getAllAmountNewServiceStudentByType($search,3,1,4);
 				
-			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,3,3);
+			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,3,3,4);
 			
 			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search,3,3); // payfor_type = 3 => Transport , type = 3 => Transport type
 			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search,3,3); // payfor_type = 3 => Transport , type = 3 => Transport type
@@ -927,7 +948,18 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 	public function rptStayAndLunchPaymentListAction(){
 		try{
 			if($this->getRequest()->isPost()){
-				$search=$this->getRequest()->getPost();
+				$data=$this->getRequest()->getPost();
+				
+				$search=array(
+						'txtsearch' 	=>$data['txtsearch'],
+						'room'			=>0,
+						'branch'		=>$data['branch'],
+						'degree'		=>0,
+						'grade'			=>0,
+						'for_month'		=>date("m"),
+						'for_year'		=>date("Y"),
+						'service'		=>$data['service'],
+				);
 			}else{
 				$search=array(
 						'txtsearch' 	=>'',
@@ -944,16 +976,16 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$db = new Allreport_Model_DbTable_DbRptPaymentList();
 			$this->view->rs = $db->getAllStayAndLunchPaymentList($search);
 		
-			$this->view->total_student = $db->getAllAmountStudentByType($search,4);
+			$this->view->total_student = $db->getAllAmountServiceStudentByType($search,4,5); // 4=lunch payfor_type , 5=lunch type
 			
-			$this->view->student_drop = $db->getAllAmountStudentDropByType($search,4,null); // 1 = khmer fulltime payment
-			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search,4,1);
+			$this->view->student_drop = $db->getAllAmountStudentDropServiceByType($search,4,null,5); // 4 = lunch payment , 5=lunch type
+			$this->view->student_drop_for_month = $db->getAllAmountStudentDropServiceByType($search,4,1,5);
 			//echo " , drop = ".count($this->view->student_drop);
 			
-			$this->view->new_student = $db->getAllAmountNewStudentByType($search,4,null); // 1 = khmer fulltime payment
-			$this->view->new_student_for_month = $db->getAllAmountNewStudentByType($search,4,1);
+			$this->view->new_student = $db->getAllAmountNewServiceStudentByType($search,4,null,5); // 1 = khmer fulltime payment , 5=lunch type
+			$this->view->new_student_for_month = $db->getAllAmountNewServiceStudentByType($search,4,1,5);
 			
-			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,4,5);
+			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,4,5,5);
 			
 			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search,4,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
 			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search,4,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
@@ -1277,6 +1309,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$this->view->rs = $db->getAllResultIncome($search);
 			
 			$this->view->rent_payment = $db->getAllRentPayment($search);
+			$this->view->other_income = $db->getAllOtherIncome($search);
 			
 			$this->view->search = $search;
 		}catch(Exception $e){
@@ -1403,6 +1436,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 					'degree_all' =>'',
 					'grade_all' =>'',
 					'session' =>'',
+					'start_date'=> date('Y-m-d'),
+					'end_date'	=>date('Y-m-d'),
 			);
 		}
 	
@@ -1425,6 +1460,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$search=array(
 					'title' =>'',
 					'service' =>0,
+					'start_date'=> date('Y-m-d'),
+					'end_date'	=>date('Y-m-d'),
 					'branch' =>'',
 			);
 		}
@@ -1451,6 +1488,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$search=array(
 					'title' =>'',
 					'service' =>0,
+					'start_date'=> date('Y-m-d'),
+					'end_date'	=>date('Y-m-d'),
 					'branch' =>'',
 			);
 		}
@@ -1466,5 +1505,248 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		
 		$this->view->service = $db->getAllServiceByCategory(2); // 2 = lunch service type
 	}
+
+	
+////////////////////////////////////// rpt income and expense //////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	public function rptOtherIncomeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'branch'	=>'',
+						'cate_income'	=>"",
+						'user'		=>'',
+						'start_date'=>date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptOtherIncome();
+			$abc = $this->view->row = $db->getAllOtherIncome($search);
+			
+			$_db = new Allreport_Model_DbTable_DbRptOtherExpense();
+			$this->view->income_category = $_db->getAllCategory(1);
+			//print_r($abc);exit();
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+				
+			$this->view->search = $search;
+				
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	
+	public function rptOtherExpenseAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'branch_id'	=>'',
+						'cate_expense'	=>"",
+						'user'	=>'',
+						'start_date'=>date('Y-m-d'),
+						'end_date'=>date('Y-m-d'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptOtherExpense();
+			$abc = $this->view->row = $db->getAllOtherExpense($search);
+			$this->view->expense_category = $db->getAllCategory(0);
+	
+			//print_r($abc);exit();
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+/////////////////////////////////////////////// payable next month ////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	public function rptPayableNextmonthEngFulltimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' 	=>'',
+						'grade_en_ft'	=>'',
+						'degree_en_ft'	=>'',
+						'for_month'		=>date('m'),
+						'for_year'		=>date('Y'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayableNextMonth();
+			$abc = $this->view->row = $db->getAllPayableNextMonth($search,6); // 6=payfor_type(eng fulltme) 
+				
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->all_month = $db->getAllMonth();
+			
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+				
+			$this->view->search = $search;
+				
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptPayableNextmonthKhFulltimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'grade_kh_ft'	=>'',
+						'degree_kh_ft'	=>'',
+						'for_month'	=>date('m'),
+						'for_year'	=>date('Y'),
+				);;
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayableNextMonth();
+			$abc = $this->view->row = $db->getAllPayableNextMonth($search,1); // 1=payfor_type(kh fulltme)
+	
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->all_month = $db->getAllMonth();
+				
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptPayableNextmonthEngParttimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						//'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'service'	=>'',
+						'for_month'	=>date('m'),
+						'for_year'	=>date('Y'),
+				);;
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayableNextMonth();
+			$abc = $this->view->row = $db->getAllPayableNextMonth($search,2); // 2=payfor_type(eng parttime)
+	
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->all_month = $db->getAllMonth();
+				
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptPayableNextmonthTransportAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						//'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'service'	=>'',
+						'for_month'	=>date('m'),
+						'for_year'	=>date('Y'),
+				);;
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayableNextMonth();
+			$abc = $this->view->row = $db->getAllPayableNextMonth($search,3); // 3=payfor_type(transport)
+	
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->all_month = $db->getAllMonth();
+	
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	public function rptPayableNextmonthLunchAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						//'start_date'=> date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+						'service'	=>'',
+						'for_month'	=>date('m'),
+						'for_year'	=>date('Y'),
+				);;
+			}
+			$db = new Allreport_Model_DbTable_DbRptPayableNextMonth();
+			$abc = $this->view->row = $db->getAllPayableNextMonth($search,4); // 4=payfor_type(lunch)
+	
+			$db = new Allreport_Model_DbTable_DbRptPaymentList();
+			$this->view->all_month = $db->getAllMonth();
+	
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
 	
 }

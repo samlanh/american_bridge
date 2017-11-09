@@ -27,7 +27,7 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllStudenTServicePayment($search);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("STUDENT_ID","NAME","SEX","RECEIPT_NO","SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER");
+    		$collumns = array("STUDENT_ID","NAME","SEX","RECEIPT_NO","SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'studentservicepayment','action'=>'edit',
     		);
@@ -64,8 +64,7 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
       		}
       	} catch (Exception $e) {
       		Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
-      		$err =$e->getMessage();
-      		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+      		echo $e->getMessage();exit();
       	}
       }
        $frm = new Registrar_Form_FrmStudentServicePayment();
@@ -95,10 +94,10 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
 //        print_r($db->getAllNewStudentName());exit();
        
        $this->view->old_stu_name = $db->getAllOldStudentName();
-//        print_r($db->getAllOldStudentName());exit();
-       
        $this->view->old_car_id = $db->getAllOldCarId();
-//        print_r($db->getAllOldCarId());exit();
+       
+       $this->view->drop_stu_name = $db->getAllDropStudentName();
+       $this->view->drop_car_id = $db->getAllDropCarId();
        
        
        $db = new Registrar_Model_DbTable_DbRegister();
@@ -110,7 +109,8 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
-     		$_data['id']=$id;
+     		$_data['payment_id']=$id;
+//      		print_r($_data);exit();
     		try {
     			$db = new Registrar_Model_DbTable_DbStudentServicePayment();
     			$db->updateStudentServicePayment($_data);
@@ -129,6 +129,10 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     	
     	$db = new Registrar_Model_DbTable_DbStudentServicePayment();
     	$payment=$this->view->row=$db->getStudentServicePaymentByID($id);
+    	
+    	if($payment['is_start']==0){
+    		Application_Form_FrmMessage::Sucessfull($this->tr->translate('Can note Edit'), self::REDIRECT_URL . '/studentservicepayment/index');
+    	}
     	
     	if($payment['buy_product']==1){
     		$this->view->row_product = $db->getStudentBuyProductById($id);

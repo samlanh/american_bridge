@@ -35,7 +35,8 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 			    	sp.grand_total_paid_amount,
 			    	sp.grand_total_balance,
 			    	sp.create_date,
-			    	(select CONCAT(first_name,' ',last_name) as name from rms_users where id = s.user_id) as user
+			    	(select CONCAT(first_name,' ',last_name) as name from rms_users where id = s.user_id) as user,
+			    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status
 			    FROM
 			    	rms_student AS s,
 			    	rms_student_payment AS sp
@@ -115,28 +116,66 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 			try{
-				if($data['student_type']==3){//old
-					
-					$is_new = 0;
-					
+				if($data['student_type']==1){//new
 					$this->_name = "rms_student";
+						
+					if($data['dept']<=3){
+						$stu_type=1;	 // khmer fulltime
+					}else{
+						$stu_type=2;	// english fulltime
+					}
+						
+					$arr=array(
+							'stu_code'		=>$stu_code,
+							'academic_year'	=>$data['study_year'],
+							'stu_khname'	=>$data['kh_name'],
+							'stu_enname'	=>$data['en_name'],
+							'sex'			=>$data['sex'],
 					
-					if($data['dept']<=3){ 
-						$stu_type=1;  // khmer fulltime 
+							'dob'			=>$data['dob'],
+							'tel'			=>$data['phone'],
+							'address'		=>$data['address'],
+					
+							'session'		=>$data['session'],
+							'degree'		=>$data['dept'],
+							'grade'			=>$data['grade'],
+							'room'			=>$data['room'],
+					
+							'is_stu_new' 	=>1,
+							'stu_type'		=>$stu_type,
+							'create_date'	=>date('Y-m-d H:i:s'),
+							'user_id'		=>$this->getUserId(),
+							'branch_id'		=>$data['branch'],
+							'reg_from'		=>1,
+					);
+					$id= $this->insert($arr);
+				}else {// old or drop
+						
+					$this->_name = "rms_student";
+						
+					if($data['dept']<=3){
+						$stu_type=1;  // khmer fulltime
 					}else{
 						$stu_type=2;  // english fulltime
- 					}
- 					
- 				// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
- 					if($data['old_degree']==$data['dept']){
- 						$stu_code = $data['old_stu_code'];
- 					}else{
- 						$stu_code = $register->getNewAccountNumber($data['dept'],$data['branch']);
- 					}
- 				////////////////////////////////////////////////////////////////////////
- 					
-				// update student information to grade that input					
-					$id=$data['old_studens'];
+					}
+					
+					// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
+					if($data['old_degree']==$data['dept']){
+						$stu_code = $data['old_stu_code'];
+					}else{
+						$stu_code = $register->getNewAccountNumber($data['dept'],$data['branch']);
+					}
+					////////////////////////////////////////////////////////////////////////
+					
+					// update student information to grade that input
+					if($data['student_type']==3){
+						$id = $data['old_studens'];
+						$is_comeback = 0;
+					}else{
+						$id = $data['drop_studens'];
+						$is_comeback = 1;
+					}
+					
 					$arr = array(
 							'stu_code'	=>$stu_code,
 							'session'	=>$data['session'],
@@ -145,44 +184,13 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'room'		=>$data['room'],
 							'academic_year'=>$data['study_year'],
 							'stu_type'	=>$stu_type,
-							);
+							
+							'is_subspend'=>0,
+							'is_stu_new' =>0,
+							'is_comeback'=>$is_comeback,
+					);
 					$where = ' stu_id = '.$id;
 					$this->update($arr, $where);
-					
-				}else {
-					$this->_name = "rms_student";
-					
-					$is_new = 1;
-					
-					if($data['dept']<=3){
-						$stu_type=1;	 // khmer fulltime 
-					}else{
-						$stu_type=2;	// english fulltime
-					}
-					
-				    $arr=array(
-							'stu_code'		=>$stu_code,
-							'academic_year'	=>$data['study_year'],
-							'stu_khname'	=>$data['kh_name'],
-							'stu_enname'	=>$data['en_name'],
-							'sex'			=>$data['sex'],
-				    		
-				    		'dob'			=>$data['dob'],
-				    		'tel'			=>$data['phone'],
-				    		'address'		=>$data['address'],
-				    		
-							'session'		=>$data['session'],
-							'degree'		=>$data['dept'],
-							'grade'			=>$data['grade'],
-				    		'room'			=>$data['room'],
-				    		
-						    'stu_type'		=>$stu_type,
-				    		'create_date'	=>date('Y-m-d H:i:s'),
-							'user_id'		=>$this->getUserId(),
-				    		'branch_id'		=>$data['branch'],
-				    		'reg_from'		=>1,
-					);
-			    	$id= $this->insert($arr);
 				}
 				
 				
@@ -198,6 +206,12 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					$buy_product = 1;
 				}else{
 					$buy_product = 0;
+				}
+				
+				if($data['student_type']==3){
+					$is_new = 0;
+				}else{
+					$is_new = 1;
 				}
 				
 				$this->_name='rms_student_payment';
@@ -235,7 +249,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						
 						'student_type'	=>$data['student_type'],
 						'create_date'	=>date('Y-m-d H:i:s'),
-						'payfor_type'	=>1,
+						'payfor_type'	=>$type,
 						
 						'is_new'		=>$is_new,
 						
@@ -514,9 +528,106 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 		
 		
 	function updateRegister($data){
-			$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
-			$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
-	//	print_r($data);exit();
+		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
+		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
+		
+		//	print_r($data);exit();
+		
+		try{
+			if(!empty($data['is_void'])){
+		
+				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
+					
+				$this->_name='rms_student_payment';
+					
+				$arr = array(
+						'is_void'=>$data['is_void'],
+				);
+				$where = " id = ".$data['pay_id'];
+				$this->update($arr, $where);
+		
+				///////////////////////////////// rms_student_paymentdetail ////////////////////////////////////////////
+		
+				if(!empty($data['parent_id'])){
+					$arr = array(
+							'is_start'=>1
+					);
+					$this->_name='rms_student_paymentdetail';
+					$where=" id = ".$data['parent_id'];
+					$this->update($arr,$where);
+				}
+		
+				//////////////////////// study history ///////////////////////////
+		
+				$this->_name='rms_study_history';
+		
+				$sql="select id,id_record_finished from rms_study_history where payment_id = ".$data['pay_id']." and stu_id = ".$data['old_studens'] ;
+				$result = $db->fetchRow($sql);
+				if(!empty($result['id_record_finished'])){
+						
+					$sql1 = "select * from rms_study_history where id = ".$result['id_record_finished'];
+					$row = $db->fetchRow($sql1);
+					if(!empty($row)){
+					//////////// update student info back //////////////
+						$this->_name='rms_student';
+						$arr = array(
+								'stu_type'		=>$row['stu_type'],
+								'stu_code'		=>$row['stu_code'],
+								'academic_year'	=>$row['academic_year'],
+								'degree'		=>$row['degree'],
+								'grade'			=>$row['grade'],
+								'session'		=>$row['session'],
+								'room'			=>$row['room'],
+						);
+						$where2 = " stu_id = ".$row['stu_id'];
+						$this->update($arr, $where2);
+					}
+
+					//////////////////// update old study_history to active ///////////
+					$this->_name='rms_study_history';
+					$array = array(
+							'is_finished_grade'=>0,
+							'is_finished_degree'=>0,
+					);
+					$where = " id = ".$result['id_record_finished'];
+					$this->update($array, $where);
+					
+					////////////////////////// delete new study history that voided ////////////
+					$where1 = "id = ".$result['id'];
+					$this->delete($where1);
+				}
+				
+				
+				
+				///////////////////////////////// rms_student ////////////////////////////////////////////
+		
+				if($data['student_type']==4){
+					$this->_name='rms_student';
+						
+					$arr = array(
+							'is_subspend'=>2,
+					);
+					$where = " stu_id = ".$data['old_studens'];
+					$this->update($arr, $where);
+				}
+		
+		
+		
+				////////////////////////////////////////////////////////////////////////////////////////////
+		
+				$db->commit();
+				return 0;
+					
+			}else{
+				$db->commit();
+				return 0;
+			}
+		}catch (Exception $e){
+			echo $e->getMessage();
+			$db->rollBack();
+		}
+			
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
 			
 			return false;
 			
@@ -724,6 +835,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.grade,
 				  sp.room_id,
 				  sp.buy_product,
+				  sp.is_void,
 				  
 				  sp.payment_term,
 				  sp.price_per_sec,
@@ -842,42 +954,114 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$order);
     }
  
-    //select GEP all old student
+//select GEP all old student
     function getAllGepOldStudent(){
     	$db=$this->getAdapter();
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$action = $request->getActionName();
+    	if($action == "edit"){
+    		$is_suspend = "";
+    	}else{
+    		$is_suspend = " and s.is_subspend=0 ";
+    	}
+    	
     	$sql="SELECT s.stu_id As stu_id,s.stu_code As stu_code FROM rms_student AS s
-    	      WHERE s.stu_type=2 AND s.is_subspend=0 and s.status=1 ORDER BY stu_id DESC  ";
+    	      WHERE s.stu_type=3 AND s.status=1 $is_suspend $branch_id ORDER BY stu_id DESC  ";
     	return $db->fetchAll($sql);
     }
     //select Gep old student by id 
     function getAllGepOldStudentName(){
     	$db=$this->getAdapter();
+    	
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$action = $request->getActionName();
+    	if($action == "edit"){
+    		$is_suspend = "";
+    	}else{
+    		$is_suspend = " and s.is_subspend=0 ";
+    	}
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	
     	$sql="SELECT s.stu_id As stu_id,CONCAT(s.stu_khname,'-',s.stu_enname) As name FROM rms_student AS s
-    	WHERE s.stu_type=2 AND s.is_subspend=0 and s.status=1 ORDER BY stu_id DESC ";
+    	WHERE s.stu_type=3 AND s.status=1 $is_suspend $branch_id ORDER BY stu_id DESC ";
     	return $db->fetchAll($sql);
     }
+    
     //select Gep old student by name
     function getGepOldStudent($stu_id){
     	$db=$this->getAdapter();
     	$sql="SELECT stu_id,stu_enname,stu_khname,sex,`session` As ses,degree,grade FROM rms_student 
-    	       WHERE  stu_type=2 AND stu_id=$stu_id LIMIT 1";
+    	       WHERE  stu_type=3 AND stu_id=$stu_id LIMIT 1";
     	return $db->fetchRow($sql);
     }
-    //select all Gerneral old student
+//select all Gerneral old student
     function getAllGerneralOldStudent(){
     	$db=$this->getAdapter();
-    	$sql="SELECT s.stu_id As stu_id,s.stu_code As stu_code FROM rms_student AS s
-    	WHERE s.stu_type!=2 AND s.status=1 and s.is_subspend=0 ORDER BY stu_id DESC ";
+    	
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$action = $request->getActionName();
+    	if($action == "edit"){
+    		$is_suspend = "";
+    	}else{
+    		$is_suspend = " and s.is_subspend=0 ";
+    	}
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	
+    	$sql="SELECT 
+    				s.stu_id,
+    				s.stu_code 
+    			FROM 
+    				rms_student AS s
+    			WHERE 
+    				s.stu_type!=3 
+    				AND s.status=1 
+    				$is_suspend 
+    				$branch_id  
+    			ORDER BY 
+    				stu_id DESC 
+    		";
+    	
     	return $db->fetchAll($sql);
     }
     //select general  old student by id
     
     function getAllGerneralOldStudentName(){
     	$db=$this->getAdapter();
-    	$sql="SELECT s.stu_id As stu_id,CONCAT(s.stu_enname,'-',s.stu_khname) as name FROM rms_student AS s
-    	WHERE s.stu_type!=2 ORDER BY stu_id DESC ";
+    	
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$action = $request->getActionName();
+    	if($action == "edit"){
+    		$is_suspend = "";
+    	}else{
+    		$is_suspend = " and s.is_subspend=0 ";
+    	}
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('s.branch_id');			
+    	
+    	$sql="SELECT 
+    				s.stu_id,
+    				CONCAT(s.stu_enname,'-',s.stu_khname) as name
+    			FROM 
+    				rms_student AS s
+    			WHERE 
+    				s.stu_type!=3 
+    				AND s.status=1 
+    				$is_suspend 
+    				$branch_id  
+    			ORDER BY 
+    				stu_id DESC ";
     	return $db->fetchAll($sql);
     }
+    
     //select general  old student by name
     
     function getGeneralOldStudentById($stu_id){
@@ -1034,10 +1218,151 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	$stu_code =  $db->fetchAll($sql1);
     	//return $stu_code;
     	
+    	array_unshift($stu_code, array ( 'id' => -1, 'name' => '------ select student --------') );
+    	array_unshift($stu_name, array ( 'id' => -1, 'name' => '------ select student --------') );
+    	
     	//$result = array_merge($stu_name, $stu_code);
     	
     	$result = array(0=>$stu_code, 1=>$stu_name);
     	return $result;
+    }
+    
+    function getDropStudentByBranch($branch_id){
+    	$db = $this->getAdapter();
+    	$sql="select stu_id as id , CONCAT(stu_khname,'-',stu_enname) as name from rms_student where is_subspend!=0 and status=1 and degree IN(1,2,3,4,5,6) and branch_id = $branch_id ";
+    	$stu_name =  $db->fetchAll($sql);
+    
+    	 
+    	$sql1="select stu_id as id , stu_code name from rms_student where is_subspend!=0 and status=1 and degree IN(1,2,3,4,5,6) and branch_id = $branch_id ";
+    	$stu_code =  $db->fetchAll($sql1);
+    	//return $stu_code;
+    	 
+    	//$result = array_merge($stu_name, $stu_code);
+    	
+    	array_unshift($stu_code, array ( 'id' => -1, 'name' => '------ select student --------') );
+    	array_unshift($stu_name, array ( 'id' => -1, 'name' => '------ select student --------') );
+    	 
+    	$result = array(0=>$stu_code, 1=>$stu_name);
+    	return $result;
+    }
+    
+    public function getRecieptNo($type,$branch){
+    	$db = $this->getAdapter();
+    	 
+    	if($branch>0){
+    		$branch_id = $branch;
+    	}else{
+    		$branch_id = $this->getBranchId();
+    	}
+    	 
+    	$sql="SELECT count(id) FROM rms_student_payment where payfor_type = $type and branch_id = $branch_id LIMIT 1 ";
+    	$acc_no = $db->fetchOne($sql);
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	 
+    	$pre="";
+    	 
+    	if($type==1){
+    		$pre="K";
+    	}
+    	else if($type==6){
+    		$pre="FE";
+    	}
+    	else if($type==2){
+    		$pre="PE";
+    	}
+    	else if($type==3){
+    		$pre="TR";
+    	}
+    	else if($type==4){
+    		$pre="F";
+    	}
+    	else if($type==5){
+    		$pre="";
+    	}
+    	 
+    	for($i = $acc_no;$i<6;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
+    
+    
+    function getAllDropStudentID($type){
+    	$db=$this->getAdapter();
+    
+    	//     	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	//     	$action = $request->getActionName();
+    	//     	if($action == "edit"){
+    	//     		$is_comeback = " ";
+    	//     	}else{
+    	//     		$is_comeback = " and s.is_comeback = 0 ";
+    	//     	}
+    	 
+    	if($type==1){
+    		$stu_type = " AND s.stu_type != 3";
+    	}else{
+    		$stu_type = " AND s.stu_type = 3";
+    	}
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    
+    	$sql="SELECT
+			    	s.stu_id As stu_id,
+			    	stu_code
+		    	FROM
+		    		rms_student AS s
+		    	WHERE
+			    	s.status=1
+			    	and s.is_subspend!=0
+			    	$stu_type
+			    	$branch_id
+		    	ORDER BY
+	    			stu_id DESC
+    	";
+    	 
+    	//     	echo $sql;//exit();
+    	 
+    	return $db->fetchAll($sql);
+    }
+    
+    
+    function getAllDropStudentName($type){
+    	$db=$this->getAdapter();
+    
+    	//     	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	//     	$action = $request->getActionName();
+    	//     	if($action == "edit"){
+    	//     		$is_comeback = " ";
+    	//     	}else{
+    	//     		$is_comeback = " and s.is_comeback = 0 ";
+    	//     	}
+    	 
+    	if($type==1){
+    		$stu_type = " AND s.stu_type != 3";
+    	}else{
+    		$stu_type = " AND s.stu_type = 3";
+    	}
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	 
+    	$sql="SELECT
+			    	s.stu_id As stu_id,
+			    	CONCAT(s.stu_enname,'-',s.stu_khname) as name
+			    FROM
+			    	rms_student AS s
+			    WHERE
+			    	s.status=1
+			    	and reg_from=0
+			    	and s.is_subspend!=0
+			    	$stu_type
+			    	$branch_id
+			    ORDER BY
+			    	stu_id DESC
+    		";
+    	return $db->fetchAll($sql);
     }
     
     

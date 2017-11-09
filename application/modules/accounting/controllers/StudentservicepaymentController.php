@@ -29,7 +29,7 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllStudenTServicePayment($search);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH","STUDENT_ID","NAME","SEX","RECEIPT_NO","SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER");
+    		$collumns = array("BRANCH","STUDENT_ID","NAME","SEX","RECEIPT_NO","SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(
     				'module'=>'accounting','controller'=>'studentservicepayment','action'=>'edit',
     		);
@@ -69,7 +69,7 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
 	      		echo $e->getMessage();
 	      	}
 	      }
-	       $frm = new Registrar_Form_FrmStudentServicePayment();
+	       $frm = new Accounting_Form_FrmStudentServicePayment();
 	       $frm_register=$frm->FrmRegistarWU();
 	       Application_Model_Decorator::removeAllDecorator($frm_register);
 	       $this->view->frm_register = $frm_register;
@@ -114,7 +114,10 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
-     		$_data['id']=$id;
+     		$_data['payment_id']=$id;
+     		
+     		//print_r($_data);exit();
+     		
     		try {
     			$db = new Accounting_Model_DbTable_DbStudentServicePayment();
     			$db->updateStudentServicePayment($_data);
@@ -134,10 +137,13 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     	$db = new Accounting_Model_DbTable_DbStudentServicePayment();
     	$payment=$this->view->row=$db->getStudentServicePaymentByID($id);
     	
-    	$payment_detail=$db->getStudentServicePaymentDetailByID($id);
-//     	print_r($payment);exit();
-    	$this->view->detail = $payment_detail;
+    	if($payment['buy_product']==1){
+    		$this->view->row_product = $db->getStudentBuyProductById($id);
+    	}
     	
+    	$payment_detail=$db->getStudentServicePaymentDetailByID($id);
+    	//     	print_r($payment);exit();
+    	$this->view->detail = $payment_detail;
 //     	print_r($payment);exit();
     	
     	$frm = new Accounting_Form_FrmStudentServicePayment();
@@ -152,13 +158,17 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     	array_unshift($service, array ( 'id' => -1, 'name' => 'Select Service') );
     	$this->view->service = $service;
     	
+    	$this->view->all_stu_name =  $db->getAllStudentName();
+    	$this->view->old_stu_name = $db->getAllOldStudentName();
+    	$this->view->old_car_id = $db->getAllOldCarId();
+    	
     	$db = new Application_Model_DbTable_DbGlobal();
     	$abc=$this->view->payment_term = $db->getAllPaymentTerm();
     	$this->view->branch_id = $db->getAllBranch();
     	
-//     	$_model = new Application_Model_GlobalClass();
-//     	$this->view->all_service = $_model->getAllServiceItemOption(2);
-    	
+    	$db = new Registrar_Model_DbTable_DbCourStudey();
+    	$this->view->all_product = $db->getAllProduct();
+    	$this->view->exchange_rate = $db->getExchangeRate();
     	
     }
     function getGradeAction(){
@@ -314,7 +324,15 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     	}
     }
     
-    
+    function getDropStudentByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbStudentServicePayment();
+    		$drop_student = $db->getAllDropStudent($data['branch_id']);
+    		print_r(Zend_Json::encode($drop_student));
+    		exit();
+    	}
+    }
     
     
     

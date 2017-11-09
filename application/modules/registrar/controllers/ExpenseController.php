@@ -21,6 +21,7 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     			$formdata = array(
     					"adv_search"=>'',
     					"category"=>'',
+    					"branch"=>'',
     					"currency_type"=>-1,
     					"status"=>-1,
     					'start_date'=> date('Y-m-d'),
@@ -32,11 +33,11 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("RECEIPT_NO","EXPENSE_TITLE","CATEGORY_EXPEND","CURRENCY_TYPE","TOTAL_EXPENSE","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_ID","RECEIPT_NO","EXPENSE_TITLE","CATEGORY_EXPENSE","CURRENCY_TYPE","TOTAL_EXPENSE","NOTE","DATE","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'expense','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('title'=>$link,'invoice'=>$link,'total_amount'=>$link));
+    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch'=>$link,'title'=>$link,'invoice'=>$link,'total_amount'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		echo $e->getMessage();
@@ -68,6 +69,13 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     	$frm = $pructis->FrmAddExpense();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
+    	
+    	$_dbs = new Application_Model_DbTable_DbGlobal();
+    	$cate_income = $_dbs->getCategoryName(0);
+    	array_unshift($cate_income, array('id'=>'-1','name'=>'បន្ថែមថ្មី'));
+    	array_unshift($cate_income, array('id'=>'0','name'=>'Select Category'));
+    	$this->view->cate_expense = $cate_income;
+    	
     }
  
     public function editAction()
@@ -94,7 +102,11 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
 		
-    	
+    	$_dbs = new Application_Model_DbTable_DbGlobal();
+    	$cate_income = $_dbs->getCategoryName(0);
+    	array_unshift($cate_income, array('id'=>'-1','name'=>'បន្ថែមថ្មី'));
+    	array_unshift($cate_income, array('id'=>'0','name'=>'Select Category'));
+    	$this->view->cate_expense = $cate_income;
     }
 
 }

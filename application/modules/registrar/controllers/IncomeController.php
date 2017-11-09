@@ -31,11 +31,11 @@ class Registrar_IncomeController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("RECEIPT_NO","INCOME_TITLE","CATEGORY_INCOME","CURRENCY_TYPE","TOTAL_INCOME","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_ID","RECEIPT_NO","INCOME_TITLE","CATEGORY_INCOME","CURRENCY_TYPE","TOTAL_INCOME","NOTE","DATE","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'income','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('title'=>$link,'invoice'=>$link,'total_amount'=>$link));
+    		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch'=>$link,'title'=>$link,'invoice'=>$link,'total_amount'=>$link,'cate_name'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -52,7 +52,7 @@ class Registrar_IncomeController extends Zend_Controller_Action
 			$data=$this->getRequest()->getPost();	
 			$db = new Registrar_Model_DbTable_DbIncome();				
 			try {
-				$db->addexpense($data);
+				$db->addIncome($data);
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/income");
 				}else{
@@ -68,6 +68,12 @@ class Registrar_IncomeController extends Zend_Controller_Action
     	$frm = $pructis->FrmAddExpense();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
+    	
+    	$_dbs = new Application_Model_DbTable_DbGlobal();
+    	$cate_income = $_dbs->getCategoryName(1);
+    	array_unshift($cate_income, array('id'=>'-1','name'=>'បន្ថែមថ្មី'));
+    	array_unshift($cate_income, array('id'=>'0','name'=>'Select Category'));
+    	$this->view->cate_income = $cate_income;
     }
  
     public function editAction()
@@ -85,7 +91,7 @@ class Registrar_IncomeController extends Zend_Controller_Action
 		}
 		$id = $this->getRequest()->getParam('id');
 		$db = new Registrar_Model_DbTable_DbIncome();
-		$row  = $db->getexpensebyid($id);
+		$row  = $db->getIncomeById($id);
 		$this->view->row = $row;
 		
     	$pructis=new Registrar_Form_Frmexpense();
@@ -93,7 +99,11 @@ class Registrar_IncomeController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
 		
-    	
+    	$_dbs = new Application_Model_DbTable_DbGlobal();
+    	$cate_income = $_dbs->getCategoryName(1);
+    	array_unshift($cate_income, array('id'=>'-1','name'=>'បន្ថែមថ្មី'));
+    	array_unshift($cate_income, array('id'=>'0','name'=>'Select Category'));
+    	$this->view->cate_income = $cate_income;
     }
     
     function getRateAction(){
@@ -108,7 +118,15 @@ class Registrar_IncomeController extends Zend_Controller_Action
     }
     
     
-    
+    function addCateIncomeAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Registrar_Model_DbTable_DbIncome();
+    		$cate_income = $db->addNewCateIncome($data);
+    		print_r(Zend_Json::encode($cate_income));
+    		exit();
+    	}
+    }
     
 
 }

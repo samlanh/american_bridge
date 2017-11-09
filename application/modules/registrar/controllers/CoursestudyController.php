@@ -35,7 +35,7 @@ class Registrar_CoursestudyController extends Zend_Controller_Action {
     		//$rs_rows = $glClass->getGetPayTerm($rs_rows, BASE_URL );
     		$list = new Application_Form_Frmtable();
     		$collumns = array("STUDENT_ID","NAME_KH","NAME_EN","SEX","DEGREE","CLASS","RECEIPT_NO",
-    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER");
+    				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'coursestudy','action'=>'edit',
     		);
@@ -92,15 +92,18 @@ class Registrar_CoursestudyController extends Zend_Controller_Action {
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
-    		$_data['id']=$id;
+    		$_data['payment_id']=$id;
+    		
+    		//print_r($_data);exit();
+    		
     		try {
     			$db = new Registrar_Model_DbTable_DbCourStudey();
     			if(isset($_data['save_new'])){
     				$db->updateStudentGep($_data);
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('EDIT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
     			}else{
     				$db->updateStudentGep($_data);
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('EDIT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
     			}
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));

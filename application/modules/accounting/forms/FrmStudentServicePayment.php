@@ -128,7 +128,7 @@ Class Accounting_Form_FrmStudentServicePayment extends Zend_Dojo_Form {
 				'style'=>'color:red;'
 				));
 		$reciept=new Registrar_Model_DbTable_DbRegister();
-		$opt=$reciept->getRecieptNo();
+		$opt=$reciept->getRecieptNo(3,0);
 		$_invoice_no->setValue($opt);
 		
 		$generation = new Zend_Dojo_Form_Element_FilteringSelect('study_year');
