@@ -11,11 +11,12 @@ class Home_IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-    	if($this->getRequest()->isPost()){
-    		$post = $this->getRequest()->getPost();
-    		print_r($post);exit();
-    	}
-       //$this->_helper->layout()->disableLayout();
+    	$search = array(
+    			'end_date' => date("Y-m-d"),
+    			'service'  => "",
+    			);
+    	$db = new Registrar_Model_DbTable_DbRptStudentNearlyEndService();
+    	$abc = $this->view->row = $db->getAllStudentNearlyEndService($search);
     }
 
     public function viewAction()

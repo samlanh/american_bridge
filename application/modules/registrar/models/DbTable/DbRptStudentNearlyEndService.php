@@ -23,6 +23,8 @@ class Registrar_Model_DbTable_DbRptStudentNearlyEndService extends Zend_Db_Table
 				  (select ser.stu_code from rms_service as ser where ser.stu_id= sp.student_id and ser.type=5 limit 1) as lunch_code,
 				  
 				  CONCAT(s.stu_khname,' - ',s.stu_enname) AS name,
+				  s.stu_khname,
+				  s.stu_enname,
 				  (select name_en from rms_view where rms_view.type=2 and key_code=s.sex )AS sex,
 				  s.tel,
 				  
@@ -45,12 +47,13 @@ class Registrar_Model_DbTable_DbRptStudentNearlyEndService extends Zend_Db_Table
     			  $branch_id
     		";
     	
-    	$where=" ";
-    	$order=" ORDER by spd.`validate` DESC ";
-    	$str_next = '+1 week';
-     	$search['end_date']=date("Y-m-d", strtotime($search['end_date'].$str_next));
-      	$to_date = (empty($search['end_date']))? '1': " spd.validate <= '".$search['end_date']." 23:59:59'";
-      	$where .= " AND ".$to_date;
+	    	$where=" ";
+	    	$order=" ORDER by spd.`validate` DESC ";
+	    	$str_next = '+1 week';
+	     	$search['end_date']=date("Y-m-d", strtotime($search['end_date'].$str_next));
+	      	$to_date = (empty($search['end_date']))? '1': " spd.validate <= '".$search['end_date']." 23:59:59'";
+	      	$where .= " AND ".$to_date;
+	      	
     		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
