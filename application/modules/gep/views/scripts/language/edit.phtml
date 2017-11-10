@@ -1,0 +1,54 @@
+
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('EDIT_DEGREE_LANGUAGE')); 
+	echo $this->headTitle(''); 
+	
+?>	
+
+<?php 
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+
+<form id="add_language" dojoType="dijit.form.Form" method="post">
+		<table cellspacing="10" width="50%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<legend align="center" style="font-size: 16px;"><strong><?php echo $tr->translate("EDIT_DEGREE_LANGUAGE");?></strong></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px" ><?php echo $tr->translate("LANGUAGE_LEVEL")?></td>
+							<td><input class="fullside" tabindex="1" value="<?php echo $this->rr['title']?>" dojoType="dijit.form.ValidationTextBox" name="language_title" id="language_title" type="text" required="required" /></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DISCRIPTION")?></td>
+							<td>
+								<textarea class="fullside"  style=" height: 60px !important;"
+										tabindex="2"  id="note" name="note"><?php echo $this->rr['note']?></textarea>
+									
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("STATUS")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="status" id="status" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1" <?php if($this->rr['status']==1){{ echo "selected='selected'"; }} ?>><?php echo $this->translate("ប្រើប្រាស់")?></option>
+										    <option value="0" <?php if($this->rr['status']==0){{ echo "selected='selected'"; }} ?>><?php echo $this->translate("មិនប្រើប្រាស់")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+								<input iconClass="dijitIconUndo" type="button" value="back" label="<?php echo $tr->translate("GO_BACK")?>" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'foundation','controller'=>"language",'action'=>'index'),null,true); ?>';" />
+								<input type="submit" value="save" name="save" label="<?php echo $tr->translate("GO_EDIT")?>" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+</form>

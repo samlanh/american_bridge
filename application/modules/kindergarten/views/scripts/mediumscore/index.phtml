@@ -1,0 +1,38 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("ADD_SCORE"));
+?>	
+<script type="text/javascript">
+dojo.require("dojo.data.ObjectStore");
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dojo.store.Memory");
+dojo.require("dojo.data.ObjectStore");
+dojo.require('dojox.form.BusyButton');
+dojo.ready(function(){
+	//control study year
+		var group_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->g_all_name));?> );
+		new dijit.form.FilteringSelect({
+		    store:group_store,
+		    autoComplete: true,                        
+		    required:false,
+		    id: "group_name",
+		    name: "group_name",  
+		    value:'<?php echo $this->g_name['group_name'];?>',         
+		    required:'true',
+		    placeHolder:"Selected Group Name",          
+		    onChange: function() {  
+		    	//getGroupName();
+		    }
+		}, "group_name");
+});
+</script>
+<form  action="<?php echo $this->url(array('module'=>'foundation','controller'=>'studentscores','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+	<div dojoType="dijit.layout.AccordionPane">
+      <input id="group_name" />
+	 <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	</div>
+</form>
+<?php 
+
+  echo $this->list;
+?>

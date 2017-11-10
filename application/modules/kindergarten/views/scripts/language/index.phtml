@@ -1,0 +1,9 @@
+
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('DEGREE_LANGUAGE')); 
+	echo $this->headTitle(''); 
+?>	
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'foundation','controller'=>'language','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+<?php echo $this->list;?>
+</form>

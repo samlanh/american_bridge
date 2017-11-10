@@ -1,0 +1,257 @@
+<?php 
+	$frm_student = $this->frm_student;
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<form id="add_student" dojoType="dijit.form.Form" method="post">
+		<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+		</script>
+				<table width="100%">
+					<tr>
+						<td>
+						 <div id="mainTabContainer" style="width: 1150px;height: 350px;" dojoType="dijit.layout.TabContainer" region="center" width="1000px !importand" >
+					      <div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("STUDENT_INFO");?>" selected="true">
+					      	<table cellspacing="5" style="margin:0 auto;" width="100%">
+					      		<tr>
+					      			<td  title="ឈ្មោះជាភាសារខ្មែរ"><?php echo $tr->translate("NAME_KH");?>*</td>
+									<td><input tabindex="15" dojoType="dijit.form.TextBox"  id="name_kh" name="name_kh" value="" type="text" required="required"></td>	
+									<td  title="ឈ្មោះជាភាសារអង់គ្លេស"><?php echo $tr->translate("NAME_EN");?>*</td>
+									<td><input tabindex="15" dojoType="dijit.form.TextBox"  id="name_en" name="name_en" value="" type="text" required="required"></td>
+									<td title="បញ្ជូលភេទនិស្សិត"><?php echo $tr->translate("SEX");?>*</td>
+									<td>
+									    <select tabindex="24" name="sex" id="sex" dojoType="dijit.form.FilteringSelect" >
+										    <option value="1" label="Active">Male</option>
+										    <option value="2" label="Deactive">Female</option>
+										</select>
+									</td>
+					      		</tr>
+					      		<tr>
+									<td title="សញ្ឃាតិ"><?php echo $tr->translate("សញ្ជាតិ");?>*</td>
+									<td>
+									    <select tabindex="24" name="national" id="national" dojoType="dijit.form.FilteringSelect" >
+										    <option value="1" label="Active">Khemr</option>
+										    <option value="2" label="Deactive">English</option>
+										</select>
+									</td>
+									<td title="ថ្ងៃខែឆ្នាំកំនើត"><?php echo $tr->translate("DOB");?>*</td>
+									<td><input tabindex="20"  name="date_of_birth" id="date_of_birth" dojoType="dijit.form.DateTextBox"  value="now" type="text"/></td>
+									<td title="ទីកន្លែងកំណើត"><?php echo $tr->translate("ទីកន្លែងកំណើត");?>*</td>
+									<td><input tabindex="15" dojoType="dijit.form.TextBox"  id="place_of_birth" name="place_of_birth" value="" type="text" ></td>
+					      		</tr>
+					      		<tr>
+									<td title="ថ្ងៃខែឆ្នាំកំនើត"><?php echo $tr->translate("អាសយដ្ធានបច្ខុប្បន្ន");?>*</td>
+									<td><input  dojoType="dijit.form.TextBox"  id="address_now" name="address_now" value="" type="text" ></td>
+									<td title="បញ្ជូលលេខសំគាល់និស្សិត"><?php echo $tr->translate("PHONE");?>*</td>
+									<td><input  dojoType="dijit.form.TextBox"  id="phone" name="phone" value="" type="text" ></td>
+									<td></td>
+									<td></td>
+					      		</tr>
+					      		<tr>
+					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong>ព័ត៏មានសិក្សានៅមហាវិទ្យាល័យ</strong></td>
+					      		</tr>
+					      		<tr>
+					      			<td title="បញ្ជូលលេខសំគាល់និស្សិត"><?php echo $tr->translate("STUDENT_ID");?>*</td>
+									<td><input  dojoType="dijit.form.TextBox"  id="student_id" name="student_id" value="" type="text" ></td>
+									<td><?php echo $tr->translate("DEGREE");?>*</td>
+									<td><select tabindex="24" name="degree" id="degree" dojoType="dijit.form.FilteringSelect" >
+										    <option value="1" label="Active">បឋមសិក្សា</option>
+										    <option value="2" label="Deactive">មធ្យមសិក្សាបឋមភូមិ</option>
+										    <option value="2" label="Deactive">មធ្យមសិក្សាទុតិយភូមិ</option>
+										</select>
+									</td>
+									<td><?php echo $tr->translate("BATCH");?>*</td>
+									<td><?php echo $frm_student->getElement('batch');?></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("FACULTIES");?>*</td>
+									<td><?php echo $frm_student->getElement('dept');?></td>
+									<td><?php echo $tr->translate("MAJOR_C");?>*</td>
+									<td><input id="major" /><?php //echo $frm_student->getElement('major');?></td>
+									<td><?php echo $tr->translate("YEAR");?>*</td>
+									<td><?php echo $frm_student->getElement('year');?></td>
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("SEMESTER");?>*</td>
+									<td><?php echo $frm_student->getElement('semester');?></td>
+									<td><?php echo $tr->translate("SESSION");?>*</td>
+									<td><?php echo $frm_student->getElement('session');?></td>
+									<td>scholarship</td>
+									<td><input id="scholarship" /></td>
+								</tr>
+					      	</table>
+					      </div><!-- end tab 1 -->
+					      <div class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("STUDNET_EDUCATION");?>" selected="false">
+					     	<table width="100%" style="margin:0 auto;" cellspacing="5">
+					      		<tr>
+					      			<td width="12%"><?php echo $tr->translate("FATHER_TEL");?>*</td>
+									<td><?php echo $frm_student->getElement('father_phone');?></td>
+									<td ><?php echo $tr->translate("MOTHER_TEL");?>*</td>
+									<td><?php echo $frm_student->getElement('mother_phone');?></td>
+									<td><?php echo $tr->translate("SITUATION");?>*</td>
+									<td><input id="situation" /><?php //echo $frm_student->getElement('situation');?></td>
+					      		</tr>
+					      		<tr>
+					      			<td><?php echo $tr->translate("POB");?>*</td>
+									<td><?php echo $frm_student->getElement('pob');?></td>
+									<td><?php echo $tr->translate("ADD_STUDENT");?>*</td>
+									<td><?php echo $frm_student->getElement('student_add');?></td>
+									<td><?php echo $tr->translate("COMPOSITION");?>*</td>
+									<td><input id="composition" /><?php //echo $frm_student->getElement('composition');?></td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border-bottom:1px solid #ccc;"><strong>ព័ត៏មានមធ្យមសិក្សា</strong></td>
+								</tr>
+					      		<tr>
+									<td><?php echo $tr->translate("BACC_EXAME");?>*</td>
+									<td><?php echo $frm_student->getElement('finish_bacc');?></td>
+									<td><?php echo $tr->translate("CERTIFICATE_CODE");?>*</td>
+									<td><?php echo $frm_student->getElement('certificate_code');?></td>
+									<td><?php echo $tr->translate("SCROE");?>*</td>
+									<td><?php echo $frm_student->getElement('bacc_score');?></td>
+					      		</tr>
+					      		<tr>
+					      			<td ><?php echo $tr->translate("MENTION");?>*</td>
+									<td><?php echo $frm_student->getElement('mention');?></td>
+									<td ><?php echo $tr->translate("អនាគតដ្ឋាន");?>*</td>
+									<td><?php echo $frm_student->getElement('school_location');?></td>
+									<td ><?php echo $tr->translate("FROM_SCHOOL");?>*</td>
+									<td><input id="from_school" /><?php //echo $frm_student->getElement('from_school');?></td>
+					      		</tr>
+					      		<tr>
+					      			<td ><?php echo $tr->translate("STUDNET_FROM");?>*</td>
+									<td><?php echo $frm_student->getElement('student_from');?></td>
+					      			<td ><?php echo $tr->translate("REMARK");?></td>
+									<td><?php echo $frm_student->getElement('remark');?></td>
+					      			<td ><?php echo $tr->translate("STATUS");?>*</td>
+									<td><?php echo $frm_student->getElement('status');?></td>
+					      		</tr>
+					      	</table>
+					      </div>
+					   </div>
+					   </td>
+					</tr>
+					<tr>
+						<td align="center">
+					   				<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+									<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+									<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVENEW');?>" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+					   	</td>
+					  </tr>
+					  </table>
+</form>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-type="dijit.Dialog" id="pop_major" >
+		<form id='frm_major' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table class="height" >
+			<tr>
+				<td>មហាវិទ្យាល័យ</td>
+				<td><input dojoType="dijit.form.TextBox"  id="facultyid" name="facultyid" value="" type="hidden">
+				<input dojoType="dijit.form.TextBox" readonly="readonly"  id="lbl_faculty" name="lbl_faculty" value="" type="text"></td>
+				</td>
+			</tr>
+			<tr>
+				<td>ជំនាញ/EN</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" missingMessage="Invalid Module!" class="full height-text" id="major_en" name="major_en" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td>ជំនាញ/KH</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" missingMessage="Invalid Module!" class="full height-text" id="major_kh" name="major_kh" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td>អក្សរកាត់</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" class=" fullside height-text" missingMessage="ភ្លេច​បំពេញ​ពាក្យកាត់!" id="shortcut" name="shortcut" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				  	<input type="button"  label="រក្សាទុក" dojoType="dijit.form.Button" 
+				 	iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewMajor();"/>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-type="dijit.Dialog" id="pop_situation" >
+		<form id='frm_situation' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table class="height" >
+			<tr>
+				<td>វណ្ណៈក្នុងគ្រួសារ</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" id="txt_situation" name="txt_situation" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				  	<input type="button"  label="រក្សាទុក" dojoType="dijit.form.Button" 
+				 	iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addsituation();"/>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-type="dijit.Dialog" id="pop_composition" >
+		<form id='frm_composition' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table class="height" >
+			<tr>
+				<td>សមាសភាពនិស្សិត</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" id="occu_name" name="occu_name" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				  	<input type="button"  label="រក្សាទុក" dojoType="dijit.form.Button" 
+				 	iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addcomposition();"/>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-type="dijit.Dialog" id="pop_school" >
+		<form id='frm_school' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table class="height" >
+			<tr>
+				<td>ខេត្ត/រាជធានី</td>
+				<td><input dojoType="dijit.form.TextBox" readonly="readonly" id="from_province" name="from_province" value="" type="text">
+					<input dojoType="dijit.form.TextBox" id="province" name="province" value="" type="text">
+				</td>
+			</tr>
+			<tr>
+				<td>ឈ្មោះសាលា</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" id="school_name" name="school_name" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				  	<input type="button"  label="រក្សាទុក" dojoType="dijit.form.Button" 
+				 	iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addschool();"/>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-type="dijit.Dialog" id="pop_scholarship" >
+		<form id='frm_scholarship' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<table class="height" >
+			<tr>
+				<td>ឈ្មោះអាហារូបការណ៏</td>
+				<td><input dojoType="dijit.form.ValidationTextBox" required="true" id="txt_scholarship" name="txt_scholarship" value="" type="text"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				  	<input type="button"  label="រក្សាទុក" dojoType="dijit.form.Button" 
+				 	iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addscholarship();"/>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+</div>

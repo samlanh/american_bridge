@@ -1,0 +1,225 @@
+<?php 
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_GEP_REGISTRAR'));
+	//echo $this->row['grade'];
+?>
+
+<script type="dojo/method" event="onSubmit">			
+	if(this.validate()) {
+				return true;
+			} else {
+				return false;
+			}
+</script>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.CheckBox");
+
+var dept_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->all_dept));?> );
+
+
+dojo.ready(function(){
+	
+	new dijit.form.FilteringSelect({
+	    store: dept_store,
+	    autoComplete: true,                        
+	    required: true,
+	    id: "dept",
+	    name: "dept",           
+	    class: 'fullside',  
+	    placeHolder:"Selected Class",          
+	    onChange: function() {  
+	    	dept_id = dijit.byId('dept').get('value');
+	    	//dijit.byId('grade').attr('value','');
+	    	getAllGrade(dept_id); 
+	    }
+	}, "dept");
+	dijit.byId('dept').attr('value','<?php echo $this->row['degree']?>');
+	
+	new dijit.form.FilteringSelect({
+	    //store: dept_store,
+	    autoComplete: true,                        
+	    id: "grade",
+	    name: "grade",           
+	    class: 'fullside',  
+	    placeHolder:"Selected Grade",          
+	}, "grade");
+	
+
+	var grade_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var url_dept = '<?php echo $this->url(array('module'=>'gep','controller'=>'gep','action'=>'get-all-grade')); ?>';
+	function getAllGrade(dept_id){
+			dojo.xhrPost({
+				url:url_dept,
+				content:{
+					'dept_id':dept_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					grade_store  = getDataStorefromJSON('id','name', data);
+				    dijit.byId('grade').set('store',grade_store);   
+				    dijit.byId('grade').attr('value','<?php echo $this->row['grade']?>');
+				},
+				error: function(err) {
+					//alert(err);
+				}
+			});
+	}
+});
+	
+</script>
+
+<form id="edit_student" dojoType="dijit.form.Form" method="post">
+		<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				return true;
+			}else {
+				return false;
+			}
+		</script>
+				<table width="100%" >
+					<tr>
+						<td>
+						 <div id="mainTabContainer" style="width: 1150px;height: 430px;" dojoType="dijit.layout.TabContainer" region="center" width="1000px !importand" >
+					      <div  class="tabContentSection" dojoType="dijit.layout.ContentPane" title="<?php echo $tr->translate("REGISTRAR");?>" selected="true">
+					      	<table  cellspacing="5" style="margin:0 auto;" width="100%">
+					      		<tr>
+					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("STUDENT_INFO");?></strong></td>
+					      		</tr>
+					      		<tr>
+					      			<td  title="ឈ្មោះជាភាសារខ្មែរ"><?php echo $tr->translate("NAME_KH");?>*</td>
+									<td><input class="fullside" tabindex="15" dojoType="dijit.form.ValidationTextBox"  id="name_kh" name="name_kh" value="<?php echo $this->rs['stu_khname'];?>" type="text" required="required"></td>	
+									<td  title="ឈ្មោះជាភាសារអង់គ្លេស"><?php echo $tr->translate("NAME_EN");?>*</td>
+									<td><input class="fullside"  tabindex="15" dojoType="dijit.form.ValidationTextBox"  id="name_en" name="name_en" value="<?php echo $this->rs['stu_enname'];?>" type="text" required="required"></td>
+									<td title="បញ្ជូលភេទនិស្សិត"><?php echo $tr->translate("SEX");?>*</td>
+									<td>
+									    <select class="fullside"  tabindex="24" name="sex" id="sex" dojoType="dijit.form.FilteringSelect" >
+										    <option value="1" <?php if($this->rs['sex']==1){{ echo "selected='selected'"; }} ?>>Male</option>
+										    <option value="2"<?php if($this->rs['sex']==2){{ echo "selected='selected'"; }} ?>>Female</option>
+										</select>
+									</td>
+					      		</tr>
+					      		<tr>
+									<td title="សញ្ឃាតិ"><?php echo $tr->translate("NATIONALITY");?></td>
+									<td><input class="fullside"  dojoType="dijit.form.TextBox"  id="studen_national" name="studen_national" value="<?php echo $this->rs['nationality'];?>" type="text" ></td>
+									<td title="ថ្ងៃខែឆ្នាំកំនើត"><?php echo $tr->translate("DOB");?></td>
+									<td><input class="fullside"  tabindex="20"  name="date_of_birth" id="date_of_birth" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->rs['dob'];?>" type="text"/></td>
+									<td title="លេខទូរស័ព្ទ"><?php echo $tr->translate("PHONE");?></td>
+									<td><input class="fullside"  tabindex="15" dojoType="dijit.form.TextBox"  id="st_phone" name="st_phone" value="<?php echo $this->rs['tel'];?>" type="text" required="required" ></td>
+					      		</tr>
+					      		<tr>
+									<td title="ទីកន្លែងកំណើត"><?php echo $tr->translate("POB");?>*</td>
+									<td  colspan="6" >
+										<textarea class="fullside"   style="width: 100%;height: 60px !important;"
+										tabindex="21" dojoType=""  id="place_of_birth" name="place_of_birth" ><?php echo $this->rs['address'];?></textarea>
+									</td>
+					      		</tr>
+					      		<tr>
+					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("ADDRESS");?></strong></td>
+					      		</tr>
+					      		<tr>
+					      			<td><?php echo $tr->translate("HOME");?></td>
+									<td><input class="fullside"  dojoType="dijit.form.TextBox"  id="home_note" name="home_note" value="<?php echo $this->rs['home_num'];?>" ></td>
+									<td><?php echo $tr->translate("STREET");?></td>
+									<td><input class="fullside"  dojoType="dijit.form.TextBox"  id="way_note" name="way_note" value="<?php echo $this->rs['street_num'];?>" type="text" ></td>
+									<td><?php echo $tr->translate("VILLAGE");?></td>
+									<td><input class="fullside"  dojoType="dijit.form.TextBox"  id="village_note" name="village_note" value="<?php echo $this->rs['village_name'];?>" type="text" ></td>
+									
+								</tr>
+								<tr>								
+									<td><?php echo $tr->translate("COMMUNE");?></td>
+									<td><input class="fullside"  dojoType="dijit.form.TextBox"  id="commun_note" name="commun_note" value="<?php echo $this->rs['commune_name'];?>" type="text" ></td>
+									<td><?php echo $tr->translate("DISTRICT");?></td>
+									<td><input class="fullside"  dojoType="dijit.form.TextBox"  id="distric_note" name="distric_note" value="<?php echo $this->rs['district_name'];?>" type="text" ></td>
+									<td><?php echo $tr->translate("PROVINCE");?></td>
+									<td>
+										<select class="fullside"  name="student_province" id="student_province" dojoType="dijit.form.FilteringSelect"">
+											<?php if(!empty($this->province))foreach ($this->province as $row){?>
+											<option value="<?php echo $row['province_id']?>"<?php if($row['province_id']==$this->rs['province_id']) echo 'selected="selected"';?>><?php echo $row['province_en_name']?></option>
+											<?php }?>
+										</select>
+									</td>
+									
+								</tr>
+					      		
+					      		<tr>
+					      			<td colspan="6"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("STUDY_INFO");?></strong></td>
+					      		</tr>
+					      		<tr>
+					      			<td title="បញ្ជូលលេខសំគាល់និស្សិត"><?php echo $tr->translate("STUDENT_ID");?>*</td>
+									<td><input class="fullside" style="color:red;"  dojoType="dijit.form.TextBox" readonly="readonly"  id="student_id" name="student_id" value="<?php echo $this->row['stu_code']; ?>" type="text" ></td>
+									<td><?php echo $tr->translate("DEGREE");?>*</td>
+									<td>
+										<input id="dept" />
+									</td>
+									
+									<td><?php echo $tr->translate("GRADE");?>*</td>
+									<td>
+										<input id="grade" name="grade" value="<?php echo $this->rs['grade'];?>"/>
+									</td>
+									
+								</tr>
+								<tr>
+									<td><?php echo $tr->translate("SESSION");?>*</td>
+									<td>
+										 <select class="fullside"  tabindex="24" name="type_time" id="type_time" dojoType="dijit.form.FilteringSelect" >
+										    <option value="2" <?php if($this->row['type_time']==2) { echo "selected='selected'"; }?>><?php echo $tr->translate("FULL_TIME");?></option>
+										    <option value="1" <?php if($this->row['type_time']==1) { echo "selected='selected'"; }?>><?php echo $tr->translate("PART_TIME");?></option>
+										</select>
+									</td>
+								
+									<td title="ចាប់ពីម៉ោង"><?php echo $tr->translate("FROM_TIME");?>*</td>
+									<td>
+									     <select class="fullside"  tabindex="24" name="from_time" id="from_time" dojoType="dijit.form.FilteringSelect" >
+										  <?php $i=0; foreach ($this->hour As $key=>$hour){ $i++;?> 
+										    <option value="<?php echo $key?>"<?php if($key==$this->row['from_time'])echo 'selected="selected"'?>><?php echo $hour; ?></option>
+										 <?php }?>
+										</select>
+									</td>
+									<td><?php echo $tr->translate("TO_TIME");?>*</td>
+									<td>
+									    <select class="fullside"  tabindex="24" name="to_time" id="to_time" dojoType="dijit.form.FilteringSelect" >
+										  <?php $i=0; foreach ($this->hour As $key=>$hour){?> 
+										    <option value="<?php echo $key?>"<?php if($key==$this->row['to_time'])echo 'selected="selected"'?>><?php echo $hour; ?></option>
+										 <?php }?>
+										</select>
+									</td>
+									
+								
+					      		</tr>
+					      		<tr>
+					      			<td><?php echo $tr->translate("START_DATE");?></td>
+									<td ><input dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="start_date" name="start_date" value="<?php echo $this->row['start_date'];?>" type="text"></td>
+					      			
+					      			<td title="ស្ថានការណ៍"><?php echo $tr->translate("STATUS");?>*</td>
+									<td>
+										<select class="fullside"  dojoType="dijit.form.FilteringSelect" required="true"  id="status" name="status" type="text">								
+											<option value="1" <?php if($this->rs['status']==1){{ echo "selected='selected'"; }}?> ><?php echo $this->translate("Active")?></option>
+											<option value="0" <?php if($this->rs['status']==0){{ echo "selected='selected'"; }}?> ><?php echo $this->translate("Deactive")?></option>
+										</select>
+									</td>
+									<td title="ពណ៌នា"><?php echo $tr->translate("REMARK");?>*</td>
+									<td  colspan="4" >
+										<textarea class="fullside" class="fullside"   style="width: 100%;height: 60px !important;"
+										tabindex="21" dojoType=""  id="remark" name="remark" ><?php echo $this->rs['remark'];?></textarea>
+									</td>
+					      		</tr>
+					      	</table>
+					   </div>
+					   </td>
+					</tr>
+					<tr>
+						<td align="center">
+					   				<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+									<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE');?>" dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />
+								
+					   	</td>
+					  </tr>
+					  </table>
+</form>
+

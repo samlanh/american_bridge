@@ -1,0 +1,54 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate('ADD_DEGREE_LANGUAGE')); 
+	echo $this->headTitle(''); 
+	
+?>	
+
+<?php 
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+
+<form id="add_language" dojoType="dijit.form.Form" method="post" >
+		<table cellspacing="10" width="50%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<legend align="center" style="font-size: 16px;" ><strong><?php echo $tr->translate("ADD_DEGREE_LANGUAGE");?></strong></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("LANGUAGE_LEVEL")?></td>
+							<td><input class="fullside" tabindex="1" value="" dojoType="dijit.form.ValidationTextBox" name="language_title" id="language_title" type="text" required="required" /></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("DISCRIPTION")?></td>
+							<td>
+								<textarea class="fullside"   style=" height: 60px !important;"
+										tabindex="2" dojoType=""  id="note" name=note >
+								</textarea>
+									
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("STATUS")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="status_p" id="status_p" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1"><?php echo $tr->translate("Active")?></option>
+									    <option value="0"><?php echo $tr->translate("Deactive")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+								<input iconClass="dijitEditorIcon dijitEditorIconSave" type="submit" name="save_close" id="save_close" value="save_close" label="<?php echo $tr->translate("SAVE_CLOSE")?>" dojoType="dijit.form.Button"  />
+								<input type="submit" value="save_new" name="save_new" id="save_new" label="<?php echo $tr->translate("SAVE_NEW")?>" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+</form>
