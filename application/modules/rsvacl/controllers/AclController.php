@@ -79,7 +79,7 @@ class RsvAcl_AclController extends Zend_Controller_Action
     {	
     	$acl_id=$this->getRequest()->getParam('id');
     	if(!$acl_id)$acl_id=0;  
-    	   	  
+    	   	 
    		$form = new RsvAcl_Form_FrmAcl();
     	     	
     	$db = new RsvAcl_Model_DbTable_DbAcl();
@@ -91,7 +91,8 @@ class RsvAcl_AclController extends Zend_Controller_Action
     	if($this->getRequest()->isPost())
 		{
 			$post=$this->getRequest()->getPost();
-			if($rs[0]['action']==$post['action']){																			
+			
+			if($rs[0]['action']==$post['action']){	
 					$db->updateAcl($post,$rs[0]['acl_id']);
 					  //write log file 
 				             $userLog= new Application_Model_Log();

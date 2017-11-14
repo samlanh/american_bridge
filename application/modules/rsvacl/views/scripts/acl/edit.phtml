@@ -58,7 +58,34 @@
 											dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->acl_data['action'];?>"
 											missingMessage="Invalid Action!" class='fullside'/>
 										</td>
-									</tr>						
+									</tr>	
+									
+									<tr>
+										<td>Order</td>
+										<td width="200px">
+											<input type="text"  name="order" dojoType="dijit.form.NumberTextBox" value="<?php echo $this->acl_data['rank'];?>" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Type</td>
+										<td width="200px">
+											<select class="fullside" name="type" dojoType="dijit.form.FilteringSelect" >
+											    <option value="1" <?php if($this->acl_data['is_menu']==1){echo "selected='selected'";}?>>MEMU</option>
+												<option value="0" <?php if($this->acl_data['is_menu']==0){echo "selected='selected'";}?>>NOT_MENU</option>
+											</select>
+										</td>
+									</tr>
+									
+									<tr>
+										<td>Status</td>
+										<td width="200px">
+											<select class="fullside" name="status" dojoType="dijit.form.FilteringSelect" >
+											    <option value="1" <?php if($this->acl_data['status']==1){echo "selected='selected'";}?>>Active</option>
+												<option value="0" <?php if($this->acl_data['status']==0){echo "selected='selected'";}?>>Deactive</option>
+											</select>
+										</td>
+									</tr>
+														
 								</table>
 							</td>							
 						</tr>

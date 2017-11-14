@@ -250,7 +250,8 @@ class Application_Form_Frmtable
 
     		//-------------------end check select-----------------
     		$row_str.='<tr class="'.$attb.'"> ';
-    				$i=0;
+    			$i=0;
+    			if(!empty($row)){
 		  			foreach($row as $key=>$read) {
 		  				if($read==null) $read='&nbsp';
 		  				if($i==0) {
@@ -288,6 +289,7 @@ class Application_Form_Frmtable
     					}
     					$i++;
 		  			}
+    			}
  			$row_str.='</tr>';
     	}
     	$counter='<span class="row_num">'.$tr->translate('NUM-RECORD').count($rows).'</span>';

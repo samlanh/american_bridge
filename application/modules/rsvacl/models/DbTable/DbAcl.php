@@ -104,17 +104,23 @@ class RsvAcl_Model_DbTable_DbAcl extends Zend_Db_Table_Abstract
 		$data['controller']=$arr['controller'];   
 		$data['action']=$arr['action'];   	
      	$data['status']='1';
+     	$data['rank']=$arr['order'];
+     	$data['is_menu']=$arr['type'];
     	return $this->insert($data); 
 	}	
 	//update user
 	public function updateAcl($arr,$acl_id)
 	{
 		$data=array(); 	
-		//Sophen add here
 		$data['label']=$arr['label'];
 		$data['module']=$arr['module'];
 		$data['controller']=$arr['controller'];
 		$data['action']=$arr['action'];  	
+		
+		$data['status']=$arr['status'];
+		$data['rank']=$arr['order'];
+		$data['is_menu']=$arr['type'];
+		
     	$where=$this->getAdapter()->quoteInto('acl_id=?',$acl_id);
 		$this->update($data,$where); 
 	}

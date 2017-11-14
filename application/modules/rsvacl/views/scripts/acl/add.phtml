@@ -58,7 +58,33 @@
 											dojoType="dijit.form.ValidationTextBox" value=""
 											missingMessage="Invalid Action!" class='fullside'/>
 										</td>
-									</tr>						
+									</tr>	
+									
+									<tr>
+										<td>Order</td>
+										<td width="200px">
+											<input type="text"  name="order" dojoType="dijit.form.NumberTextBox" class='fullside'/>
+										</td>
+									</tr>
+									<tr>
+										<td>Type</td>
+										<td width="200px">
+											<select class="fullside" name="type" dojoType="dijit.form.FilteringSelect" >
+											    <option value="1">MEMU</option>
+												<option value="0">NOT_MENU</option>
+											</select>
+										</td>
+									</tr>
+									
+									<tr>
+										<td>Status</td>
+										<td width="200px">
+											<select class="fullside" name="status" dojoType="dijit.form.FilteringSelect" >
+											    <option value="1">Active</option>
+												<option value="0">Deactive</option>
+											</select>
+										</td>
+									</tr>					
 								</table>
 							</td>							
 						</tr>

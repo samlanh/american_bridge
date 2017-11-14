@@ -46,6 +46,11 @@ public function addAction()
     		$userAccessQuery = "SELECT user_type_id, user_type, status from rms_acl_user_type where user_type_id=".$id;
     		$rows = $db->getUserTypeInfo($userAccessQuery);
     		$this->view->rs=$rows;
+    		
+    		//////////////////////////////
+    		$db = new RsvAcl_Model_DbTable_DbUserAccess();
+    		$this->view->all_module = $db->getAllModule();
+    		$this->view->user_type = $id;
     	
     		//Add filter search
     		$gc = new Application_Model_GlobalClass();
@@ -107,20 +112,41 @@ public function addAction()
     			//Display all for admin id = 1
     			//Do not change admin id = 1 in database
     			//Otherwise, it error
-    			$sql = "select acl.acl_id,acl.label,CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access
-    			from rms_acl_acl as acl
-    			WHERE 1 " . $where;
+    			$sql = "select 
+    						acl.acl_id,
+    						acl.label,
+    						CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access ,
+    						acl.status, 
+    						acl.module, 
+    						acl.is_menu
+		    			from 
+    						rms_acl_acl as acl 
+    					WHERE 1 " . $where;
     		}
     		 
     		else {
     			//Display all of his/her parent access
-    			$sql="SELECT acl.acl_id,acl.label, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status
-    			FROM rms_acl_user_access AS ua
-    			INNER JOIN rms_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
-    			INNER JOIN rms_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ut.user_type_id =".$id . $where;
+    			$sql="SELECT 
+    					acl.acl_id,
+    					acl.label, 
+    					CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, 
+    					acl.status, 
+    					acl.module, 
+    					acl.is_menu
+    				FROM 
+    					rms_acl_user_access AS ua
+    				INNER JOIN 
+    					rms_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
+    				INNER JOIN 
+    					rms_acl_acl AS acl ON (acl.acl_id = ua.acl_id) 
+    				WHERE 
+    					ut.user_type_id = ".$id . $where;
     		}
+    		
+    		$order = " order by acl.module ASC, acl.rank ASC,acl.controller ASC,acl.is_menu DESC ";
+    		
     		//echo $sql; exit;
-    		$acl=$db_acl->getGlobalDb($sql);
+    		$acl=$db_acl->getGlobalDb($sql.$order);
     		$acl = (is_null($acl))? array(): $acl;
     		//print_r($acl);
     		$this->view->acl=$acl;		
@@ -128,25 +154,46 @@ public function addAction()
     		if(!$usernotparentid){
     			///Display only of his/her parent access	and not have user_type_id of user access in user type parent id
     			//ua.user_type_id != ut.parent_id
-    			$sql_acl = "SELECT acl.acl_id,acl.label, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status
-    			FROM rms_acl_user_access AS ua
-    			INNER JOIN rms_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
-    			INNER JOIN rms_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id . $where;
+    			$sql_acl = "SELECT 
+    							acl.acl_id,
+    							acl.label, 
+    							CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, 
+    							acl.status
+    						FROM 
+    							rms_acl_user_access AS ua
+    						INNER JOIN 
+    							rms_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
+    						INNER JOIN 
+    							rms_acl_acl AS acl ON (acl.acl_id = ua.acl_id) 
+    						WHERE 
+    							ua.user_type_id = ".$id . $where;
     		}else{
     			//Display only he / she access in rsv_acl_user_access
-    			$sql_acl = "SELECT acl.acl_id,acl.label, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status
-    			FROM rms_acl_user_access AS ua
-    			INNER JOIN rms_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
-    			INNER JOIN rms_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id . $where;
+    			$sql_acl = "SELECT 
+    							acl.acl_id,
+    							acl.label, 
+    							CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, 
+    							acl.status, 
+    							acl.status , 
+    							acl.is_menu
+    						FROM 
+    							rms_acl_user_access AS ua
+			    			INNER JOIN 
+			    				rms_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
+			    			INNER JOIN 
+    							rms_acl_acl AS acl ON (acl.acl_id = ua.acl_id) 
+    						WHERE 
+    							ua.user_type_id = ".$id . $where;
     		}
     	
-    		$acl_name=$db_acl->getGlobalDb($sql_acl);
+    		$acl_name=$db_acl->getGlobalDb($sql_acl.$order);
     		$acl_name = (is_null($acl_name))? array(): $acl_name;
     			
     		$imgnone='<img src="'.BASE_URL.'/images/icon/none.png"/>';
     		$imgtick='<img src="'.BASE_URL.'/images/icon/tick.png"/>';
     			
     		$rows= array();
+    		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     		foreach($acl as $com){
     			$img='<img src="'.BASE_URL.'/images/icon/none.png" id="img_'.$com['acl_id'].'" onclick="changeStatus('.$com['acl_id'].','.$id.');" class="pointer"/>';
     			$tmp_status = 0;
@@ -161,9 +208,11 @@ public function addAction()
     			if(!empty($status) || $status === 0){
     				if($tmp_status !== $status) continue;
     			}
-    			$rows[] = array($com['acl_id'],$com['label'], $com['user_access'], $img) ;
+    			$rows[] = array("acl_id"=>$com['acl_id'],"label"=>$tr->translate($com['label']), "url"=>$com['user_access'], "img"=>$img,"module"=>$com['module'] , "is_menu"=>$com['is_menu']) ;
     		}
     	
+    		$this->view->rows = $rows;
+    		
 //     		$list=new Application_Form_Frmlist();
     		$list = new Application_Form_Frmtable();
     		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

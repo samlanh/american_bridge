@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('Add student lunch payment')); 
+	echo $this->headTitle($tr->translate('ADD_STUDENT_LUNCH_PAYMENT')); 
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 // 	print_r($this->service);exit();
 ?>	
@@ -105,7 +105,7 @@ fieldset{  background:none;}
 	<tr>
 		<td>
 			<fieldset>
-				<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_SERVICE_PAYMENT");?></strong></legend>
+				<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_LUNCH_PAYMENT");?></strong></legend>
 				<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
 					&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" onchange="displayNoneAddRow();netTotal();" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
 					<tr>
