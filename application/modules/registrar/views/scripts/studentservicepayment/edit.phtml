@@ -72,7 +72,7 @@ fieldset{  background:none;}
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'studentservicepayment','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	
 	<script type="dojo/method" event="onSubmit">   
-
+		dijit.byId('save_close').set('disabled',true);
 		stu_type = dijit.byId('student_type').get('value');
 		if(stu_type==1){
 			stu_id = dijit.byId('student_name_new').get('value');
@@ -346,7 +346,7 @@ fieldset{  background:none;}
 					
 					<tr>
 						<td colspan="4" align="center">
-							<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
+							<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
 								iconClass="dijitEditorIcon dijitEditorIconSave" />
 								
 							<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 

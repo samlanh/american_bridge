@@ -408,14 +408,17 @@ fieldset{  background:none;}
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'register','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">   
    if(this.validate()) {
-    year = dijit.byId('study_year').get('value');
-    if(year==-1){
-         dijit.byId("study_year").focus();
-         return false;
-    }
-    return true;
+		
+		dijit.byId('save_close').set('disabled',true);
+		
+		year = dijit.byId('study_year').get('value');
+		if(year==-1){
+			 dijit.byId("study_year").focus();
+			 return false;
+		}
+		return true;
    }else {
-    return false;
+		return false;
    }
 </script>
 
@@ -472,8 +475,6 @@ fieldset{  background:none;}
 						<td>
 							<div id="student_old_name"><?php echo $register->getElement('old_stu_name');?></div>
 							<div id="name_stu"><?php echo $register->getElement('stu_name');?></div>
-							<?php //echo $register->getElement('old_stu_name'); ?>
-							<?php //$register->getElement('stu_name');?>
 						</td>
 					</tr>
 					<tr>
@@ -519,9 +520,9 @@ fieldset{  background:none;}
 					
 					<tr>
 						<td><?php echo $tr->translate("DEGREE");?><label class="red">*</label></td>
-						<td><input id="dept" /><?php //echo $register->getElement('dept');?></td>
+						<td><input id="dept" /></td>
 						<td><?php echo $tr->translate("CLASS");?><label class="red">*</label></td>
-						<td><input id="grade" /><?php //echo $register->getElement('metion');?></td>
+						<td><input id="grade" /></td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("SESSION");?></td>
@@ -529,11 +530,6 @@ fieldset{  background:none;}
 						<td style="white-space: nowrap;"><?php echo $tr->translate("TIME");?></td>
 						<td>
 							<input dojoType="dijit.form.TextBox"  class="fullside" id="study_hour" name="study_hour"  type="text">
-						<!--  <select dojoType="dijit.form.FilteringSelect" required="true" class="fullside"  id="time" name="time" type="text" onchange="paymentTerm()">								
-									<option value="2"  <?php //if($this->degree_row['time']== 2)  { echo ' selected="selected"'; } ?> ><?php //echo $tr->translate("FULL_TIME");?></option>
-									<option value="1" <?php //if($this->degree_row['time']== 1) { echo ' selected="selected"'; } ?> ><?php //echo $tr->translate("PART_TIME");?></option>
-							</select>
-						-->	
 						</td>
 					</tr>
 					<tr>
@@ -631,7 +627,7 @@ fieldset{  background:none;}
 					
 					<tr>
 						<td colspan="4" align="center">
-							<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate("GO_EDIT");?>"  dojoType="dijit.form.Button" 
+							<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate("GO_EDIT");?>"  dojoType="dijit.form.Button" 
 							 iconClass="dijitEditorIcon dijitEditorIconSave" />
 						</td>
 					</tr>

@@ -458,11 +458,10 @@ fieldset{  background:none;}
 						
 						<tr>
 							<td colspan="4" align="center">
-								<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
-								<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
-								 iconClass="dijitEditorIcon dijitEditorIconSave" />
-								<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_NEW');?>"  dojoType="dijit.form.Button" 
-								 iconClass="dijitEditorIcon dijitEditorIconSave" />
+								<input type="button" name="save_close" id="save_close" onclick="submitDataClose();" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />
+								<input type="button" name="save_new" id="save_new" onclick="submitDataAddNew();" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_NEW');?>"  dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />
 							</td>
 						</tr>
 					</table>	
@@ -475,6 +474,92 @@ fieldset{  background:none;}
 
 
 <script type="text/javascript">
+
+
+function submitDataClose(){
+	
+	if(document.getElementById('buy_product').checked){
+		condition = checkValidateAddRow();
+		if(condition==false){
+			alert("Please select service or product !!! ");
+			return false;
+		}
+	}
+		
+	if(dijit.byId('office_receipt').validate()) {
+		
+		dijit.byId('save_new').set('disabled',true);
+		dijit.byId('save_close').set('disabled',true);
+	
+		var url_submit = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentlunchpayment','action'=>'add')); ?>';
+		loading();
+		dojo.xhrPost({
+		    url: url_submit,	
+			form: dojo.byId("office_receipt"),		    
+			load: function(data) {
+				document.getElementsByClassName("overlay")[0].style.display="none";	
+				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
+				window.location.href ="<?php echo $this->baseUrl();?>/accounting/studentlunchpayment";
+			},
+			error: function(e) {
+			}
+		});
+	}
+}
+
+function submitDataAddNew(){
+	
+	if(document.getElementById('buy_product').checked){
+		condition = checkValidateAddRow();
+		if(condition==false){
+			alert("Please select service or product !!! ");
+			return false;
+		}
+	}
+	
+	if(dijit.byId('office_receipt').validate()) {
+	
+		dijit.byId('save_new').set('disabled',true);
+		dijit.byId('save_close').set('disabled',true);
+		
+		var url_submit = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentlunchpayment','action'=>'add')); ?>';
+		loading();
+		dojo.xhrPost({
+		    url: url_submit,	
+			form: dojo.byId("office_receipt"),		    
+			load: function(data) {
+				document.getElementsByClassName("overlay")[0].style.display="none";		
+				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
+				window.location.href ="<?php echo $this->baseUrl();?>/accounting/studentlunchpayment/add";
+			},
+			error: function(e) {
+			}
+		});
+	}
+}
+
+function checkValidateAddRow(){
+	var rowId = $('#identity').val();
+	//alert(rowId);
+	if(rowId!=''){
+		var rowIDArray = rowId.split(',');
+		for(var n = 0; n < rowIDArray.length; n++) {
+			product_id = dijit.byId('product_'+rowIDArray[n]).get('value');
+			if(product_id==''){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+
+function loading(){
+    document.getElementsByClassName("overlay")[0].style.display="block";
+}
+
+
+
 
 function setID(type){
 	if(type==1){
@@ -1152,3 +1237,19 @@ function displayNoneAddRow(){
 	</div>
 </div>
 
+
+<div class="overlay">
+	<div class="overlay-load">
+		<div class="overlay-msg">
+	    </div>
+	</div>
+</div>	
+<style>
+.overlay {display: none;position: absolute;width: 100%;height: 150%;top: 0px;left: 0px;background: #FCFCFC;z-index: 1001;opacity: .5;}
+.overlay-load {width: 350px;height: 100px;margin: auto;top: 0px;bottom: 0px;position: absolute;left: 0px;right: 0px;
+           text-align: center;
+           background: #fff url("<?php echo $this->baseUrl()?>/images/loading.gif") 50% 25%;
+           background-repeat: no-repeat;          
+}
+.overlay-msg{margin-bottom: 10px;bottom: 0px;position: absolute;font-style: italic;color: rgb(19, 19, 19);} 
+</style>

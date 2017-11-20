@@ -68,8 +68,8 @@ fieldset{  background:none;}
 //print_r($register);
 ?>
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'studentlunchpayment','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<script type="dojo/method" event="onSubmit">   
-
+<script type="dojo/method" event="onSubmit">  
+ 
 	stu_type = dijit.byId('student_type').get('value');
 	if(stu_type==1){
 		stu_id = dijit.byId('student_name_new').get('value');
@@ -92,7 +92,9 @@ fieldset{  background:none;}
 		dijit.byId('paid_amount').focus();
 		return false;
 	}
-    else if(this.validate()) {
+    
+	if(this.validate()) {
+		dijit.byId('save_close').set('disabled',true);
     	return true;
     }else {
     	return false;

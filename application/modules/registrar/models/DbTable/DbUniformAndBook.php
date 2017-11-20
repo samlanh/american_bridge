@@ -111,7 +111,7 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
 		
 		
 		try{
-			if($data['is_void']==1){
+			if(!empty($data['is_void'])){
 		
 				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
 					

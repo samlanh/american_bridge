@@ -67,7 +67,7 @@
 		    autoComplete: true,                        
 		    id: "old_studens",
 		    name: "old_studens", 
-		    required: true,         
+		    required: false,         
 		    class: 'fullside',  
 		    placeHolder:"----- select student id -----",          
 		    onChange: function() {  
@@ -681,6 +681,22 @@
 		}
 	}
 	
+	
+	function checkValidateAddRow(){
+		var rowId = $('#identity').val();
+		//alert(rowId);
+		if(rowId!=''){
+			var rowIDArray = rowId.split(',');
+			for(var n = 0; n < rowIDArray.length; n++) {
+				product_id = dijit.byId('product_'+rowIDArray[n]).get('value');
+				if(product_id==''){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 </script>
 <style>
 select{ width:100%;}
@@ -693,7 +709,16 @@ fieldset{  background:none;}
 	<script type="dojo/method" event="onSubmit">   
 	   if(this.validate()) {
 		    //alert(1);return false;
-		    branch_id = dijit.byId('branch').get('value');
+		    
+			condition = checkValidateAddRow();
+			if(condition==false){
+				alert("Please select service or product !!! ");
+				return false;
+			}
+			
+			dijit.byId('save_close').set('disabled',true);
+			
+			branch_id = dijit.byId('branch').get('value');
 		    if(branch_id == -1){
 				dijit.byId("branch").focus();
 				return false;
@@ -927,7 +952,7 @@ fieldset{  background:none;}
 					
 					<tr>
 						<td colspan="4" align="center">
-							<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate("SAVE_CLOSE");?>"  dojoType="dijit.form.Button" 
+							<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate("SAVE_CLOSE");?>"  dojoType="dijit.form.Button" 
 							 iconClass="dijitEditorIcon dijitEditorIconSave" />
 						</td>
 					</tr>

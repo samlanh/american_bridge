@@ -61,7 +61,9 @@ class IndexController extends Zend_Controller_Action
 					$session_user->branch_id= $user_info['branch_id'];
 					
 					$a_i = 0;
-					$arr_actin = array();					
+					$arr_actin = array();
+					$arr_module = array();
+					
 					for($i=0; $i<count($arr_acl);$i++){
 						
 						$arr_module[$i]=$arr_acl[$i]['module'];
@@ -85,15 +87,17 @@ class IndexController extends Zend_Controller_Action
 					
 					$log=new Application_Model_DbTable_DbUserLog();
 					$log->insertLogin($user_id);
-					foreach ($arr_module AS $i => $d){
-						if($d !== 'user'){
-							$url = '/' . $arr_module[2];
-						}
-						else{
-							$url = self::REDIRECT_URL;
-							break;
-						}
-					}	
+// 					if(!empty($arr_module)){ 
+// 						foreach ($arr_module AS $i => $d){
+// 							if($d !== 'user'){
+// 								$url = '/' . $arr_module[2];
+// 							}
+// 							else{
+// 								$url = self::REDIRECT_URL;
+// 								break;
+// 							}
+// 						}
+// 					}	
 					Application_Form_FrmMessage::redirectUrl("/home");	
 					exit();										
 				}

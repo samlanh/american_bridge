@@ -36,96 +36,97 @@ fieldset{  background:none;}
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'uniformandbook','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">   
    if(this.validate()) {
-    return true;
+		dijit.byId('save_close').set('disabled',true);	
+		return true;
    }else {
-    return false;
+		return false;
    }
 </script>
 <table  cellspacing="10" style="margin: 0 auto; width: 100%;">
 	<tr>
 		<td>
-		<fieldset>
-					<legend align="center"><strong style="font-size: 18px;"><?php echo $tr->translate("EDIT_STUDENT_PRODUCT_PAYMENT");?></strong></legend>
-					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" >
-						<tr>
-							<td colspan="3">
-								&nbsp;
-							</td>
-							<td>
-								<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
-							</td>
-						</tr>
-						<tr>
-							<td style="width: 12%" align="left"><?php echo $tr->translate("STUDENT_NAME");?></td>
-							<td style="width: 37%" align="center">
-								<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" name="stu_name" id="stu_name" onChange="" >
-									<option value="-1">Select Student Name</option>
-									<?php if(!empty($this->row_name)){foreach ($this->row_name as $row){?>
-									<option value="<?php echo $row['id']?>" <?php if($row['id']==$this->row['student_id']) echo 'selected="selected"' ?> ><?php echo $row['name']?></option>
-									<?php }}?>
-								</select>
-							</td>
-							
-							<td align="right" style="width: 12%"><?php echo $tr->translate("RECEIPT_NO");?></td>
-							<td style="width: 37%"><?php echo $register->getElement('reciept_no');?></td>
-						</tr>
-						<tr>
-						    <td><?php echo $tr->translate("NAME_KH");?></td>
-							<td><?php echo $register->getElement('kh_name');?></td>
-							<td align="right"><?php echo $tr->translate("NAME_EN");?></td>
-							<td ><?php echo $register->getElement('en_name');?></td>
-						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("SEX");?></td>
-							<td><?php echo $register->getElement('sex');?></td>
-						    <td align="right"><?php echo $tr->translate("PHONE");?></td>
-							<td ><?php echo $register->getElement('phone');?></td>	
-						</tr>
-						<tr>
-							<td colspan="4" align="left">
-								&nbsp;
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<table border="1" id="table_row" style="border-collapse: collapse; border:1px solid #ccc;">
-										<tr id="head-title" class="head-td" align="right"></tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
-								<input type="hidden" id="identity" name="identity" />
-								<input type="text" class="fullside" name="readmoney" id="readmoney" readonly dojoType="dijit.form.TextBox" />
-							</td>
-							<td colspan="2" align="right">
-								<table style="width:250px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
-									<tr>
-										<td ><?php echo $tr->translate("TOTAL");?></td>
-										<td align="right"><input class="fullside" type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
-									</tr>
-									<tr>	
-										<td><?php echo $tr->translate("CONVERT_TO_RIELS");?> (៛)</td>
-										<td align="right"><input  type="text" readonly="readonly"  name="convert_to_riels" id="convert_to_riels" dojoType="dijit.form.NumberTextBox" /></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4" align="center">
-								<input type="submit" name="save_new" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
-								 	iconClass="dijitEditorIcon dijitEditorIconSave" />
-									
-								<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
-									iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave('');"/> 
-							</td>
-						</tr>
-					</table>
-				<style>
-					.h{ margin-top: -8px;/*margin-left:4px;*/}
-				</style>	
-		</fieldset>		
+			<fieldset>
+				<legend align="center"><strong style="font-size: 18px;"><?php echo $tr->translate("EDIT_STUDENT_PRODUCT_PAYMENT");?></strong></legend>
+				<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" >
+					<tr>
+						<td colspan="3">
+							&nbsp;
+						</td>
+						<td>
+							<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 12%" align="left"><?php echo $tr->translate("STUDENT_NAME");?></td>
+						<td style="width: 37%" align="center">
+							<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" name="stu_name" id="stu_name" onChange="" >
+								<option value="-1">Select Student Name</option>
+								<?php if(!empty($this->row_name)){foreach ($this->row_name as $row){?>
+								<option value="<?php echo $row['id']?>" <?php if($row['id']==$this->row['student_id']) echo 'selected="selected"' ?> ><?php echo $row['name']?></option>
+								<?php }}?>
+							</select>
+						</td>
+						
+						<td align="right" style="width: 12%"><?php echo $tr->translate("RECEIPT_NO");?></td>
+						<td style="width: 37%"><?php echo $register->getElement('reciept_no');?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("NAME_KH");?></td>
+						<td><?php echo $register->getElement('kh_name');?></td>
+						<td align="right"><?php echo $tr->translate("NAME_EN");?></td>
+						<td ><?php echo $register->getElement('en_name');?></td>
+					</tr>
+					<tr>	
+						<td><?php echo $tr->translate("SEX");?></td>
+						<td><?php echo $register->getElement('sex');?></td>
+						<td align="right"><?php echo $tr->translate("PHONE");?></td>
+						<td ><?php echo $register->getElement('phone');?></td>	
+					</tr>
+					<tr>
+						<td colspan="4" align="left">
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<table border="1" id="table_row" style="border-collapse: collapse; border:1px solid #ccc;">
+									<tr id="head-title" class="head-td" align="right"></tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
+							<input type="hidden" id="identity" name="identity" />
+							<input type="text" class="fullside" name="readmoney" id="readmoney" readonly dojoType="dijit.form.TextBox" />
+						</td>
+						<td colspan="2" align="right">
+							<table style="width:250px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+								<tr>
+									<td ><?php echo $tr->translate("TOTAL");?></td>
+									<td align="right"><input class="fullside" type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
+								</tr>
+								<tr>	
+									<td><?php echo $tr->translate("CONVERT_TO_RIELS");?> (៛)</td>
+									<td align="right"><input  type="text" readonly="readonly"  name="convert_to_riels" id="convert_to_riels" dojoType="dijit.form.NumberTextBox" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" align="center">
+							<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
+								iconClass="dijitEditorIcon dijitEditorIconSave" />
+								
+							<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
+								iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave('');"/> 
+						</td>
+					</tr>
+				</table>
+			<style>
+				.h{ margin-top: -8px;/*margin-left:4px;*/}
+			</style>	
+			</fieldset>		
 		</td>
 	</tr>
 </table>	

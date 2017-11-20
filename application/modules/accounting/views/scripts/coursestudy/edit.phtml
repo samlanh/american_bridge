@@ -286,14 +286,17 @@ fieldset{  background:none;}
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'coursestudy','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">   
    if(this.validate()) {
-    year = dijit.byId('study_year').get('value');
-    if(year==-1){
-         dijit.byId("study_year").focus();
-         return false;
-    }
-    return true;
+		
+		dijit.byId('save_close').set('disabled',true);
+		
+		year = dijit.byId('study_year').get('value');
+		if(year==-1){
+			 dijit.byId("study_year").focus();
+			 return false;
+		}
+		return true;
    }else {
-    return false;
+		return false;
    }
 </script>
 	<table  cellspacing="10" style="margin: 0 auto; width: 100%;">
