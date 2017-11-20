@@ -174,7 +174,6 @@ public function addAction()
     							acl.label, 
     							CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, 
     							acl.status, 
-    							acl.status , 
     							acl.is_menu
     						FROM 
     							rms_acl_user_access AS ua

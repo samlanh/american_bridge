@@ -39,6 +39,9 @@
   $rpt_car_att = $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-att-car'), null, true);
   $rpt_lunch_att = $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-att-lunch'), null, true);
   $rpt_study_att = $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-att-study'), null, true);
+  
+  $rpt_all_student=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-all-student'), null, true);
+  $rpt_all_amount_student=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-all-amount-student'), null, true);
   ?>
   
   <div style=" width: 100%;height: 220px;">
@@ -89,6 +92,9 @@
   	    <li><a href="<?php echo $rpt_car_att;?>"><?php echo $tr->translate('CAR_ATT_RPT');?></a></li>
   		<li><a href="<?php echo $rpt_lunch_att;?>"><?php echo $tr->translate('LUNCH_ATT_RPT');?></a></li>
   		<li><a href="<?php echo $rpt_study_att;?>"><?php echo $tr->translate('STUDY_ATT_RPT');?></a></li>
+  		
+  		<li><a href="<?php echo $rpt_all_student;?>"><?php echo $tr->translate('RPT_ALL_STUDENT');?></a></li>
+  		<li><a href="<?php echo $rpt_all_amount_student;?>"><?php echo $tr->translate('RPT_ALL_AMOUNT_STUDENT');?></a></li>
   	</ul>
   </div>
   
