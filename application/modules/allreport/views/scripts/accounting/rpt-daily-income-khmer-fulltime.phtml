@@ -227,7 +227,7 @@
 											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. ចំណូលទទួលបានពីតម្លៃសិក្សាថ្នាក់ចំណេះទូទៅខ្មែរ
 										</td>
 										<td>
-											<?php echo "$ ".$total_study_fee;?>
+											<?php echo "$ ".number_format($total_study_fee,2);?>
 										</td>
 									</tr>
 									<tr class="hover">
@@ -235,7 +235,7 @@
 											II. ចំណូលទទួលបានពីតម្លៃរដ្ឋបាល
 										</td>
 										<td>
-											<?php echo "$ ".$total_admin_fee;?>
+											<?php echo "$ ".number_format($total_admin_fee,2);?>
 										</td>
 									</tr>
 									<tr class="hover">
@@ -243,7 +243,7 @@
 											I. ​ចំណូលទទួលបានពីតម្លៃកញ្ចប់សម្ភារៈសិក្សា
 										</td>
 										<td>
-											<?php echo "$ ".$total_study_material_fee;?>
+											<?php echo "$ ".number_format($total_study_material_fee,2);?>
 										</td>
 									</tr>
 									<tr class="hover">
@@ -251,7 +251,7 @@
 											I. ចំណូលទទួលបានផ្សេងៗ
 										</td>
 										<td>
-											<?php echo "$ ".$total_other_fee;?>
+											<?php echo "$ ".number_format($total_other_fee,2);?>
 										</td>
 									</tr>
 									<tr class="hover">
@@ -259,7 +259,7 @@
 											I. សរុបទឹកប្រាក់ជំពាក់ពីអតិថិជន
 										</td>
 										<td>
-											<?php echo "$ ".$total_balance;?>
+											<?php echo "$ ".number_format($total_balance,2);?>
 										</td>
 									</tr>
 									
@@ -268,7 +268,7 @@
 											ចំនួនសិស្សថ្មីសរុប
 										</td>
 										<td style="border-top:2px solid #000;">
-											<?php echo $amont_new_student;?> student(s)
+											<?php echo $amont_new_student;?> នាក់
 										</td>
 									</tr>
 									<tr class="hover">
@@ -276,7 +276,7 @@
 											ចំនួនសិស្សចាស់សរុប
 										</td>
 										<td>
-											<?php echo $amont_old_student;?> student(s)
+											<?php echo $amont_old_student;?> នាក់
 										</td>
 									</tr>
 									<tr class="hover">
@@ -284,7 +284,7 @@
 											ទឹកប្រាក់សរុបរួម
 										</td>
 										<td>
-											<?php echo "$ ".$grand_total;?>
+											<?php echo "$ ".number_format($grand_total,2);?>
 										</td>
 									</tr>
 								</table>
@@ -296,7 +296,7 @@
 											&nbsp;
 										</td>
 										<td width="40%">
-											អត្រាប្តូរប្រាក់ = <?php echo $this->rate;?> រៀល
+											អត្រាប្តូរប្រាក់ = <?php echo number_format($this->rate);?> រៀល
 										</td>
 									</tr>
 									<tr>
@@ -304,7 +304,7 @@
 											ទឹកប្រាក់សរុបរួម
 										</td>
 										<td style="border: 1px solid #000;">
-											&nbsp;<?php echo " $ ".$grand_total?>
+											&nbsp;<?php echo " $ ".number_format($grand_total,2)?>
 										</td>
 									</tr>
 									<tr>	
@@ -406,10 +406,12 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo $grand_total;?>';
+	total_amount = '<?php echo number_format($grand_total,2);?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
 	total_reil = (total_amount - amount_usd)*exchange_rate;
+
+	var total_reil = total_reil.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 	//alert(total_reil);
 	
 	dojo.byId("lb_amount_usd").innerHTML = "&nbsp;$ " + amount_usd;

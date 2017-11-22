@@ -113,7 +113,7 @@ class Registrar_uniformandbookController extends Zend_Controller_Action {
     	$payment=$db->getStudentServicePaymentDetailByID($id);
     	$this->view->rows = $payment;
     	
-//     	print_r($payment);exit();
+//     	print_r($this->view->row);exit();
     	
     	$frm = new Registrar_Form_FrmUniformAndBook();
     	$frm_register=$frm->FrmRegistarWU($payment);

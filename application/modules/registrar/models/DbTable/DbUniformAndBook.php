@@ -45,7 +45,9 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		$register = new Registrar_Model_DbTable_DbRegister();
-		$receipt_no = $register->getRecieptNo(5,0);
+		//$receipt_no = $register->getRecieptNo(5,0);
+		
+		$receipt_no = $data['receipt_no'];
 		
 		try{
 			$arr=array(
@@ -56,6 +58,8 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
 					
 					'buy_product'		=>1 ,
 					'reg_from'			=>0 ,
+					
+					'exchange_rate'		=>$data['ex_rate'],
 					
 					'grand_total_payment'			=>$data['grand_total'],
 					'grand_total_payment_in_riel'	=>$data['convert_to_riels'],

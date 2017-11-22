@@ -168,13 +168,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	function getUserEdit($id){
 		$db = $this->getAdapter();
 		$sql = "SELECT 
-					u.`first_name`, 
-					u.`last_name`, 
-					u.`user_name`, 
-					u.`user_type`, 
-					u.`active`, 
-					u.`id` 
-					
+					*
 				FROM `rms_users` AS u
 				WHERE u.id = ".$id;	
 		
@@ -219,6 +213,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			'user_name'=>$data['user_name'],
 			'password'=> MD5($data['password']),
 			'user_type'=> $data['user_type'],
+			'branch_id'=> $data['branch_id'],
 			'active'=> 1			
 	    ); 
 	    	           	    	   
@@ -232,6 +227,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			'user_name'=>$data['user_name'],
 			'password'=> MD5($data['password']),
 			'user_type'=> $data['user_type'],
+			'branch_id'=> $data['branch_id'],
 			'active'=> $data['active']			
 	    );    	   
 		

@@ -39,17 +39,13 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		$receipt = new Registrar_Model_DbTable_DbRegister();
-		$receipt_no = $receipt->getRecieptNo(3,0);
-		
-		// សិក្សាពេល User ច្រលំចុច submit 2 ដង​​ អោយវាចូលតែ1
-// 		$rs = $this->getStudentExist($data['reciept_no'],$data['studentid']);
-// 		if(!empty($rs)){
-// 			return -1;
-// 		}
+		//$receipt_no = $receipt->getRecieptNo(3,0);
+		$receipt_no = $data['reciept_no'];
 
 		$this->_name = "rms_service";
 		if($data['student_type']==1){ // new student
-			$new_car_id = $this->getNewCarId();
+			//$new_car_id = $this->getNewCarId();
+			$new_car_id = $data['new_car_id'];
 			$array = array(
 				'branch_id'=>$this->getBranchId(),
 				'type'=>4,
@@ -136,8 +132,10 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 					'buy_product'		=>$buy_product,
 					
 					//'year'				=>$data['study_year'],
+					'exchange_rate'		=>$data['ex_rate'],
 					'tuition_fee'		=>$data['service_fee'],
 					'discount_percent'	=>$data['discount'],
+					'discount_fix'		=>$data['discount_fix'],
 					'total_payment'		=>$data['total_payment'],
 					'receive_amount'	=>$data['paid_amount'],
 					'paid_amount'		=>$data['paid_amount'],
@@ -180,6 +178,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 						'fee'			=>$data['service_fee'],
 						'qty'			=>$data['qty'],
 						'discount_percent'=>$data['discount'],
+						'discount_fix'	=>$data['discount_fix'],
 						'subtotal'		=>$data['total_payment'],
 						'paidamount'	=>$data['paid_amount'],
 						'balance'		=>$balance,
@@ -218,7 +217,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 			
 	    	$db->commit();
 		}catch (Exception $e){
-			echo $e->getMessage();exit();
+			echo $e->getMessage();//exit();
 			$db->rollBack();//អោយវាវិលត្រលប់ទៅដើមវីញពេលណាវាជួបErrore
 		}
 	}

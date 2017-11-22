@@ -27,8 +27,11 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		$register = new Registrar_Model_DbTable_DbRegister();
-		$stu_code = $register->getNewAccountNumber($data['dept'],0);
-		$receipt = $register->getRecieptNo(2,0);
+// 		$stu_code = $register->getNewAccountNumber($data['dept'],0);
+// 		$receipt = $register->getRecieptNo(2,0);
+
+		$stu_code=$data['stu_id'];
+		$receipt=$data['reciept_no'];
 		
 		//print_r($this->getBranchId());exit();
 		try{
@@ -130,15 +133,17 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 					'price_per_sec'	=>$price_per_sec,
 					'amount_sec'	=>$amount_sec,
 					
-					'tuition_fee'=>$data['tuitionfee'],
-					'total_payment'=>$data['tuitionfee'] - ($data['tuitionfee']*($data['discount']/100)),
-					'discount_percent'=>$data['discount'],
-					'other_fee'=>$data['remark'],
-					'admin_fee'=>$data['addmin_fee'],
-					'total'=>$data['total'],
-					'paid_amount'=>$data['books'],
-					'receive_amount'=>$data['books'],
-					'balance_due'=>$data['remaining'],
+					'exchange_rate'		=>$data['ex_rate'],
+					'tuition_fee'		=>$data['tuitionfee'],
+					'discount_percent'	=>$data['discount'],
+					'discount_fix'		=>$data['discount_fix'],
+					'other_fee'			=>$data['remark'],
+					'admin_fee'			=>$data['addmin_fee'],
+					'total'				=>$data['total'],
+					'total_payment'		=>$data['total'],
+					'paid_amount'		=>$data['books'],
+					'receive_amount'	=>$data['books'],
+					'balance_due'		=>$data['remaining'],
 					
 					
 					'grand_total_payment'			=>$data['grand_total'],
@@ -342,6 +347,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'qty'=>$qty,
 						
 						'discount_percent'=>$discount,
+						'discount_fix'	=>$data['discount_fix'],
 						
 						'admin_fee'=>$data['addmin_fee'],
 						'other_fee'=>$data['remark'],
@@ -350,7 +356,6 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'paidamount'=>$paidamount,
 						'balance'=>$balance,
 							
-						'discount_fix'=>0,
 						'note'=>$data['not'],
 						'start_date'=>$data['start_date'],
 						'validate'=>$data['end_date'],
@@ -755,8 +760,10 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				  sp.payment_term,
 				  sp.price_per_sec,
 				  sp.amount_sec,
+				  sp.exchange_rate,
 				  sp.tuition_fee,
 				  sp.discount_percent,
+				  sp.discount_fix,
 				  sp.other_fee,
 				  sp.admin_fee,
 				  sp.total,

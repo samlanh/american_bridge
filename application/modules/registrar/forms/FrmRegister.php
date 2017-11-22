@@ -138,9 +138,8 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		
 		$_invoice_no = new Zend_Dojo_Form_Element_TextBox('reciept_no');
 		$_invoice_no->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',
-				//'onkeyup'=>'CheckReceipt()'
 				'required'=>'true',
-				'readonly'=>'true',
+				//'readonly'=>'true',
 				'style'=>'color:red;'
 				));
 		$reciept=new Registrar_Model_DbTable_DbRegister();
@@ -186,7 +185,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		
 		$_studid = new Zend_Dojo_Form_Element_TextBox('stu_id');
 		$_studid->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',
-				'style'=>'color:red;','readonly'=>'true'));
+				'style'=>'color:red;'));
 		
 		$_sex =  new Zend_Dojo_Form_Element_FilteringSelect('sex');
 		$_sex->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
@@ -217,12 +216,6 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		
 		  $_term = new Zend_Dojo_Form_Element_FilteringSelect("payment_term");
 		  $opt_term = $_db->getAllPaymentTerm(null,null);
-// 		  $opt_term = array(
-// 		  		1=>$this->tr->translate('QUARTER'),
-// 		  		2=>$this->tr->translate('SEMESTER'),
-// 		  		3=>$this->tr->translate('YEAR'),
-// 		  		4=>$this->tr->translate('OTHER')
-// 		  );
 		  $_term->setMultiOptions($opt_term);
 		  $_term->setAttribs(array(
 		  		'dojoType'=>$this->filter,
@@ -240,15 +233,25 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 				//'readOnly'=>'true'
 				));
 
-		$_disc = new Zend_Dojo_Form_Element_NumberTextBox('discount');
-		$_disc->setAttribs(array(
-				'dojoType'=>$this->text,
+		$_disc_percent = new Zend_Dojo_Form_Element_NumberTextBox('discount');
+		$_disc_percent->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'onkeyup'=>'getDisccount();getTotale();netTotal();'
 				//'onkeyup'=>'CheckAmount();'
 				//'onkeyup'=>'getTotale();',
 				));
-		$_disc->setValue(0);
+		$_disc_percent->setValue(0);
+		
+		$_disc_fix = new Zend_Dojo_Form_Element_NumberTextBox('discount_fix');
+		$_disc_fix->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'onkeyup'=>'getDisccount();getTotale();netTotal();'
+				//'onkeyup'=>'CheckAmount();'
+				//'onkeyup'=>'getTotale();',
+		));
+		$_disc_fix->setValue(0);
 		
 		$total = new Zend_Dojo_Form_Element_NumberTextBox('total');
 		$total->setAttribs(array(
@@ -328,8 +331,8 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onchange'=>'changControll();paymentTerm();',
 		));
-		$opts = array(  1=>$this->tr->translate('NEW_STUDENT'),
-				        3=>$this->tr->translate('OLD_STUDENT'),
+		$opts = array(  3=>$this->tr->translate('OLD_STUDENT'),
+						1=>$this->tr->translate('NEW_STUDENT'),
 						4=>$this->tr->translate('DROP_STUDENT')
 				  );
 	    $student_type->setMultiOptions($opts);
@@ -424,7 +427,8 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 			$generation->setValue($data['academic_year']);
 			$_term->setValue($data['payment_term']);
 			$_fee->setValue($data['tuition_fee']);
-			$_disc->setValue($data['discount_percent']);
+			$_disc_percent->setValue($data['discount_percent']);
+			$_disc_fix->setValue($data['discount_fix']);
 			$_remark->setValue($data['other_fee']);
 			$addmin_fee->setValue($data['admin_fee']);
 			$total->setValue($data['total']);
@@ -438,83 +442,14 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 			$end_date->setValue($data['validate']);
 			$old_studen_name->setValue($data['stu_id']);
 			$drop_studens->setValue($data['stu_id']);
-			$drop_stu_name->setValue($data['stu_id']);
+			$drop_stu_name->setValue($data['stu_id']);	
 		}
 		$this->addElements(array(
 			 $drop_stu_name,$drop_studens,$parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total, $_year_one,$_new_student,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
-			  $_phone,$_dept,$_major,$_batch,$_year,$_session,$_term,$_fee,$_disc,$_paid,$_paid_kh,$_remark,$_is_hold ));
+			  $_phone,$_dept,$_major,$_batch,$_year,$_session,$_term,$_fee,$_disc_fix,$_disc_percent,$_paid,$_paid_kh,$_remark,$_is_hold ));
 		
 		return $this;
 	}
-	public function FrmStudentRequest($data=null){
 		
-		$_degree = $this->_degree;
-		$_khname = $this->_khname;
-		$_enname = $this->_enname;
-		$_phone  = $this->_phone;
-		$_batch  = $this->_batch;
-		$_year   = $this->_year;
-		$_session= $this->_session;
-		$_dob = $this->_dob;
-		$_pay_date=$this->_pay_date;
-		$_remark = $this->_remark;
-		
-		$_reciept_no = new Zend_Dojo_Form_Element_TextBox('reciept_no');
-		$_reciept_no->setAttribs(array('dojoType'=>$this->t_num,'class'=>'fullside',
-				//'onkeyup'=>'CheckReceipt()'
-				'dojoType'=>$this->t_num,
-				'required'=>'true',
-				'style'=>'color: red;'
-				));
-		
-		$_studid = new Zend_Dojo_Form_Element_TextBox('stu_id');
-		$_studid->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
-		
-		$_pob = new Zend_Dojo_Form_Element_TextBox('pob');
-		$_pob->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
-		
-		$_cur_add = new Zend_Dojo_Form_Element_TextBox('current_add');
-		$_cur_add->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
-		
-		$_fee = new Zend_Dojo_Form_Element_NumberTextBox('payment_paid');
-		$_fee->setAttribs(array(
-				'dojoType'=>$this->t_num,
-				'required'=>'true','class'=>'fullside',));
-		
-		$_db = new Application_Model_DbTable_DbGlobal();
-		$rows = $_db->getAllFecultyNamess(1);
-		//$rows = $_db->getGlobalDb('SELECT en_name,dept_id FROM rms_dept WHERE is_active=1 AND en_name !="" ');
-		$opt = array();
-		if(!empty($rows))foreach($rows AS $row) $opt[$row['dept_id']]=$row['en_name'];
-			
-		$_dept = new Zend_Dojo_Form_Element_FilteringSelect("dept");
-		$_dept->setMultiOptions($opt);
-		$_dept->setAttribs(array(
-				'dojoType'=>$this->filter,
-				'required'=>'true',
-				//'missingMessage'=>'Invalid Module!',
-				'class'=>'fullside',));
-		
-		$rows = $_db->getAllstudentRequest();
-		$re_opt = array();
-		if(!empty($rows))foreach($rows AS $row) $re_opt[$row['service_id']]=$row['title'];
-			
-		$_request = new Zend_Dojo_Form_Element_FilteringSelect("request_id");
-		$_request->setMultiOptions($re_opt);
-		$_request->setAttribs(array(
-				'dojoType'=>$this->filter,
-				'required'=>'true',
-				'class'=>'fullside',));
-		$_save = new Zend_Dojo_Form_Element_Button('$this->tr->translate("SAVE_PAYMENT")');
-		$_save->setAttribs(array(
-				'dojoType'=>'dijit.form.Button',
-				));$_save->setValue("save");
-		$this->addElements(array(
-				$_reciept_no, $_pay_date,$_pob,$_khname, $_enname,$_studid,$_dob,$_degree,
-				$_phone,$_dept,$_batch,$_year,$_session,$_fee,$_cur_add,$_remark,$_request,$_save
-		));
-		
-		return $this;
-	}
 	
 }

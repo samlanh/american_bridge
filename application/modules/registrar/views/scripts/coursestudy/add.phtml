@@ -215,12 +215,7 @@
 				    	// paymentTerms();
 				    	 dijit.byId('tuitionfee').attr('value','0'); 
 				    	 dijit.byId('total').attr('value','0'); 
-				    	 dijit.byId('discount').attr('value','0');
 				    	 dijit.byId('books').attr('value','0');
-					     dijit.byId('addmin_fee').attr('value','0');
-					     dijit.byId('remaining').attr('value','0');
-					     dijit.byId('remark').attr('value','0');
-					    // dijit.byId('char_price').attr('value','0');
 					     dijit.byId('not').attr('value','');
 					     removeReadOnly();
 					     paymentTerms();
@@ -237,10 +232,11 @@
 		dijit.byId('tuitionfee').attr('value',0);
     	dijit.byId('total').attr('value',0);
     	dijit.byId('books').attr('value',0);
-    	dijit.byId('discount').attr('value',0);
-    	dijit.byId('addmin_fee').attr('value',0);
-    	dijit.byId('remaining').attr('value',0);
-    	dijit.byId('remark').attr('value',0);
+    	//dijit.byId('discount').attr('value',0);
+		//dijit.byId('discount_fix').attr('value',0);
+    	//dijit.byId('addmin_fee').attr('value',0);
+    	//dijit.byId('remaining').attr('value',0);
+    	//dijit.byId('remark').attr('value',0);
     	//dijit.byId('char_price').attr('value',0);
 
     	if(payment_term==5){ // if pay by section => show amount of section 
@@ -272,6 +268,7 @@
 				      }else {
 
 					  }
+					  getTotale();
 				      netTotal();
 				},
 				error: function(err) {
@@ -294,18 +291,25 @@
 		}
 		
 		discount=dijit.byId('discount').get('value');
+		discount = isNaN(discount)?0:discount;
+
+		discount_fix=dijit.byId('discount_fix').get('value');
+		discount_fix = isNaN(discount_fix)?0:discount_fix;
+		
 		pc=discount/100;
-		ds=tuitionfee*pc;
-		old_totale=tuitionfee - ds;
+		ds=(tuitionfee-discount_fix)*pc;
+		old_totale=(tuitionfee-discount_fix) - ds;
+		
 		//alert('hello');
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
 		addmin_fee=dijit.byId('addmin_fee').get('value');
 		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
+		
 		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee);
-		  dijit.byId('total').attr('value',totals.toFixed(2));
-		  dijit.byId('books').attr('value',totals.toFixed(2));
-		  getRemaining();
+		dijit.byId('total').attr('value',totals.toFixed(2));
+		dijit.byId('books').attr('value',totals.toFixed(2));
+		getRemaining();
 	}
 	//set value remaining
 	function getRemaining(){
@@ -324,20 +328,10 @@
 		  CheckAmount();
 	}
 	function getDisccount(){
-		tuitionfee=dijit.byId('tuitionfee').get('value');
-		discount=dijit.byId('discount').get('value');
-		pc=discount/100;
-		ds=tuitionfee*pc;
-		totale=tuitionfee - ds;
-		if(discount<=100){
-			   dijit.byId('total').attr('value',totale.toFixed(2));
-			//   dijit.byId('remaining').attr('value','0');
-			}else{ 
-				alert('No more than a hundred of disccount!');
-				dijit.byId('discount').attr('value','100');
-				//getTotale();
-			  //  dijit.byId('remaining').attr('value','0');
-			}
+		if(dijit.byId('discount').get('value')>100){
+			alert('No more than a hundred of disccount!');
+			dijit.byId('discount').attr('value','100');
+		}
 	}
 	var major_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 	var stucard_store = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->student_card));?> );
@@ -467,14 +461,13 @@ fieldset{  background:none;}
 			<td>
 			<fieldset>
 			<legend align="center"><strong><?php echo $tr->translate("ADD_COURSESTUDY");?></strong></legend>
-				<table style="margin: 0 auto; width: 100%;padding:0px 10px 10px 10px;" cellspacing="7" >
+				<table style="margin: 0 auto; width: 100%;padding:0px 10px 10px 10px;white-space:nowrap;" cellspacing="7" >
 					
 					&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" onchange="displayNoneAddRow();netTotal();" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
 					
 					<tr>
 						<td colspan="4"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("STUDENT_INFO");?></strong></td>
 					</tr>
-					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
 					<tr>
 						<td style="width: 160px"><?php echo $tr->translate("STUDENT_TYPE");?>
 							  <?php echo $register->getElement('ids');?>
@@ -498,10 +491,10 @@ fieldset{  background:none;}
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("NAME_EN");?></td>
-						<td><?php echo $register->getElement('en_name');?></td>
-						<td><?php echo $tr->translate("NAME_KH");?></td>
-						<td><?php echo $register->getElement('kh_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_EN");?></td>
+						<td width="35%"><?php echo $register->getElement('en_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_KH");?></td>
+						<td width="35%"><?php echo $register->getElement('kh_name');?></td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("SEX");?></td>
@@ -587,7 +580,16 @@ fieldset{  background:none;}
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("DISCOUND");?></td>
-						<td title='Ex: 20 or 10%'><?php echo $register->getElement('discount');?></td>
+						<td>
+							<table width="100%" style="white-space: nowrap;">
+								<tr>
+									<td>(%)&nbsp;</td>
+									<td><?php echo $register->getElement('discount');?></td>
+									<td>&nbsp;&nbsp;($)&nbsp;&nbsp;</td>
+									<td><?php echo $register->getElement('discount_fix');?></td>
+								</tr>
+							</table>
+						</td>
 						<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 						<td><?php echo $register->getElement('remark');;?></td>
 					</tr>
@@ -619,7 +621,7 @@ fieldset{  background:none;}
 					<input type="hidden" id="identity" name="identity" />
 					<tr>
 						<td colspan="4" align="left">
-								<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
+								<input type="button" label="<?php echo $tr->translate('ADD_BUY_PRODUCT');?>" dojoType="dijit.form.Button" 
 									iconClass="dijitIconEditProperty" onclick="addRow();" />
 						</td>
 					</tr>
@@ -634,10 +636,16 @@ fieldset{  background:none;}
 					</tr>
 					<tr>
 						<td colspan="2">
-							<input type="text" class="fullside" name="readmoney" id="readmoney" dojoType="dijit.form.TextBox" />
+							<input type="text" class="fullside" name="readmoney" id="readmoney" readonly dojoType="dijit.form.TextBox" />
 						</td>
 						<td colspan="2" align="right">
 							<table style="width:400px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+								<tr>
+									<td ><?php echo $tr->translate("EXCHANGE_RATE")." (៛)";?></td>
+									<td align="right">
+										<input type="text" name="ex_rate" id="ex_rate" readonly value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.NumberTextBox" />
+									</td>
+								</tr>
 								<tr>
 									<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 									<td align="right"><input type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
@@ -952,39 +960,53 @@ function printSave(new_stu_id,new_receipt_no){
 		 }else{
 			 dojo.byId("lb_stu_type").innerHTML = "សិស្សចាស់/Old Stu.";;
 		 }
-		 if(stu_type==1){
-			 if(new_stu_id==''){
-				 getStudentNo(degree,1);
-			 }else{
-				 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-				 dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-			 }
-		 }else{
-			if(old_degree!=degree){ // old student change degree => generate new stu_code by degree
+		 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		 
+		 // if(stu_type==1){
+			 // if(new_stu_id==''){
+				 // getStudentNo(degree,1);
+			 // }else{
+				 // dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+				 // dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+			 // }
+		 // }else{
+			// if(old_degree!=degree){ // old student change degree => generate new stu_code by degree
 				 
-				 if(new_stu_id==''){
-					getStudentNo(degree,1);
-				 }else{
-					dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-					dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-				 }
+				 // if(new_stu_id==''){
+					// getStudentNo(degree,1);
+				 // }else{
+					// dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+					// dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+				 // }
 			 
-			 }else{  // generate new receipt before print
-				if(new_receipt_no==''){
-					getNewReceiptNo(1);
-				}else{
-					dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-					if(stu_type==3){// old student
-						stu_id = dijit.byId("old_studens").attr('displayedValue');
-					}else{ // drop student
-						stu_id = dijit.byId("drop_studens").attr('displayedValue');
-					}
-					dojo.byId("lb_stu_id").innerHTML = stu_id;
-				} 
+			 // }else{  // generate new receipt before print
+				// if(new_receipt_no==''){
+					// getNewReceiptNo(1);
+				// }else{
+					// dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+					// if(stu_type==3){// old student
+						// stu_id = dijit.byId("old_studens").attr('displayedValue');
+					// }else{ // drop student
+						// stu_id = dijit.byId("drop_studens").attr('displayedValue');
+					// }
+					// dojo.byId("lb_stu_id").innerHTML = stu_id;
+				// } 
 				
-			 }
-		 }
-		
+			 // }
+		 // }
+		 
+		dojo.byId("lb_receipt_no").innerHTML =  dijit.byId("reciept_no").get('value');;
+		if(stu_type==3){// old student
+			stu_id = dijit.byId("old_studens").attr('displayedValue');
+		}else if(stu_type==4){ // drop student
+			stu_id = dijit.byId("drop_studens").attr('displayedValue');
+		}else{
+			stu_id = dijit.byId("stu_id").get('value');
+		}
+		dojo.byId("lb_stu_id").innerHTML = stu_id;
+		 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		
 		 dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');
 		 dojo.byId("lb_en_name").innerHTML = dijit.byId("en_name").get('value');
@@ -1014,17 +1036,27 @@ function printSave(new_stu_id,new_receipt_no){
 		 }else{
 			 study_fee = tuitionfee;
 		 }
-		 dojo.byId("lb_study_fee").innerHTML = "$ "+study_fee;
+		 dojo.byId("lb_study_fee").innerHTML = "$ "+study_fee.toFixed(2);
 		 
-		 var discount_value = dijit.byId("discount").get('value');
-		 if(discount_value == 0){
-			 discount = '';
+		 dis_percent = dijit.byId('discount').get('value');
+		 dis_percent = isNaN(dis_percent)?0:dis_percent;
+		 
+		 dis_fix = dijit.byId('discount_fix').get('value');
+		 dis_fix = isNaN(dis_fix)?0:dis_fix;
+		 
+		 discount=0;
+		 if(dis_percent>0 && dis_fix>0){
+			discount = dis_percent + " %  + " + dis_fix + " $"; 
 		 }else{
-			 discount = discount_value+" %";
+			 if(dis_percent>0){
+				discount = dis_percent + " %";
+			 }else{
+				discount = dis_fix + " $";
+			 }
 		 }
 		 dojo.byId("lb_discount").innerHTML = discount;
 		 
-		 dojo.byId("lb_total_payment").innerHTML = "$ " + (study_fee - ((study_fee * discount_value) / 100));
+		 dojo.byId("lb_total_payment").innerHTML = "$ " + dijit.byId("total").get('value');
 		 
 		 dojo.byId("lb_other_fee").innerHTML = "$ "+dijit.byId("remark").get('value');
 		 
@@ -1509,13 +1541,13 @@ function printSave(new_stu_id,new_receipt_no){
 //save daata when sub button print 
 function printSubmit(){
 	
-	//$('#office_receipt').submit();
+	$('#office_receipt').submit();
 	 
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
 	
-	//dijit.byId("terms").hide();	//hideDialog();
+	dijit.byId("terms").hide();	//hideDialog();
 }
 function hideDialog(){
 	dijit.byId('terms').hide();

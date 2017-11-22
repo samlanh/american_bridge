@@ -177,7 +177,9 @@
 		dijit.byId("session").set('readOnly',true);
 		dijit.byId("study_hour").set('readOnly',true);
 		dijit.byId("payment_term").set('readOnly',true);
+		dijit.byId("amount_section").set('readOnly',true);
 		dijit.byId("discount").set('readOnly',true);
+		dijit.byId("discount_fix").set('readOnly',true);
 		dijit.byId("remark").set('readOnly',true);
 		dijit.byId("addmin_fee").set('readOnly',true);
 		dijit.byId("books").set('readOnly',true);
@@ -185,7 +187,8 @@
 		dijit.byId("start_date").set('readOnly',true);
 		dijit.byId("end_date").set('readOnly',true);
 		dijit.byId("remaining").set('readOnly',true);
-		
+		dijit.byId("reciept_no").set('readOnly',true);
+		dijit.byId("stu_id").set('readOnly',true);
 	}
 	
 	function defaultPayment(){
@@ -412,7 +415,7 @@ fieldset{  background:none;}
 			<td>
 			<fieldset>
 				<legend align="center"><strong><?php echo $tr->translate("EDIT_REGISTER");?></strong></legend>
-				<table style="margin: 0 auto; width: 100%;padding: 0px 10px 10px 10px;" cellspacing="5" >
+				<table style="margin: 0 auto; width: 100%;padding: 0px 10px 10px 10px;white-space: nowrap;" cellspacing="5" >
 					
 					<tr>
 						<td>
@@ -458,10 +461,10 @@ fieldset{  background:none;}
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("NAME_EN");?></td>
-						<td><?php echo $register->getElement('en_name');?></td>
-						<td><?php echo $tr->translate("NAME_KH");?></td>
-						<td><?php echo $register->getElement('kh_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_EN");?></td>
+						<td width="35%"><?php echo $register->getElement('en_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_KH");?></td>
+						<td width="35%"><?php echo $register->getElement('kh_name');?></td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("SEX");?></td>
@@ -543,7 +546,16 @@ fieldset{  background:none;}
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("DISCOUND");?></td>
-						<td title='Ex: 20 or 10%'><?php echo $register->getElement('discount');?></td>
+						<td>
+							<table width="100%" style="white-space: nowrap;">
+								<tr>
+									<td>(%)&nbsp;</td>
+									<td><?php echo $register->getElement('discount');?></td>
+									<td>&nbsp;&nbsp;($)&nbsp;&nbsp;</td>
+									<td><?php echo $register->getElement('discount_fix');?></td>
+								</tr>
+							</table>
+						</td>
 						<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 						<td><?php echo $register->getElement('remark');;?></td>
 					</tr>
@@ -571,7 +583,6 @@ fieldset{  background:none;}
 						<td><?php echo $tr->translate("END_DATE");?></td>
 						<td><?php echo $register->getElement('end_date');?></td>
 					</tr>
-					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
 					<input type="hidden" id="identity" name="identity" />
 					
 					<tr>
@@ -594,6 +605,12 @@ fieldset{  background:none;}
 					
 						<td colspan="2" align="right">
 							<table style="width:400px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+								<tr>
+									<td ><?php echo $tr->translate("EXCHANGE_RATE")." (៛)";?></td>
+									<td align="right">
+										<input type="text" name="ex_rate" id="ex_rate" readonly value="<?php echo $this->degree_row['exchange_rate'] ;?>" dojoType="dijit.form.NumberTextBox" />
+									</td>
+								</tr>
 								<tr>
 									<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 									<td align="right"><input type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
@@ -865,17 +882,28 @@ fieldset{  background:none;}
 			 }else{
 				 study_fee = tuitionfee;
 			 }
-			 dojo.byId("lb_study_fee").innerHTML = "$ "+study_fee;
+			 dojo.byId("lb_study_fee").innerHTML = "$ "+study_fee.toFixed(2);
 			 
-			 var discount_value = dijit.byId("discount").get('value');
-			 if(discount_value == 0){
-				 discount = '';
+			 dis_percent = dijit.byId('discount').get('value');
+			 dis_percent = isNaN(dis_percent)?0:dis_percent;
+			 
+			 dis_fix = dijit.byId('discount_fix').get('value');
+			 dis_fix = isNaN(dis_fix)?0:dis_fix;
+			 
+			 discount=0;
+			 if(dis_percent>0 && dis_fix>0){
+				discount = dis_percent + " %  + " + dis_fix + " $"; 
 			 }else{
-				 discount = discount_value+" %";
+				 if(dis_percent>0){
+					discount = dis_percent + " %";
+				 }else{
+					discount = dis_fix + " $";
+				 }
 			 }
+
 			 dojo.byId("lb_discount").innerHTML = discount;
 			 
-			 dojo.byId("lb_total_payment").innerHTML ="$ " + (study_fee - ((study_fee * discount_value) / 100));
+			 dojo.byId("lb_total_payment").innerHTML ="$ " + dijit.byId("total").get('value');
 			 
 			 dojo.byId("lb_admin_fee").innerHTML ="$ "+dijit.byId("addmin_fee").get('value');
 			 

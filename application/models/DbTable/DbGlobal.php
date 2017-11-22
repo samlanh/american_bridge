@@ -499,7 +499,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    }
     function getViewById($type,$is_opt=null){
    	$db=$this->getAdapter();
-   	$sql="SELECT key_code,name_kh AS view_name FROM rms_view WHERE `type`=$type AND `status`=1 ";
+   	$sql="SELECT key_code,name_kh AS view_name FROM rms_view WHERE `type`=$type AND `status`=1 and key_code=1 ";
    	$rows = $db->fetchAll($sql);
    	$options= array();
    	if($is_opt!=null){

@@ -125,7 +125,7 @@ Class Registrar_Form_FrmStudentServicePayment extends Zend_Dojo_Form {
 		$_invoice_no->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',
 				//'onkeyup'=>'CheckReceipt()'
 				'required'=>'true',
-				'readonly'=>'true',
+				//'readonly'=>'true',
 				'style'=>'color:red;'
 				));
 		$reciept=new Registrar_Model_DbTable_DbRegister();

@@ -241,14 +241,15 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo $grand_total;?>';
+	total_amount = '<?php echo number_format($grand_total,2);?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
-	total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
+	total_reil = (total_amount - amount_usd)*exchange_rate;
 	//alert(total_reil);
+	var total_reil = total_reil.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 	
-	dojo.byId("lb_amount_usd").innerHTML = "&nbsp;&nbsp;$ " + amount_usd;
-	dojo.byId("lb_amount_reil").innerHTML = total_reil + "&nbsp;&nbsp;៛ ";
+	dojo.byId("lb_amount_usd").innerHTML = "&nbsp;$ " + amount_usd;
+	dojo.byId("lb_amount_reil").innerHTML = "&nbsp;៛ " + total_reil;
 	
 }
 					

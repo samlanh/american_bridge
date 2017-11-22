@@ -5,7 +5,7 @@
 ?>	
 <title><?php echo $tr->translate('របាយការណ៍លទ្ធផលចំណូល');?></title>
 	<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-result-income')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-		<table width="70%">
+		<table width="95%">
 		    <tr>
 		    	<td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->search['start_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
 		    	<td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->search['end_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
@@ -236,18 +236,17 @@
 	});
 	
 	function calculateRemainReil(){
-		total_amount = '<?php echo $grand_total;?>';
+		total_amount = '<?php echo number_format($grand_total,2);?>';
 		other_income_riel = '<?php echo $other_income_riel;?>';
 		amount_usd = dijit.byId("amount_usd").get('value');
 		exchange_rate = '<?php echo $this->rate?>';
-
+		total_reil = (total_amount - amount_usd)*exchange_rate;
 		//alert(total_amount - amount_usd).toFixed(2);
 		
-		total_reil = parseFloat((total_amount - amount_usd).toFixed(2)*exchange_rate) + parseFloat(other_income_riel);
-		//alert(total_reil);
+		var total_reil = total_reil.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 		
-		dojo.byId("lb_amount_usd").innerHTML = "&nbsp;$ " + amount_usd;
-		dojo.byId("lb_amount_reil").innerHTML = total_reil+"&nbsp;៛ ";
+		dojo.byId("lb_amount_usd").innerHTML = "&nbsp;&nbsp;$ " + amount_usd;
+		dojo.byId("lb_amount_reil").innerHTML = "&nbsp;&nbsp;៛ " + total_reil;
 	}
 	 					
 	function doPrint() {

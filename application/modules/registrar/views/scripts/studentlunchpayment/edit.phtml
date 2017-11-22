@@ -128,7 +128,6 @@ fieldset{  background:none;}
 						<td align="center" style="width: 37%"><input type="text" name="receipt_no" style="color:red;" id="receipt_no" value="<?php echo $this->row['receipt_number'];?>" readOnly="readOnly" class="fullside" dojoType="dijit.form.TextBox" > </td>
 					</tr>
 					<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
-					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
 					<input type="hidden" name="parent_id" id="parent_id" value="<?php echo $this->row['is_parent'];?>" dojoType="dijit.form.TextBox" />
 					<tr>
 						<td><?php echo $tr->translate("STUDENT_NAME");?></td>
@@ -228,7 +227,18 @@ fieldset{  background:none;}
 					
 						<td ><?php echo $tr->translate('DISCOUNT');?></td>
 						<td> 
-							<input class="fullside" name="discount" id="discount" value="<?php echo $this->detail['discount_percent']?>" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.TextBox" value="0" type="text"   >
+							<table>
+								<tr>
+									<td>(%)&nbsp;</td>
+									<td>
+										<input class="fullside" name="discount" id="discount" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" value="<?php echo $this->row['discount_percent']?>" type="text"   >
+									</td>
+									<td>&nbsp;($)&nbsp;</td>
+									<td>
+										<input class="fullside" name="discount_fix" id="discount_fix" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" value="<?php echo $this->row['discount_fix']?>" type="text"   >
+									</td>
+								</tr>
+							</table>
 						</td>
 					
 						<td align="right" ><?php echo $tr->translate('TOTAL_PAYMENT');?></td>
@@ -295,6 +305,12 @@ fieldset{  background:none;}
 					
 						<td colspan="2" align="right">
 							<table style="width:400px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+								<tr>
+									<td ><?php echo $tr->translate("EXCHANGE_RATE")." (៛)";?></td>
+									<td align="right">
+										<input type="text" name="ex_rate" id="ex_rate" readonly value="<?php echo $this->row['exchange_rate'] ;?>" dojoType="dijit.form.NumberTextBox" />
+									</td>
+								</tr>
 								<tr>
 									<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 									<td align="right"><input type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
@@ -430,6 +446,7 @@ fieldset{  background:none;}
 		dijit.byId("end_date").set('readOnly',true);
 		dijit.byId("other").set('readOnly',true);
 		dijit.byId("readmoney").set('readOnly',true);
+		dijit.byId("discount_fix").set('readOnly',true);
 	}
 
 	function setID(){
@@ -519,7 +536,23 @@ function printSave(new_stu_id,new_receipt_no){
 			dojo.byId("checkbox3").innerHTML = uncheck;
 		}
 		
-		dojo.byId("lb_discount").innerHTML = dijit.byId('discount').get('value')+" %"; 
+		dis_percent = dijit.byId('discount').get('value');
+		dis_percent = isNaN(dis_percent)?0:dis_percent;
+		
+		dis_fix = dijit.byId('discount_fix').get('value');
+		dis_fix = isNaN(dis_fix)?0:dis_fix;
+		
+		discount=0;
+		if(dis_percent>0 && dis_fix>0){
+		discount = dis_percent + " %  + " + dis_fix + " $"; 
+		}else{
+			if(dis_percent>0){
+				discount = dis_percent + " %";
+			}else{
+				discount = dis_fix + " $";
+			}
+		}
+		dojo.byId("lb_discount").innerHTML = discount;
 		 
 		dojo.byId("lb_grand_total").innerHTML = "$ "+dijit.byId('grand_total').get('value');
 		 

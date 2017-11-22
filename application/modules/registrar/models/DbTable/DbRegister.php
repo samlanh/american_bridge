@@ -30,13 +30,18 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     
 	function addRegister($data){
 		
-		$stu_code = $this->getNewAccountNumber($data['dept'],0);
+		
 		if($data['dept']<=3){
 			$type=1; // khmer fulltime
 		}else{
 			$type=6; // english fulltime
 		}
-		$receipt_no = $this->getRecieptNo($type,0);
+		
+		//$stu_code = $this->getNewAccountNumber($data['dept'],0);
+		//$receipt_no = $this->getRecieptNo($type,0);
+		
+		$stu_code=$data['stu_id'];
+		$receipt_no=$data['reciept_no'];
 		
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
@@ -158,14 +163,16 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						'payment_term'	=>$data['payment_term'],
 						
 						'price_per_sec'	=>$price_per_sec,
-						'amount_sec'	=>$amount_sec,
+						'amount_sec'	=>$amount_sec,				
 						
+						'exchange_rate'	=>$data['ex_rate'],
 						'tuition_fee'	=>$data['tuitionfee'],
 						'discount_percent'=>$data['discount'],
+						'discount_fix'	=>$data['discount_fix'],
 						'other_fee'		=>$data['remark'],
 						'admin_fee'		=>$data['addmin_fee'],
 						'total'			=>$data['total'],
-						'total_payment'	=>$data['tuitionfee']-($data['tuitionfee']*($data['discount']/100)),
+						'total_payment'	=>$data['total'],
 						'paid_amount'	=>$data['books'],
 						'receive_amount'=>$data['books'],
 						'balance_due'	=>$data['remaining'],
@@ -409,7 +416,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 	             			'paidamount'=>$paidamount,//$paidamount,
 	             			'balance'=>$balance,
 	             			'discount_percent'=>$discount,//$discount,
-	             			'discount_fix'=>0,
+					 		'discount_fix'	=>$data['discount_fix'],
 	             			'note'=>$data['not'],
 	             			'start_date'=>$data['start_date'],
 	             			'validate'=>$data['end_date'],
@@ -828,8 +835,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.payment_term,
 				  sp.price_per_sec,
 				  sp.amount_sec,
+				  sp.exchange_rate,
 				  sp.tuition_fee,
 				  sp.discount_percent,
+				  sp.discount_fix,
 				  sp.other_fee,
 				  sp.admin_fee,
 				  sp.total,

@@ -55,92 +55,60 @@ class RsvAcl_UserController extends Zend_Controller_Action
         else{
         	$result = Application_Model_DbTable_DbGlobal::getResultWarning();
         }
-        $collumns = array("LASTNAME_FIRSTNAME","USER_NAME","USER_TYPE","STATUS");
+        $collumns = array("NAME","USER_NAME","USER_TYPE","STATUS");
         $link=array(
         		'module'=>'rsvacl','controller'=>'user','action'=>'edit',
         );
         $this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('user_name'=>$link,'name'=>$link));
     }
-    public function viewUserAction()
-    {   
-    	/* Initialize action controller here */
-    	if($this->getRequest()->getParam('id')){
-    		$db = new RsvAcl_Model_DbTable_DbUser();
-    		$user_id = $this->getRequest()->getParam('id');
-    		$rs=$db->getUser($user_id);
-    		//print_r($rs); exit;
-    		$this->view->rs=$rs;
-    	}  	 
-    	
-    }
-	public function addUserAction()
-		{
-			$form=new RsvAcl_Form_FrmUser();	
-			$this->view->form=$form;
-			
-			if($this->getRequest()->isPost())
-			{
-				$db=new RsvAcl_Model_DbTable_DbUser();	
-				$post=$this->getRequest()->getPost();			
-				if(!$db->isUserExist($post['username'])){
-					
-						$id=$db->insertUser($post);
-						  //write log file 
-				             $userLog= new Application_Model_Log();
-				    		 $userLog->writeUserLog($id);
-				     	  //End write log file
-				
-						//Application_Form_FrmMessage::message('One row affected!');
-						Application_Form_FrmMessage::redirector('/rsvacl/user/index');																			
-				}else {
-					Application_Form_FrmMessage::message('User had existed already');
-				}
-			}
-			Application_Model_Decorator::removeAllDecorator($form);
-		}
 	public function addAction()
 	{
 			// action body
-			$db_user=new Application_Model_DbTable_DbUsers();
-			 
-			if ($db_user->getMaxUser() > self::MAX_USER) {
-				Application_Form_FrmMessage::Sucessfull('អ្នក​ប្រើ​ប្រាស់​របស់​អ្នក​បាន​ត្រឹម​តែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL);
+		$db_user=new Application_Model_DbTable_DbUsers();
+		 
+		if ($db_user->getMaxUser() > self::MAX_USER) {
+			Application_Form_FrmMessage::Sucessfull('អ្នក​ប្រើ​ប្រាស់​របស់​អ្នក​បាន​ត្រឹម​តែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL);
+		}
+		$this->view->user_typelist =$this->user_typelist;
+	
+		if($this->getRequest()->isPost()){
+			$userdata=$this->getRequest()->getPost();
+				
+			try {
+				$db = $db_user->insertUser($userdata);
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
+			} catch (Exception $e) {
+				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}
-			 
-			$this->view->user_typelist =$this->user_typelist;
+		}
 		
-			if($this->getRequest()->isPost()){
-				$userdata=$this->getRequest()->getPost();
-					
-				try {
-					$db = $db_user->insertUser($userdata);
-					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
-				} catch (Exception $e) {
-					$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
-				}
-			}
+		$db  = new Application_Model_DbTable_DbGlobal();
+		$this->view->rs_branch = $db->getAllBranch();
+		
 	}
 	public function editAction()
-	    {
-	        // action body
-	        $us_id = $this->getRequest()->getParam('id');
-	    	$us_id = (empty($us_id))? 0 : $us_id;
-	    	
-	        $db_user=new Application_Model_DbTable_DbUsers();
-	        $this->view->user_edit = $db_user->getUserEdit($us_id);
-	
-	        $this->view->user_typelist =$this->user_typelist;  
-	        
-	    	if($this->getRequest()->isPost()){
-				$userdata=$this->getRequest()->getPost();	
-				
-				try {
-					$db = $db_user->updateUser($userdata);				
-					Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);		
-				} catch (Exception $e) {
-					$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
-				}
+    {
+        // action body
+        $us_id = $this->getRequest()->getParam('id');
+    	$us_id = (empty($us_id))? 0 : $us_id;
+    	
+        $db_user=new Application_Model_DbTable_DbUsers();
+        $this->view->user_edit = $db_user->getUserEdit($us_id);
+
+        $this->view->user_typelist =$this->user_typelist;  
+        
+    	if($this->getRequest()->isPost()){
+			$userdata=$this->getRequest()->getPost();	
+			
+			try {
+				$db = $db_user->updateUser($userdata);				
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);		
+			} catch (Exception $e) {
+				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}
+		}
+		$db  = new Application_Model_DbTable_DbGlobal();
+		$this->view->rs_branch = $db->getAllBranch();
     }
     
  

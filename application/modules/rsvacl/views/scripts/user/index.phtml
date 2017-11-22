@@ -1,7 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$this->headTitle('SRMS System | User page'); 
-	echo $this->headTitle();
+	echo $this->headTitle($tr->translate("USER"));
 ?>	
 <style>
 	#grid{

@@ -207,7 +207,7 @@
 											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Total amount of Food & Stay fee
 										</td>
 										<td>
-											<?php echo "$ ".$foodandstay;?>
+											<?php echo "$ ".number_format($foodandstay,2);?>
 										</td>
 									</tr>
 									
@@ -216,7 +216,7 @@
 											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Total amount of Food fee
 										</td>
 										<td>
-											<?php echo "$ ".$food;?>
+											<?php echo "$ ".number_format($food,2);?>
 										</td>
 									</tr>
 									
@@ -225,7 +225,7 @@
 											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5. Total amount of Stay fee
 										</td>
 										<td>
-											<?php echo "$ ".$stay;?>
+											<?php echo "$ ".number_format($stay,2);?>
 										</td>
 									</tr>
 									
@@ -234,7 +234,7 @@
 											II. Total amount of study material fee
 										</td>
 										<td>
-											<?php echo "$ ".$total_study_material_fee;?>
+											<?php echo "$ ".number_format($total_study_material_fee,2);?>
 										</td>
 									</tr>
 									<tr class="hover">
@@ -242,7 +242,7 @@
 											IV. Total amount of student credit
 										</td>
 										<td>
-											<?php echo "$ ".$total_balance;?>
+											<?php echo "$ ".number_format($total_balance,2);?>
 										</td>
 									</tr>
 									
@@ -267,7 +267,7 @@
 											Total Amount
 										</td>
 										<td>
-											<?php echo "$ ".$grand_total;?>
+											<?php echo "$ ".number_format($grand_total,2);?>
 										</td>
 									</tr>
 								</table>
@@ -279,7 +279,7 @@
 											&nbsp;
 										</td>
 										<td width="60%">
-											Rate = <?php echo $this->rate;?> R
+											Rate = <?php echo number_format($this->rate);?> R
 										</td>
 									</tr>
 									<tr>
@@ -287,7 +287,7 @@
 											Grand Total 
 										</td>
 										<td style="border: 1px solid #000;">
-											&nbsp;<?php echo " $ ".$grand_total?>
+											&nbsp;<?php echo " $ ".number_format($grand_total,2)?>
 										</td>
 									</tr>
 									
@@ -391,11 +391,12 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo $grand_total;?>';
+	total_amount = '<?php echo number_format($grand_total,2);?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
 	total_reil = (total_amount - amount_usd)*exchange_rate;
 	//alert(total_reil);
+	var total_reil = total_reil.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 	
 	dojo.byId("lb_amount_usd").innerHTML = "&nbsp;&nbsp;$ " + amount_usd;
 	dojo.byId("lb_amount_reil").innerHTML = "&nbsp;&nbsp;៛ " + total_reil;
