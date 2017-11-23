@@ -265,6 +265,7 @@
 		dijit.byId("payment_term").set('readOnly',true);
 		dijit.byId("amount_section").set('readOnly',true);
 		dijit.byId("discount").set('readOnly',true);
+		dijit.byId("discount_fix").set('readOnly',true);
 		dijit.byId("remark").set('readOnly',true);
 		dijit.byId("addmin_fee").set('readOnly',true);
 		dijit.byId("books").set('readOnly',true);
@@ -273,6 +274,7 @@
 		dijit.byId("end_date").set('readOnly',true);
 		dijit.byId("remaining").set('readOnly',true);
 		dijit.byId("readmoney").set('readOnly',true);
+		dijit.byId("reciept_no").set('readOnly',true);
 	}
 	
 	
@@ -361,10 +363,10 @@ fieldset{  background:none;}
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("NAME_EN");?></td>
-						<td><?php echo $register->getElement('en_name');?></td>
-						<td><?php echo $tr->translate("NAME_KH");?></td>
-						<td><?php echo $register->getElement('kh_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_EN");?></td>
+						<td width="35%"><?php echo $register->getElement('en_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_KH");?></td>
+						<td width="35%" align="center"><?php echo $register->getElement('kh_name');?></td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("SEX");?></td>
@@ -404,10 +406,10 @@ fieldset{  background:none;}
 						<input type="hidden" name="old_grade" id="old_grade" dojoType="dijit.form.TextBox" />
 					
 						<td><?php echo $tr->translate("DEGREE");?><label class="red">*</label></td>
-						<td><input id="dept" /><?php //echo $register->getElement('dept');?></td>
+						<td><input id="dept" /></td>
 						
 						<td><?php echo $tr->translate("CLASS");?><label class="red">*</label></td>
-						<td><input id="grade" /><?php //echo $register->getElement('metion');?></td>
+						<td><input id="grade" /></td>
 					</tr>
 					<tr>
 						<td title="ចាប់ពីម៉ោង"><?php echo $tr->translate("SESSION");?>*</td>
@@ -449,8 +451,17 @@ fieldset{  background:none;}
 						<td colspan="4"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("PAYMENT_INFO");?></strong></td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("DISCOUND");?></td>
-						<td title='Ex: 20 or 10%'><?php echo $register->getElement('discount');?></td>
+						<td><?php echo $tr->translate("DISCOUNT");?></td>
+						<td>
+							<table width="100%" style="white-space: nowrap;">
+								<tr>
+									<td>(%)&nbsp;</td>
+									<td><?php echo $register->getElement('discount');?></td>
+									<td>&nbsp;&nbsp;($)&nbsp;&nbsp;</td>
+									<td><?php echo $register->getElement('discount_fix');?></td>
+								</tr>
+							</table>
+						</td>
 						<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 						<td><?php echo $register->getElement('remark');;?></td>
 					</tr>

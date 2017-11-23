@@ -54,6 +54,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'grade'=>$data['grade'],
 						'room'=>$data['room'],
 						
+						'is_stu_new' 	=>1,
 						'stu_type'=>3,
 						'create_date'=>date("Y-m-d H:i:s"),
 						'user_id'=>$this->getUserId(),

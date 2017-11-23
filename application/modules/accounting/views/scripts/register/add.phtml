@@ -40,8 +40,8 @@
 		}, "dept");
 		
 		new dijit.form.FilteringSelect({
-		    //store: dept_store,
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "grade",
 		    name: "grade",           
 		    class: 'fullside', 
@@ -63,7 +63,8 @@
 
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "study_year",
 		    name: "study_year",           
 		    class: 'fullside',  
@@ -75,7 +76,8 @@
 
 		
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                       
 		    id: "old_studens",
 		    name: "old_studens", 
 		    required: false,         
@@ -89,7 +91,8 @@
 		}, "old_studens");
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                       
 		    id: "old_stu_name",
 		    name: "old_stu_name",
 		    required: false,           
@@ -101,7 +104,8 @@
 		}, "old_stu_name");
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                      
 		    id: "drop_studens",
 		    name: "drop_studens", 
 		    required: false,         
@@ -115,7 +119,8 @@
 		}, "drop_studens");
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "drop_student_name",
 		    name: "drop_student_name",
 		    required: false,           
@@ -363,13 +368,14 @@
 				  }else {
 					 dijit.byId('tuitionfee').attr('value','0'); 
 					 dijit.byId('total').attr('value','0'); 
-					 dijit.byId('discount').attr('value','0');
+					 //dijit.byId('discount').attr('value','0');
 					 dijit.byId('books').attr('value','0');
-					 dijit.byId('addmin_fee').attr('value','0');
+					 //dijit.byId('addmin_fee').attr('value','0');
 					 dijit.byId('remaining').attr('value','0');
-					 dijit.byId('remark').attr('value','0');
+					 //dijit.byId('remark').attr('value','0');
 					 dijit.byId('not').attr('value','');
 				  }
+				  getTotale();
 				  netTotal();
 			},
 			error: function(err) {
@@ -456,10 +462,14 @@
 		tuitionfee=isNaN(tuitionfee)?0:tuitionfee;
 		
 		discount=dijit.byId('discount').get('value');
+		discount = isNaN(discount)?0:discount;
+
+		discount_fix=dijit.byId('discount_fix').get('value');
+		discount_fix = isNaN(discount_fix)?0:discount_fix;
+
 		pc=discount/100;
-		ds=tuitionfee*pc;
-		
-		old_totale=tuitionfee - ds;
+		ds=(tuitionfee-discount_fix)*pc;
+		old_totale=(tuitionfee-discount_fix) - ds;
 		//alert('hello');
 		
 		remark=dijit.byId('remark').get('value');
@@ -492,34 +502,10 @@
 		  //CheckAmount();
 	}
 	function getDisccount(){
-		books=dijit.byId('books').get('value');
-		books=isNaN(books)?0:books;
-		
-		if(payment_term==5){
-			tuitionfee = dijit.byId('tuitionfee').get('value');
-			amount_section = dijit.byId('amount_section').get('value');
-			
-			tuitionfee = tuitionfee * amount_section;
-		}else{
-			tuitionfee=dijit.byId('tuitionfee').get('value');
+		if(dijit.byId('discount').get('value')>100){
+			alert('No more than a hundred of disccount!');
+			dijit.byId('discount').attr('value','100');
 		}
-		tuitionfee=isNaN(tuitionfee)?0:tuitionfee;
-		
-		discount=dijit.byId('discount').get('value');
-		
-		pc=discount/100;
-		ds=tuitionfee*pc;
-		totale=tuitionfee - ds;
-		
-		if(discount<=100){
-			   dijit.byId('total').attr('value',totale.toFixed(2));
-			//   dijit.byId('remaining').attr('value','0');
-			}else{ 
-				alert('No more than a hundred of disccount!');
-				dijit.byId('discount').attr('value','100');
-				//getTotale();
-			  //  dijit.byId('remaining').attr('value','0');
-			}
 	}
 	
 	
@@ -681,7 +667,7 @@ fieldset{  background:none;}
 		<td>
 			<fieldset> 
 				<legend align="center"><strong><?php echo $tr->translate("OFFICIAL_RECEIPT");?></strong></legend> 
-				<table style="margin: 0 auto; width: 100%;padding:0px 10px 10px 10px;" cellspacing="5" >
+				<table style="margin: 0 auto; width: 100%;padding:0px 10px 10px 10px;white-space:nowrap;" cellspacing="5" >
 					<tr>
 						<td colspan="4"​ style="border-bottom:1px solid #ccc;"><strong><?php echo $tr->translate("STUDENT_INFO");?></strong></td>
 					</tr>
@@ -730,10 +716,10 @@ fieldset{  background:none;}
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $tr->translate("NAME_EN");?></td>
-						<td><?php echo $register->getElement('en_name');?></td>
-						<td><?php echo $tr->translate("NAME_KH");?></td>
-						<td><?php echo $register->getElement('kh_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_EN");?></td>
+						<td width="35%"><?php echo $register->getElement('en_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_KH");?></td>
+						<td width="35%"><?php echo $register->getElement('kh_name');?></td>
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("SEX");?></td>
@@ -761,7 +747,7 @@ fieldset{  background:none;}
 						
 						<td><?php echo $tr->translate("ROOM_NAME");?><label class="red">*</label></td>
 						<td>
-							<select name="room" id="room" dojoType="dijit.form.FilteringSelect" class="fullside" >
+							<select name="room" id="room" dojoType="dijit.form.FilteringSelect" class="fullside" autoComplete="false" queryExpr="*${0}*" >
 								<option value="-1">----- select room -----</option>
 								<?php if(!empty($this->room)){foreach ($this->room as $room){?>
 									<option value="<?php echo $room['id']?>"><?php echo $room['name']?></option>
@@ -794,7 +780,6 @@ fieldset{  background:none;}
 						<td><?php echo $tr->translate("TUITION_FEE");?></td>
 						<td><?php echo $register->getElement('tuitionfee');?></td>
 					</tr>
-					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
 					<input type="hidden" name="price_per_section" id="price_per_section" dojoType="dijit.form.TextBox" >
 					<tr>
 						<td>
@@ -813,7 +798,16 @@ fieldset{  background:none;}
 					</tr>
 					<tr>
 						<td><?php echo $tr->translate("DISCOUND");?></td>
-						<td title='Ex: 20 or 10%'><?php echo $register->getElement('discount');?></td>
+						<td>
+							<table width="100%" style="white-space: nowrap;">
+								<tr>
+									<td>(%)&nbsp;</td>
+									<td><?php echo $register->getElement('discount');?></td>
+									<td>&nbsp;&nbsp;($)&nbsp;&nbsp;</td>
+									<td><?php echo $register->getElement('discount_fix');?></td>
+								</tr>
+							</table>
+						</td>
 						<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 						<td><?php echo $register->getElement('remark');;?></td>
 					</tr>
@@ -845,7 +839,7 @@ fieldset{  background:none;}
 					<input type="hidden" id="identity" name="identity" />
 					<tr>
 						<td colspan="4" align="left">
-							<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
+							<input type="button" label="<?php echo $tr->translate('ADD_BUY_PRODUCT');?>" dojoType="dijit.form.Button" 
 								iconClass="dijitIconEditProperty" onclick="addRow();" />
 						</td>
 					</tr>
@@ -859,6 +853,12 @@ fieldset{  background:none;}
 					<tr>
 						<td colspan="6" align="right">
 							<table style="width:400px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+								<tr>
+									<td ><?php echo $tr->translate("EXCHANGE_RATE")." (៛)";?></td>
+									<td align="right">
+										<input type="text" name="ex_rate" id="ex_rate" readonly value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.NumberTextBox" />
+									</td>
+								</tr>
 								<tr>
 									<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 									<td align="right"><input type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>

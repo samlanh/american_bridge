@@ -38,8 +38,8 @@
 		}, "dept");
 		
 		new dijit.form.FilteringSelect({
-		    //store: dept_store,
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                       
 		    id: "grade",
 		    name: "grade",           
 		    class: 'fullside', 
@@ -212,11 +212,11 @@
 				      }else {
 				    	 dijit.byId('tuitionfee').attr('value','0'); 
 				    	 dijit.byId('total').attr('value','0'); 
-				    	 dijit.byId('discount').attr('value','0');
+				    	 //dijit.byId('discount').attr('value','0');
 				    	 dijit.byId('books').attr('value','0');
-					     dijit.byId('addmin_fee').attr('value','0');
+					     //dijit.byId('addmin_fee').attr('value','0');
 					     dijit.byId('remaining').attr('value','0');
-					     dijit.byId('remark').attr('value','0');
+					     //dijit.byId('remark').attr('value','0');
 					 //    dijit.byId('char_price').attr('value','0');
 					     dijit.byId('not').attr('value','');
 	
@@ -324,6 +324,7 @@
 		pc=discount/100;
 		ds=(tuitionfee-discount_fix)*pc;
 		old_totale=(tuitionfee-discount_fix) - ds;
+		
 		//alert('hello');
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
@@ -545,7 +546,7 @@ fieldset{  background:none;}
 							<td><?php echo $register->getElement('study_year');?></td>
 							<td><?php echo $tr->translate("ROOM_NAME");?><label class="red">*</label></td>
 							<td>
-								<select type="text" class="fullside" name="room" id="room" dojoType="dijit.form.FilteringSelect" />
+								<select type="text" class="fullside" name="room" id="room" autoComplete="false" queryExpr="*${0}*" dojoType="dijit.form.FilteringSelect" />
 									<option value='-1'>---------- select room ----------</option>
 									<?php if(!empty($this->room)){foreach($this->room as $room){?>
 										<option value="<?php echo $room['id'];?>"><?php echo $room['name'];?></option>

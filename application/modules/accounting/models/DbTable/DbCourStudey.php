@@ -26,12 +26,14 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
-		$register = new Registrar_Model_DbTable_DbRegister();
-		$stu_code = $register->getNewAccountNumber($data['dept'], $data['branch']);
-		
 		$type = 2; // parttime payment
-		$receipt = $register->getRecieptNo($type,$data['branch']);
 		
+		$register = new Registrar_Model_DbTable_DbRegister();
+		//$stu_code = $register->getNewAccountNumber($data['dept'], $data['branch']);
+// 		$receipt = $register->getRecieptNo($type,$data['branch']);
+		$stu_code = $data['stu_id'];
+		$receipt = $data['reciept_no'];
+		//echo $stu_code;exit();
 		//print_r($this->getBranchId());exit();
 			try{
 				if($data['student_type']==1){ // New student
@@ -134,12 +136,14 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'price_per_sec'		=>$price_per_sec,
 						'amount_sec'		=>$amount_sec,
 						
+						'exchange_rate'		=>$data['ex_rate'],
 						'tuition_fee'		=>$data['tuitionfee'],
-						'total_payment'		=>$data['tuitionfee'] - ($data['tuitionfee']*($data['discount']/100)),
 						'discount_percent'	=>$data['discount'],
+						'discount_fix'		=>$data['discount_fix'],
 						'other_fee'			=>$data['remark'],
 						'admin_fee'			=>$data['addmin_fee'],
 						'total'				=>$data['total'],
+						'total_payment'		=>$data['total'],
 						'paid_amount'		=>$data['books'],
 						'receive_amount'	=>$data['books'],
 						'balance_due'		=>$data['remaining'],
@@ -157,7 +161,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						
 						'student_type'		=>$data['student_type'],
 						'create_date'		=>date('Y-m-d'),
-						'payfor_type'		=>2,
+						'payfor_type'		=>2,//parttime
 						'user_id'			=>$this->getUserId(),
 						'branch_id'			=>$data['branch'],
 						'reg_from'			=>1, // from accounting
@@ -362,11 +366,11 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'fee'				=>$fee,
 							'qty'				=>$qty,
 							'discount_percent'	=>$discount,
+							'discount_fix'		=>$data['discount_fix'],
 							'subtotal'			=>$subtotal,
 							'paidamount'		=>$paidamount,
 							'balance'			=>$balance,
 							
-							'discount_fix'		=>0,
 							'note'				=>$data['not'],
 							'start_date'		=>$data['start_date'],
 							'validate'			=>$data['end_date'],
@@ -773,8 +777,10 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				  sp.payment_term,
 				  sp.price_per_sec,
 				  sp.amount_sec,
+				  sp.exchange_rate,
 				  sp.tuition_fee,
 				  sp.discount_percent,
+				  sp.discount_fix,
 				  sp.other_fee,
 				  sp.admin_fee,
 				  sp.total,

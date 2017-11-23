@@ -146,13 +146,8 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     		$_data['id']=$id;
     		try {
     			$db = new Accounting_Model_DbTable_DbCourStudey();
-    			if(isset($_data['save_new'])){
-    				$db->addStudentGep($_data);
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
-    			}else{
-    				$db->updateStudentGep($_data);
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
-    			}
+    			$db->addStudentGep($_data);
+    			Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/coursestudy/index');
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
     			$err =$e->getMessage();
@@ -161,7 +156,6 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     	}
     	$db = new Accounting_Model_DbTable_DbCourStudey();
     	$row_gep=$db->getStuentGepById($id);
-    	
     	
     	$this->view->row_gep=$row_gep;
     	$frm = new Accounting_Form_FrmCourseStudy();

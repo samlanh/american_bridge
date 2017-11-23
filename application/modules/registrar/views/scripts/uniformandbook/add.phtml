@@ -50,7 +50,7 @@
 						<tr>
 							<td width="12%"><?php echo $tr->translate("STUDENT_NAME");?></td>
 							<td width="37%">
-								<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" name="stu_name" id="stu_name" onChange="getStudentInfo();" >
+								<select type="text" style="" class="fullside" dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" name="stu_name" id="stu_name" onChange="getStudentInfo();" >
 									<option value="-1">Select Student Name</option>
 									<?php if(!empty($this->row)){foreach ($this->row as $row){?>
 									<option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>

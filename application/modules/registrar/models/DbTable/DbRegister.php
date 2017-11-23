@@ -30,13 +30,6 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     
 	function addRegister($data){
 		
-		
-		if($data['dept']<=3){
-			$type=1; // khmer fulltime
-		}else{
-			$type=6; // english fulltime
-		}
-		
 		//$stu_code = $this->getNewAccountNumber($data['dept'],0);
 		//$receipt_no = $this->getRecieptNo($type,0);
 		

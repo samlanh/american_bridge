@@ -162,8 +162,11 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				));
 		
 		$old_studens =  new Zend_Dojo_Form_Element_FilteringSelect('old_studens');
-		$old_studens->setAttribs(array('dojoType'=>$this->filter,
+		$old_studens->setAttribs(array(
+				'dojoType'=>$this->filter,
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'Onchange'=>"getGepOldStudentById(1);paymentTerm();getStartDate();",
 				));
 		$opt_gep=$reciept->getAllGepOldStudent();
@@ -173,8 +176,11 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		
 		
 		$old_studen_name =  new Zend_Dojo_Form_Element_FilteringSelect('old_stu_name');
-		$old_studen_name->setAttribs(array('dojoType'=>$this->filter,
+		$old_studen_name->setAttribs(array(
+				'dojoType'=>$this->filter,
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'Onchange'=>"setID(1);",
 		));
 		$opt_gep_name=$reciept->getAllGepOldStudentName();
@@ -187,7 +193,9 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		$drop_studens = new Zend_Dojo_Form_Element_FilteringSelect('drop_studens');
 		$drop_studens->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'required'=>'true',
+// 				'required'=>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 				'onchange'=>'getGepOldStudentById(2);paymentTerm();getStartDate();',
 		));
@@ -203,7 +211,9 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		$drop_stu_name = new Zend_Dojo_Form_Element_FilteringSelect('drop_stu_name');
 		$drop_stu_name->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'required'=>'true',
+// 				'required'=>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 				'onchange'=>'setID(2);',
 		));

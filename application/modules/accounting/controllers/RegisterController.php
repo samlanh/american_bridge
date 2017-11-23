@@ -52,8 +52,6 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($form);
     	$this->view->form_search=$form;
     	
-    	
-    	
     }
   
     public function addAction(){

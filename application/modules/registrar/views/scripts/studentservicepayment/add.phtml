@@ -29,7 +29,8 @@
 	
 		new dijit.form.FilteringSelect({
 			store: service_store,
-			autoComplete: true,                        
+			autoComplete: false,
+			queryExpr: "*${0}*",                       
 		    id: "service",
 		    name: "service",
 			value:-1,
@@ -127,7 +128,7 @@ fieldset{  background:none;}
 						<td><?php echo $tr->translate("STUDENT_NAME");?></td>
 						<td>
 							<div id="new_name">
-								<select name="student_name_new" id="student_name_new" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="student_name_new" id="student_name_new" onChange="getStudentInfo();" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
 									<?php if(!empty($this->new_stu_name)){foreach($this->new_stu_name as $new_stu_name){?>
 										<option value="<?php echo $new_stu_name['stu_id']?>"><?php echo $new_stu_name['stu_name']?></option>
@@ -135,7 +136,7 @@ fieldset{  background:none;}
 								</select>
 							</div>	
 							<div id="old_name">
-								<select name="student_name_old" id="student_name_old" onChange="setID(1);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="student_name_old" id="student_name_old" onChange="setID(1);" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
 									<?php if(!empty($this->old_stu_name)){foreach($this->old_stu_name as $old_stu_name){?>
 										<option value="<?php echo $old_stu_name['stu_id']?>"><?php echo $old_stu_name['stu_name']?></option>
@@ -143,7 +144,7 @@ fieldset{  background:none;}
 								</select>
 							</div>	
 							<div id="drop_name">
-								<select name="drop_name" id="drop_name" onChange="setID(2);" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="drop_name" id="drop_name" onChange="setID(2);" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select name -----</option>
 									<?php if(!empty($this->drop_stu_name)){foreach($this->drop_stu_name as $drop_stu_name){?>
 										<option value="<?php echo $drop_stu_name['stu_id']?>"><?php echo $drop_stu_name['stu_name']?></option>
@@ -158,7 +159,7 @@ fieldset{  background:none;}
 								<input type="text" name="new_car_id" style="color:red;" id="new_car_id"  class="fullside" dojoType="dijit.form.TextBox" >     
 							</div>
 							<div id="old_id">
-								<select name="old_car_id" id="old_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="old_car_id" id="old_car_id" onChange="getStudentInfo();" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select id -----</option>
 									<?php if(!empty($this->old_car_id)){foreach($this->old_car_id as $old_car_id){?>
 										<option value="<?php echo $old_car_id['stu_id']?>"><?php echo $old_car_id['stu_code']?></option>
@@ -166,7 +167,7 @@ fieldset{  background:none;}
 								</select>
 							</div>
 							<div id="drop_id">
-								<select name="drop_car_id" id="drop_car_id" onChange="getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="drop_car_id" id="drop_car_id" onChange="getStudentInfo();" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">----- select id -----</option>
 									<?php if(!empty($this->drop_car_id)){foreach($this->drop_car_id as $drop_car_id){?>
 										<option value="<?php echo $drop_car_id['stu_id']?>"><?php echo $drop_car_id['stu_code']?></option>
