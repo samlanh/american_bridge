@@ -298,17 +298,17 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$data=$this->getRequest()->getPost();
 				$search = array(
 						'txtsearch' => $data['txtsearch'],
-						//'start_date'=> $data['from_date'],
+						'branch'	=> $data['branch'],
 						'end_date'	=>$data['to_date'],
 						'service'	=>$data['service']
 				);
 			}else{
 				$search=array(
 						'txtsearch' =>'',
-						//'start_date'=> date('Y-m-d'),
+						'branch'	=> '',
 						'end_date'	=>date('Y-m-d'),
 						'service'	=>''
-				);;
+				);
 			}
 			$db = new Allreport_Model_DbTable_DbRptStudentNearlyEndService();
 			$abc = $this->view->row = $db->getAllStudentNearlyEndService($search);
@@ -333,14 +333,14 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$data=$this->getRequest()->getPost();
 				$search = array(
 						'txtsearch' => $data['txtsearch'],
-						//'start_date'=> $data['from_date'],
+						'branch'	=> $data['branch'],
 						'end_date'	=>$data['to_date'],
 						'service'	=>$data['service'],
 				);
 			}else{
 				$search=array(
 						'txtsearch' =>'',
-						//'start_date'=> date('Y-m-d'),
+						'branch'	=> $data['branch'],
 						'end_date'	=>date('Y-m-d'),
 						'service'	=>'',
 				);;
@@ -1450,11 +1450,10 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		try{
 			if($this->getRequest()->isPost()){
 				$search=$this->getRequest()->getPost();
-					
 			}else{
 				$search = array(
 						'title'	        =>	'',
-						'cus_name'		=>	0,
+						'cus_name'		=>	'',
 						'end_date'		=>	date('Y-m-d'),
 						'status_search'	=> 1
 				);
@@ -1486,6 +1485,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 					'degree_all' =>'',
 					'grade_all' =>'',
 					'session' =>'',
+					'branch' =>'',
+					'user' =>'',
 					'start_date'=> date('Y-m-d'),
 					'end_date'	=>date('Y-m-d'),
 			);

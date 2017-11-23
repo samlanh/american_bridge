@@ -26,6 +26,7 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     		    		}
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllStudenTServicePayment($search);
+    		
     		$list = new Application_Form_Frmtable();
     		$collumns = array("STUDENT_ID","NAME","SEX","RECEIPT_NO","SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");
     		$link=array(

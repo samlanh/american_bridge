@@ -41,7 +41,8 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 		
 		$receipt = new Registrar_Model_DbTable_DbRegister();
 		$type = 4 ; // lunch payment 
-		$receipt_no = $receipt->getRecieptNo($type ,$data['branch']);
+		//$receipt_no = $receipt->getRecieptNo($type ,$data['branch']);
+		$receipt_no = $data['receipt_no'];
 		
 		// សិក្សាពេល User ច្រលំចុច submit 2 ដង​​ អោយវាចូលតែ1
 // 		$rs = $this->getStudentExist($data['reciept_no'],$data['studentid']);
@@ -51,7 +52,8 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 
 		$this->_name = "rms_service";
 		if($data['student_type']==1){
-			$new_lunch_id = $this->getNewLunchId();
+			//$new_lunch_id = $this->getNewLunchId();
+			$new_lunch_id = $data['new_car_id'];
 			$array = array(
 				'branch_id'		=>$data['branch'],
 				'type'			=>5, // pay lunch service
@@ -60,6 +62,7 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 				'service_id'	=>$data['service'],
 				'create_date'	=>date('Y-m-d'),
 				'reg_from'		=>1 , // from accounting
+				'is_new'		=>1,
 				);
 			$this->insert($array);
 		}else{
@@ -75,6 +78,7 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 				'service_id'=>$data['service'],
 				'is_suspend'=>0,
 				'is_comeback'=>$is_comeback,
+				'is_new'	=>0,
 			);
 			$where = " type=5 and stu_id = ".$stu_id;
 			$this->update($array, $where);
@@ -137,8 +141,10 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 					'buy_product'		=>$buy_product,
 					
 					//'year'				=>$data['study_year'],
+					'exchange_rate'		=>$data['ex_rate'],
 					'tuition_fee'		=>$data['service_fee'],
 					'discount_percent'	=>$data['discount'],
+					'discount_fix'		=>$data['discount_fix'],
 					'total_payment'		=>$data['total_payment'],
 					'receive_amount'	=>$data['paid_amount'],
 					'paid_amount'		=>$data['paid_amount'],
@@ -155,7 +161,7 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 					
 					'is_new'			=>$is_new,
 					'student_type'		=>$data['student_type'],
-					'payfor_type'		=>3 ,
+					'payfor_type'		=>4 ,// lunch payment 
 					'create_date'		=>date("Y-m-d H:i:s"),
 					'user_id'			=>$this->getUserId(),
 					'branch_id'			=>$data['branch'],
@@ -183,6 +189,7 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 						'fee'			=>$data['service_fee'],
 						'qty'			=>$data['qty'],
 						'discount_percent'=>$data['discount'],
+						'discount_fix'	=>$data['discount_fix'],
 						'subtotal'		=>$data['total_payment'],
 						'paidamount'	=>$data['paid_amount'],
 						'balance'		=>$balance,

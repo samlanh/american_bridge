@@ -41,8 +41,9 @@ function addStudentServicePayment($data){
 		
 		$receipt = new Registrar_Model_DbTable_DbRegister();
 		$type = 3;
-		$receipt_no = $receipt->getRecieptNo($type,$data['branch']);
+		//$receipt_no = $receipt->getRecieptNo($type,$data['branch']);
 		
+		$receipt_no = $data['reciept_no'];
 		
 		// សិក្សាពេល User ច្រលំចុច submit 2 ដង​​ អោយវាចូលតែ1
 // 		$rs = $this->getStudentExist($data['reciept_no'],$data['studentid']);
@@ -52,7 +53,8 @@ function addStudentServicePayment($data){
 
 		$this->_name = "rms_service";
 		if($data['student_type']==1){
-			$new_car_id = $this->getNewCarId();
+			//$new_car_id = $this->getNewCarId();
+			$new_car_id = $data['new_car_id'];
 			$array = array(
 				'branch_id'=>$data['branch'],
 				'type'=>4,
@@ -61,6 +63,7 @@ function addStudentServicePayment($data){
 				'service_id'=>$data['service'],
 				'create_date'=>date('Y-m-d'),
 				'reg_from'			=>1,
+				'is_new'=>1,
 				);
 			$this->insert($array);
 		}else{
@@ -77,6 +80,7 @@ function addStudentServicePayment($data){
 				'service_id'=>$data['service'],
 				'is_suspend'=>0,
 				'is_comeback'=>$is_comeback,
+				'is_new'=>0,
 			);
 			$where = " type=4 and stu_id = ".$stu_id;
 			$this->update($array, $where);
@@ -139,8 +143,10 @@ function addStudentServicePayment($data){
 					'buy_product'		=>$buy_product,
 					
 					//'year'				=>$data['study_year'],
+					'exchange_rate'		=>$data['ex_rate'],
 					'tuition_fee'		=>$data['service_fee'],
 					'discount_percent'	=>$data['discount'],
+					'discount_fix'		=>$data['discount_fix'],
 					'total_payment'		=>$data['total_payment'],
 					'receive_amount'	=>$data['paid_amount'],
 					'paid_amount'		=>$data['paid_amount'],
@@ -186,6 +192,7 @@ function addStudentServicePayment($data){
 						'fee'			=>$data['service_fee'],
 						'qty'			=>$data['qty'],
 						'discount_percent'=>$data['discount'],
+						'discount_fix'	=>$data['discount_fix'],
 						'subtotal'		=>$data['total_payment'],
 						'paidamount'	=>$data['paid_amount'],
 						'balance'		=>$balance,
@@ -380,6 +387,10 @@ function addStudentServicePayment($data){
     function getAllStudenTServicePayment($search){
     	$user=$this->getUserId();
     	$db=$this->getAdapter();
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal;
+    	$branch_id = $_db->getAccessPermission('sp.branch_id');
+    	
     	$sql="select sp.id,
 	    		(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch,
 				(select sv.stu_code from rms_service as sv where sv.stu_id=sp.student_id and sv.type=4 limit 1)AS code,
@@ -395,7 +406,9 @@ function addStudentServicePayment($data){
 	    	from 
 	    		rms_student_payment as sp 
 	    	where 1 
-	    		and (select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 ";
+	    		and (select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 
+    			$branch_id
+    		";
     	
     	$from_date =(empty($search['start_date']))? '1': " sp.create_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " sp.create_date <= '".$search['end_date']." 23:59:59'";

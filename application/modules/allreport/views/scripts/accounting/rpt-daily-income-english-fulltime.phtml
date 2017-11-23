@@ -7,7 +7,7 @@
 
 
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-english-fulltime')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-	<table width="95%">
+	<table width="100%">
 	    <tr>
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
 	    	<td><?php echo $frm->getElement('degree_en_ft');?></td>
@@ -148,7 +148,17 @@
 						
 						
 						<td class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
-						<td class="padd"><?php if($rs['discount_percent']>0){echo $rs['discount_percent']." %";}?></td>
+						<td class="padd">
+							<?php if($rs['discount_percent']>0 && $rs['discount_fix']>0){
+										echo $rs['discount_percent']." %"." + $".$rs['discount_fix'];
+									}else if($rs['discount_percent']>0){
+										echo $rs['discount_percent']." %";
+									}else if($rs['discount_fix']>0){
+										echo "$ ".$rs['discount_fix'];
+									}
+							?>
+							
+						</td>
 						<td class="padd"><?php echo "$ ".$rs['total_payment'];?></td>
 						
 						

@@ -841,6 +841,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 					
 					sp.`tuition_fee`,
 					sp.`discount_percent`,
+					sp.`discount_fix`,
 					sp.`total_payment`,
 					sp.`admin_fee`,
 					sp.`other_fee`,
@@ -952,6 +953,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    		
 			    	sp.`tuition_fee`,
 			    	sp.`discount_percent`,
+			    	sp.`discount_fix`,
 			    	sp.`total_payment`,
 			    	sp.`admin_fee`,
 			    	sp.`other_fee`,
@@ -1057,6 +1059,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    		
 			    	sp.`tuition_fee`,
 			    	sp.`discount_percent`,
+			    	sp.`discount_fix`,
 			    	sp.`total_payment`,
 			    	sp.`admin_fee`,
 			    	sp.`other_fee`,
@@ -1161,6 +1164,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	 
 			    	sp.`tuition_fee`,
 			    	sp.`discount_percent`,
+			    	sp.`discount_fix`,
 			    	sp.`total_payment`,
 			    	 
 			    	sp.`grand_total_payment`,
@@ -1254,6 +1258,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	 
 			    	sp.`tuition_fee`,
 			    	sp.`discount_percent`,
+			    	sp.`discount_fix`,
 			    	sp.`total_payment`,
 			    	 
 			    	sp.`grand_total_payment`,

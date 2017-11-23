@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('Product Payment')); 
+	echo $this->headTitle($tr->translate('ADD_STUDENT_PRODUCT_PAYMENT')); 
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 ?>	
 <script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.8.3.min.js"></script>
@@ -21,7 +21,8 @@
 		getNewReceiptNo("");
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "student_name",
 		    name: "student_name",           
 		    class: 'fullside',  
@@ -100,7 +101,7 @@
 	<tr>
 		<td>
 			<fieldset>
-					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_SERVICE_PAYMENT");?></strong></legend>
+					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("ADD_STUDENT_PRODUCT_PAYMENT");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
 						<tr>
 							<td width="12%"><?php echo $tr->translate("BRANCH");?></td>
@@ -155,12 +156,17 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
 								<input type="hidden" id="identity" name="identity" />
 								<input type="text" class="fullside" name="readmoney" readonly="readonly" id="readmoney" dojoType="dijit.form.TextBox" />
 							</td>
 							<td colspan="2" align="right">
 								<table style="width:80%;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
+									<tr>
+										<td ><?php echo $tr->translate("EXCHANGE_RATE")." (៛)";?></td>
+										<td align="right">
+											<input type="text" name="ex_rate" id="ex_rate" class="fullside" readonly value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.NumberTextBox" />
+										</td>
+									</tr>
 									<tr>
 										<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 										<td align="right"><input class="fullside" type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
@@ -196,6 +202,12 @@
 
 
 function submitDataClose(){
+	
+	if(dijit.byId('branch').get('value')==-1){
+		alert("You must select branch ! ");
+		dijit.byId('branch').focus();
+		return false;
+	}
 	
 	condition = checkValidateAddRow();
 	if(condition==false){
@@ -260,7 +272,7 @@ function checkValidateAddRow(){
 		var rowIDArray = rowId.split(',');
 		for(var n = 0; n < rowIDArray.length; n++) {
 			product_id = dijit.byId('service_'+rowIDArray[n]).get('value');
-			if(product_id==0){
+			if(product_id<1){
 				return false;
 			}
 		}
@@ -453,22 +465,23 @@ function readMoneyInKhmer(netTotal){
 var url_price = "<?php echo $this->url(array('module'=>'registrar','controller'=>'uniformandbook','action'=>'get-price'));?>";
 function getprice(index){
 	service_price = dijit.byId('service_'+index).get('value');
-	//alert(service_price);
-	dojo.xhrPost({
-		url:url_price,
-		content:{
-			'service_price':service_price,
+	if(service_price>0){
+		dojo.xhrPost({
+			url:url_price,
+			content:{
+				'service_price':service_price,
+				},
+			handleAs:"json",
+			load: function(data) {
+				//alert(data);
+				dijit.byId("price_"+index).attr("value",data);
+				calculateDiscount(index);
 			},
-		handleAs:"json",
-		load: function(data) {
-			//alert(data);
-			dijit.byId("price_"+index).attr("value",data);
-			calculateDiscount(index);
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
 }
 
 

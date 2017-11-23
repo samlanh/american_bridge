@@ -696,6 +696,9 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     	$to_date = (empty($search['end_date']))? '1': " sp.create_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
     	
+    	$_db = new Application_Model_DbTable_DbGlobal;
+    	$branch_id = $_db->getAccessPermission('sp.branch_id');
+    	
     	$sql=" SELECT 
 				  sp.id,
 				  (select branch_namekh from rms_branch where br_id = s.branch_id) as branch,
@@ -718,6 +721,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				WHERE s.stu_id = sp.student_id 
 				  AND s.stu_type = 3 
 				  AND sp.payfor_type = 2 
+				  $branch_id
     	    ";
     	
     	if(!empty($search['adv_search'])){

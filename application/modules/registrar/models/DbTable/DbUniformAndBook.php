@@ -207,6 +207,10 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
     function getAllProductPayment($search){
     	$user=$this->getUserId();
     	$db=$this->getAdapter();
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal;
+    	$branch_id = $_db->getAccessPermission('sp.branch_id');
+    	
     	$sql="select 
     			sp.id,
 		    	(select CONCAT(stu_khname,' - ',stu_enname) from rms_student where rms_student.stu_id=sp.student_id limit 1)AS name,
@@ -222,6 +226,7 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
 	    	 where 
 	    	 	sp.payfor_type=5
 	    	 	and reg_from=0
+	    	 	$branch_id
     		";
 	    	
     	$from_date =(empty($search['start_date']))? '1': " sp.create_date >= '".$search['start_date']." 00:00:00'";

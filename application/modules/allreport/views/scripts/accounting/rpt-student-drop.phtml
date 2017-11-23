@@ -10,12 +10,16 @@
 		<table width="98%">
 	       <tr>
 	           <td><?php echo $frm->getElement("title");?></td>
+	           <td> <?php echo $frm->getElement("branch");?></td>
 	           <td> <?php echo $frm->getElement("study_year");?></td>
 	           <td> <?php echo $frm->getElement("degree_all");?></td>
 	           <td> <?php echo $frm->getElement("grade_all");?></td>
 			   <td> <?php echo $frm->getElement("session");?></td>
+			</tr>
+			<tr>   
 			   <td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->search['start_date'];?>" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}"/></td>
 		    	<td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->search['end_date'];?>" dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"/></td>
+			   <td> <?php echo $frm->getElement("user");?></td>
 			   <td>
 			   		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
 	       	   </td>

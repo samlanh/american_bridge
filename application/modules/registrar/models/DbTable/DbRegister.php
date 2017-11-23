@@ -1386,7 +1386,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$branch = $_db->getAccessPermission("br_id");
     	
-    	$sql=" select br_id as id,branch_namekh as name from rms_branch where status=1 ";
+    	$sql=" select br_id as id,branch_namekh as name from rms_branch where status=1 $branch ";
     	return $db->fetchAll($sql);
     }
     

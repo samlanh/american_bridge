@@ -41,6 +41,7 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 		$receipt = new Registrar_Model_DbTable_DbRegister();
 		//$receipt_no = $receipt->getRecieptNo(4,0);
 		$receipt_no = $data['receipt_no'];
+		
 		// សិក្សាពេល User ច្រលំចុច submit 2 ដង​​ អោយវាចូលតែ1
 // 		$rs = $this->getStudentExist($data['reciept_no'],$data['studentid']);
 // 		if(!empty($rs)){

@@ -373,7 +373,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     	$db=$this->getAdapter();
     	
     	$_db = new Application_Model_DbTable_DbGlobal();
-    	$branch_id = $_db->getAccessPermission();
+    	$branch_id = $_db->getAccessPermission('sp.branch_id');
     	
     	$sql="select 
     			sp.id,

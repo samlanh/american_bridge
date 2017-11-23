@@ -12,8 +12,12 @@ class Allreport_Model_DbTable_DbRptStudentPaymentLate extends Zend_Db_Table_Abst
     function getAllStudentPaymentLate($search){
     	$db=$this->getAdapter();
     	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    	
     	$sql="SELECT 
 				  sp.`receipt_number` AS receipt,
+				  (select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
 				  (select stu_code from rms_student where rms_student.stu_id=sp.student_id limit 1)AS code,
 				  (select CONCAT(stu_khname,' - ',stu_enname) from rms_student where rms_student.stu_id=sp.student_id limit 1)AS name,
 				  (select name_en from rms_view where rms_view.type=2 and key_code=(select sex from rms_student where rms_student.stu_id=sp.student_id limit 1))AS sex,
@@ -27,15 +31,20 @@ class Allreport_Model_DbTable_DbRptStudentPaymentLate extends Zend_Db_Table_Abst
 				  `rms_program_name` AS pn
 				WHERE spd.`is_start` = 1 
 				  AND sp.id=spd.`payment_id`
-				  AND spd.`service_id`=pn.`service_id`";
+				  AND spd.`service_id`=pn.`service_id`
+    			  $branch_id
+    		";
     	
-     	$order=" ORDER by sp.receipt_number ASC ";
+     	$order=" ORDER by spd.`validate` ASC ";
      	//$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
      	$to_date = (empty($search['end_date']))? '1': "spd.validate <= '".$search['end_date']." 23:59:59'";
      	$where = " AND ".$to_date;
      	
-     	if(!empty($search['service'])){
-     		$where .= " and spd.service_id = ".$search['service'];
+    	if($search['service']>0){
+     		$where .=" and spd.service_id=".$search['service'];
+     	}
+     	if($search['branch'] > 0){
+     		$where.= " AND sp.`branch_id` = ".$search['branch'];
      	}
      	
     		if(!empty($search['txtsearch'])){

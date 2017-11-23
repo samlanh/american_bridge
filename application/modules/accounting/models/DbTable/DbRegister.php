@@ -18,7 +18,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     function getAllStudentRegister($search=null){
     	 
     	$_db = new Application_Model_DbTable_DbGlobal;
-    	$branch_id = $_db->getAccessPermission('s.branch_id');
+    	$branch_id = $_db->getAccessPermission('sp.branch_id');
     	
     	$db=$this->getAdapter();
     	$sql=" SELECT
@@ -44,6 +44,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 			    	AND s.stu_id = sp.student_id
 			    	AND s.stu_type IN (1,2)
 			    	and s.status=1
+			    	$branch_id
     		";
     	 
     	$where=" ";

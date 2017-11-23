@@ -66,37 +66,8 @@ fieldset{  background:none;}
 ?>
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'studentservicepayment','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	
-	<script type="dojo/method" event="onSubmit">   
-
-		stu_type = dijit.byId('student_type').get('value');
-		if(stu_type==1){
-			stu_id = dijit.byId('student_name_new').get('value');
-			if(stu_id==-1){
-				dijit.byId('student_name_new').focus();
-				return false;
-			}
-		}else if(stu_type==3){
-			stu_id = dijit.byId('student_name_old').get('value');
-			if(stu_id==-1){
-				dijit.byId('student_name_old').focus();
-				return false;
-			}
-		}else if(stu_type==4){
-			stu_id = dijit.byId('drop_name').get('value');
-			if(stu_id==-1){
-				dijit.byId('drop_name').focus();
-				return false;
-			}
-		}
-
-		total_payment = dijit.byId('total_payment').get('value');
-		paid_amount = dijit.byId('paid_amount').get('value');
-		if(paid_amount>total_payment){
-			alert('You can not pay more than total payment')
-			dijit.byId('paid_amount').focus();
-			return false;
-		}
-		else if(this.validate()) {
+	<script type="dojo/method" event="onSubmit">   		
+		if(this.validate()) {
 			return true;
 		}else {
 			return false;
@@ -371,6 +342,35 @@ fieldset{  background:none;}
 
 function submitDataClose(){
 	
+	stu_type = dijit.byId('student_type').get('value');
+	if(stu_type==1){
+		stu_id = dijit.byId('student_name_new').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_new').focus();
+			return false;
+		}
+	}else if(stu_type==3){
+		stu_id = dijit.byId('student_name_old').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_old').focus();
+			return false;
+		}
+	}else if(stu_type==4){
+		stu_id = dijit.byId('drop_name').get('value');
+		if(stu_id<1){
+			dijit.byId('drop_name').focus();
+			return false;
+		}
+	}
+
+	total_payment = dijit.byId('total_payment').get('value');
+	paid_amount = dijit.byId('paid_amount').get('value');
+	if(paid_amount>total_payment){
+		alert('You can not pay more than total payment')
+		dijit.byId('paid_amount').focus();
+		return false;
+	}
+	
 	if(document.getElementById('buy_product').checked){
 		condition = checkValidateAddRow();
 		if(condition==false){
@@ -401,6 +401,35 @@ function submitDataClose(){
 }
 
 function submitDataAddNew(){
+	
+	stu_type = dijit.byId('student_type').get('value');
+	if(stu_type==1){
+		stu_id = dijit.byId('student_name_new').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_new').focus();
+			return false;
+		}
+	}else if(stu_type==3){
+		stu_id = dijit.byId('student_name_old').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_old').focus();
+			return false;
+		}
+	}else if(stu_type==4){
+		stu_id = dijit.byId('drop_name').get('value');
+		if(stu_id<1){
+			dijit.byId('drop_name').focus();
+			return false;
+		}
+	}
+
+	total_payment = dijit.byId('total_payment').get('value');
+	paid_amount = dijit.byId('paid_amount').get('value');
+	if(paid_amount>total_payment){
+		alert('You can not pay more than total payment')
+		dijit.byId('paid_amount').focus();
+		return false;
+	}
 	
 	if(document.getElementById('buy_product').checked){
 		condition = checkValidateAddRow();

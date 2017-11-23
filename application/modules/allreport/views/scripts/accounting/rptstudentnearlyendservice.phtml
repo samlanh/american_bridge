@@ -12,14 +12,15 @@
 ?>
 <div style="width: 28cm;margin: 0 auto;">
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rptstudentnearlyendservice')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-	<table>	
+	<table width="100%">	
 		<tr>
 			<td>
-				<input dojoType="dijit.form.TextBox" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+				<input dojoType="dijit.form.TextBox" class="fullside" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
 			</td>
-			<td width="350px"> <?php echo $frm->getElement("service");?></td>
+			<td > <?php echo $frm->getElement("branch");?></td>
+			<td > <?php echo $frm->getElement("service");?></td>
 			<td>
-				<input class="fullside" name="to_date" id="to_date" dojoType="dijit.form.DateTextBox" placeholder="to date" value="<?php echo $this->search['end_date'];?>" type="text">
+				<input class="fullside" name="to_date" id="to_date" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" placeholder="to date" value="<?php echo $this->search['end_date'];?>" type="text">
 			</td>
 			<td>
 				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
@@ -47,8 +48,9 @@
 				<tr>
 					<td colspan="3">
 						<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
-							<tr style="font-size:11px; height: 20px;border: 1px solid #000;" align="center" >
+							<tr style="font-size:12px; height: 20px;border: 1px solid #000;background: #ccc;" align="center" >
 								<td style="border: 1px solid #000;">&nbsp;N.o&nbsp;</td>
+								<td style="border: 1px solid #000;">&nbsp;Branch&nbsp;</td>
 								<td style="border: 1px solid #000;">&nbsp;Receipt No&nbsp;</td>
 								<td style="border: 1px solid #000;">Code</th>
 								<td style="border: 1px solid #000;">&nbsp;Student Name&nbsp;</td>
@@ -68,8 +70,9 @@
 // 													echo $diff->format('%R'); // use for point out relation: smaller/greater
 // 													echo $diff->days;
 							?>
-							<tr style="font-size:10px; height: 20px;border: 1px solid #000;" align="center" >
+							<tr class="hover" style="font-size:11px; height: 20px;border: 1px solid #000;" align="center" >
 								<td style="border: 1px solid #000;"><?php echo $i;?></td>
+								<td style="border: 1px solid #000;"><?php echo $row['branch_name'];?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['receipt'];?></td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $row['code'];?>&nbsp;</td>
 								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['name'];?></td>	

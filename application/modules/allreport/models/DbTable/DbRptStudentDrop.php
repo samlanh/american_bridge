@@ -77,7 +77,12 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     	if(!empty($search['session'])){
     		$where.=' AND st.session='.$search['session'];
     	}
-    	
+    	if($search['branch'] > 0){
+    		$where.= " AND st.`branch_id` = ".$search['branch'];
+    	}
+    	if($search['user'] > 0){
+    		$where.= " AND stdp.`user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     	 
     }
@@ -139,8 +144,11 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 	    if(!empty($search['service'])){
 	    	$where.=' AND s.service_id='.$search['service'];
 	    }
-	    if(!empty($search['branch'])){
-	    	$where.=' AND st.branch_id='.$search['branch'];
+    	if($search['branch'] > 0){
+    		$where.= " AND st.`branch_id` = ".$search['branch'];
+    	}
+	    if($search['user'] > 0){
+	    	$where.= " AND stdp.`user_id` = ".$search['user'];
 	    }
 	    return $db->fetchAll($sql.$where.$order);
     }
@@ -202,8 +210,11 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 	    if(!empty($search['service'])){
 	    	$where.=' AND s.service_id='.$search['service'];
 	    }
-	    if(!empty($search['branch'])){
-	    	$where.=' AND st.branch_id='.$search['branch'];
+    	if($search['branch'] > 0){
+    		$where.= " AND st.`branch_id` = ".$search['branch'];
+    	}
+	    if($search['user'] > 0){
+	    	$where.= " AND stdp.`user_id` = ".$search['user'];
 	    }
 	    return $db->fetchAll($sql.$where.$order);
     

@@ -45,7 +45,8 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		$register = new Registrar_Model_DbTable_DbRegister();
-		$receipt_no = $register->getRecieptNo(5,$data['branch']);
+		//$receipt_no = $register->getRecieptNo(5,$data['branch']);
+		$receipt_no = $data['receipt_no'];
 		
 		try{
 			$arr=array(
@@ -56,6 +57,8 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 					
 					'buy_product'		=>1 ,
 					'reg_from'			=>1 ,
+					
+					'exchange_rate'		=>$data['ex_rate'],
 					
 					'grand_total_payment'			=>$data['grand_total'],
 					'grand_total_payment_in_riel'	=>$data['convert_to_riels'],
@@ -200,6 +203,10 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
     function getAllProductPayment($search){
     	$user=$this->getUserId();
     	$db=$this->getAdapter();
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal;
+    	$branch_id = $_db->getAccessPermission('sp.branch_id');
+    	
     	$sql="select 
     			sp.id,
     			(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch,
@@ -215,6 +222,7 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 	    		rms_student_payment as sp 
 	    	 where 
 	    	 	sp.payfor_type=5
+	    	 	$branch_id
     		";
 	    	
     	$from_date =(empty($search['start_date']))? '1': " sp.create_date >= '".$search['start_date']." 00:00:00'";
@@ -229,6 +237,9 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
     		$s_where[] = " (select stu_khname from rms_student where rms_student.stu_id=sp.student_id) LIKE '%{$s_search}%'";
     		$where .=' AND ( 
     		'.implode(' OR ',$s_where).')';
+    	}
+    	if(!empty($search['branch'])){
+    		$where.=" AND sp.branch_id=".$search['branch'];
     	}
     	if(!empty($search['user'])){
     		$where.=" AND sp.user_id=".$search['user'];

@@ -29,7 +29,8 @@
 	
 		new dijit.form.FilteringSelect({
 			store: service_store,
-			autoComplete: true,                        
+			autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "service",
 		    name: "service",
 			value:-1,
@@ -55,7 +56,8 @@
 
 		
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                       
 		    id: "student_name_new",
 		    name: "student_name_new",           
 		    class: 'fullside',  
@@ -68,7 +70,8 @@
 
 		
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "student_name_old",
 		    name: "student_name_old",           
 		    class: 'fullside',  
@@ -80,7 +83,8 @@
 		}, "student_name_old");
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                         
 		    id: "old_car_id",
 		    name: "old_car_id",           
 		    class: 'fullside',  
@@ -93,7 +97,8 @@
 
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "stu_drop_name",
 		    name: "stu_drop_name",           
 		    class: 'fullside',  
@@ -105,7 +110,8 @@
 		}, "stu_drop_name");
 
 		new dijit.form.FilteringSelect({
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    id: "stu_drop_id",
 		    name: "stu_drop_id",           
 		    class: 'fullside',  
@@ -276,8 +282,8 @@ fieldset{  background:none;}
 						<td style="width: 12%"><?php echo $tr->translate("STUDENT_TYPE");?></td>
 						<td style="width: 37%">
 							<select name="student_type" id="student_type" onchange="changeControl();getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
-								<option value="1">New Student</option>
 								<option value="3">Old Student</option>
+								<option value="1">New Student</option>
 								<option value="4">Drop Student</option>
 							</select>
 						</td>
@@ -286,7 +292,6 @@ fieldset{  background:none;}
 						<td align="center" style="width: 37%"><?php echo $register->getElement('reciept_no');?></td>
 					</tr>
 					<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
-					<input type="hidden" name="ex_rate" id="ex_rate" value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.TextBox" />
 					<tr>
 						<td><?php echo $tr->translate("STUDENT_NAME");?></td>
 						<td>
@@ -306,7 +311,7 @@ fieldset{  background:none;}
 						<td align="center">
 							
 							<div id="new_id">
-								<input type="text" name="new_car_id" style="color:red;" id="new_car_id" readOnly="readOnly" class="fullside" dojoType="dijit.form.TextBox" >     
+								<input type="text" name="new_car_id" style="color:red;" id="new_car_id" class="fullside" dojoType="dijit.form.TextBox" >     
 							</div>
 							
 							<div id="old_id">
@@ -320,10 +325,10 @@ fieldset{  background:none;}
 					</tr>
 					
 					<tr>
-						<td><?php echo $tr->translate("NAME_EN");?></td>
-						<td><?php echo $register->getElement('en_name');?></td>
-						<td align="right"><?php echo $tr->translate("NAME_KH");?></td>
-						<td align="center"><?php echo $register->getElement('kh_name');?></td>
+						<td width="15%"><?php echo $tr->translate("NAME_EN");?></td>
+						<td width="35%"><?php echo $register->getElement('en_name');?></td>
+						<td width="15%" align="right"><?php echo $tr->translate("NAME_KH");?></td>
+						<td width="35%" align="center"><?php echo $register->getElement('kh_name');?></td>
 					</tr>
 					<tr>	
 						<td><?php echo $tr->translate("SEX");?></td>
@@ -369,7 +374,18 @@ fieldset{  background:none;}
 					
 						<td ><?php echo $tr->translate('DISCOUNT');?></td>
 						<td> 
-							<input class="fullside" name="discount" id="discount" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.TextBox" value="0" type="text"   >
+							<table>
+								<tr>
+									<td>(%)&nbsp;</td>
+									<td>
+										<input class="fullside" name="discount" id="discount" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" value="0" type="text"   >
+									</td>
+									<td>&nbsp;($)&nbsp;</td>
+									<td>
+										<input class="fullside" name="discount_fix" id="discount_fix" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" value="0" type="text"   >
+									</td>
+								</tr>
+							</table>
 						</td>
 					
 						<td align="right" ><?php echo $tr->translate('TOTAL_PAYMENT');?></td>
@@ -448,6 +464,12 @@ fieldset{  background:none;}
 						<td colspan="4" align="right">
 							<table style="width:400px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
 								<tr>
+									<td ><?php echo $tr->translate("EXCHANGE_RATE")." (៛)";?></td>
+									<td align="right">
+										<input type="text" name="ex_rate" id="ex_rate" readonly value="<?php echo $this->exchange_rate ;?>" dojoType="dijit.form.NumberTextBox" />
+									</td>
+								</tr>
+								<tr>
 									<td ><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 									<td align="right"><input type="text" readonly="readonly" onkeyup="calculatBalanceAndReturn();"  name="grand_total" id="grand_total" dojoType="dijit.form.NumberTextBox" /></td>
 								</tr>
@@ -488,6 +510,35 @@ fieldset{  background:none;}
 
 function submitDataClose(){
 	
+	stu_type = dijit.byId('student_type').get('value');
+	if(stu_type==1){
+		stu_id = dijit.byId('student_name_new').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_new').focus();
+			return false;
+		}
+	}else if(stu_type==3){
+		stu_id = dijit.byId('student_name_old').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_old').focus();
+			return false;
+		}
+	}else if(stu_type==4){
+		stu_id = dijit.byId('drop_name').get('value');
+		if(stu_id<1){
+			dijit.byId('drop_name').focus();
+			return false;
+		}
+	}
+
+	total_payment = dijit.byId('total_payment').get('value');
+	paid_amount = dijit.byId('paid_amount').get('value');
+	if(paid_amount>total_payment){
+		alert('You can not pay more than total payment')
+		dijit.byId('paid_amount').focus();
+		return false;
+	}
+	
 	if(document.getElementById('buy_product').checked){
 		condition = checkValidateAddRow();
 		if(condition==false){
@@ -518,6 +569,35 @@ function submitDataClose(){
 }
 
 function submitDataAddNew(){
+	
+	stu_type = dijit.byId('student_type').get('value');
+	if(stu_type==1){
+		stu_id = dijit.byId('student_name_new').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_new').focus();
+			return false;
+		}
+	}else if(stu_type==3){
+		stu_id = dijit.byId('student_name_old').get('value');
+		if(stu_id<1){
+			dijit.byId('student_name_old').focus();
+			return false;
+		}
+	}else if(stu_type==4){
+		stu_id = dijit.byId('drop_name').get('value');
+		if(stu_id<1){
+			dijit.byId('drop_name').focus();
+			return false;
+		}
+	}
+
+	total_payment = dijit.byId('total_payment').get('value');
+	paid_amount = dijit.byId('paid_amount').get('value');
+	if(paid_amount>total_payment){
+		alert('You can not pay more than total payment')
+		dijit.byId('paid_amount').focus();
+		return false;
+	}
 	
 	if(document.getElementById('buy_product').checked){
 		condition = checkValidateAddRow();
@@ -704,6 +784,7 @@ function getStartDateService(){
 var url_get_service_cate = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-service-cate')); ?>';
 function getServiceCate(service_id){
 		//alert(service_id);
+	if(service_id>0){
 		dojo.xhrPost({
 				url:url_get_service_cate,
 				content:{
@@ -717,7 +798,7 @@ function getServiceCate(service_id){
 					alert(err);
 				}
 		});
-	
+	}
 }
 
 
@@ -764,8 +845,12 @@ function calculateTotalPayment(){
 	service_fee = service_fee * qty;
 	discount = dijit.byId('discount').get('value');
 	discount = isNaN(discount)?0:discount;
-	dijit.byId('total_payment').attr('value',service_fee-(service_fee*discount/100));
-	dijit.byId('paid_amount').attr('value',service_fee-(service_fee*discount/100));
+	
+	discount_fix = dijit.byId('discount_fix').get('value');
+	discount_fix = isNaN(discount_fix)?0:discount_fix;
+	
+	dijit.byId('total_payment').attr('value',(service_fee-discount_fix)-((service_fee-discount_fix)*discount/100));
+	dijit.byId('paid_amount').attr('value',(service_fee-discount_fix)-((service_fee-discount_fix)*discount/100));
 	calculatBalanceAndReturn();
 	
 	netTotal();
@@ -877,12 +962,12 @@ function getservicefee(){
 function clear(){
 	dijit.byId("balance_id").attr("value",'');
 	dijit.byId("service_fee").attr("value",0);
-	dijit.byId("discount").attr("value",0);
+	//dijit.byId("discount").attr("value",0);
 	dijit.byId("total_payment").attr("value",0);
 	dijit.byId("paid_amount").attr("value",0);
 	dijit.byId("balance").attr("value",0);
 	//dijit.byId("return").attr("value",0);
-	dijit.byId("other").attr("value",'');
+	//dijit.byId("other").attr("value",'');
 }
 function setDateReadOnly(){
 	//document.getElementById('start_date').readOnly = true;
@@ -1213,24 +1298,25 @@ function displayNoneAddRow(){
 
 var url_getCarIdByService = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-car-id-by-service')); ?>';
 function getCarIdByService(){
-	
 	service_id = dijit.byId('service').get('value');
-	dojo.xhrPost({
-		url:url_getCarIdByService,
-		content:{
-			'service_id':service_id,
+	if(service_id>0){
+		dojo.xhrPost({
+			url:url_getCarIdByService,
+			content:{
+				'service_id':service_id,
+				},
+			handleAs:"json",
+			load: function(data) {
+				//alert(data);
+				if(data){
+					dijit.byId('car_id').attr('value',data);
+				}
 			},
-		handleAs:"json",
-		load: function(data) {
-			//alert(data);
-			if(data){
-				dijit.byId('car_id').attr('value',data);
+			error: function(err) {
+				//alert(err);
 			}
-		},
-		error: function(err) {
-			//alert(err);
-		}
-	});
+		});
+	}
 	
 }
 

@@ -13,19 +13,18 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     {
     	try{
     		$db = new Accounting_Model_DbTable_DbStudentServicePayment();
-    		    		if($this->getRequest()->isPost()){
-    		    			$search=$this->getRequest()->getPost();
-    		    			//print_r($search);exit();
-    						
-    		    		}
-    		    		else{
-    		    			$search = array(
-    		    					'adv_search' => '',
-    		    					'branch' => '',
-    		    					'user' => '',
-    		    					'start_date'=> date('Y-m-d'),
-    		    					'end_date'=>date('Y-m-d'));
-    		    		}
+    		if($this->getRequest()->isPost()){
+    			$search=$this->getRequest()->getPost();
+    		}
+    		else{
+    			$search = array(
+    						'adv_search' => '',
+    		    			'branch' => '',
+    		    			'user' => '',
+    		    			'start_date'=> date('Y-m-d'),
+    		    			'end_date'=>date('Y-m-d')
+    					);
+    		}
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllStudenTServicePayment($search);
     		$list = new Application_Form_Frmtable();
