@@ -252,7 +252,20 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	 */
 	public function getArrAcl($user_type_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_type_id."'";
+		$sql = "SELECT aa.module, aa.controller, aa.action,aa.label FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa
+				ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_type_id."'
+				GROUP BY  aa.module ,aa.controller,aa.action
+				ORDER BY aa.module ,aa.is_menu ASC ,aa.rank ASC";
+		$rows = $db->fetchAll($sql);
+		return $rows;
+	}
+	
+	function getAccessUrl($module,$controller,$action){
+		$session_user=new Zend_Session_Namespace('auth');
+		$user_typeid = $session_user->level;
+		$db = $this->getAdapter();
+		$sql = "SELECT aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa
+		ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_typeid."' AND aa.module='".$module."' AND aa.controller='".$controller."' AND aa.action='".$action."' limit 1";
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}

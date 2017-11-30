@@ -67,16 +67,18 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 			if($data['student_type']==3){
 				$is_comeback = 0;
 				$stu_id = $data['student_name_old'];
+				$is_new=0;
 			}else{
 				$is_comeback = 1;
 				$stu_id = $data['drop_name'];
+				$is_new=1;
 			}
 			
 			$array = array(
 				'service_id'=>$data['service'],
 				'is_suspend'=>0,
 				'is_comeback'=>$is_comeback,
-				'is_new'=>0,
+				'is_new'=>$is_new,
 			);
 			$where = " type=5 and stu_id = ".$stu_id;
 			$this->update($array, $where);
@@ -236,7 +238,7 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 		
 		
 		try{
-			if($data['is_void']==1){
+			if(!empty($data['is_void'])){
 		
 				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
 					

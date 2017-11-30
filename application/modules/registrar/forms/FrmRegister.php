@@ -221,7 +221,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		  		'dojoType'=>$this->filter,
 		  		'required'=>'true',
 		  		'class'=>'fullside',
-		  		'onchange'=>'paymentTerm();getDateTerm();'
+		  		'onchange'=>'paymentTerm();getDateTerm(1);displayAmountSection();'
 		  		));
 		
 		$_fee = new Zend_Dojo_Form_Element_NumberTextBox('tuitionfee');
@@ -278,6 +278,14 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		));
 		$addmin_fee->setValue(0);
 		
+		$material_fee = new Zend_Dojo_Form_Element_NumberTextBox('material_fee');
+		$material_fee->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'onkeyup'=>'getTotale();netTotal();'
+		));
+		$material_fee->setValue(0);
+		
 		$books = new Zend_Dojo_Form_Element_NumberTextBox('books');
 		$books->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -304,7 +312,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$start_date->setAttribs(array(
 				'dojoType'=>"dijit.form.DateTextBox",
 				'class'=>'fullside',
-				'onChange'=>'getDateTerm();',
+				'onChange'=>'getDateTerm(2);calculateAmountDay();',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'required'=>true));
 		$start_date->setValue($date);
@@ -314,7 +322,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$end_date->setAttribs(array(
 				'dojoType'=>"dijit.form.DateTextBox",
 				'class'=>'fullside',
-				//'onChange'=>'getDateTerm();',
+				'onChange'=>'getDateTerm(2);',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'required'=>true));
 		$end_date->setValue($date);
@@ -435,6 +443,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 			$_disc_fix->setValue($data['discount_fix']);
 			$_remark->setValue($data['other_fee']);
 			$addmin_fee->setValue($data['admin_fee']);
+			$material_fee->setValue($data['material_fee']);
 			$total->setValue($data['total']);
 			$books->setValue($data['paid_amount']);
 			$remaining->setValue($data['balance_due']);
@@ -449,7 +458,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 			$drop_stu_name->setValue($data['stu_id']);	
 		}
 		$this->addElements(array(
-			 $drop_stu_name,$drop_studens,$parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total, $_year_one,$_new_student,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
+			 $material_fee,$drop_stu_name,$drop_studens,$parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total, $_year_one,$_new_student,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
 			  $_phone,$_dept,$_major,$_batch,$_year,$_session,$_term,$_fee,$_disc_fix,$_disc_percent,$_paid,$_paid_kh,$_remark,$_is_hold ));
 		
 		return $this;

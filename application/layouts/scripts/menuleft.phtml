@@ -13,174 +13,209 @@
 	//$allstudent=$acl=$this->url(array('module'=>'allreport','controller'=>'allstudent','action'=>'index'), null, true);
 	
 	/*--------------------URLs link display--------------------------*/
-		  $tr=Application_Form_FrmLanguages::getCurrentlanguage();
-		$arr_param_menu=array( 
-			'home'=>array(
+	
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	$session_user=new Zend_Session_Namespace('auth');
+	$arr_module = $session_user->arr_acl;
+// 	print_r($arr_module);exit();
+	$menu = array();
+	$module = '';
+	$controller=array();
+	$newarray=array();
+	if(!empty($arr_module)){
+		foreach ($arr_module as $key => $rs){
+			if($rs['module']=='report'){
+				continue;
+			}
+			$lblcontroller = $rs['label'];
+			if($module!=$rs['module']){
+				$newarray= array($rs['controller']=>'<li><a href="">'.$tr->translate(($lblcontroller)).'</a></li>');
+				$menu[$rs['module']]= $newarray;
+				$old_module=$rs['module'];
+			}else{
+				$newarray= array_merge($newarray,array($rs['controller']=>'<li><a href="">'.$tr->translate(($lblcontroller)).'</a></li>'));
+				$menu[$rs['module']] = $newarray;
+			}
+			$module=$rs['module'];
+		}
+	}
+	$arr_param_menu = $menu;
+	
+// 	print_r($menu);exit();
+// 	echo " module name : ".$request->getModuleName();
+	
+// 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+// 		$arr_param_menu=array( 
+// 			'home'=>array(
 						
-			),
-			'registrar'=>array(
-			    /*'index'=>'<li><a href="">'.$tr->translate("RECEIPT").'</a></li>',*/
+// 			),
+// 			'registrar'=>array(
+// 			    /*'index'=>'<li><a href="">'.$tr->translate("RECEIPT").'</a></li>',*/
 			    	          
-			    'register'=>'<li><a href="">'.$tr->translate("STUDENT_REGISTRATION").'</a></li>',
-				'coursestudy'=>'<li><a href="">'.$tr->translate("STUDENT_COURSE").'</a></li>',
-				'studentservicepayment'=>'<li><a href="">'.$tr->translate("STUDENT_CAR_PAYMENT").'</a></li>',
-				'studentlunchpayment'=>'<li><a href="">'.$tr->translate("STUDENT_LUNCH_PAYMENT").'</a></li>',
-				'uniformandbook'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY_MATERIAL_PAYMENT").'</a></li>',
-				'studenttest'=>'<li><a href="">'.$tr->translate("STUDENT_TEST").'</a></li>',
+// 			    'register'=>'<li><a href="">'.$tr->translate("STUDENT_REGISTRATION").'</a></li>',
+// 				'coursestudy'=>'<li><a href="">'.$tr->translate("STUDENT_COURSE").'</a></li>',
+// 				'studentservicepayment'=>'<li><a href="">'.$tr->translate("STUDENT_CAR_PAYMENT").'</a></li>',
+// 				'studentlunchpayment'=>'<li><a href="">'.$tr->translate("STUDENT_LUNCH_PAYMENT").'</a></li>',
+// 				'uniformandbook'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY_MATERIAL_PAYMENT").'</a></li>',
+// 				//'studenttest'=>'<li><a href="">'.$tr->translate("STUDENT_TEST").'</a></li>',
 					
-				'income'=>'<li><a href="">'.$tr->translate("OTHER_INCOME").'</a></li>',
-				'expense'=>'<li><a href="">'.$tr->translate("OTHER_EXPENSE").'</a></li>',
+// 				'income'=>'<li><a href="">'.$tr->translate("OTHER_INCOME").'</a></li>',
+// 				'expense'=>'<li><a href="">'.$tr->translate("OTHER_EXPENSE").'</a></li>',
 					
-				'cateincome'=>'<li><a href="">'.$tr->translate("CATEGORY_INCOME").'</a></li>',
-				'cateexpense'=>'<li><a href="">'.$tr->translate("CATEGORY_EXPENSE").'</a></li>',
+// 				'cateincome'=>'<li><a href="">'.$tr->translate("CATEGORY_INCOME").'</a></li>',
+// 				'cateexpense'=>'<li><a href="">'.$tr->translate("CATEGORY_EXPENSE").'</a></li>',
 					
-				'calculator'=>'<li><a href="">'.$tr->translate("CASH_COUNT").'</a></li>',
-				'allreports'=>'<li><a href="">'.$tr->translate("RPT_CASHPAYMENT").'</a></li>',
-				'studentnearlyendservice'=>'<li><a href="">'.$tr->translate("STUDENT_NEARLY_END_SERVICE").'</a></li>',
-				'studentpaymentlate'=>'<li><a href="">'.$tr->translate("STUDENT_PAYMENT_LATE").'</a></li>',
-// 				'otherincomeexpense'=>'<li><a href="">'.$tr->translate("RPT_OTHER_INCOME_EXPENSE").'</a></li>',
-// 				'category'=>'<li><a href="">'.$tr->translate("CATEGORY").'</a></li>',
-			),
-			'global'=>array(
-// 						'group'=>'<li><a href="">'.$tr->translate("STUDY_GROUP").'</a></li>',
-// 						'academicyear'=>'<li><a href="">'.$tr->translate("ACADEMIC_YEAR").'</a></li>',
-// 						'subject'=>'<li><a href="">'.$tr->translate("SUBJECT").'</a></li>',
-						//'studentscore'=>'<li><a href="">'.$tr->translate("STUDENT_SCORE").'</a></li>',
+// 				'calculator'=>'<li><a href="">'.$tr->translate("CASH_COUNT").'</a></li>',
+// 				'allreports'=>'<li><a href="">'.$tr->translate("RPT_CASHPAYMENT").'</a></li>',
+// 				'studentnearlyendservice'=>'<li><a href="">'.$tr->translate("STUDENT_NEARLY_END_SERVICE").'</a></li>',
+// 				'studentpaymentlate'=>'<li><a href="">'.$tr->translate("STUDENT_PAYMENT_LATE").'</a></li>',
+// // 				'otherincomeexpense'=>'<li><a href="">'.$tr->translate("RPT_OTHER_INCOME_EXPENSE").'</a></li>',
+// // 				'category'=>'<li><a href="">'.$tr->translate("CATEGORY").'</a></li>',
+// 			),
+// 			'global'=>array(
+// // 						'group'=>'<li><a href="">'.$tr->translate("STUDY_GROUP").'</a></li>',
+// // 						'academicyear'=>'<li><a href="">'.$tr->translate("ACADEMIC_YEAR").'</a></li>',
+// // 						'subject'=>'<li><a href="">'.$tr->translate("SUBJECT").'</a></li>',
+// 						//'studentscore'=>'<li><a href="">'.$tr->translate("STUDENT_SCORE").'</a></li>',
 						
 						
-						///'scholarship'=>'<li><a href="">'.$tr->translate("SCHOLARSHIP").'</a></li>',
-				// 					'Scholarship'=>'<li><a href="">'.$tr->translate("SCHOLARSHIP").'</a></li>',
+// 						///'scholarship'=>'<li><a href="">'.$tr->translate("SCHOLARSHIP").'</a></li>',
+// 				// 					'Scholarship'=>'<li><a href="">'.$tr->translate("SCHOLARSHIP").'</a></li>',
 						
-					    'branch'=>'<li><a href="">'.$tr->translate("BRANCH_LIST").'</a></li>',
-						'faculty'=>'<li><a href="">'.$tr->translate("DEGREE").'</a></li>',
-						'major'=>'<li><a href="">'.$tr->translate("GRADE").'</a></li>',
-						'car'=>'<li><a href="">'.$tr->translate("CAR").'</a></li>',
-						'room'=>'<li><a href="">'.$tr->translate("ROOM").'</a></li>',
-						//'situation'=>'<li><a href="">'.$tr->translate("SITUATIONS").'</a></li>',
-					    'occupation'=>'<li><a href="">'.$tr->translate("OCCUPATION").'</a></li>',
-// 						'province'=>'<li><a href="">'.$tr->translate("CITY_PROVINCE").'</a></li>',
-						//'highschool'=>'<li><a href="">'.$tr->translate("HIGHSCHOOL").'</a></li>',
-						//'icon'=>'<li><a href="">'.$tr->translate("ICON").'</a></li>',
-				),
-			'foundation'=>array(
-				'register'=>'<li><a href="">'.$tr->translate("REGISTER").'</a></li>',
-				'studentdrop'=>'<li><a href="">'.$tr->translate("STUDENT_DROP").'</a></li>',
-				'studentdroptransport'=>'<li><a href="">'.$tr->translate("STUDENT_DROP_TRANSPORT").'</a></li>',
-				'studentdroplunchandstay'=>'<li><a href="">'.$tr->translate("STUDENT_DROP_LUNCH_AND_STAY").'</a></li>',
-				'studentchangebranch'=>'<li><a href="">'.$tr->translate("STUDENT_CHANGE_BRANCH").'</a></li>',
-// 				'gep'=>'<li><a href="">'.$tr->translate("GEP_REGISTER").'</a></li>',
-				/*'groupstudy'=>'<li><a href="">'.$tr->translate("STUDY_GROUP").'</a></li>',
-				'studentgroup'=>'<li><a href="">'.$tr->translate("STUDENT_GROUP").'</a></li>',
-				'attendent'=>'<li><a href="">'.$tr->translate("ATTENDENT").'</a></li>',
-				'attendent'=>'<li><a href="">'.$tr->translate("ATTENDENT").'</a></li>',
-				'studentscore'=>'<li><a href="">'.$tr->translate("PRIMARY_SCORE").'</a></li>',
-				'mediumscore'=>'<li><a href="">'.$tr->translate("SECONDARY_SCORE").'</a></li>',
-				'studentchangegroup'=>'<li><a href="">'.$tr->translate("STUDENT_CHANGE_GROUP").'</a></li>',
-				'groupstudentchangegroup'=>'<li><a href="">'.$tr->translate("GROUP_STUDENT_CHANGE_GROUP").'</a></li>',
-				*/
-// 				'language'=>'<li><a href="">'.$tr->translate("DEGREE_LANGUAGE").'</a></li>',
-				//'studentstudy'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY").'</a></li>',
-				//'studentgroup'=>'<li><a href="">'.$tr->translate("STUDENT_GROUP").'</a></li>',
-			   /* 'certificate'=>'<li><a href="">'.$tr->translate("ALL_REPORT").'</a></li>',
-			    //'studentstudy'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY").'</a></li>',
-		        //'student'=>'<li><a href="">'.$tr->translate("STUDENT_LIST").'</a></li>',
-			    //'studentscore'=>'<li><a href="">'.$tr->translate("STUDENT_SCORE").'</a></li>',
-				//'studentscores'=>'<li><a href="">'.$tr->translate("STUDENT_SCORE").'</a></li>',
-		        'score'=>'<li><a href="">'.$tr->translate("SCORE_LIST").'</a></li>',
-			    'result'=>'<li><a href="">'.$tr->translate("STUDENT_CERTIFICATION").'</a></li>',
-			    'certificate'=>'<li><a href="">'.$tr->translate("ALL_REPORT").'</a></li>',*/
+// 					    'branch'=>'<li><a href="">'.$tr->translate("BRANCH_LIST").'</a></li>',
+// 						'faculty'=>'<li><a href="">'.$tr->translate("DEGREE").'</a></li>',
+// 						'major'=>'<li><a href="">'.$tr->translate("GRADE").'</a></li>',
+// 						'car'=>'<li><a href="">'.$tr->translate("CAR").'</a></li>',
+// 						'room'=>'<li><a href="">'.$tr->translate("ROOM").'</a></li>',
+// 						//'situation'=>'<li><a href="">'.$tr->translate("SITUATIONS").'</a></li>',
+// 					    'occupation'=>'<li><a href="">'.$tr->translate("OCCUPATION").'</a></li>',
+// // 						'province'=>'<li><a href="">'.$tr->translate("CITY_PROVINCE").'</a></li>',
+// 						//'highschool'=>'<li><a href="">'.$tr->translate("HIGHSCHOOL").'</a></li>',
+// 						//'icon'=>'<li><a href="">'.$tr->translate("ICON").'</a></li>',
+// 				),
+// 			'foundation'=>array(
+// 				'register'=>'<li><a href="">'.$tr->translate("REGISTER").'</a></li>',
+// 				'studentdrop'=>'<li><a href="">'.$tr->translate("STUDENT_DROP").'</a></li>',
+// 				'studentdroptransport'=>'<li><a href="">'.$tr->translate("STUDENT_DROP_TRANSPORT").'</a></li>',
+// 				'studentdroplunchandstay'=>'<li><a href="">'.$tr->translate("STUDENT_DROP_LUNCH_AND_STAY").'</a></li>',
+// 				//'studentchangebranch'=>'<li><a href="">'.$tr->translate("STUDENT_CHANGE_BRANCH").'</a></li>',
+// // 				'gep'=>'<li><a href="">'.$tr->translate("GEP_REGISTER").'</a></li>',
+// 				/*'groupstudy'=>'<li><a href="">'.$tr->translate("STUDY_GROUP").'</a></li>',
+// 				'studentgroup'=>'<li><a href="">'.$tr->translate("STUDENT_GROUP").'</a></li>',
+// 				'attendent'=>'<li><a href="">'.$tr->translate("ATTENDENT").'</a></li>',
+// 				'attendent'=>'<li><a href="">'.$tr->translate("ATTENDENT").'</a></li>',
+// 				'studentscore'=>'<li><a href="">'.$tr->translate("PRIMARY_SCORE").'</a></li>',
+// 				'mediumscore'=>'<li><a href="">'.$tr->translate("SECONDARY_SCORE").'</a></li>',
+// 				'studentchangegroup'=>'<li><a href="">'.$tr->translate("STUDENT_CHANGE_GROUP").'</a></li>',
+// 				'groupstudentchangegroup'=>'<li><a href="">'.$tr->translate("GROUP_STUDENT_CHANGE_GROUP").'</a></li>',
+// 				*/
+// // 				'language'=>'<li><a href="">'.$tr->translate("DEGREE_LANGUAGE").'</a></li>',
+// 				//'studentstudy'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY").'</a></li>',
+// 				//'studentgroup'=>'<li><a href="">'.$tr->translate("STUDENT_GROUP").'</a></li>',
+// 			   /* 'certificate'=>'<li><a href="">'.$tr->translate("ALL_REPORT").'</a></li>',
+// 			    //'studentstudy'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY").'</a></li>',
+// 		        //'student'=>'<li><a href="">'.$tr->translate("STUDENT_LIST").'</a></li>',
+// 			    //'studentscore'=>'<li><a href="">'.$tr->translate("STUDENT_SCORE").'</a></li>',
+// 				//'studentscores'=>'<li><a href="">'.$tr->translate("STUDENT_SCORE").'</a></li>',
+// 		        'score'=>'<li><a href="">'.$tr->translate("SCORE_LIST").'</a></li>',
+// 			    'result'=>'<li><a href="">'.$tr->translate("STUDENT_CERTIFICATION").'</a></li>',
+// 			    'certificate'=>'<li><a href="">'.$tr->translate("ALL_REPORT").'</a></li>',*/
  
-			),
-			'accounting'=>array(
-				'register'=>'<li><a href="">'.$tr->translate("STUDENT_REGISTRATION").'</a></li>',
-				'coursestudy'=>'<li><a href="">'.$tr->translate("STUDENT_COURSE").'</a></li>',
+// 			),
+// 			'accounting'=>array(
+// 				'register'=>'<li><a href="">'.$tr->translate("STUDENT_REGISTRATION").'</a></li>',
+// 				'coursestudy'=>'<li><a href="">'.$tr->translate("STUDENT_COURSE").'</a></li>',
 				
-				'studentservicepayment'=>'<li><a href="">'.$tr->translate("STUDENT_CAR_PAYMENT").'</a></li>',
-				'studentlunchpayment'=>'<li><a href="">'.$tr->translate("STUDENT_LUNCH_PAYMENT").'</a></li>',
-				'productpayment'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY_MATERIAL_PAYMENT").'</a></li>',
+// 				'studentservicepayment'=>'<li><a href="">'.$tr->translate("STUDENT_CAR_PAYMENT").'</a></li>',
+// 				'studentlunchpayment'=>'<li><a href="">'.$tr->translate("STUDENT_LUNCH_PAYMENT").'</a></li>',
+// 				'productpayment'=>'<li><a href="">'.$tr->translate("STUDENT_STUDY_MATERIAL_PAYMENT").'</a></li>',
 					
 					
-				'fee'=>'<li><a href="">'.$tr->translate("TUITION_FEE").'</a></li>',
-				'Servicecharge'=>'<li><a href="">'.$tr->translate("SERVICE_FEE").'</a></li>',
-				'service'=>'<li><a href="">'.$tr->translate("SERVICE_NAME").'</a></li>',
-				'services'=>'<li><a href="">'.$tr->translate("SERVICE_CATE").'</a></li>',
-				//'Servicear'=>'<li><a href="">'.$tr->translate("SERVICE_INCOME").'</a></li>',
-				'service'=>'<li><a href="">'.$tr->translate("SERVICES").'</a></li>',
-				'services'=>'<li><a href="">'.$tr->translate("SERVICE_TYPE").'</a></li>',
-				'bookanduniform'=>'<li><a href="">'.$tr->translate("PRODUCT").'</a></li>',
-				//'suspendservice'=>'<li><a href="">'.$tr->translate("STUDENT_SUSPEND_SERVICE").'</a></li>',
-				/*'StudentDebt'=>'<li><a href="">'.$tr->translate("áž�áž¶ážšáž¶áž„áž‡áŸ†áž–áž¶áž€áŸ‹áž‡áŸ†áž–áž¶áž€áŸ‹").'</a></li>',
-				'StudentLate'=>'<li><a href="">'.$tr->translate("STUDENT_LATE").'</a></li>',
-				'Programcharge'=>'<li><a href="">'.$tr->translate("GEPPROGRAM_FEE").'</a></li>',
-				'program'=>'<li><a href="">'.$tr->translate("SUBJECT").'</a></li>'
-				'program'=>'<li><a href="">'.$tr->translate("Subjects").'</a></li>',*/
-				'exchangerate'=>'<li><a href="">'.$tr->translate("EXCHANGE_RATE_INFORMATION").'</a></li>',
-				'customerpayment'=>'<li><a href="">'.$tr->translate("CUSTOMER_PAYMENT").'</a></li>',
-			),
+// 				'fee'=>'<li><a href="">'.$tr->translate("TUITION_FEE").'</a></li>',
+// 				'Servicecharge'=>'<li><a href="">'.$tr->translate("SERVICE_FEE").'</a></li>',
+// 				'service'=>'<li><a href="">'.$tr->translate("SERVICE_NAME").'</a></li>',
+// 				'services'=>'<li><a href="">'.$tr->translate("SERVICE_CATE").'</a></li>',
+// 				//'Servicear'=>'<li><a href="">'.$tr->translate("SERVICE_INCOME").'</a></li>',
+// 				'service'=>'<li><a href="">'.$tr->translate("SERVICES").'</a></li>',
+// 				'services'=>'<li><a href="">'.$tr->translate("SERVICE_TYPE").'</a></li>',
+// 				'bookanduniform'=>'<li><a href="">'.$tr->translate("PRODUCT").'</a></li>',
+// 				//'suspendservice'=>'<li><a href="">'.$tr->translate("STUDENT_SUSPEND_SERVICE").'</a></li>',
+// 				/*'StudentDebt'=>'<li><a href="">'.$tr->translate("áž�áž¶ážšáž¶áž„áž‡áŸ†áž–áž¶áž€áŸ‹áž‡áŸ†áž–áž¶áž€áŸ‹").'</a></li>',
+// 				'StudentLate'=>'<li><a href="">'.$tr->translate("STUDENT_LATE").'</a></li>',
+// 				'Programcharge'=>'<li><a href="">'.$tr->translate("GEPPROGRAM_FEE").'</a></li>',
+// 				'program'=>'<li><a href="">'.$tr->translate("SUBJECT").'</a></li>'
+// 				'program'=>'<li><a href="">'.$tr->translate("Subjects").'</a></li>',*/
+// 				'exchangerate'=>'<li><a href="">'.$tr->translate("EXCHANGE_RATE_INFORMATION").'</a></li>',
+// 				'customerpayment'=>'<li><a href="">'.$tr->translate("CUSTOMER_PAYMENT").'</a></li>',
+// 			),
 			
-			'user'=>array(
-				'index'=>'<li><a href="">'.$tr->translate("USER").'</a></li>',
-			),	
-			'rsvacl'=>array(
-					 	//'index'=>'<li><a href="">'.$tr->translate("USER").'</a></li>',
-					    'acl'=>'<li><a href="">'.$tr->translate("ACL").'</a></li>',
-						'user'=>'<li><a href="">'.$tr->translate('USER').'</a></li>',
-						'useraccess'=>'<li><a href="">'.$tr->translate("USER_ACCESS").'</a></li>',
-						'usertype'=>'<li><a href="">'.$tr->translate("USER_TYPE").'</a></li>',
-				),
-			'backup'=>array(
-						'index'=>'<li><a href="">'.$tr->translate("Backup List").'</a></li>',
-				),
-			'allreport'=>array(
-				'allstudent'=>"<li><span class''><a href=".$allstudent.">".$tr->translate("ALL_STUDENT_REPORT")."</a></span></li>",
-				//'registra'=>"<li><span class''><a href=".$registrar.">".$tr->translate("REGISTRATION_REPORT")."</a></span></li>",
-				//'fundation'=>"<li><span class''><a href=".$fundation.">".$tr->translate("ADMINISTRATION_REPORT")."</a></span></li>",
-				'accounting'=>"<li><span class''><a href=".$accoutning.">".$tr->translate("ACCOUNTING_REPORT")."</a></span></li>",
-				//'other'=>"<li><span class''><a href=".$other.">".$tr->translate("OTHER_REPORT")."</a></span></li>",
-				//'rpt-student-list'=>"<li><span class''><a href='".$baseurl."/allreport/foundation/rpt-student-list'>".$tr->translate("STUDENT_LIST")."</a></span></li>",
-				//'rpt-student-info'=>"<li><span class''><a href='".$baseurl."/allreport/foundation/rpt-student-info'>".$tr->translate("STUDENT_INFOMATION")."</a></span></li>",
-				//'poc'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-exam-degree'>".$tr->translate('STUDENT_EXAM_LIST')."</a></li>",
-				/*'legal-document'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-final-exams'>".$tr->translate("STUDENT_PASS_EXAM")."</a></li>",
-				'rfm'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-stuid'>".$tr->translate('STUDENT_CARD')."</a></li>",
-				'pam'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-foundation'>".$tr->translate("ážŸáž·ážŸáŸ’ážŸáž”áž¶áž“áž’áŸ’ážœáž¾áž€áž¶áž�ážš")."</a></li>",
-				'prc'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-drop-out'>".$tr->translate("STUDENT_ADMISSION_EXAM")."</a></li>",
-				'budget-regulation'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-total-attendance'>".$tr->translate("TOTAL_ATTENDANT_LIST")."</a></li>",
-				'da'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-scorelist'>".$tr->translate("TEACHER_SCORE_LIST")."</a></li>",
-				'asd'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-student-attendance'>".$tr->translate("ATTENDANT_LIST")."</a></li>",
-				*///'asdf'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-amount-student'>".$tr->translate("ALL_STUDENT_LIST")."</a></li>",
-				//''=>"<li><a href='".$baseurl."/allreport/foundation/rpt-scorelist'>".$tr->translate("REF_SOP")."</a></li>",
-				//'rpt-allresult'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-allresult'>".$tr->translate("YAER_END_EXAM_RESULT")."</a></li>",
-				//''=>"<li><a href='".$baseurl."/allreport/foundation/rpt-certificate'>".$tr->translate("áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž˜áž¼áž›ážŠáŸ’áž‹áž¶áž“ ")."</a></li>",
-				//'asasfd'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-full-result'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹ážŸáž·ážŸáŸ’ážŸ")."</a></li>",
-				//'rpt-daily'=>"<li><a href='".$baseurl."/allreport/receiptionist/rpt-daily'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//accounting
-				//'rpt-account-rec'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-account-rec'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-gep-fee'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-gep-fee'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-gep-list'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-gep-list'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-invoice'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-invoice'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-list-of-item'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-list-of-item'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-student-list-detail-part1'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-student-list-detail-part1'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-student-list-detail-part2'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-student-list-detail-part2'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-student-list-detail-part3'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-student-list-detail-part3'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-studentpayment'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-studentpayment'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-				//'rpt-tuition-fee'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-tuition-fee'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
-			),	
-			'setting'=>array(
-				'label'=>'<li><a href="">'.$tr->translate("Label_SETTING").'</a></li>',
-				//'profile'=>'<li><a href="">'.$tr->translate("COM_PROFILE").'</a></li>',
-				'database'=>'<li><a href="">'.$tr->translate("DATA_BASE_SETTING").'</a></li>',
-				'setting'=>'<li><a href="">'.$tr->translate("System_SETTING").'</a></li>',			
-				)
-		); 
+// 			'user'=>array(
+// 				'index'=>'<li><a href="">'.$tr->translate("USER").'</a></li>',
+// 			),	
+// 			'rsvacl'=>array(
+// 					 	//'index'=>'<li><a href="">'.$tr->translate("USER").'</a></li>',
+// 					    'acl'=>'<li><a href="">'.$tr->translate("ACL").'</a></li>',
+// 						'user'=>'<li><a href="">'.$tr->translate('USER').'</a></li>',
+// 						'useraccess'=>'<li><a href="">'.$tr->translate("USER_ACCESS").'</a></li>',
+// 						'usertype'=>'<li><a href="">'.$tr->translate("USER_TYPE").'</a></li>',
+// 				),
+// 			'backup'=>array(
+// 						'index'=>'<li><a href="">'.$tr->translate("Backup List").'</a></li>',
+// 				),
+// 			'allreport'=>array(
+// 				'allstudent'=>"<li><span class''><a href=".$allstudent.">".$tr->translate("ALL_STUDENT_REPORT")."</a></span></li>",
+// 				//'registra'=>"<li><span class''><a href=".$registrar.">".$tr->translate("REGISTRATION_REPORT")."</a></span></li>",
+// 				//'fundation'=>"<li><span class''><a href=".$fundation.">".$tr->translate("ADMINISTRATION_REPORT")."</a></span></li>",
+// 				'accounting'=>"<li><span class''><a href=".$accoutning.">".$tr->translate("ACCOUNTING_REPORT")."</a></span></li>",
+// 				//'other'=>"<li><span class''><a href=".$other.">".$tr->translate("OTHER_REPORT")."</a></span></li>",
+// 				//'rpt-student-list'=>"<li><span class''><a href='".$baseurl."/allreport/foundation/rpt-student-list'>".$tr->translate("STUDENT_LIST")."</a></span></li>",
+// 				//'rpt-student-info'=>"<li><span class''><a href='".$baseurl."/allreport/foundation/rpt-student-info'>".$tr->translate("STUDENT_INFOMATION")."</a></span></li>",
+// 				//'poc'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-exam-degree'>".$tr->translate('STUDENT_EXAM_LIST')."</a></li>",
+// 				/*'legal-document'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-final-exams'>".$tr->translate("STUDENT_PASS_EXAM")."</a></li>",
+// 				'rfm'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-stuid'>".$tr->translate('STUDENT_CARD')."</a></li>",
+// 				'pam'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-foundation'>".$tr->translate("ážŸáž·ážŸáŸ’ážŸáž”áž¶áž“áž’áŸ’ážœáž¾áž€áž¶áž�ážš")."</a></li>",
+// 				'prc'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-drop-out'>".$tr->translate("STUDENT_ADMISSION_EXAM")."</a></li>",
+// 				'budget-regulation'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-total-attendance'>".$tr->translate("TOTAL_ATTENDANT_LIST")."</a></li>",
+// 				'da'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-scorelist'>".$tr->translate("TEACHER_SCORE_LIST")."</a></li>",
+// 				'asd'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-student-attendance'>".$tr->translate("ATTENDANT_LIST")."</a></li>",
+// 				*///'asdf'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-amount-student'>".$tr->translate("ALL_STUDENT_LIST")."</a></li>",
+// 				//''=>"<li><a href='".$baseurl."/allreport/foundation/rpt-scorelist'>".$tr->translate("REF_SOP")."</a></li>",
+// 				//'rpt-allresult'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-allresult'>".$tr->translate("YAER_END_EXAM_RESULT")."</a></li>",
+// 				//''=>"<li><a href='".$baseurl."/allreport/foundation/rpt-certificate'>".$tr->translate("áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž˜áž¼áž›ážŠáŸ’áž‹áž¶áž“ ")."</a></li>",
+// 				//'asasfd'=>"<li><a href='".$baseurl."/allreport/foundation/rpt-full-result'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹ážŸáž·ážŸáŸ’ážŸ")."</a></li>",
+// 				//'rpt-daily'=>"<li><a href='".$baseurl."/allreport/receiptionist/rpt-daily'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//accounting
+// 				//'rpt-account-rec'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-account-rec'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-gep-fee'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-gep-fee'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-gep-list'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-gep-list'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-invoice'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-invoice'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-list-of-item'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-list-of-item'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-student-list-detail-part1'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-student-list-detail-part1'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-student-list-detail-part2'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-student-list-detail-part2'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-student-list-detail-part3'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-student-list-detail-part3'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-studentpayment'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-studentpayment'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 				//'rpt-tuition-fee'=>"<li><a href='".$baseurl."/allreport/accounting/rpt-tuition-fee'>".$tr->translate("áž”áŸ’ážšáž¶áž€áŸ‹áž…áŸ†ážŽáž¼áž›ážšáž”ážŸáŸ‹áž“áž·")."</a></li>",
+// 			),	
+// 			'setting'=>array(
+// 				'label'=>'<li><a href="">'.$tr->translate("Label_SETTING").'</a></li>',
+// 				//'profile'=>'<li><a href="">'.$tr->translate("COM_PROFILE").'</a></li>',
+// 				'database'=>'<li><a href="">'.$tr->translate("DATA_BASE_SETTING").'</a></li>',
+// 				'setting'=>'<li><a href="">'.$tr->translate("System_SETTING").'</a></li>',			
+// 				)
+// 		); 
 	?>
 	<div id="header-left">
-	<ul>
+		<ul>
 			<?php 
-// 				$request=Zend_Controller_Front::getInstance()->getRequest();
-				$dc=new Application_Model_Decorator();					
-				$class="current-left";					
-				@$menu=$dc->getMenuLeft($arr_param_menu[$request->getModuleName()],$request->getControllerName(),$request->getModuleName());
-				if($menu) echo $menu;					
+				if($request->getModuleName()!='report'){
+					if($request->getModuleName()!='default' AND $action!='changepassword' ){
+						$dc=new Application_Model_Decorator();					
+						$class="current-left";					
+						$menu=$dc->getMenuLeft($arr_param_menu[$request->getModuleName()],$request->getControllerName(),$request->getModuleName());
+						//print_r($arr_param_menu[$request->getModuleName()]);
+						if($menu) print_r($menu);	
+					 }		
+				}				
 			?>
-	</ul>																
+		</ul>																
 	</div>

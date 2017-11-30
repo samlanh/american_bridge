@@ -173,9 +173,11 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					if($data['student_type']==3){
 						$id = $data['old_studens'];
 						$is_comeback = 0;
+						$is_stu_new = 0;
 					}else{
 						$id = $data['drop_studens'];
 						$is_comeback = 1;
+						$is_stu_new = 1;
 					}
 					
 					$arr = array(
@@ -188,7 +190,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'stu_type'	=>$stu_type,
 							
 							'is_subspend'=>0,
-							'is_stu_new' =>0,
+							'is_stu_new' =>$is_stu_new,
 							'is_comeback'=>$is_comeback,
 					);
 					$where = ' stu_id = '.$id;
@@ -614,8 +616,6 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					$where = " stu_id = ".$data['old_studens'];
 					$this->update($arr, $where);
 				}
-		
-		
 		
 				////////////////////////////////////////////////////////////////////////////////////////////
 		

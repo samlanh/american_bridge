@@ -115,8 +115,20 @@ dojo.require("dojo.parser");
 								</ul>
 							</div>
 							<div style="clear:both;"></div>
-							<?php }?>
-            	<?php echo $this->layout()->content;  ?></td>
+				<?php }?>
+				
+				<?php 
+					$db = new Application_Model_DbTable_DbUsers();
+            		$rs = $db->getAccessUrl($module,$controller,$action);
+            		
+            		if(!empty($rs) OR $action=='changepassword'){
+            			echo $this->layout()->content;
+            		}else{
+            			echo $this->render('pagenotfund.phtml');
+            		}
+            	?>
+				
+            	<?php //echo $this->layout()->content;  ?></td>
             </tr>
              <tr height="30px" style="border:1px solid #ccc;background:#B9B9CC; color: #008;">
              	<td colspan="2" align="center"><marquee behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">

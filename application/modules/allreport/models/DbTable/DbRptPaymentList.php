@@ -62,9 +62,9 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['txtsearch']));
-    		$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
-    		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
-    		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_khname LIKE '%{$s_search}%'";
     		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
@@ -140,9 +140,9 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['txtsearch']));
-    		$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
-    		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
-    		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_khname LIKE '%{$s_search}%'";
     		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
@@ -200,12 +200,14 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.id,COUNT(sp.student_id)
 			    FROM
 			    	`rms_student_payment` AS sp,
-			    	rms_service AS st
+			    	rms_service AS s,
+			    	rms_student as st
 			    WHERE
-			    	st.`stu_id`=sp.`student_id`
+			    	s.`stu_id`=sp.`student_id`
+			    	and st.stu_id = sp.student_id
 			    	AND sp.payfor_type=$payfor_type
 			    	and sp.is_void=0
-			    	and st.type=$service_type
+			    	and s.type=$service_type
     				$branch_id
     		";
     	 
@@ -241,7 +243,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 	    if(!empty($search['txtsearch'])){
 	    	$s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
     		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
@@ -282,9 +284,11 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	COUNT(s.stu_id)
 			    FROM
 			    	`rms_student_payment` AS sp,
-			    	`rms_service` AS s
+			    	`rms_service` AS s,
+			    	rms_student as st
 			    WHERE
 			    	s.`stu_id`=sp.`student_id`
+			    	and st.stu_id = sp.student_id
 			    	AND sp.`payfor_type`=$type
 			    	AND s.`is_suspend`!=0
 			    	and s.type = $service_type
@@ -321,7 +325,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
 	    	$s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
 	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
 	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
 	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
@@ -374,9 +378,11 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	COUNT(sp.student_id)
 			    FROM
 			    	`rms_student_payment` AS sp,
-			    	`rms_service` AS s
+			    	`rms_service` AS s,
+			    	rms_student as st
 			    WHERE
 			    	s.`stu_id`=sp.`student_id`
+			    	and st.stu_id = sp.student_id
 			    	AND sp.`payfor_type` = $payfor_type
 			    	AND sp.`is_new` = 1
 			    	and sp.is_void=0
@@ -399,7 +405,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
 	    	$s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
 	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
 	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
 	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
@@ -459,9 +465,11 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_service` AS s,
+			    	rms_student as st,
 			    	rms_student_paymentdetail as spd
 			    WHERE
 			    	s.`stu_id`=sp.`student_id`
+			    	and st.stu_id = sp.student_id
 			    	and sp.id = spd.payment_id
 			    	AND sp.`payfor_type` = $type
 			    	and spd.type = $detail_type
@@ -507,7 +515,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
     	$s_where = array();
     	$s_search = addslashes(trim($search['txtsearch']));
-    		$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
     		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
@@ -520,7 +528,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
-    		//echo $sql.$where.$order;
+//     	echo $sql.$where.$group_by.$order;
     
     	return $db->fetchAll($sql.$where.$group_by.$order);
     }
@@ -563,9 +571,9 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 	    if(!empty($search['txtsearch'])){
 		    $s_where = array();
 		    $s_search = addslashes(trim($search['txtsearch']));
-		    $s_where[] = " st.stu_code LIKE '%{$s_search}%'";
-	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
-	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+		    $s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_enname LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_khname LIKE '%{$s_search}%'";
 	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
 	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
 	    }
@@ -673,9 +681,9 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
 	    	$s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
-	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
-	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_enname LIKE '%{$s_search}%'";
+	    	$s_where[] = " s.stu_khname LIKE '%{$s_search}%'";
 	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
 	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
@@ -713,9 +721,13 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 				  sp.`student_id`,
 				  spd.`validate` 
 				FROM
+				  rms_student as s,
 				  `rms_student_payment` AS sp,
 				  `rms_student_paymentdetail` AS spd 
-				WHERE sp.id = spd.`payment_id` 
+				WHERE 
+				  sp.id = spd.`payment_id`
+				  and s.stu_id = sp.student_id
+				  and s.stu_id = sp.student_id 
 				  AND sp.is_subspend = 0 
 				  AND spd.type = $type 
 				  AND spd.`is_start` = 1
@@ -737,7 +749,15 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	 
     	$where .= " AND ".$to_date;
     	
-    	
+    	if(!empty($search['txtsearch'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['txtsearch']));
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
     	
     	
     	if(!empty($search['service'])){
@@ -759,6 +779,78 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where);
     }
     
+    
+    function getStudentPayableLastMonthService($search,$payfor_type,$type,$service_type){ //
+    	$db = $this->getAdapter();
+    
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    	 
+    	$sql=" SELECT
+			    	sp.id,
+			    	sp.`student_id`,
+			    	spd.`validate`
+			    FROM
+			    	rms_service as s,
+			    	rms_student as st,
+			    	`rms_student_payment` AS sp,
+			    	`rms_student_paymentdetail` AS spd
+		    	WHERE
+			    	sp.id = spd.`payment_id`
+			    	and st.stu_id = s.stu_id
+			    	and s.stu_id = sp.student_id
+			    	and s.type = $service_type
+			    	AND sp.is_subspend = 0
+			    	AND spd.type = $type
+			    	AND spd.`is_start` = 1
+			    	AND sp.`payfor_type` = $payfor_type
+			    	$branch_id
+    	";
+    	 
+    	$where = " ";
+    	 
+    
+    	$first_day = 1;
+    	$last_day = 31;
+    	$year=date("Y");
+    	$last_month = date("m") - 1;
+    
+    	$end = $year.'-'.$last_month.'-'.$last_day;
+    
+    	$to_date = (empty($end))? '1': " spd.`validate` <= '".$end." 23:59:59'";
+    
+    	$where .= " AND ".$to_date;
+    	 
+    	if(!empty($search['txtsearch'])){
+	    	$s_where = array();
+	    	$s_search = addslashes(trim($search['txtsearch']));
+	    	$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+	    	$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	 
+    	 
+    	if(!empty($search['service'])){
+    		$where.= " AND spd.`service_id` = ".$search['service'];
+    	}
+    	if(!empty($search['branch'])){
+	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
+	    }
+	    if(!empty($search['degree'])){
+	    $where.= " AND sp.`degree` = ".$search['degree'];
+	    }
+	    if(!empty($search['grade'] )){
+	    $where.= " AND sp.`grade` = ".$search['grade'];
+	    }
+	    if(!empty($search['room'])){
+	    		$where.= " AND sp.`room_id` = ".$search['room'];
+	    }
+	    //echo $sql.$where;//exit();
+	    return $db->fetchAll($sql.$where);
+    }
+    
     function getStudentPayableThisMonth($search,$payfor_type,$type){ //
     	$db = $this->getAdapter();
     	
@@ -770,10 +862,14 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`student_id`,
 			    	spd.`validate`
 			    FROM
+			    	rms_student as st,
+			    	rms_service as s,
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd
 			    WHERE 
 			    	sp.id = spd.`payment_id`
+			    	and st.stu_id = sp.student_id
+			    	and s.stu_id = st.stu_id
 			    	AND sp.is_subspend = 0
 			    	AND spd.type = $type
 			    	AND spd.`is_start` = 1
@@ -796,6 +892,17 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	 
     	$where .= " AND ".$from_date." AND ".$to_date;
     	
+    	
+    	if(!empty($search['txtsearch'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['txtsearch']));
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	
     	if($search['service'] > 0){
     		$where.= " AND spd.`service_id` = ".$search['service'];
     	}
@@ -814,6 +921,80 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	//echo $sql.$where;//exit();
     	return $db->fetchAll($sql.$where);
     }
+    
+    function getStudentPayableThisMonthService($search,$payfor_type,$type,$service_type){ //
+    	$db = $this->getAdapter();
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
+    	 
+    	$sql=" SELECT
+			    	sp.id,
+			    	sp.`student_id`,
+			    	spd.`validate`
+			    FROM
+			    	rms_student as st,
+			    	rms_service as s,
+			    	`rms_student_payment` AS sp,
+			    	`rms_student_paymentdetail` AS spd
+	    		WHERE
+			    	sp.id = spd.`payment_id`
+			    	and st.stu_id = sp.student_id
+			    	and s.stu_id = st.stu_id
+			    	and s.type=$service_type
+			    	AND sp.is_subspend = 0
+			    	AND spd.type = $type
+			    	AND spd.`is_start` = 1
+			    	AND sp.`payfor_type` = $payfor_type
+			    	$branch_id
+    	";
+    
+    	$where = " ";
+    
+    	$first_day = 1;
+    	$last_day = date("t");
+    	$year=date("Y");
+    	$for_month = date("m");
+    
+    	$start = $year.'-'.$for_month.'-'.$first_day;
+    	$end = $year.'-'.$for_month.'-'.$last_day;
+    
+    	$from_date = (empty($start))? '1': " spd.`validate` >= '".$start." 00:00:00'";
+    	$to_date = (empty($end))? '1': " spd.`validate` <= '".$end." 23:59:59'";
+    
+    	$where .= " AND ".$from_date." AND ".$to_date;
+    	 
+    	 
+    	if(!empty($search['txtsearch'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['txtsearch']));
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+    		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+    		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	 
+    	if($search['service'] > 0){
+    		$where.= " AND spd.`service_id` = ".$search['service'];
+    	}
+    	if($search['branch'] > 0){
+    		$where.= " AND sp.`branch_id` = ".$search['branch'];
+    	}
+    	if(!empty($search['degree'])){
+    		$where.= " AND sp.`degree` = ".$search['degree'];
+    	}
+    	if(!empty($search['grade'] )){
+    		$where.= " AND sp.`grade` = ".$search['grade'];
+    	}
+    		if(!empty($search['room'])){
+    				$where.= " AND sp.`room_id` = ".$search['room'];
+	    }
+	    //echo $sql.$where;//exit();
+	    return $db->fetchAll($sql.$where);
+    }
+    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     
     public function getAllEnglishFulltimePaymentList($search){
     	$db = $this->getAdapter();
@@ -852,7 +1033,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 					sp.`note`,
 					sp.is_subspend,
 					(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
-					
+					(select date from rms_student_drop where stu_id = sp.student_id and drop_from = 1 order by id DESC limit 1) as date_stop,
 					spd.qty,
 					spd.`start_date`,
 					spd.`validate`,
@@ -964,7 +1145,8 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`note`,
 			    	sp.is_subspend,
 			    	(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
-			    		
+			    	(select date from rms_student_drop where stu_id = sp.student_id and drop_from = 1 order by id DESC limit 1) as date_stop,
+			    	
 			    	spd.qty,
 			    	spd.`start_date`,
 			    	spd.`validate`,
@@ -1070,6 +1252,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`note`,
 			    	sp.is_subspend,
 			    	(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
+			    	(select date from rms_student_drop where stu_id = sp.student_id and drop_from = 1 order by id DESC limit 1) as date_stop,
 			    		
 			    	spd.qty,
 			    	spd.`start_date`,
@@ -1174,6 +1357,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.time_for_car,
 			    	sp.is_subspend,
 			    	(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
+			    	(select date from rms_student_drop where stu_id = sp.student_id and drop_from = 2 order by id DESC limit 1) as date_stop,
 			    	 
 			    	spd.`start_date`,
 			    	spd.`validate`,
@@ -1268,6 +1452,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.time_for_car,
 			    	sp.is_subspend,
 			    	(select v.name_en from rms_view as v where v.type=5 and key_code = sp.is_subspend) as suspend_type,
+			    	(select date from rms_student_drop where stu_id = sp.student_id and drop_from = 3 order by id DESC limit 1) as date_stop,
 			    	 
 			    	spd.service_id,
 			    	spd.`start_date`,

@@ -96,7 +96,7 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     		$_data = $this->getRequest()->getPost();
     		$_data['pay_id']=$id;
     		
-    		//print_r($_data);exit();
+//     		print_r($_data);exit();
     		
     		try {
     			$db = new Accounting_Model_DbTable_DbRegister();

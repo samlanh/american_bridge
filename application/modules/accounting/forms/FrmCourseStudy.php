@@ -365,8 +365,8 @@ Class Accounting_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'onchange'=>'changControll();',
 		));
-		$opts = array(  1=>$this->tr->translate('NEW_STUDENT'),
-			           	3=>$this->tr->translate('OLD_STUDENT'),
+		$opts = array(  3=>$this->tr->translate('OLD_STUDENT'),
+						1=>$this->tr->translate('NEW_STUDENT'),
 						4=>$this->tr->translate('DROP_STUDENT')
 		);
 		$student_type->setMultiOptions($opts);

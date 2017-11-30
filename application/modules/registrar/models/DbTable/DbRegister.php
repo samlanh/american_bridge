@@ -60,7 +60,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'address'		=>$data['address'],
 							'dob'			=>$data['dob'],
 							'room'			=>$data['room'],
-					
+							
 							'session'		=>$data['session'],
 							'degree'		=>$data['dept'],
 							'grade'			=>$data['grade'],
@@ -68,6 +68,8 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'create_date'	=>date('Y-m-d H:i:s'),
 							'user_id'		=>$this->getUserId(),
 							'branch_id'		=>$this->getBranchId(),
+							
+							'is_stu_new' =>1,
 					
 					);
 					$id= $this->insert($arr);
@@ -96,9 +98,11 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					if($data['student_type']==3){
 						$id = $data['old_studens'];
 						$is_comeback = 0;
+						$is_stu_new = 0;
 					}else{
 						$id = $data['drop_studens'];
 						$is_comeback = 1;
+						$is_stu_new = 1;
 					}
 					
 				// update student information to grade that input
@@ -111,7 +115,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'academic_year'=>$data['study_year'],
 							'stu_type'	=>$stu_type,
 							'is_subspend'=>0,
-							'is_stu_new' =>0,
+							'is_stu_new' =>$is_stu_new,
 							'is_comeback'=>$is_comeback,
 						);
 					$where = ' stu_id = '.$id;
@@ -164,6 +168,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						'discount_fix'	=>$data['discount_fix'],
 						'other_fee'		=>$data['remark'],
 						'admin_fee'		=>$data['addmin_fee'],
+						'material_fee'	=>$data['material_fee'],
 						'total'			=>$data['total'],
 						'total_payment'	=>$data['total'],
 						'paid_amount'	=>$data['books'],
@@ -404,6 +409,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					 
 					 		'admin_fee'=>$data['addmin_fee'],
 					 		'other_fee'=>$data['remark'],
+					 		'material_fee'	=>$data['material_fee'],
 					 		
 	             			'subtotal'=>$subtotal,//$subtotal,
 	             			'paidamount'=>$paidamount,//$paidamount,
@@ -834,6 +840,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.discount_fix,
 				  sp.other_fee,
 				  sp.admin_fee,
+				  sp.material_fee,
 				  sp.total,
 				  sp.paid_amount,
 				  sp.balance_due,

@@ -42,7 +42,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     		$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('stu_code'=>$link,'receipt_number'=>$link,'stu_khname'=>$link,'stu_enname'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		echo $e->getMessage();
     	}
     	$db=new Accounting_Model_DbTable_DbCourStudey();
     	$this->view->rows_deg=$db->getDegree();

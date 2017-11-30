@@ -126,7 +126,7 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
     		$_data['pay_id']=$id;
-    		//print_r($_data);exit();
+//     		print_r($_data);exit();
     		try {
     			$db = new Registrar_Model_DbTable_DbRegister();
     			$db->updateRegister($_data);

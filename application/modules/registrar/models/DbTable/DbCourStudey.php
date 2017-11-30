@@ -73,9 +73,11 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				if($data['student_type']==3){
 					$id = $data['old_studens'];
 					$is_comeback = 0;
+					$is_stu_new = 0;
 				}else{
 					$id = $data['drop_studens'];
 					$is_comeback = 1;
+					$is_stu_new = 1;
 				}
 				
 				$arr = array(
@@ -86,7 +88,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'room'		=>$data['room'],
 						'academic_year'=>$data['study_year'],
 						'stu_type'	=>3,
-						'is_stu_new' =>0,
+						'is_stu_new' =>$is_stu_new,
 						'is_subspend'=>0,
 						'is_comeback'=>$is_comeback,
 				);
@@ -409,7 +411,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		try{
-			if($data['is_void']==1){
+			if(!empty($data['is_void'])){
 		
 				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
 					
@@ -683,7 +685,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     	
     	$sql=" SELECT 
 				  sp.id,
-				  (select h.stu_code from rms_study_history as h where s.stu_id=h.stu_id) as stu_code,
+				  (select h.stu_code from rms_study_history as h where s.stu_id=h.stu_id limit 1) as stu_code,
 				  s.stu_khname,
 				  s.stu_enname,
 				  s.sex,
@@ -767,6 +769,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				  sp.discount_fix,
 				  sp.other_fee,
 				  sp.admin_fee,
+				  sp.material_fee,
 				  sp.total,
 				  sp.paid_amount,
 				  sp.balance_due,

@@ -740,7 +740,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			//print_r($this->view->rs);
 
 			$this->view->total_student = $db->getAllAmountStudentByType($search1,6); // 1 = khmer fulltime payment
-			//echo "all = ".count($this->view->total_student);
+// 			echo "all = ".count($this->view->total_student);
 				
 			$this->view->student_drop = $db->getAllAmountStudentDropByType($search1,6,null); // 1 = khmer fulltime payment
 			$this->view->student_drop_for_month = $db->getAllAmountStudentDropByType($search1,6,1);
@@ -751,7 +751,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			//echo " , New = ".count($this->view->new_student_for_month);
 			
 			$this->view->amount_student_by_grade = $db->getAllAmountStudentByGrade($search1,6); // 1 = khmer fulltime payment
-			//print_r($this->view->amount_student_by_grade);
+// 			print_r($this->view->amount_student_by_grade);
 			
 			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search1,6,1); // payfor_type = 6 => EFT , type = 1 => study fulltime type                
 			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search1,6,1); // payfor_type = 6 => EFT , type = 1 => study fulltime type
@@ -968,15 +968,15 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				
 			$this->view->student_drop = $db->getAllAmountStudentDropServiceByType($search,3,null,4); // 3 = transport payment , 4=transport type
 			$this->view->student_drop_for_month = $db->getAllAmountStudentDropServiceByType($search,3,1,4);
-			//echo " , drop = ".count($this->view->student_drop);
+// 			echo " , drop = ".count($this->view->student_drop);
 				
 			$this->view->new_student = $db->getAllAmountNewServiceStudentByType($search,3,null,4); // 3 = transport payment , 4=transport service
 			$this->view->new_student_for_month = $db->getAllAmountNewServiceStudentByType($search,3,1,4);
 				
 			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,3,3,4);
 			
-			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search,3,3); // payfor_type = 3 => Transport , type = 3 => Transport type
-			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search,3,3); // payfor_type = 3 => Transport , type = 3 => Transport type
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonthService($search,3,3,4); // payfor_type = 3 => Transport , type = 3 => Transport type
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonthService($search,3,3,4); // payfor_type = 3 => Transport , type = 3 => Transport type
 					
 			$this->view->search = $search;
 			
@@ -1037,8 +1037,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			
 			$this->view->amount_student_by_service = $db->getAllAmountStudentByService($search,4,5,5);
 			
-			$this->view->student_payable_last_month = $db->getStudentPayableLastMonth($search,4,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
-			$this->view->student_payable_this_month = $db->getStudentPayableThisMonth($search,4,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
+			$this->view->student_payable_last_month = $db->getStudentPayableLastMonthService($search,4,5,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
+			$this->view->student_payable_this_month = $db->getStudentPayableThisMonthService($search,4,5,5); // payfor_type = 4 => Lunch , type = 5 => Lunch type
 			
 			
 			$this->view->search = $search;

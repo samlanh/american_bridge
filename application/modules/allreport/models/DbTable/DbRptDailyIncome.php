@@ -378,9 +378,11 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
-			    	`rms_student` AS st
+			    	`rms_student` AS st,
+			    	rms_service as s
 			    WHERE
 			    	sp.id=spd.`payment_id`
+			    	and s.stu_id = st.stu_id
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=3
 			    	AND spd.`type`=3
@@ -418,7 +420,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
 	    	$s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-    		$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
     		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
@@ -477,9 +479,11 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
-			    	`rms_student` AS st
+			    	`rms_student` AS st,
+			    	rms_service as s
 			    WHERE
 			    	sp.id=spd.`payment_id`
+			    	and s.stu_id = st.stu_id
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=4
 			    	AND spd.`type`=5
@@ -517,7 +521,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 	    if(!empty($search['txtsearch'])){
 		    $s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-    		$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+    		$s_where[] = " s.stu_code LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
     		$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
     		$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";

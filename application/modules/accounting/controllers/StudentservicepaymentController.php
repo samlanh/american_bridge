@@ -115,7 +115,7 @@ class Accounting_StudentservicepaymentController extends Zend_Controller_Action 
     		$_data = $this->getRequest()->getPost();
      		$_data['payment_id']=$id;
      		
-     		//print_r($_data);exit();
+//      		print_r($_data);exit();
      		
     		try {
     			$db = new Accounting_Model_DbTable_DbStudentServicePayment();

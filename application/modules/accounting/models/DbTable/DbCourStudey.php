@@ -33,8 +33,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 // 		$receipt = $register->getRecieptNo($type,$data['branch']);
 		$stu_code = $data['stu_id'];
 		$receipt = $data['reciept_no'];
-		//echo $stu_code;exit();
-		//print_r($this->getBranchId());exit();
+		
 			try{
 				if($data['student_type']==1){ // New student
 					$this->_name="rms_student";
@@ -76,9 +75,11 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 					if($data['student_type']==3){
 						$id = $data['old_studens'];
 						$is_comeback = 0;
+						$is_stu_new = 0;
 					}else{
 						$id = $data['drop_studens'];
 						$is_comeback = 1;
+						$is_stu_new = 1;
 					}
 					
 					$arr = array(
@@ -90,7 +91,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'academic_year'=>$data['study_year'],
 							'stu_type'	=>3,
 							
-							'is_stu_new' =>0,
+							'is_stu_new' =>$is_stu_new,
 							'is_subspend'=>0,
 							'is_comeback'=>$is_comeback,
 					);
@@ -425,7 +426,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		try{
-			if($data['is_void']==1){
+			if(!empty($data['is_void'])){
 		
 				///////////////////////////////// rms_student_payment ////////////////////////////////////////////
 					
@@ -702,7 +703,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
 				  sp.id,
 				  (select branch_namekh from rms_branch where br_id = s.branch_id) as branch,
-				  (select h.stu_code from rms_study_history as h where s.stu_id=h.stu_id) as stu_code,
+				  (select h.stu_code from rms_study_history as h where s.stu_id=h.stu_id limit 1) as stu_code,
 				  s.stu_khname,
 				  s.stu_enname,
 				  s.sex,

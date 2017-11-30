@@ -55,8 +55,6 @@ class Application_Model_Decorator
 			$i++;
 		}
 		return $menu;
-		// }
-		//return null;
 	}
 	public function spanMenu($url,$controller,$class="current-left"){
 		$temp=str_replace('<a', '<a class="'.$class.'"', $url);

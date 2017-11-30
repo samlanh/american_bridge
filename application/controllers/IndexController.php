@@ -51,6 +51,24 @@ class IndexController extends Zend_Controller_Action
 					$user_info = $db_user->getUserInfo($user_id);
 					
 					$arr_acl=$db_user->getArrAcl($user_info['user_type']);
+					//print_r($arr_acl);exit();
+					$a_i = 0;
+					$arr_actin = array();
+					$arr_module=array();
+					for($i=0; $i<count($arr_acl);$i++){
+						$arr_module[$i]=$arr_acl[$i]['module'];
+					}
+					
+					
+					
+					$arr_module=(array_unique($arr_module));
+					//print_r($arr_module);exit();
+					$arr_actin=(array_unique($arr_actin));
+					$arr_module=$this->sortMenu($arr_module);
+					
+					$session_user->arr_acl = $arr_acl;
+					$session_user->arr_module = $arr_module;
+					$session_user->arr_actin = $arr_actin;
 					
 					$session_user->user_id=$user_id;
 					$session_user->user_name=$user_name;
@@ -60,43 +78,39 @@ class IndexController extends Zend_Controller_Action
 					$session_user->first_name= $user_info['first_name'];
 					$session_user->branch_id= $user_info['branch_id'];
 					
-					$a_i = 0;
-					$arr_actin = array();
-					$arr_module = array();
+// 					$a_i = 0;
+// 					$arr_actin = array();
+// 					$arr_module = array();
 					
-					for($i=0; $i<count($arr_acl);$i++){
+// 					for($i=0; $i<count($arr_acl);$i++){
 						
-						$arr_module[$i]=$arr_acl[$i]['module'];
-						if($arr_acl[$i]['module'] == 'exchange'){
-							if($arr_acl[$i]['action'] == "index" || $arr_acl[$i]['action'] == "add" || $arr_acl[$i]['action'] == "edited" ) {
-								continue;
-							}
-							$arr_actin[$a_i++] = $arr_acl[$i]['action'];
-						}
-					}					
+// 						$arr_module[$i]=$arr_acl[$i]['module'];
+// 						if($arr_acl[$i]['module'] == 'exchange'){
+// 							if($arr_acl[$i]['action'] == "index" || $arr_acl[$i]['action'] == "add" || $arr_acl[$i]['action'] == "edited" ) {
+// 								continue;
+// 							}
+// 							$arr_actin[$a_i++] = $arr_acl[$i]['action'];
+// 						}
+// 					}					
+					
+// // 					print_r($arr_module); exit;
+// 					$arr_module=$this->sortMenu($arr_module);
 					
 // 					print_r($arr_module); exit;
-					$arr_module=$this->sortMenu($arr_module);
 					
-// 					print_r($arr_module); exit;
-					$session_user->arr_acl = $arr_acl;
-					$session_user->arr_module = $arr_module;
-					$session_user->arr_actin = $arr_actin;
 						
 					$session_user->lock();
 					
 					$log=new Application_Model_DbTable_DbUserLog();
 					$log->insertLogin($user_id);
-// 					if(!empty($arr_module)){ 
-// 						foreach ($arr_module AS $i => $d){
-// 							if($d !== 'user'){
-// 								$url = '/' . $arr_module[2];
-// 							}
-// 							else{
-// 								$url = self::REDIRECT_URL;
-// 								break;
-// 							}
-// 						}
+//  					foreach ($arr_module AS $i => $d){
+//  						if($d !== 'user'){
+// 							$url = '/' . $arr_module[2];
+//  						}
+//  						else{
+// 							$url = self::REDIRECT_URL;
+// 							break;
+//  						}
 // 					}	
 					Application_Form_FrmMessage::redirectUrl("/home");	
 					exit();										
@@ -113,7 +127,7 @@ class IndexController extends Zend_Controller_Action
     }
     
     protected function sortMenu($menus){
-    	$menus_order = Array ( 'setting','rsvAcl','user','subagent','agent','transfer','exchange','reports');
+    	$menus_order = Array ( 'home','registrar','global','foundation','accounting','allreport','rsvacl','setting');
 //     	$menus_order = Array ( 'rsvAcl','user','subagent','agent','transfer','reports');
     	$temp_menu = Array();
     	$menus=array_unique($menus);

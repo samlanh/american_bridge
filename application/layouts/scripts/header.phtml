@@ -17,82 +17,162 @@
       $acl=$this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'index'), null, true);
       $setting=$this->url(array('module'=>'setting','controller'=>'index','action'=>'index'), null, true);
        
-      $module=Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+//       $module=Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
 	  
-      //$url_logo = $this->baseUrl()."/images/cam-app-logo.png";
+//       //$url_logo = $this->baseUrl()."/images/cam-app-logo.png";
       
-	  $item_arr=array(
-	  	'index'=>'<li>
-					<a><img src="/psst/trunk/public/images/cam-app-logo.png" style="max-height:45px"></a>
-				</li>',
+// 	  $item_arr=array(
+// 	  	'index'=>'<li>
+// 					<a><img src="/psst/trunk/public/images/cam-app-logo.png" style="max-height:45px"></a>
+// 				</li>',
 	  		
-	   'home'=>'<li class="link">
-					<a title="ទំព័រដើម" href="'.$home.'">
-						<span class="icon_menu"><i class="fa fa-home" aria-hidden="true"></i></span><br />'.$tr->translate("HOME_PAGE").'
-					</a>
-				</li>',	  
-	  'registrar'=>'<li class="link">
-						<a title="ការិ.ចុះឈ្មោះ" href="'.$registrar.'">
-							<span class="icon_menu"><i class="fa fa-graduation-cap" aria-hidden="true"></i></span><br />'.$tr->translate("REGISTRATION").'
-						</a>
-				  </li>',
-	  'global'=>'<li class="link">
-			  		<a title="ព័ត៏មានផ្សេងៗ" href="'.$global.'">
-			  			<span class="icon_menu"><i class="fa fa-users" aria-hidden="true"></i></span><br />'.$tr->translate("OTHER_INFOMATION").'
-			  		</a>
-	  			</li>',
-	  'foundation'=>'<li class="link">
-				  		<a title="ការិយាល័យរដ្ឋបាល" href="'.$foundation.'">
-				  			<span class="icon_menu"><i class="fa fa-university" aria-hidden="true"></i></span><br />'.$tr->translate("ADMINISTRATION").'
-				  		</a>
-				  	</li>',
-	 /* 'kindergarten'=>'<li class="link">
-	  		<a href="'.$kidergarten.'">
-	  			<span>'.$tr->translate("Kindergarten").'</span>
-	  		</a>
-	  	</li>',
-	 	'gep'=>'<li class="link">
-							<a title="ការិយាល័យរដ្ឋបាល" href="'.$gep.'">
-								<span>'.$tr->translate("GEP").'</span>
-							</a>
-						</li>',
+// 	   'home'=>'<li class="link">
+// 					<a title="ទំព័រដើម" href="'.$home.'">
+// 						<span class="icon_menu"><i class="fa fa-home" aria-hidden="true"></i></span><br />'.$tr->translate("HOME_PAGE").'
+// 					</a>
+// 				</li>',	  
+// 	  'registrar'=>'<li class="link">
+// 						<a title="ការិ.ចុះឈ្មោះ" href="'.$registrar.'">
+// 							<span class="icon_menu"><i class="fa fa-graduation-cap" aria-hidden="true"></i></span><br />'.$tr->translate("REGISTRATION").'
+// 						</a>
+// 				  </li>',
+// 	  'global'=>'<li class="link">
+// 			  		<a title="ព័ត៏មានផ្សេងៗ" href="'.$global.'">
+// 			  			<span class="icon_menu"><i class="fa fa-users" aria-hidden="true"></i></span><br />'.$tr->translate("OTHER_INFOMATION").'
+// 			  		</a>
+// 	  			</li>',
+// 	  'foundation'=>'<li class="link">
+// 				  		<a title="ការិយាល័យរដ្ឋបាល" href="'.$foundation.'">
+// 				  			<span class="icon_menu"><i class="fa fa-university" aria-hidden="true"></i></span><br />'.$tr->translate("ADMINISTRATION").'
+// 				  		</a>
+// 				  	</li>',
+// 	 /* 'kindergarten'=>'<li class="link">
+// 	  		<a href="'.$kidergarten.'">
+// 	  			<span>'.$tr->translate("Kindergarten").'</span>
+// 	  		</a>
+// 	  	</li>',
+// 	 	'gep'=>'<li class="link">
+// 							<a title="ការិយាល័យរដ្ឋបាល" href="'.$gep.'">
+// 								<span>'.$tr->translate("GEP").'</span>
+// 							</a>
+// 						</li>',
 	  
-	  */
-	  	'accounting'=>'<li class="link">
-						<a title="ការិយាល័យគណនេយ្យ" href="'.$accounting.'">
-							<span class="icon_menu"><i class="fa fa-money" aria-hidden="true"></i></span><br />'.$tr->translate("ACCOUNTING").'
-						</a>
-					</li>',
+// 	  */
+// 	  	'accounting'=>'<li class="link">
+// 						<a title="ការិយាល័យគណនេយ្យ" href="'.$accounting.'">
+// 							<span class="icon_menu"><i class="fa fa-money" aria-hidden="true"></i></span><br />'.$tr->translate("ACCOUNTING").'
+// 						</a>
+// 					</li>',
 	     
-	    'allreport'=>'<li class="link">
-							<a title="របាយការណ៏" href="'.$report.'">
-								<span class="icon_menu"><i class="fa  fa-file-text" aria-hidden="true"></i></span><br />'.$tr->translate("REPORT").'
-							</a>
-					   </li>',
-	  	'rsvacl'=>'<li class="link">
-				  		<a title="acl" href="'.$acl.'">
-				  			<span class="icon_menu"><i class="fa  fa-cog" aria-hidden="true"></i></span><br />'.$tr->translate("ACL").'
-				  		</a>
-				   </li>',
-	  	'setting'=>'<li class="link">
-					  	<a title="ការកំណត់ផ្សេងៗ" href="'.$setting.'">
-					  		<span class="icon_menu"><i class="fa  fa-cogs" aria-hidden="true"></i></span><br />'.$tr->translate("SRMS_SETTING").'
-					  	</a>
-					</li>',
+// 	    'allreport'=>'<li class="link">
+// 							<a title="របាយការណ៏" href="'.$report.'">
+// 								<span class="icon_menu"><i class="fa  fa-file-text" aria-hidden="true"></i></span><br />'.$tr->translate("REPORT").'
+// 							</a>
+// 					   </li>',
+// 	  	'rsvacl'=>'<li class="link">
+// 				  		<a title="acl" href="'.$acl.'">
+// 				  			<span class="icon_menu"><i class="fa  fa-cog" aria-hidden="true"></i></span><br />'.$tr->translate("ACL").'
+// 				  		</a>
+// 				   </li>',
+// 	  	'setting'=>'<li class="link">
+// 					  	<a title="ការកំណត់ផ្សេងៗ" href="'.$setting.'">
+// 					  		<span class="icon_menu"><i class="fa  fa-cogs" aria-hidden="true"></i></span><br />'.$tr->translate("SRMS_SETTING").'
+// 					  	</a>
+// 					</li>',
 	 
-	  );
+// 	  );
+
+      $icon = array(
+      		'home'=>'<i class="fa fa-home" aria-hidden="true"></i>',
+      		'registrar'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+      		'global'=>'<i class="fa fa-users" aria-hidden="true"></i>',
+      		'foundation'=>'<i class="fa fa-desktop" aria-hidden="true"></i>',
+      		'accounting'=>'<i class="fa fa-money" aria-hidden="true"></i>',
+      		'allreport'=>'<i class="fa  fa-file-text" aria-hidden="true"></i>',
+      		'rsvacl'=>'<i class="fa  fa-cog" aria-hidden="true"></i>',
+      		'setting'=>'<i class="fa  fa-cogs" aria-hidden="true"></i>',
+      );
+      
+      $module=Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+      $session_user=new Zend_Session_Namespace('auth');
+      $arr_module = $session_user->arr_module;
+//       print_r($arr_module);//exit();
+      $menuleft=array();
+      $class='link';
+      if(!empty($arr_module)){
+      	foreach ($arr_module as $rs){
+      		if($rs==$module){
+      			$class='current';
+      		}else{$class='link';
+      		}
+      			
+      		$controller = 'index';
+      		$label="";
+      			
+      		if($rs=='home'){
+      			$controller='index';
+      			$label="HOME_PAGE";
+      		}
+      			
+      		if($rs=='rsvacl'){
+      			$controller='user';
+      			$label="ACL";
+      		}
+      		elseif($rs=='setting'){
+      			$controller='database';
+      			$label="SETTING";
+      		}
+      		elseif($rs=='accounting'){
+      			$controller='fee';
+      			$label="ACCOUNTING";
+      
+      		}
+      		elseif($rs=='foundation'){
+      			$controller='register';
+      			$label="ADMINISTRATION";
+      		}
+      		elseif($rs=='global'){
+      			$controller='group';
+      			$label="OTHER_INFOMATION";
+      		}
+      		elseif($rs=='registrar'){
+      			$controller='register';
+      			$label="REGISTRAR";
+      		}
+      		elseif($rs=='allreport'){
+      			$controller='accounting';
+      			$label="ALL_REPORT";
+      		}
+      		elseif($rs=='library'){
+      			$controller='index';
+      			$label="library";
+      		}
+      			
+      			
+      		$url =$this->url(array('module'=>$rs,'controller'=>$controller,'action'=>'index'), null, true); ;
+      		$menuleft[$rs]="<li class='$class'><a href='$url'><span class='icon_menu'>$icon[$rs]</span><br />".$tr->translate(strtoupper($label))."</a></li>";
+      	}
+      }
+      
+      
+      $url_logo = $this->baseUrl()."/images/camapp.png";
 ?>  
 <div id="menu">
 	<ul>
+		<li >
+			<a ><img src="<?php echo $url_logo;?>" style="max-height:45px"  /></a>
+		</li>
 		<?php
-			foreach($item_arr as $key=>$value){
-				if($module==$key){
-					echo str_replace('class="link"', 'class="current"', $value);
-				}
-				else{
-					echo $value;
-				}
-			} 
+		$session_user=new Zend_Session_Namespace('authstu');
+		$modules_access = $session_user->arr_module;
+		foreach($menuleft as $key=>$value){
+			if($module==$value){
+				echo str_replace('link', 'current',$value);
+			}
+			else{
+				echo $value;
+			}
+		} 
 		?>
 		<li style="float: right;">
 			<a href="" class="langiconen" onclick="changeLange(2);"></a>

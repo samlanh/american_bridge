@@ -218,8 +218,8 @@
 						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 						
 						<td class="padd"><?php echo $rs['note'];?></td>
-						<td class="padd"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
-						<td class="padd"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
+						<td class="padd" style="color: red;"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
+						<td class="padd" style="color: red;"><?php if($rs['is_subspend']>0){ echo date("d-m-Y",strtotime($rs['date_stop']));}?></td>
  					</tr>
  					
  				<?php }?>

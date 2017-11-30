@@ -69,13 +69,15 @@ class Allreport_Model_DbTable_DbRptAllStudent extends Zend_Db_Table_Abstract
     	}
     	
     	if($search['stu_type']==0){
-    		$where.=' AND is_stu_new = 0 ';
+    		$where.=' AND is_stu_new = 0 and is_subspend=0 ';
     	}else if($search['stu_type']==1){
-    		$where.=' AND is_stu_new = 1 ';
+    		$where.=' AND is_stu_new = 1 and is_subspend = 0 and is_comeback = 0 ';
     	}else if($search['stu_type']==2){
     		$where.=' AND is_subspend != 0 ';
     	}else if($search['stu_type']==3){
     		$where.=' AND is_comeback = 1 AND is_subspend = 0';
+    	}else if($search['stu_type']==4){
+    		$where.=' AND is_stu_new = 1 and is_subspend = 0 ';
     	}
     	
     	
