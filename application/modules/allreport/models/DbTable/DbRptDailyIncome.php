@@ -118,6 +118,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 	    if($search['branch'] > 0){
 	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
 	    }
+	    //echo $sql.$where.$order;exit();
 	    return $db->fetchAll($sql.$where.$order);
     
     }

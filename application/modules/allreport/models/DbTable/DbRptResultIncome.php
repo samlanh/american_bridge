@@ -18,6 +18,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	
     	$sql = "SELECT
 					spd.id,
+					sp.grand_total_payment,
 					(SELECT ser_cate_id FROM `rms_program_name` WHERE spd.`service_id`=rms_program_name.`service_id`) AS category_id,
 					(SELECT account_no FROM `rms_program_type` WHERE id=(SELECT ser_cate_id FROM `rms_program_name` WHERE spd.`service_id`=rms_program_name.`service_id`)) AS account_no,
 					(SELECT title FROM `rms_program_type` WHERE id=(SELECT ser_cate_id FROM `rms_program_name` WHERE spd.`service_id`=rms_program_name.`service_id`)) AS category,

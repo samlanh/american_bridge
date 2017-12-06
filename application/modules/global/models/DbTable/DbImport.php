@@ -39,7 +39,12 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     public function updateItemsByImport($data){
     	$db = $this->getAdapter();
     	$count = count($data);
+    	//print_r($data);exit();
     	for($i=3; $i<=$count; $i++){
+    		
+    		if(empty($data[$i]['K']) && empty($data[$i]['M'])){
+    			continue;
+    		}
     		
 	    	if($data[$i]['I']=="Mor"){
 	    		$session = 1;
@@ -82,6 +87,7 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 	    				'stu_khname'=>$data[$i]['C'],
 	    				'stu_enname'=>$data[$i]['D'],
 	    				'sex'=>($data[$i]['E']=="M")?1:2,
+    					'degree'=>4,
 	    				'grade'=>$grade_id,
 	    				'room'=>$room_id,
 	    				'session'=>$session,
