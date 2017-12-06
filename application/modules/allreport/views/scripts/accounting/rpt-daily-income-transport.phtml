@@ -123,7 +123,7 @@
 						
 				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
 					
-						$study_material = $rs['grand_total_payment'] - $rs['total_payment'];
+// 						$study_material = $rs['grand_total_payment'] - $rs['total_payment'];
 						
 						$style = 'style="width:12px;"';
 						$img_src = $this->baseUrl()."/images/Green_tick.png";
@@ -149,12 +149,10 @@
 					   	<td class="padd"><?php if(!empty($time_id)){foreach ($time_id as $id){if($id==3){echo "<img ".$style." src='".$img_src."' />" ; $time3 = $time3 + 1;} }}?></td>
 					   	<td class="padd"><?php if(!empty($time_id)){foreach ($time_id as $id){if($id==4){echo "<img ".$style." src='".$img_src."' />" ; $time4 = $time4 + 1;} }}?></td>
 						
-						<td class="padd"><?php echo "$ ".(($rs['tuition_fee']*$rs['qty'])-(($rs['tuition_fee']*$rs['qty'])*($rs['discount_percent']/100)));?></td>
-						<td class="padd"><?php echo "$ ".$study_material;?></td>
-						
-						<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
+						<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
+						<td class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
+						<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
 						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
-						
 						<td class="padd"><?php echo $rs['note'];?></td>
 						
  					</tr>
@@ -163,22 +161,19 @@
 					
 						$stu_id=$rs['student_id'];
 					
-						$total_study_fee = $total_study_fee + $rs['grand_total_paid_amount'] - $study_material - $rs['admin_fee'] - $rs['other_fee'];
+						$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'] ;
 						
 						$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
 						
-						$total_study_material_fee = $total_study_material_fee + $study_material;
+						$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
 						
 						$total_other_fee = $total_other_fee + $rs['other_fee'];
 						
 						if($rs['is_complete']==0){
 							$total_balance = $total_balance + $rs['grand_total_balance'];
 						}
-					
 					?> 					
- 					
  				<?php }}
- 				
  						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee + $total_balance;
  				?>
  				

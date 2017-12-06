@@ -37,12 +37,13 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		$sql = " SELECT 
 					dept_id,
 					en_name,
+					(select name_en from rms_view as v where v.type=13 and key_code = d.type) as type,
 					shortcut,
 					modify_date,
 					is_active as status,
 		       		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE user_id=id ) AS user_name
 		       	 FROM 
-					rms_dept 
+					rms_dept as d
 				 WHERE
 				 	is_active=1
 				 	and en_name != ''
@@ -55,29 +56,21 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		$where = ' ';
 		if(!empty($search['title'])){
 			$s_where = array();
-	    		$s_search = addslashes(trim($search['title']));
-		 		$s_where[] = " en_name LIKE '%{$s_search}%'";
-	    		$s_where[] = " kh_name LIKE '%{$s_search}%'";
-	    		$s_where[] = " shortcut LIKE '%{$s_search}%'";
-	    		$sql .=' AND ( '.implode(' OR ',$s_where).')';	
-			}
+    		$s_search = addslashes(trim($search['title']));
+	 		$s_where[] = " en_name LIKE '%{$s_search}%'";
+    		$s_where[] = " kh_name LIKE '%{$s_search}%'";
+    		$s_where[] = " shortcut LIKE '%{$s_search}%'";
+    		$sql .=' AND ( '.implode(' OR ',$s_where).')';	
+		}
 	    		
 		if($search['status']>-1){
 			$where.= " AND is_active = ".$db->quote($search['status']);
 		}
+		if($search['type']>0){
+			$where.= " AND type = ".$search['type'];
+		}
+// 		echo $sql.$where.$orderby;
 		return $db->fetchAll($sql.$where.$orderby);
-	}
-	public function AddNewDepartment($_data){
-		$this->_name='rms_dept';
-		$_arr=array(
-				'en_name'	  => $_data['en_name'],
-				'kh_name'	  => $_data['kh_name'],
-				'shortcut'    => $_data['shortcut'],
-				'modify_date' => Zend_Date::now(),
-				'is_active'   => $_data['status'],
-				'user_id'	  => $this->getUserId()
-		);
-		return  $this->insert($_arr);
 	}
 	
 	public function getAllMajorList($search=''){
@@ -195,7 +188,31 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		}
 	}
 		
+	public function AddNewDepartment($_data){
+		$this->_name='rms_dept';
+		$_arr=array(
+				'en_name'	  => $_data['en_name'],
+				'type'		  => $_data['type'],
+				'shortcut'    => $_data['shortcut'],
+				'modify_date' => new Zend_Date(),
+				'is_active'   => $_data['status'],
+				'user_id'	  => $this->getUserId()
+		);
+		return  $this->insert($_arr);
+	}
 	
+	public function UpdateDepartment($_data){
+		$this->_name='rms_dept';
+		$_arr=array(
+				'en_name'	  => $_data['en_name'],
+				'type'		  => $_data['type'],
+				'shortcut'    => $_data['shortcut'],
+				'is_active'   => $_data['status'],
+				'user_id'	  => $this->getUserId()
+		);
+		$where = $this->getAdapter()->quoteInto("dept_id=?",$_data["dept_id"]);
+		$this->update($_arr, $where);
+	}
 	
 }
 

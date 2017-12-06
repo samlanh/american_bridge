@@ -128,11 +128,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getAllFecultyNamess($type){
    	$db = $this->getAdapter();
    	if($type==1){
-   		$sql ="SELECT dept_id AS id, en_name AS name,en_name,dept_id FROM rms_dept WHERE dept_id IN(1,2,3,4,5,6)
+   		$sql ="SELECT dept_id AS id, en_name AS name,en_name,dept_id FROM rms_dept WHERE type IN(1,2)
                AND is_active=1  ORDER BY dept_id ASC";
    		return $db->fetchAll($sql);
    	 }else if($type==2){
-        $sql="SELECT dept_id AS id, en_name AS `name`,en_name,dept_id,shortcut FROM rms_dept WHERE dept_id NOT IN(1,2,3,4,5,6)
+        $sql="SELECT dept_id AS id, en_name AS `name`,en_name,dept_id,shortcut FROM rms_dept WHERE type = 3
               AND  is_active=1  ORDER BY dept_id ASC";
         return $db->fetchAll($sql);
    	 }

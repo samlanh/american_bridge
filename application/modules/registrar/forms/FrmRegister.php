@@ -196,7 +196,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		
 		$_db = new Application_Model_DbTable_DbGlobal();
 		$rows = $_db->getAllFecultyNamess(1);
-		$opt = '' ;//array(-1=>$this->tr->translate("SELECT_DEPT"));
+		$opt = array();//array(-1=>$this->tr->translate("SELECT_DEPT"));
 		if(!empty($rows))foreach($rows AS $row) $opt[$row['dept_id']]=$row['en_name'];
 		 
 		$_dept = new Zend_Dojo_Form_Element_FilteringSelect("dept");
@@ -312,7 +312,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$start_date->setAttribs(array(
 				'dojoType'=>"dijit.form.DateTextBox",
 				'class'=>'fullside',
-				'onChange'=>'getDateTerm(2);calculateAmountDay();',
+				'onChange'=>'getDateTerm(1);',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'required'=>true));
 		$start_date->setValue($date);
@@ -438,13 +438,13 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 			$_session->setValue($data['session']);
 			$generation->setValue($data['academic_year']);
 			$_term->setValue($data['payment_term']);
-			$_fee->setValue($data['tuition_fee']);
+			$_fee->setValue($data['fee']);
 			$_disc_percent->setValue($data['discount_percent']);
 			$_disc_fix->setValue($data['discount_fix']);
 			$_remark->setValue($data['other_fee']);
 			$addmin_fee->setValue($data['admin_fee']);
 			$material_fee->setValue($data['material_fee']);
-			$total->setValue($data['total']);
+			$total->setValue($data['total_payment']);
 			$books->setValue($data['paid_amount']);
 			$remaining->setValue($data['balance_due']);
 			$char_price->setValue($data['amount_in_khmer']);

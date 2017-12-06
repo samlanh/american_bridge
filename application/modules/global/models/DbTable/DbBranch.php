@@ -38,10 +38,23 @@ class Global_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
     	
     function getAllBranch($search=null){
     	$db = $this->getAdapter();
-    	$sql = "SELECT b.br_id,b.branch_namekh,
-    	b.prefix,b.branch_code,b.br_address,b.branch_tel,b.fax,
-    			b.other,b.`status` FROM rms_branch AS b  ";
-    	$where = ' WHERE  b.branch_nameen !="" ';
+    	$sql = "SELECT 
+    				b.br_id,
+    				b.branch_namekh,
+    				b.prefix,
+    				b.branch_code,
+    				b.br_address,
+    				b.branch_tel,
+    				b.fax,
+    				b.other,
+    				b.`status` 
+    			FROM 
+    				rms_branch AS b  
+    			WHERE  
+    				b.branch_namekh !=''
+    				and status=1
+    		";
+    	$where = '  ';
     	
     	if($search['status_search']>-1){
     		$where.= " AND b.status = ".$search['status_search'];
@@ -67,11 +80,24 @@ class Global_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
     
 	function getBranchById($id){
     	$db = $this->getAdapter();
-    	$sql = "SELECT br_id,prefix,branch_namekh,branch_nameen,br_address,branch_code,branch_tel,fax,displayby,other,status FROM
-    	$this->_name ";
-    	$where = " WHERE `br_id`= $id" ;
-  
-   		return $db->fetchRow($sql.$where);
+    	$sql = "SELECT 
+    				br_id,
+    				prefix,
+    				branch_namekh,
+    				branch_nameen,
+    				br_address,
+    				branch_code,
+    				branch_tel,
+    				fax,
+    				displayby,
+    				other,
+    				status 
+    			FROM
+    				rms_branch
+    			WHERE 
+    				`br_id`= $id
+    		";
+   		return $db->fetchRow($sql);
     }
     public static function getBranchCode(){
     	$db = new Application_Model_DbTable_DbGlobal();

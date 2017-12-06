@@ -125,7 +125,7 @@
 						
 				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
 					
-						$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
+						//$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
 				?>
 						
  					<tr id="row" align="center" class="hover" >
@@ -155,19 +155,12 @@
 									}
 							?>
 						</td>
-						<td class="padd"><?php echo "$ ".$rs['total_payment'];?></td>
-						
-						
-						<td class="padd"><?php echo "$ ".$rs['admin_fee'];?></td>
-						
-						
-						<td class="padd"><?php echo "$ ".$study_material;?></td>
-						
-						<td class="padd"><?php echo "$ ".$rs['other_fee'];?></td>
-						
-						<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
+						<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
+						<td class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
+						<td class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
+						<td class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
+						<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
 						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
-						
 						<td class="padd"><?php echo $rs['note'];?></td>
  					</tr>
  					
@@ -175,11 +168,11 @@
 					
 						$stu_id=$rs['student_id'];
 					
-						$total_study_fee = $total_study_fee + $rs['grand_total_paid_amount'] - $study_material - $rs['admin_fee'] - $rs['other_fee'];
+						$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
 						
 						$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
 						
-						$total_study_material_fee = $total_study_material_fee + $study_material;
+						$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
 						
 						$total_other_fee = $total_other_fee + $rs['other_fee'];
 						

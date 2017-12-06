@@ -1,6 +1,8 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm =  $this->form_search;
+	
+	
 ?>	
 <title><?php echo $tr->translate('Daily Income Food & Stay Fee');?></title>
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-foodandstay')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -116,7 +118,7 @@
 						
 				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
 					
-						$study_material = $rs['grand_total_payment'] - $rs['total_payment'];
+// 						$study_material = $rs['grand_total_payment'] - $rs['total_payment'];
 						
 						$style = 'style="width:12px;"';
 						$img_src = $this->baseUrl()."/images/Green_tick.png";
@@ -136,11 +138,11 @@
 						<td class="padd"><?php if($rs['is_new']==1 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
 						<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
 						
-						<td><?php if($rs['service_id']==93){echo "$ ".(($rs['tuition_fee']*$rs['qty'])-(($rs['tuition_fee']*$rs['qty'])*($rs['discount_percent']/100))); $foodandstay = $foodandstay + ($rs['grand_total_paid_amount']-$study_material);}?></td>
-						<td><?php if($rs['service_id']==91){echo "$ ".(($rs['tuition_fee']*$rs['qty'])-(($rs['tuition_fee']*$rs['qty'])*($rs['discount_percent']/100))); $food = $food + ($rs['grand_total_paid_amount']-$study_material);}?></td>
-						<td><?php if($rs['service_id']==92){echo "$ ".(($rs['tuition_fee']*$rs['qty'])-(($rs['tuition_fee']*$rs['qty'])*($rs['discount_percent']/100))); $stay = $stay + ($rs['grand_total_paid_amount']-$study_material);}?></td>
+						<td><?php if($rs['service_id']==93){echo "$ ".$rs['tuition_fee_after_discount']; $foodandstay = $foodandstay + $rs['tuition_fee_after_discount'];}?></td>
+						<td><?php if($rs['service_id']==91){echo "$ ".$rs['tuition_fee_after_discount']; $food = $food + $rs['tuition_fee_after_discount'];}?></td>
+						<td><?php if($rs['service_id']==92){echo "$ ".$rs['tuition_fee_after_discount']; $stay = $stay + $rs['tuition_fee_after_discount'];}?></td>
 						
-						<td class="padd"><?php echo "$ ".$study_material;?></td>
+						<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
 						
 						<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
 						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
@@ -151,11 +153,11 @@
 					<?php 
 						$stu_id=$rs['student_id'];
 					
-						$total_study_fee = $total_study_fee + $rs['grand_total_paid_amount'] - $study_material - $rs['admin_fee'] - $rs['other_fee'];
+						$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
 						
 						$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
 						
-						$total_study_material_fee = $total_study_material_fee + $study_material;
+						$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
 						
 						$total_other_fee = $total_other_fee + $rs['other_fee'];
 						

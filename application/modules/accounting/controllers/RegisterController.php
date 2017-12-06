@@ -43,6 +43,7 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     		$this->view->list=$list->getCheckList(2, $collumns, $rs_rows,array('stu_code'=>$link,'receipt_number'=>$link,'stu_khname'=>$link,'stu_enname'=>$link));
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		echo $e->getMessage();
     	}
     	$data = new Accounting_Model_DbTable_DbRegister();
     	$this->view->rows_degree=$data->getDegree();

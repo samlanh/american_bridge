@@ -19,7 +19,10 @@
 	dojo.ready(function(){ 
 		displayNoneAddRow();
 		addRow();
-		changControll();getStudentNo(7,'');setStudyTime();displayAmountSection();
+		changControll();
+		getStudentNo(7,'');
+		setStudyTime();
+		displayAmountSection();
 		document.getElementById('hideAddRow').style.display="none";
 		
 		new dijit.form.FilteringSelect({
@@ -53,7 +56,7 @@
 		    	paymentTerm();
 		    }
 		}, "grade");
-		getDateTerm();
+		getDateTerm(1);
 	});	
 	var grade_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 	var url_dept = '<?php echo $this->url(array('module'=>'registrar','controller'=>'coursestudy','action'=>'get-grade')); ?>';
@@ -176,7 +179,7 @@
 				getPaymentTerms(study_year,payment_term,grade);
 			}
 		}
-		getDateTerm();
+		getDateTerm(1);
 	}
 	function paymentTerms(){
 		generat=dijit.byId('study_year').get('value');
@@ -306,10 +309,15 @@
 		//alert('hello');
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
+		
 		addmin_fee=dijit.byId('addmin_fee').get('value');
 		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
 		
-		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee);
+		material_fee=dijit.byId('material_fee').get('value');
+		material_fee=isNaN(material_fee)?0:material_fee;
+		
+		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee)+parseFloat(material_fee);
+		
 		dijit.byId('total').attr('value',totals.toFixed(2));
 		dijit.byId('books').attr('value',totals.toFixed(2));
 		getRemaining();
@@ -328,7 +336,6 @@
 		  }else{
 		     dijit.byId('remaining').attr('value',remaining.toFixed(2));
 		  }
-		  CheckAmount();
 	}
 	function getDisccount(){
 		if(dijit.byId('discount').get('value')>100){
@@ -337,98 +344,97 @@
 		}
 	}
 	//calculator date by select term_payment
-	function getDateTerm() {
-		
-		payment_term=dijit.byId('payment_term').get('value');
-		start_date=dijit.byId('start_date').get('value');
-		
-		amount_section = dijit.byId('amount_section').get('value');
-		
-		 if(payment_term==1){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(1)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }
-		 else if(payment_term==2){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(3)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }
-		 else if(payment_term==3){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(6)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }
-		 else if(payment_term==4){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(12)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }else if(payment_term==5){
+	function getDateTerm(type) {
+		// alert(1);
+		if(type==1){
+			payment_term=dijit.byId('payment_term').get('value');
+			start_date=dijit.byId('start_date').get('value');
+			
+			amount_section = dijit.byId('amount_section').get('value');
+			
 			var a = new Date(start_date);
-			dd = a.getDate()+parseInt(amount_section); 
-			 
-			 if(dd<10){
-			   dd = "0"+dd;
+			
+			if(payment_term==1){
+				 mm = a.getMonth()+(1)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
-			 mm = a.getMonth()+1;
-			 if(mm<10){
-			   mm = "0"+mm;
+			 else if(payment_term==2){
+				 mm = a.getMonth()+(3)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
-			 var y = a.getFullYear(); 
-			 var epx_date = y + '-' + mm + '-' + dd ;
-			 
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }	
+			 else if(payment_term==3){
+				 mm = a.getMonth()+(6)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
+			 }
+			 else if(payment_term==4){
+				 mm = a.getMonth()+(12)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
+			 }else if(payment_term==5){
+				 var amount_day = dijit.byId('amount_section').get('value');;
+				 var start_date = dijit.byId('start_date').get('value');
+				 var year = start_date.getFullYear();
+				 var month = start_date.getMonth();
+				 var date = start_date.getDate();
+				 for(var i=0; i<amount_day; i++){
+					  var epx_date = new Date(year, month, date + i);
+				 }
+				 dijit.byId('end_date').attr('value',epx_date); 
+			 }	
+		}else{
+			payment_term = dijit.byId('payment_term').get('value');
+			if(payment_term == 5){
+				start_date = dijit.byId('start_date').get('value');
+				end_date = dijit.byId('end_date').get('value');
+				//alert(start_date+" , "+end_date)
+				
+				//day = end_date - start_date;
+				
+				var timeDiff = (end_date.getTime() - start_date.getTime());
+				if(timeDiff>=0){
+					var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1 ; // +1 because they also count the first day that register
+					dijit.byId('amount_section').attr('value',diffDays);
+				}else{
+					dijit.byId('amount_section').attr('value',0);
+				}
+				calculateTotalFee();netTotal();
+			}
+		}
 	}
 </script>
 <style>
@@ -598,7 +604,7 @@ fieldset{  background:none;}
 							</td>
 							<td>
 								<div id="amount_section">
-									<input name="amount_section" id="amount_section" onkeyup="calculateTotalFee();netTotal();getDateTerm();" dojoType="dijit.form.TextBox" value="1" class="fullside" type="text"/>
+									<input name="amount_section" id="amount_section" onkeyup="calculateTotalFee();netTotal();getDateTerm(1);" dojoType="dijit.form.TextBox" value="1" class="fullside" type="text"/>
 								</div>
 							</td>
 						</tr>
@@ -1082,7 +1088,9 @@ function printSave(new_stu_id,new_receipt_no){
 		 }
 		 dojo.byId("lb_discount").innerHTML = discount;
 		 
-		 dojo.byId("lb_total_payment").innerHTML = "$ " + dijit.byId("total").get('value');
+		 after_discount = (study_fee - dis_fix) - ((study_fee - dis_fix) * (dis_percent/100));
+		 
+		 dojo.byId("lb_total_payment").innerHTML = "$ " + after_discount.toFixed(2);
 		 
 		 dojo.byId("lb_other_fee").innerHTML = "$ "+dijit.byId("remark").get('value');
 		 
@@ -1096,22 +1104,7 @@ function printSave(new_stu_id,new_receipt_no){
 		 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		 
 		
-		total_product_fee = 0;
-		
-		checkbox = dijit.byId('buy_product').get('value');
-		
-		if(checkbox==1){
-			var rowId = $('#identity').val();
-			if(rowId==""){
-				return false;
-			}
-			var rowIDArray = rowId.split(',');
-			for(var n = 0; n < rowIDArray.length; n++) {
-				total_product_fee += dijit.byId('subtotal_'+rowIDArray[n]).get('value');
-			}
-		}
-		dojo.byId("lb_total_product_fee").innerHTML ="$ "+total_product_fee;
-		
+		dojo.byId("lb_total_product_fee").innerHTML = "$ " + dijit.byId('material_fee').get('value');
 		
 		if(payment_term==5){
 			pay_term = dijit.byId('amount_section').get('value') + dijit.byId('payment_term').attr('displayedValue');
@@ -1151,10 +1144,7 @@ function printSave(new_stu_id,new_receipt_no){
 			
 		dojo.byId("lb_epx_date").innerHTML = epx_date;
 		
-		 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		 
-		 
-		 
 		 
 		dijit.byId("terms").show();	
 	}
@@ -1611,23 +1601,6 @@ function doPrint() {
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
     dijit.byId("terms").hide();	//hideDialog();
-}
-function CheckAmount(){
-	
-	//alert('hello');
-	remain=calculatePrice();
-	if( 100 < dijit.byId('discount').get('value') ){
-		alert("Discount cannot greather than fee value!");
-		dijit.byId("discount").focus();
-		return false;
-	}
-	else{
-		//remain = dijit.byId('tuitionfee').get('value')-dijit.byId('discount').get('value');
-	}
-	b=dijit.byId('total').get('value');
-	a = dojo.number.format(b);
-	money_khmer=read_money_in_khmer(a);
-	//dijit.byId('char_price').attr('value',money_khmer.trim()+'ដុល្លាគត់');
 }
 
 function changControll(){

@@ -145,7 +145,7 @@
 							<td rowspan="2" class="padd">Paid & <br />Payable</td>
 							<td rowspan="2" class="padd">Remark</td>
 							<td rowspan="2"  class="padd">Stop <br />Student</td>
-							<td colspan="2" rowspan="2" class="padd">Stop</td>
+							<td colspan="2" rowspan="2" class="padd">Date Stop</td>
 	 					 </tr>
 						 <tr id="row" align="center" style="background: #ccc;">
 							<td class="padd">IssueDate</td>
@@ -181,7 +181,7 @@
 								$amount_month=$rs['qty']." Days";
 							}
 							
-							$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
+							//$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
 							
 						?>
 				
@@ -206,7 +206,7 @@
 									}
 								?>
 							</td>
-							<td class="padd"><?php echo "$ ".$rs['total_payment'];?></td>
+							<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
 							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
 							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 							<td class="padd"><?php echo $amount_month;?></td>
@@ -217,7 +217,7 @@
 							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 							
 							
-							<td class="padd"><?php echo "$ ".$study_material;?></td>
+							<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
 							
 							<td class="padd"><?php echo "$ ".$rs['other_fee'];?></td>
 							

@@ -1,6 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('SRMS_WUREGISTER')); 
+	echo $this->headTitle($tr->translate('REGISTER')); 
 	$base_url = Application_Form_FrmMessage::getUrl("/");
 ?>	
 <script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.8.3.min.js"></script>
@@ -15,6 +15,7 @@
 		i=0;
 		changControll();
 		displayNoneAddRow();
+		document.getElementById('hideAddRow').style.display="none";
 		addRow();
 		new dijit.form.FilteringSelect({
 		    store: dept_store,
@@ -31,10 +32,13 @@
 		    	setHourDefaul();
 				getNewReceiptNo('');
 		    	getStudentNo(dept_id);
-				
+				getDegreeType(dept_id);
 				oldStudentChangeDegree();
 		    }
 		}, "dept");
+		
+		
+		
 		new dijit.form.FilteringSelect({
 		    autoComplete: false,
 			queryExpr: "*${0}*",                       
@@ -49,7 +53,9 @@
 		    }
 		}, "grade");
 		dijit.byId('dept').attr('value','<?php echo $this->degree_row['degree'];?>');
-
+		getDegreeType('<?php echo $this->degree_row['degree'];?>');
+		
+		
 		new dijit.form.FilteringSelect({
 		    autoComplete: false,
 			queryExpr: "*${0}*",                       
@@ -401,7 +407,7 @@
 	function defaultPayment(){
 		
 		dijit.byId('tuitionfee').attr('value','<?php echo $this->degree_row['tuition_fee'];?>');
-    	dijit.byId('total').attr('value','<?php echo $this->degree_row['total'];?>');
+    	dijit.byId('total').attr('value','<?php echo $this->degree_row['total_payment'];?>');
     	dijit.byId('discount').attr('value','<?php echo $this->degree_row['discount_percent'];?>');
     	dijit.byId('books').attr('value','<?php echo $this->degree_row['paid_amount'];?>');
     	dijit.byId('addmin_fee').attr('value','<?php echo $this->degree_row['admin_fee'];?>');
@@ -446,7 +452,9 @@
 		addmin_fee=dijit.byId('addmin_fee').get('value');
 		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
 		
-		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee);
+		material_fee=dijit.byId('material_fee').get('value');
+		material_fee=isNaN(material_fee)?0:material_fee;
+		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee)+parseFloat(material_fee);
 		
 		dijit.byId('total').attr('value',totals.toFixed(2));
 		dijit.byId('books').attr('value',totals.toFixed(2));
@@ -471,98 +479,98 @@
 	}
 
 	//calculator date by select term_payment
-	function getDateTerm() {
-		
-		payment_term=dijit.byId('payment_term').get('value');
-		start_date=dijit.byId('start_date').get('value');
-		
-		amount_section = dijit.byId('amount_section').get('value');
-		
-		if(payment_term==1){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(1)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }
-		 else if(payment_term==2){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(3)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }
-		 else if(payment_term==3){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(6)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }
-		 else if(payment_term==4){
-			 var a = new Date(start_date);
-			  mm = a.getMonth()+(12)+1;
-
-			 var dd = a.getDate();
-			  if(dd<10){
-			   dd = "0"+dd;
-			 }
-			  if(mm<10){
-			   mm = "0"+mm;
-			 }
-			 var y = a.getFullYear();
-			 
-			 var epx_date = y + '-' + mm + '-' + dd ;
-
-			 //alert(epx_date);
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }else if(payment_term==5){
+	function getDateTerm(type) {
+		// alert(1);
+		if(type==1){
+			payment_term=dijit.byId('payment_term').get('value');
+			start_date=dijit.byId('start_date').get('value');
+			
+			amount_section = dijit.byId('amount_section').get('value');
+			
 			var a = new Date(start_date);
-			dd = a.getDate()+parseInt(amount_section); 
-			 
-			 if(dd<10){
-			   dd = "0"+dd;
+			
+			if(payment_term==1){
+				 
+				 mm = a.getMonth()+(1)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
-			 mm = a.getMonth()+1;
-			 if(mm<10){
-			   mm = "0"+mm;
+			 else if(payment_term==2){
+				 mm = a.getMonth()+(3)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
-			 var y = a.getFullYear(); 
-			 var epx_date = y + '-' + mm + '-' + dd ;
-			 
-			 dijit.byId('end_date').attr('value',epx_date);
-		 }	
+			 else if(payment_term==3){
+				 mm = a.getMonth()+(6)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
+			 }
+			 else if(payment_term==4){
+				 mm = a.getMonth()+(12)+1;
+				 var dd = a.getDate();
+				 if(dd<10){
+				   dd = "0"+dd;
+				 }
+				 if(mm<10){
+				   mm = "0"+mm;
+				 }
+				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
+			 }else if(payment_term==5){
+				 var amount_day = dijit.byId('amount_section').get('value');;
+				 var start_date = dijit.byId('start_date').get('value');
+				 var year = start_date.getFullYear();
+				 var month = start_date.getMonth();
+				 var date = start_date.getDate();
+				 for(var i=0; i<amount_day; i++){
+					  var epx_date = new Date(year, month, date + i);
+				 }
+				 dijit.byId('end_date').attr('value',epx_date); 
+			 }	
+		}else{
+			payment_term = dijit.byId('payment_term').get('value');
+			if(payment_term == 5){
+				start_date = dijit.byId('start_date').get('value');
+				end_date = dijit.byId('end_date').get('value');
+				//alert(start_date+" , "+end_date)
+				
+				//day = end_date - start_date;
+				
+				var timeDiff = (end_date.getTime() - start_date.getTime());
+				if(timeDiff>=0){
+					var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1 ; // +1 because they also count the first day that register
+					dijit.byId('amount_section').attr('value',diffDays);
+				}else{
+					dijit.byId('amount_section').attr('value',0);
+				}
+				calculateTotalFee();netTotal();
+			}
+		}
 	}
 	
 	function getDisccount(){
@@ -701,6 +709,28 @@
 		return true;
 	}
 	
+	
+	var url_get_degree_type = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-degree-type')); ?>';
+	function getDegreeType(degree){
+		if(degree>0){	
+			dojo.xhrPost({
+				url:url_get_degree_type,
+				content:{
+					'degree':degree,
+					},
+				handleAs:"json",
+				load: function(data) {
+				     if(data){
+				    	  dijit.byId('degree_type').attr('value',data);
+				     }
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+	
 </script>
 <style>
 select{ width:100%;}
@@ -831,6 +861,8 @@ fieldset{  background:none;}
 							<input type="hidden" name="old_stu_code" id="old_stu_code" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="old_degree" id="old_degree" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="old_grade" id="old_grade" dojoType="dijit.form.TextBox" />
+							<input type="hidden" name="degree_type" id="degree_type" dojoType="dijit.form.TextBox" />
+							
 							<td><?php echo $tr->translate("DEGREE");?><label class="red">*</label></td>
 							<td><input id="dept" /></td>
 						</tr>
@@ -904,7 +936,7 @@ fieldset{  background:none;}
 							</td>
 							<td>
 								<div id="amount_section">
-									<input name="amount_section" id="amount_section" onkeyup="getTotale();getDateTerm();" dojoType="dijit.form.TextBox" value="<?php if(!empty($this->degree_row['amount_sec'])){echo $this->degree_row['amount_sec'];}else{echo 1;}?>" class="fullside" type="text"/>
+									<input name="amount_section" id="amount_section" onkeyup="getTotale();getDateTerm(1);" dojoType="dijit.form.TextBox" value="<?php if(!empty($this->degree_row['amount_sec'])){echo $this->degree_row['amount_sec'];}else{echo 1;}?>" class="fullside" type="text"/>
 								</div>
 							</td>
 						</tr>
@@ -925,6 +957,10 @@ fieldset{  background:none;}
 						<tr>	
 							<td><?php echo $tr->translate("ADMIN_FEE");?></td>
 							<td title='Ex: 20 or 10%'><?php echo $register->getElement('addmin_fee');?></td>	
+						</tr>
+						<tr>	
+							<td><?php echo $tr->translate("MATERIAL_FEE");?></td>
+							<td><?php echo $register->getElement('material_fee');?></td>	
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
@@ -952,10 +988,9 @@ fieldset{  background:none;}
 		<input type="hidden" id="identity" name="identity" />
 		<tr>
 			<td colspan="3" align="left">
-				<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
-					iconClass="dijitIconEditProperty" onclick="addRow();" />
-				
-				<input type="checkbox" value="1"  onchange="displayNoneAddRow();netTotal();" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+				<div id="hideAddRow">	
+					<input type="checkbox" value="1"  onchange="displayNoneAddRow();netTotal();" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+				</div>
 			</td>
 		</tr>
 		<tr>

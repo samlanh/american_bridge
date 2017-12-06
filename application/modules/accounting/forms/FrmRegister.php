@@ -216,7 +216,7 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		  		'dojoType'=>$this->filter,
 		  		'required'=>'true',
 		  		'class'=>'fullside',
-		  		'onchange'=>'paymentTerm();getDateTerm();'
+		  		'onchange'=>'paymentTerm();getDateTerm(1);'
 		  		));
 		
 		$_fee = new Zend_Dojo_Form_Element_NumberTextBox('tuitionfee');
@@ -272,6 +272,14 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		));
 		$addmin_fee->setValue(0);
 		
+		$material_fee = new Zend_Dojo_Form_Element_NumberTextBox('material_fee');
+		$material_fee->setAttribs(array(
+				'dojoType'=>'dijit.form.NumberTextBox',
+				'class'=>'fullside',
+				'onkeyup'=>'getTotale();netTotal();'
+		));
+		$material_fee->setValue(0);
+		
 		$books = new Zend_Dojo_Form_Element_NumberTextBox('books');
 		$books->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
@@ -298,7 +306,7 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		$start_date->setAttribs(array(
 				'dojoType'=>"dijit.form.DateTextBox",
 				'class'=>'fullside',
-				'onChange'=>'getDateTerm();',
+				'onChange'=>'getDateTerm(1);',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'required'=>true));
 		$start_date->setValue($date);
@@ -308,7 +316,7 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		$end_date->setAttribs(array(
 				'dojoType'=>"dijit.form.DateTextBox",
 				'class'=>'fullside',
-				//'onChange'=>'getDateTerm();',
+				'onChange'=>'getDateTerm(2);',
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
 				'required'=>true));
 		$end_date->setValue($date);
@@ -426,12 +434,13 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 			$_session->setValue($data['session']);
 			$generation->setValue($data['academic_year']);
 			$_term->setValue($data['payment_term']);
-			$_fee->setValue($data['tuition_fee']);
+			$_fee->setValue($data['fee']);
 			$_disc->setValue($data['discount_percent']);
 			$_disc_fix->setValue($data['discount_fix']);
 			$_remark->setValue($data['other_fee']);
-			$addmin_fee->setValue($data['admin_fee']);
-			$total->setValue($data['total']);
+			$addmin_fee->setValue($data['admin_fee']);		
+			$material_fee->setValue($data['material_fee']);
+			$total->setValue($data['total_payment']);
 			$books->setValue($data['paid_amount']);
 			$remaining->setValue($data['balance_due']);
 			$char_price->setValue($data['amount_in_khmer']);
@@ -442,7 +451,7 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 			$end_date->setValue($data['validate']);
 		}
 		$this->addElements(array(
-			 $parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
+			  $material_fee,$parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
 			  $_phone,$_dept,$_major,$_batch,$_year,$_session,$_term,$_fee,$_disc_fix,$_disc,$_paid,$_paid_kh,$_remark, ));
 		
 		return $this;

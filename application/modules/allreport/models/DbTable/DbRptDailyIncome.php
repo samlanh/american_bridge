@@ -23,6 +23,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     	 
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	st.`stu_code`,
@@ -129,6 +130,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     	
     	$sql = "SELECT
+					sp.*,
 					sp.id,
 					sp.`student_id`,
 					st.`stu_code`,
@@ -234,6 +236,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	st.`stu_code`,
@@ -341,6 +344,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=4) as stu_code ,
@@ -442,6 +446,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=5) as stu_code ,
@@ -544,6 +549,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	st.`stu_code`,

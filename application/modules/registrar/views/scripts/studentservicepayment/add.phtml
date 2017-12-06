@@ -26,6 +26,8 @@
 		addRow();
 		changeControl();
 		getNewCarId('');
+		
+		document.getElementById('hideAddRow').style.display="none";
 	
 		new dijit.form.FilteringSelect({
 			store: service_store,
@@ -51,7 +53,7 @@
 		}, "service");
 
 
-		getValidate();
+		getValidate(1);
 	});	
 
 </script>
@@ -186,7 +188,7 @@ fieldset{  background:none;}
 						<tr>	
 							<td><?php echo $tr->translate('PAYMENT_TERM');?></td>
 							<td>
-								<select class="fullside" class="fullside" name="term" id="term" onchange="getservicefee();getValidate();" dojoType="dijit.form.FilteringSelect" type="text"   >
+								<select class="fullside" class="fullside" name="term" id="term" onchange="getservicefee();getValidate(1);" dojoType="dijit.form.FilteringSelect" type="text"   >
 									<?php if(!empty($this->payment_term)){foreach ($this->payment_term as $key => $term){?>
 										<option value="<?php echo $key?>"><?php echo $term;?></option>
 									<?php  }}?>
@@ -196,19 +198,19 @@ fieldset{  background:none;}
 						<tr>
 							<td><?php echo $tr->translate('QTY');?></td>
 							<td> 
-								<input class="fullside" name="qty" id="qty" onkeyup="calculateTotalPayment();getValidate();netTotal();" dojoType="dijit.form.TextBox" value="1" type="text"   >
+								<input class="fullside" name="qty" id="qty" onkeyup="calculateTotalPayment();getValidate(1);netTotal();" dojoType="dijit.form.TextBox" value="1" type="text"   >
 							</td>
 						</tr>
 						<tr>	
 							<td><?php echo $tr->translate('START_DATE');?></td>
 							<td> 
-								<input class="fullside" name="start_date" id="start_date" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" onchange="getValidate();" value="now" type="text" >
+								<input class="fullside" name="start_date" id="start_date" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" onchange="getValidate(1);" value="now" type="text" >
 							</td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate('END_DATE');?></td>
 							<td> 
-								<input class="fullside" name="end_date" id="end_date" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" type="text"   >
+								<input class="fullside" name="end_date" id="end_date" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" onchange="getValidate(2);" type="text"   >
 							</td>
 						</tr>
 						<tr>
@@ -243,7 +245,13 @@ fieldset{  background:none;}
 						<tr>
 							<td><?php echo $tr->translate('SERVICE_FEE');?></td>
 							<td> 
-								<input class="fullside" name="service_fee" id="service_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.TextBox" type="text" >
+								<input class="fullside" name="service_fee" id="service_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
+							</td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate('MATERIAL_FEE');?></td>
+							<td> 
+								<input class="fullside" value="0" name="material_fee" id="material_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
 							</td>
 						</tr>
 						<tr>
@@ -301,10 +309,9 @@ fieldset{  background:none;}
 						
 		<tr>
 			<td colspan="3" align="left">
-				<input type="button" label="<?php echo $tr->translate('ADD_BUY_PRODUCT');?>" dojoType="dijit.form.Button" 
-					iconClass="dijitIconEditProperty" onclick="addRow();" />
-						
-				<input type="checkbox" value="1" onchange="displayNoneAddRow();netTotal();" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+				<div id="hideAddRow">
+					<input type="checkbox" value="1" onchange="displayNoneAddRow();netTotal();" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+				</div>
 			</td>
 		
 		</tr>
@@ -696,21 +703,8 @@ function printSave(new_stu_id,new_receipt_no){
 		}
 		dojo.byId("lb_discount").innerHTML = discount;
 		
-		total_product_fee = 0;
 		
-		checkbox = dijit.byId('buy_product').get('value');
-		
-		if(checkbox==1){
-			var rowId = $('#identity').val();
-			if(rowId==""){
-				return false;
-			}
-			var rowIDArray = rowId.split(',');
-			for(var n = 0; n < rowIDArray.length; n++) {
-				total_product_fee += dijit.byId('subtotal_'+rowIDArray[n]).get('value');
-			}
-		}
-		dojo.byId("lb_total_product_fee").innerHTML ="$ "+total_product_fee;
+		dojo.byId("lb_total_product_fee").innerHTML ="$ " + dijit.byId('material_fee').get('value');
 		
 		
 		pay_term = dijit.byId('qty').get('value') + dijit.byId('term').attr('displayedValue');
@@ -1297,6 +1291,10 @@ function calculateTotalPayment(){
 	service_fee = dijit.byId('service_fee').get('value');
 	qty = dijit.byId('qty').get('value');
 	qty = isNaN(qty)?1:qty;
+	
+	material_fee = dijit.byId('material_fee').get('value');
+	material_fee = isNaN(material_fee)?0:material_fee;
+	
 	service_fee = service_fee * qty;
 	
 	discount = dijit.byId('discount').get('value');
@@ -1305,8 +1303,11 @@ function calculateTotalPayment(){
 	discount_fix = dijit.byId('discount_fix').get('value');
 	discount_fix = isNaN(discount_fix)?0:discount_fix;
 	
-	dijit.byId('total_payment').attr('value',(service_fee-discount_fix)-((service_fee-discount_fix)*discount/100));
-	dijit.byId('paid_amount').attr('value',(service_fee-discount_fix)-((service_fee-discount_fix)*discount/100));
+	total_payment = ((service_fee-discount_fix)-((service_fee-discount_fix)*discount/100)) + parseFloat(material_fee);
+	
+	dijit.byId('total_payment').attr('value',total_payment.toFixed(2));
+	dijit.byId('paid_amount').attr('value',total_payment.toFixed(2));
+	
 	calculatBalanceAndReturn();
 	
 	netTotal();
@@ -1450,96 +1451,136 @@ function getCurrentDate(){
     document.getElementById("start_date").value = my_date;
     getValidate();
 }
-function getValidate(){
-	 term = dijit.byId('term').get('value');
-	 qty = dijit.byId('qty').get('value');
-	 qty = isNaN(qty)?1:qty;
-	 start_date = dijit.byId('start_date').get('value');
-	 if(term==1){
-		 var a = new Date(start_date);
-		  mm = a.getMonth()+(1*qty)+1;
 
-		 var dd = a.getDate();
-		  if(dd<10){
-		   dd = "0"+dd;
-		 }
-		  if(mm<10){
-		   mm = "0"+mm;
-		 }
-		 var y = a.getFullYear();
-		 var epx_date = y + '-' + mm + '-' + dd ;
-
-		 //alert(epx_date);
-		 dijit.byId('end_date').attr('value',epx_date);
-	 }
-	 else if(term==2){
-		 var a = new Date(start_date);
-		  mm = a.getMonth()+(3*qty)+1;
-
-		 var dd = a.getDate();
-		  if(dd<10){
-		   dd = "0"+dd;
-		 }
-		  if(mm<10){
-		   mm = "0"+mm;
-		 }
-		 var y = a.getFullYear();
-		 var epx_date = y + '-' + mm + '-' + dd ;
-
-		 //alert(epx_date);
-		 dijit.byId('end_date').attr('value',epx_date);
-	 }
-	 else if(term==3){
-		 var a = new Date(start_date);
-		  mm = a.getMonth()+(6*qty)+1;
-
-		 var dd = a.getDate();
-		  if(dd<10){
-		   dd = "0"+dd;
-		 }
-		  if(mm<10){
-		   mm = "0"+mm;
-		 }
-		 var y = a.getFullYear();
-		 var epx_date = y + '-' + mm + '-' + dd ;
-
-		 //alert(epx_date);
-		 dijit.byId('end_date').attr('value',epx_date);
-	 }
-	 else if(term==4){
-		 var a = new Date(start_date);
-		  mm = a.getMonth()+(12*qty)+1;
-
-		 var dd = a.getDate();
-		  if(dd<10){
-		   dd = "0"+dd;
-		 }
-		  if(mm<10){
-		   mm = "0"+mm;
-		 }
-		 var y = a.getFullYear();
+function getValidate(type){
+	 
+	 if(type==1){
+		 term = dijit.byId('term').get('value');
+		 qty = dijit.byId('qty').get('value');
+		 qty = isNaN(qty)?1:qty;
+		 start_date = dijit.byId('start_date').get('value');
 		 
-		 var epx_date = y + '-' + mm + '-' + dd ;
+		 var a = new Date(start_date);
+		 
+		 if(term==1){
+			 mm = a.getMonth()+(1*qty)+1;
+			 var dd = a.getDate();
+			 if(dd<10){
+			   dd = "0"+dd;
+			 }
+			 if(mm<10){
+			   mm = "0"+mm;
+			 }
+			 var y = a.getFullYear(); 
+			 var epx_date = y + '-' + mm + '-' + dd ;
+			 dijit.byId('end_date').attr('value',epx_date);
+		 }
+		 else if(term==2){
+			 mm = a.getMonth()+(3*qty)+1;
+			 var dd = a.getDate();
+			 if(dd<10){
+			   dd = "0"+dd;
+			 }
+			 if(mm<10){
+			   mm = "0"+mm;
+			 }
+			 var y = a.getFullYear(); 
+			 var epx_date = y + '-' + mm + '-' + dd ;
+			 dijit.byId('end_date').attr('value',epx_date);
+		 }
+		 else if(term==3){
+			 mm = a.getMonth()+(6*qty)+1;
+			 var dd = a.getDate();
+			 if(dd<10){
+			   dd = "0"+dd;
+			 }
+			 if(mm<10){
+			   mm = "0"+mm;
+			 }
+			 var y = a.getFullYear(); 
+			 var epx_date = y + '-' + mm + '-' + dd ;
+			 dijit.byId('end_date').attr('value',epx_date);
+		 }
+		 else if(term==4){
+			 mm = a.getMonth()+(12*qty)+1;
+			 var dd = a.getDate();
+			 if(dd<10){
+			   dd = "0"+dd;
+			 }
+			 if(mm<10){
+			   mm = "0"+mm;
+			 }
+			 var y = a.getFullYear(); 
+			 var epx_date = y + '-' + mm + '-' + dd ;
+			 dijit.byId('end_date').attr('value',epx_date);
+		 }else if(term==5){
+			 /*dd = a.getDate()+(parseInt(qty)-1); 
+			 if(dd<10){
+			   dd = "0"+dd;
+			 }
+			 mm = a.getMonth()+1;
+			 if(mm<10){
+			   mm = "0"+mm;
+			 }
+			 var y = a.getFullYear(); 
+			 var epx_date = y + '-' + mm + '-' + dd ;
+			 dijit.byId('end_date').attr('value',epx_date);
+			 */
+			 
+			var amount_day = dijit.byId('qty').get('value');;
+		
+			var start_date = dijit.byId('start_date').get('value');
 
-		 //alert(epx_date);
-		 dijit.byId('end_date').attr('value',epx_date);
-	 }else if(term==5){
-		var a = new Date(start_date);
-		dd = a.getDate()+parseInt(qty); 
-		 
-		 if(dd<10){
-		   dd = "0"+dd;
+			var year = start_date.getFullYear();
+			var month = start_date.getMonth();
+			var date = start_date.getDate();
+
+			for(var i=0; i<amount_day; i++){
+				  var epx_date = new Date(year, month, date + i);
+			}
+			dijit.byId('end_date').attr('value',epx_date); 
 		 }
-		 mm = a.getMonth()+1;
-		 if(mm<10){
-		   mm = "0"+mm;
-		 }
-		 var y = a.getFullYear(); 
-		 var epx_date = y + '-' + mm + '-' + dd ;
 		 
-		 dijit.byId('end_date').attr('value',epx_date);
+	 }else{
+		 term = dijit.byId('term').get('value');
+		 if(term == 5){
+			start_date = dijit.byId('start_date').get('value');
+			end_date = dijit.byId('end_date').get('value');
+			//alert(start_date+" , "+end_date)
+			
+			//day = end_date - start_date;
+			
+			var timeDiff = (end_date.getTime() - start_date.getTime());
+			if(timeDiff>=0){
+				var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1 ; // +1 because they also count the first day that register
+				dijit.byId('qty').attr('value',diffDays);
+			}else{
+				dijit.byId('qty').attr('value',0);
+			}
+			calculateTotalPayment();netTotal();
+		}
 	 }
 }
+
+function calculateEndDate(){
+	
+	if(dijit.byId('term').get('value')==5){
+		var amount_day = dijit.byId('qty').get('value');;
+		
+		var start_date = dijit.byId('start_date').get('value');
+
+		var year = start_date.getFullYear();
+		var month = start_date.getMonth();
+		var date = start_date.getDate();
+
+		for(var i=0; i<amount_day; i++){
+			  var day=new Date(year, month, date + i);
+		}
+		dijit.byId('end_date').attr('value',day); 
+	}
+}
+
+
 function getValue(){
 	seperater='';
 	i=0;

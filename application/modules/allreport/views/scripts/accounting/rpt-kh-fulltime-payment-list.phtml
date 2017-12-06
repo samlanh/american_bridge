@@ -142,7 +142,7 @@
 						<td rowspan="2" class="padd">បង់រួច&<br />ផុតកំណត់ក្នុងខែ</td>
 						<td rowspan="2" class="padd">ផ្សេងៗ</td>
 						<td rowspan="2" class="padd">សិស្ស<br />ឈប់</td>
-						<td rowspan="2" class="padd">ឈប់</td>
+						<td rowspan="2" class="padd">ថ្ងៃឈប់</td>
  					 </tr>
 					 <tr id="row" align="center" style="background: #ccc;">
 						<td class="padd">ថ្ងៃបង់ប្រាក់</td>
@@ -206,7 +206,7 @@
 								}
 							?>
 						</td>
-						<td class="padd"><?php echo "$ ".$rs['total_payment'];?></td>
+						<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 						<td class="padd"><?php echo $amount_month;?></td>
@@ -217,7 +217,7 @@
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 						
 						
-						<td class="padd"><?php echo "$ ".$study_material;?></td>
+						<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 						

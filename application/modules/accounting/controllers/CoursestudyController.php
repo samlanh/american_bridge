@@ -243,7 +243,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     		$db = new Accounting_Model_DbTable_DbCourStudey();
     		$year = $db->getAllYearByBranch($data['branch_id']);
     		//print_r($grade);exit();
-    		array_unshift($year, array ( 'id' => -1, 'name' => '------ select year --------') );
+    		//array_unshift($year, array ( 'id' => -1, 'name' => '------ select year --------') );
     		print_r(Zend_Json::encode($year));
     		exit();
     	}
@@ -274,17 +274,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     }
     
     
-    
-    
-    
-    
-    
-    
 }
-
-
-
-
 
 
 

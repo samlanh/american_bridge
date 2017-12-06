@@ -195,8 +195,8 @@
 	
 	function defaultPayment(){
 		
-		dijit.byId('tuitionfee').attr('value','<?php echo $this->degree_row['tuition_fee'];?>');
-    	dijit.byId('total').attr('value','<?php echo $this->degree_row['total'];?>');
+		dijit.byId('tuitionfee').attr('value','<?php echo $this->degree_row['fee'];?>');
+    	dijit.byId('total').attr('value','<?php echo $this->degree_row['total_payment'];?>');
     	dijit.byId('discount').attr('value','<?php echo $this->degree_row['discount_percent'];?>');
     	dijit.byId('books').attr('value','<?php echo $this->degree_row['paid_amount'];?>');
     	dijit.byId('addmin_fee').attr('value','<?php echo $this->degree_row['admin_fee'];?>');
@@ -916,7 +916,8 @@ fieldset{  background:none;}
 
 			 dojo.byId("lb_discount").innerHTML = discount;
 			 
-			 dojo.byId("lb_total_payment").innerHTML ="$ " + dijit.byId("total").get('value');
+			 after_discount = (study_fee - dis_fix) - ((study_fee - dis_fix) * (dis_percent/100));
+			 dojo.byId("lb_total_payment").innerHTML ="$ " + after_discount.toFixed(2);
 			 
 			 dojo.byId("lb_admin_fee").innerHTML ="$ "+dijit.byId("addmin_fee").get('value');
 			 

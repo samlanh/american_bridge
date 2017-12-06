@@ -118,14 +118,16 @@ dojo.require("dojo.parser");
 				<?php }?>
 				
 				<?php 
-					$db = new Application_Model_DbTable_DbUsers();
-            		$rs = $db->getAccessUrl($module,$controller,$action);
+// 					$db = new Application_Model_DbTable_DbUsers();
+//             		$rs = $db->getAccessUrl($module,$controller,$action);
             		
-            		if(!empty($rs) OR $action=='changepassword'){
-            			echo $this->layout()->content;
-            		}else{
-            			echo $this->render('pagenotfund.phtml');
-            		}
+//             		if(!empty($rs) OR $action=='changepassword'){
+//             			echo $this->layout()->content;
+//             		}else{
+//             			echo $this->render('pagenotfund.phtml');
+//             		}
+            		
+            		echo $this->layout()->content;
             	?>
 				
             	<?php //echo $this->layout()->content;  ?></td>

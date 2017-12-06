@@ -124,6 +124,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 			$buy_product = 0;
 		}
 		
+		$tuitionfee = $data['service_fee'] * $data['qty'];
 		
 		$this->_name = 'rms_student_payment';
 		try{
@@ -135,14 +136,19 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 					
 					//'year'				=>$data['study_year'],
 					'exchange_rate'		=>$data['ex_rate'],
-					'tuition_fee'		=>$data['service_fee'],
+					'tuition_fee'		=>$tuitionfee,
+					'material_fee'		=>$data['material_fee'],
+					
 					'discount_percent'	=>$data['discount'],
 					'discount_fix'		=>$data['discount_fix'],
+					
+					'tuition_fee_after_discount'=>($tuitionfee-$data['discount_fix']) - (($tuitionfee-$data['discount_fix'])*($data['discount']/100)),
+					
 					'total_payment'		=>$data['total_payment'],
 					'receive_amount'	=>$data['paid_amount'],
 					'paid_amount'		=>$data['paid_amount'],
-					'total'				=>$data['paid_amount'],
 					'balance_due'		=>$data['balance'],
+					
 					//'amount_in_khmer'	=>$data['char_price'],
 					'note'				=>$data['other'],
 					'time_for_car'		=>$data['time_identity'],
@@ -179,6 +185,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 						'payment_term'	=>$data['term'],
 						'fee'			=>$data['service_fee'],
 						'qty'			=>$data['qty'],
+						'material_fee'	=>$data['material_fee'],
 						'discount_percent'=>$data['discount'],
 						'discount_fix'	=>$data['discount_fix'],
 						'subtotal'		=>$data['total_payment'],

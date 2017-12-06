@@ -41,7 +41,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 			try{
 				if($data['student_type']==1){//new student
 					$this->_name = "rms_student";
-					if($data['dept']<=3){
+					if($data['degree_type']==1){
 						$stu_type=1;  // khmer fulltime
 						$payfor_type = 1;  // khmer fulltime
 					}else{
@@ -78,7 +78,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					
 					$this->_name = "rms_student";
 						
-					if($data['dept']<=3){
+					if($data['degree_type']==1){
 						$stu_type=1;  // khmer fulltime
 						$payfor_type = 1;  // khmer fulltime
 					}else{
@@ -126,9 +126,13 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				if($data['payment_term']==5){
 					$price_per_sec = $data['price_per_section'];
 					$amount_sec = $data['amount_section'];
+					
+					$tuitionfee = $data['tuitionfee'] * $data['amount_section'];
 				}else{
 					$price_per_sec = null;
 					$amount_sec = null;
+					
+					$tuitionfee = $data['tuitionfee'];
 				}
 				
 				if($data['student_type']==3){
@@ -163,13 +167,13 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						'amount_sec'	=>$amount_sec,				
 						
 						'exchange_rate'	=>$data['ex_rate'],
-						'tuition_fee'	=>$data['tuitionfee'],
+						'tuition_fee'	=>$tuitionfee,
 						'discount_percent'=>$data['discount'],
 						'discount_fix'	=>$data['discount_fix'],
+						'tuition_fee_after_discount'=>($tuitionfee - $data['discount_fix']) - (($tuitionfee - $data['discount_fix'])*($data['discount']/100)),
 						'other_fee'		=>$data['remark'],
 						'admin_fee'		=>$data['addmin_fee'],
 						'material_fee'	=>$data['material_fee'],
-						'total'			=>$data['total'],
 						'total_payment'	=>$data['total'],
 						'paid_amount'	=>$data['books'],
 						'receive_amount'=>$data['books'],
@@ -246,9 +250,9 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							}
 						}
 				
-						if($data['dept']<=3){
+						if($data['degree_type']==1){ // khmer FT
 							$stu_type=1;
-						}else{
+						}else{ // Eng FT
 							$stu_type=2;
 						}
 							
@@ -288,10 +292,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				
 				if($data['student_type']==1){ // new student
 				
-					if($data['dept']<=3){
-						$stu_type=1; // khmer fulltime
-					}else{
-						$stu_type=2; // english fulltime
+					if($data['degree_type']==1){ // khmer FT
+						$stu_type=1;
+					}else{ // Eng FT
+						$stu_type=2;
 					}
 				
 					$arr=array(
@@ -314,10 +318,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							$this->update($arr, $where);
 						}
 						
-						if($data['dept']<=3){
-							$stu_type=1; // khmer fulltime
-						}else{
-							$stu_type=2; // english fulltime
+						if($data['degree_type']==1){ // khmer FT
+							$stu_type=1;
+						}else{ // Eng FT
+							$stu_type=2;
 						}
 						
 						$arr=array(
@@ -838,10 +842,11 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.tuition_fee,
 				  sp.discount_percent,
 				  sp.discount_fix,
+				  sp.tuition_fee_after_discount,
 				  sp.other_fee,
 				  sp.admin_fee,
 				  sp.material_fee,
-				  sp.total,
+				  sp.total_payment,
 				  sp.paid_amount,
 				  sp.balance_due,
 				  sp.amount_in_khmer,
@@ -849,6 +854,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.student_type,
 				  sp.time,
 				  sp.end_hour,
+				  spd.fee,
 				  spd.start_date,
 				  spd.validate,
 				  spd.is_start,
@@ -910,16 +916,16 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
    
     function getAllYearsProgramFee(){
     	$db = $this->getAdapter();
-    	$sql = "SELECT id,CONCAT(from_academic,'-',to_academic,'(',generation,')') AS years,(select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee
-    	        WHERE `status`=1 GROUP BY from_academic,to_academic,generation,time ";
+    	$sql = "SELECT id,CONCAT(from_academic,'-',to_academic,'(',(SELECT branch_namekh FROM rms_branch WHERE br_id = branch_id),')') AS years,(select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee
+    	        WHERE `status`=1 GROUP BY from_academic,to_academic,generation,time,branch_id ";
     	$order=' ORDER BY id DESC';
     	return $db->fetchAll($sql.$order);
     }
     
     function getAllYears(){
     	$db = $this->getAdapter();
-    	$sql = "SELECT id,CONCAT(from_academic,'-',to_academic,'(',generation,')') AS years , (select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee WHERE `status`=1 
-    	        GROUP BY from_academic,to_academic,generation,time";
+    	$sql = "SELECT id,CONCAT(from_academic,'-',to_academic,'(',(SELECT branch_namekh FROM rms_branch WHERE br_id = branch_id),')') AS years , (select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee WHERE `status`=1 
+    	        GROUP BY from_academic,to_academic,generation,time,branch_id";
     	$order=' ORDER BY id DESC';
     	return $db->fetchAll($sql.$order);
     }
@@ -1396,6 +1402,13 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	$sql=" select br_id as id,branch_namekh as name from rms_branch where status=1 $branch ";
     	return $db->fetchAll($sql);
     }
+    
+    function getDegreeType($degree){
+    	$db=$this->getAdapter();
+    	$sql=" select type from rms_dept where is_active=1 and dept_id = $degree ";
+    	return $db->fetchOne($sql);
+    }
+    
     
 }
 

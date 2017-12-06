@@ -17,12 +17,26 @@ Class Global_Form_FrmSearchMajor extends Zend_Dojo_Form{
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 	
 		$_title = new Zend_Dojo_Form_Element_TextBox('title');
-		$_title->setAttribs(array('dojoType'=>$this->text,
+		$_title->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("SEARCH_FACULTY_NAME")));
 		$_title->setValue($request->getParam("title"));
 	
+		$_arr_type = array(
+				0=>$this->tr->translate("select type"),
+				1=>$this->tr->translate("Khmer Fulltime"),
+				2=>$this->tr->translate("English Fulltime"),
+				3=>$this->tr->translate("English Parttime")
+		);
+		$_type = new Zend_Dojo_Form_Element_FilteringSelect("type");
+		$_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'required'=>'true',
+				'class'=>'fullside',));
+		$_type->setMultiOptions($_arr_type);
+		$_type->setValue($request->getParam("type"));
+		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status_search');
-		$_status->setAttribs(array('dojoType'=>$this->filter,));
+		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL_STATUS"),
 				1=>$this->tr->translate("ACTIVE"),
@@ -30,7 +44,7 @@ Class Global_Form_FrmSearchMajor extends Zend_Dojo_Form{
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status_search"));
 	
-		$this->addElements(array($_title,$_status));
+		$this->addElements(array($_type,$_title,$_status));
 	
 		return $this;
 	}

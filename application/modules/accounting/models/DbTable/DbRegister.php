@@ -23,26 +23,25 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	$sql=" SELECT
 			    	sp.id,
-			    	(select branch_namekh from rms_branch where br_id = s.branch_id) as branch,
-			    	(select h.stu_code from rms_study_history as h where s.stu_id=h.stu_id) as stu_code,
+			    	(select branch_namekh from rms_branch where br_id = s.branch_id limit 1) as branch,
+			    	(select h.stu_code from rms_study_history as h where s.stu_id=h.stu_id limit 1) as stu_code,
 			    	s.stu_khname,
 			    	s.stu_enname,
 			    	s.sex,
-			    	(SELECT en_name FROM rms_dept WHERE dept_id=sp.degree)AS degree,
-			    	(SELECT major_enname FROM rms_major WHERE major_id=sp.grade ) AS grade,
+			    	(SELECT en_name FROM rms_dept WHERE dept_id=sp.degree limit 1)AS degree,
+			    	(SELECT major_enname FROM rms_major WHERE major_id=sp.grade limit 1) AS grade,
 			    	sp.receipt_number,
 			    	sp.grand_total_payment,
 			    	sp.grand_total_paid_amount,
 			    	sp.grand_total_balance,
 			    	sp.create_date,
-			    	(select CONCAT(first_name,' ',last_name) as name from rms_users where id = s.user_id) as user,
-			    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status
+			    	(select CONCAT(first_name,' ',last_name) as name from rms_users where id = s.user_id limit 1) as user,
+			    	(select name_en from rms_view where type=12 and key_code = sp.is_void limit 1) as void_status
 			    FROM
 			    	rms_student AS s,
 			    	rms_student_payment AS sp
 			    WHERE sp.payfor_type IN (1,6)
 			    	AND s.stu_id = sp.student_id
-			    	AND s.stu_type IN (1,2)
 			    	and s.status=1
 			    	$branch_id
     		";
@@ -117,7 +116,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				if($data['student_type']==1){//new
 					$this->_name = "rms_student";
 						
-					if($data['dept']<=3){
+					if($data['degree_type']==1){
 						$stu_type=1;  // khmer fulltime
 						$payfor_type = 1;  // khmer fulltime
 					}else{
@@ -153,7 +152,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						
 					$this->_name = "rms_student";
 						
-					if($data['dept']<=3){
+					if($data['degree_type']==1){
 						$stu_type=1;  // khmer fulltime
 						$payfor_type = 1;  // khmer fulltime
 					}else{
@@ -201,9 +200,13 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				if($data['payment_term']==5){
 					$price_per_sec = $data['price_per_section'];
 					$amount_sec = $data['amount_section'];
+					
+					$tuitionfee = $data['tuitionfee'] * $data['amount_section'];
 				}else{
 					$price_per_sec = null;
 					$amount_sec = null;
+					
+					$tuitionfee = $data['tuitionfee'];
 				}
 				
 				if(!empty($data['buy_product'])){
@@ -236,12 +239,16 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						'amount_sec'	=>$amount_sec,
 						
 						'exchange_rate'	=>$data['ex_rate'],
-						'tuition_fee'	=>$data['tuitionfee'],
+						'tuition_fee'	=>$tuitionfee,
 						'discount_percent'=>$data['discount'],
 						'discount_fix'	=>$data['discount_fix'],
+						
+						'tuition_fee_after_discount'=>($tuitionfee - $data['discount_fix']) - (($tuitionfee - $data['discount_fix'])*($data['discount']/100)),                 
+						
 						'other_fee'		=>$data['remark'],
 						'admin_fee'		=>$data['addmin_fee'],
-						'total'			=>$data['total'],
+						'material_fee'	=>$data['material_fee'],
+						
 						'total_payment'	=>$data['total'],
 						'paid_amount'	=>$data['books'],
 						'receive_amount'=>$data['books'],
@@ -273,7 +280,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				$this->_name='rms_study_history';
 				if($data['student_type']==1){
 				
-					if($data['dept']<=3){
+					if($data['degree_type']==1){
 						$stu_type=1;
 					}else{
 						$stu_type=2;
@@ -325,7 +332,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				
 						}
 				
-						if($data['dept']<=3){
+						if($data['degree_type']==1){
 							$stu_type=1;
 						}else{
 							$stu_type=2;
@@ -367,7 +374,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				
 				if($data['student_type']==1){ // new student
 				
-					if($data['dept']<=3){
+					if($data['degree_type']==1){
 						$stu_type=1; // khmer fulltime
 					}else{
 						$stu_type=2; // english fulltime
@@ -393,7 +400,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							$this->update($arr, $where);
 						}
 				
-						if($data['dept']<=3){
+						if($data['degree_type']==1){
 							$stu_type=1; // khmer fulltime
 						}else{
 							$stu_type=2; // english fulltime
@@ -481,7 +488,12 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 	             			'service_id'=>$type,
 	             			'payment_term'=>$data['payment_term'],
 	             			'fee'=>$fee,
-	             			'qty'=>$qty,
+							'qty'=>$qty,
+							
+							'admin_fee'=>$data['addmin_fee'],
+							'other_fee'=>$data['remark'],
+							'material_fee'=>$data['material_fee'],
+	             			
 	             			//'subtotal'=>$data['total'],
 	             			'subtotal'=>$subtotal,//$subtotal,
 	             			'paidamount'=>$paidamount,//$paidamount,
@@ -848,9 +860,11 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.tuition_fee,
 				  sp.discount_percent,
 				  sp.discount_fix,
+				  sp.tuition_fee_after_discount,
 				  sp.other_fee,
 				  sp.admin_fee,
-				  sp.total,
+				  sp.material_fee,
+				  sp.total_payment,
 				  sp.paid_amount,
 				  sp.balance_due,
 				  sp.amount_in_khmer,
@@ -858,6 +872,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.student_type,
 				  sp.time,
 				  sp.end_hour,
+				  spd.fee,
 				  spd.start_date,
 				  spd.validate,
 				  spd.is_start,

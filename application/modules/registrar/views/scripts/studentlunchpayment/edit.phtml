@@ -26,6 +26,7 @@
 		displayNoneAddRow();
 		// addRow();
 		changeControl();
+		document.getElementById('hideAddRow').style.display="none";
 		// getNewLunchId('');
 		// getNewReceiptNo("","");
 	
@@ -260,6 +261,12 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate('MATERIAL_FEE');?></td>
+							<td> 
+								<input class="fullside" value="<?php echo $this->detail['material_fee']?>" name="material_fee" id="material_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
+							</td>
+						</tr>
+						<tr>
 							<td ><?php echo $tr->translate('DISCOUNT');?></td>
 							<td> 
 								<table>
@@ -303,11 +310,10 @@ fieldset{  background:none;}
 		<input type="hidden" id="identity" name="identity" />
 		
 		<tr>
-			<td colspan="3" align="left">
-				<input type="button" label="<?php echo $tr->translate('ADD_BUY_PRODUCT');?>" dojoType="dijit.form.Button" 
-					iconClass="dijitIconEditProperty" onclick="" />
-					
-				&nbsp;&nbsp;<input type="checkbox" value="1" <?php if($this->row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+			<td colspan="3" align="center">
+				<div id="hideAddRow">
+					&nbsp;&nbsp;<input type="checkbox" value="1" <?php if($this->row['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+				</div>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
 			</td>
 		</tr>
@@ -458,6 +464,7 @@ fieldset{  background:none;}
 		dijit.byId("service").set('readOnly',true);
 		dijit.byId("term").set('readOnly',true);
 		dijit.byId("service_fee").set('readOnly',true);
+		dijit.byId("material_fee").set('readOnly',true);
 		dijit.byId("qty").set('readOnly',true);
 		dijit.byId("discount").set('readOnly',true);
 		dijit.byId("paid_amount").set('readOnly',true);

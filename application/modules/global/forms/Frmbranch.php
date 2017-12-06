@@ -155,7 +155,7 @@ Class Global_Form_Frmbranch extends Zend_Dojo_Form {
 			$br_id->setValue($data['br_id']);
 			$prefix_code->setValue($data['prefix']);
 			$branch_namekh->setValue($data['branch_namekh']);
-			$branch_nameen->setValue($data['branch_nameen']);
+			$branch_nameen->setValue($data['branch_namekh']);
 			//$select_branch_nameen->setValue($data['branch_nameen']);
 			$br_address->setValue($data['br_address']);
 			$branch_tel->setValue($data['branch_tel']);

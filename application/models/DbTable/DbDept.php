@@ -27,6 +27,7 @@ class Application_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		$this->_name='rms_dept';
 		$_arr=array(
 				'en_name'	  => $_data['en_name'],
+				'type'		  => $_data['type'],
 				'shortcut'    => $_data['shortcut'],
 				'modify_date' => new Zend_Date(),
 				'is_active'   => $_data['status'],
@@ -39,6 +40,7 @@ class Application_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		$this->_name='rms_dept';
 		$_arr=array(
 				'en_name'	  => $_data['en_name'],
+				'type'		  => $_data['type'],
 				'shortcut'    => $_data['shortcut'],
 				'is_active'   => $_data['status'],
 				'user_id'	  => $this->getUserId()

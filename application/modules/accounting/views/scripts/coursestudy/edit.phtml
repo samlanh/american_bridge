@@ -22,6 +22,8 @@
 		setStudyTime();
 		Initialize();
 		
+		document.getElementById('hideAddRow').style.display="none";
+		
 		new dijit.form.FilteringSelect({
 			store: dept_store,
 			autoComplete: true,                        
@@ -156,7 +158,7 @@
 	}
 	function defaultPayment(){
 		dijit.byId('tuitionfee').attr('value','<?php echo $this->row_gep['tuition_fee'];?>');
-    	dijit.byId('total').attr('value','<?php echo $this->row_gep['total'];?>');
+    	dijit.byId('total').attr('value','<?php echo $this->row_gep['total_payment'];?>');
     	dijit.byId('discount').attr('value','<?php echo $this->row_gep['discount_percent'];?>');
     	dijit.byId('books').attr('value','<?php echo $this->row_gep['paid_amount'];?>');
     	dijit.byId('addmin_fee').attr('value','<?php echo $this->row_gep['admin_fee'];?>');
@@ -268,6 +270,8 @@
 		dijit.byId("discount_fix").set('readOnly',true);
 		dijit.byId("remark").set('readOnly',true);
 		dijit.byId("addmin_fee").set('readOnly',true);
+		dijit.byId("material_fee").set('readOnly',true);
+		
 		dijit.byId("books").set('readOnly',true);
 		dijit.byId("not").set('readOnly',true);
 		dijit.byId("start_date").set('readOnly',true);
@@ -481,6 +485,10 @@ fieldset{  background:none;}
 							<td><?php echo $register->getElement('addmin_fee');?></td>
 						</tr>
 						<tr>	
+							<td><?php echo $tr->translate("MATERIAL_FEE");?></td>
+							<td><?php echo $register->getElement('material_fee');?></td>	
+						</tr>
+						<tr>	
 							<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 							<td><?php echo $register->getElement('remark');;?></td>
 						</tr>
@@ -505,11 +513,11 @@ fieldset{  background:none;}
 		
 		<input type="hidden" id="identity" name="identity" />
 		<tr>
-			<td colspan="3" align="left">
-				<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
-					iconClass="dijitIconEditProperty" onclick="" />
-					
-				<input type="checkbox" value="1" <?php if($this->row_gep['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+			<td colspan="3" align="center">
+				<div id="hideAddRow">
+					<input type="checkbox" value="1" <?php if($this->row_gep['buy_product']==1){echo "checked";}?> onclick="return false;" name="buy_product" id="buy_product" dojoType="dijit.form.CheckBox"  /> Buy Product
+				</div>
+				
 				<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row_gep['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
 				
 			</td>

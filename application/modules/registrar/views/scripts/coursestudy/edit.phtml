@@ -157,8 +157,8 @@
 			});
 	}
 	function defaultPayment(){
-		dijit.byId('tuitionfee').attr('value','<?php echo $this->row_gep['tuition_fee'];?>');
-    	dijit.byId('total').attr('value','<?php echo $this->row_gep['total'];?>');
+		dijit.byId('tuitionfee').attr('value','<?php echo $this->row_gep['fee'];?>');
+    	dijit.byId('total').attr('value','<?php echo $this->row_gep['total_payment'];?>');
     	dijit.byId('discount').attr('value','<?php echo $this->row_gep['discount_percent'];?>');
     	dijit.byId('books').attr('value','<?php echo $this->row_gep['paid_amount'];?>');
     	dijit.byId('addmin_fee').attr('value','<?php echo $this->row_gep['admin_fee'];?>');
@@ -269,7 +269,8 @@
 		dijit.byId("discount").set('readOnly',true);
 		dijit.byId("discount_fix").set('readOnly',true);
 		dijit.byId("remark").set('readOnly',true);
-		dijit.byId("addmin_fee").set('readOnly',true);
+		dijit.byId("addmin_fee").set('readOnly',true);	
+		dijit.byId("material_fee").set('readOnly',true);
 		dijit.byId("books").set('readOnly',true);
 		dijit.byId("not").set('readOnly',true);
 		dijit.byId("start_date").set('readOnly',true);
@@ -902,7 +903,8 @@ fieldset{  background:none;}
 			 }
 			 dojo.byId("lb_discount").innerHTML = discount;
 			 
-			 dojo.byId("lb_total_payment").innerHTML = "$ " + dijit.byId("total").get('value');
+			 after_discount = (study_fee - dis_fix) - ((study_fee - dis_fix) * (dis_percent/100));
+			 dojo.byId("lb_total_payment").innerHTML = "$ " + after_discount.toFixed(2);
 			 
 			 dojo.byId("lb_other_fee").innerHTML = "$ "+dijit.byId("remark").get('value');
 			 
@@ -916,21 +918,7 @@ fieldset{  background:none;}
 			 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		 
 			
-			total_product_fee = 0;
-			
-			checkbox = dijit.byId('buy_product').get('value');
-			
-			if(checkbox==1){
-				var rowId = $('#identity').val();
-				if(rowId==""){
-					return false;
-				}
-				var rowIDArray = rowId.split(',');
-				for(var n = 0; n < rowIDArray.length; n++) {
-					total_product_fee += dijit.byId('subtotal_'+rowIDArray[n]).get('value');
-				}
-			}
-			dojo.byId("lb_total_product_fee").innerHTML ="$ "+total_product_fee;
+			dojo.byId("lb_total_product_fee").innerHTML = "$ " + dijit.byId('material_fee').get('value');
 			
 			
 			if(payment_term==5){

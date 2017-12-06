@@ -1003,6 +1003,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     	
     	$sql = "SELECT
+    				sp.*,
 					sp.id,
 					sp.`student_id`,
 					st.`stu_code`,
@@ -1026,6 +1027,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 					sp.`total_payment`,
 					sp.`admin_fee`,
 					sp.`other_fee`,
+					sp.`material_fee`,
 					
 					sp.`grand_total_payment`,
 					sp.`grand_total_paid_amount`,
@@ -1116,6 +1118,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	//echo $search['for_month'];exit();
     	 
     	$sql = "SELECT
+    				sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	st.`stu_code`,
@@ -1138,6 +1141,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`total_payment`,
 			    	sp.`admin_fee`,
 			    	sp.`other_fee`,
+			    	sp.`material_fee`,
 			    		
 			    	sp.`grand_total_payment`,
 			    	sp.`grand_total_paid_amount`,
@@ -1223,6 +1227,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     	 
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	st.`stu_code`,
@@ -1245,6 +1250,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`total_payment`,
 			    	sp.`admin_fee`,
 			    	sp.`other_fee`,
+			    	sp.`material_fee`,
 			    		
 			    	sp.`grand_total_payment`,
 			    	sp.`grand_total_paid_amount`,
@@ -1330,6 +1336,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=4) as stu_code ,
@@ -1349,6 +1356,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`discount_percent`,
 			    	sp.`discount_fix`,
 			    	sp.`total_payment`,
+			    	sp.`material_fee`,
 			    	 
 			    	sp.`grand_total_payment`,
 			    	sp.`grand_total_paid_amount`,
@@ -1425,6 +1433,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission("sp.`branch_id`");
     
     	$sql = "SELECT
+			    	sp.*,
 			    	sp.id,
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=5) as stu_code ,
@@ -1444,6 +1453,8 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	sp.`discount_percent`,
 			    	sp.`discount_fix`,
 			    	sp.`total_payment`,
+			    	
+			    	sp.`material_fee`,
 			    	 
 			    	sp.`grand_total_payment`,
 			    	sp.`grand_total_paid_amount`,

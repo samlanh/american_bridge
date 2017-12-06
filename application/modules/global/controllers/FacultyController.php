@@ -15,7 +15,9 @@ class Global_FacultyController extends Zend_Controller_Action {
     		$_data=$this->getRequest()->getPost();
     		$search = array(
     				'title' => $_data['title'],
-    				'status' => $_data['status_search']);
+    				'status' => $_data['status_search'],
+    				'type' => $_data['type'],
+    				);
     	}
     	else{
     		$search='';
@@ -26,13 +28,13 @@ class Global_FacultyController extends Zend_Controller_Action {
         $rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
         
     	$list = new Application_Form_Frmtable();
-    	$collumns = array("DEGREE","SHORTCUT","CREATED_DATE","STATUS","BY_USER");
+    	$collumns = array("DEGREE","TYPE","SHORTCUT","CREATED_DATE","STATUS","BY_USER");
     	$link=array(
     			'module'=>'global','controller'=>'faculty','action'=>'edit',
     	);
     	$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('en_name'=>$link));
-    	$frm = new Global_Form_FrmSearchMajor();
-    	$frm = $frm->FrmDepartment();
+    	$frm1 = new Global_Form_FrmSearchMajor();
+    	$frm = $frm1->FrmDepartment();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     	
@@ -46,7 +48,7 @@ class Global_FacultyController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		try {
     			$_data = $this->getRequest()->getPost();
-    			$_dbmodel = new Application_Model_DbTable_DbDept();
+    			$_dbmodel = new Global_Model_DbTable_DbDept();
     			$_dbmodel->AddNewDepartment($_data);
     			
     			if(isset($_data['save_close'])){
@@ -69,7 +71,7 @@ class Global_FacultyController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		try {
     			$_data = $this->getRequest()->getPost();
-    			$_dbmodel = new Application_Model_DbTable_DbDept();
+    			$_dbmodel = new Global_Model_DbTable_DbDept();
     			$_dbmodel->UpdateDepartment($_data);
     			Application_Form_FrmMessage::Sucessfull("ការកៃប្រែដោយជោគជ័យ !", "/global/faculty/index");
     			//$this->_redirect("");

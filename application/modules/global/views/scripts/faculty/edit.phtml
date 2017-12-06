@@ -7,32 +7,35 @@
 <table cellspacing="10" width="40%" style="margin: 0 auto;">
 	<tr>
 		<td>
-		<fieldset>
-					<legend align="center" ><strong><?php echo $tr->translate("EDET_FACULTY");?></strong></legend>
-					<table style="margin: 0 auto; width: 100%;" cellspacing="10">
-						<tr>
-							<td><?php echo $tr->translate("NAME");?></td>
-							<td>
-								<?php echo $frm_dept->getElement("en_name");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("SHORTCUT");?></td>
-							<td><?php echo $frm_dept->getElement("shortcut");?></td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("STATUS");?></td>
-							<td><?php echo $frm_dept->getElement("status");?>
-								<?php echo $frm_dept->getElement("dept_id");?>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" align="center">
-								<input type="submit"  label="<?php echo $tr->translate("GO_EDIT");?>" id="submitButton" 
-								dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave" />
-							</td>
-						</tr>
-					</table>	
-		</fieldset>		
+			<fieldset>
+				<legend align="center" ><strong><?php echo $tr->translate("EDET_FACULTY");?></strong></legend>
+				<table style="margin: 0 auto; width: 100%;" cellspacing="10">
+					<tr>
+						<td><?php echo $tr->translate("NAME");?></td>
+						<td><?php echo $frm_dept->getElement("en_name");?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("TYPE");?></td>
+						<td><?php echo $frm_dept->getElement("type");?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("SHORTCUT");?></td>
+						<td><?php echo $frm_dept->getElement("shortcut");?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("STATUS");?></td>
+						<td><?php echo $frm_dept->getElement("status");?>
+							<?php echo $frm_dept->getElement("dept_id");?>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<input type="submit"  label="<?php echo $tr->translate("GO_EDIT");?>" id="submitButton" 
+							dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave" />
+						</td>
+					</tr>
+				</table>	
+			</fieldset>		
 		</td>
 	</tr>
 </table>	

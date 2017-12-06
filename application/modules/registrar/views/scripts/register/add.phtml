@@ -29,13 +29,12 @@
 		    onChange: function() {  
 		    	dept_id = dijit.byId('dept').get('value');
 		    	dijit.byId('grade').attr('value','');
+				getDegreeType(dept_id);
 		    	getallModel(dept_id,a=''); 
 		    	getStudentNo(dept_id,'');
 				getNewReceiptNo("");
 		    	setHourDefault();
-				
 				oldStudentChangeDegree();
-				
 		    }
 		}, "dept");
 		
@@ -386,6 +385,8 @@
 				   mm = "0"+mm;
 				 }
 				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
 			 else if(payment_term==2){
 				 mm = a.getMonth()+(3)+1;
@@ -397,6 +398,8 @@
 				   mm = "0"+mm;
 				 }
 				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
 			 else if(payment_term==3){
 				 mm = a.getMonth()+(6)+1;
@@ -408,6 +411,8 @@
 				   mm = "0"+mm;
 				 }
 				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }
 			 else if(payment_term==4){
 				 mm = a.getMonth()+(12)+1;
@@ -419,19 +424,19 @@
 				   mm = "0"+mm;
 				 }
 				 var y = a.getFullYear();
+				 var epx_date = y + '-' + mm + '-' + dd ;
+				 dijit.byId('end_date').attr('value',epx_date);
 			 }else if(payment_term==5){
-				 dd = a.getDate()+(parseInt(amount_section)-1); 
-				 if(dd<10){
-				   dd = "0"+dd;
+				 var amount_day = dijit.byId('amount_section').get('value');;
+				 var start_date = dijit.byId('start_date').get('value');
+				 var year = start_date.getFullYear();
+				 var month = start_date.getMonth();
+				 var date = start_date.getDate();
+				 for(var i=0; i<amount_day; i++){
+					  var epx_date = new Date(year, month, date + i);
 				 }
-				 mm = a.getMonth()+1;
-				 if(mm<10){
-				   mm = "0"+mm;
-				 }
-				 var y = a.getFullYear(); 
+				 dijit.byId('end_date').attr('value',epx_date); 
 			 }	
-			 var epx_date = y + '-' + mm + '-' + dd ;
-			 dijit.byId('end_date').attr('value',epx_date);
 		}else{
 			payment_term = dijit.byId('payment_term').get('value');
 			if(payment_term == 5){
@@ -452,6 +457,28 @@
 			}
 		}
 	}
+	
+	var url_get_degree_type = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-degree-type')); ?>';
+	function getDegreeType(degree){
+		if(degree>0){	
+			dojo.xhrPost({
+				url:url_get_degree_type,
+				content:{
+					'degree':degree,
+					},
+				handleAs:"json",
+				load: function(data) {
+				     if(data){
+				    	  dijit.byId('degree_type').attr('value',data);
+				     }
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+	
 	
 </script>
 <style>
@@ -546,6 +573,7 @@ fieldset{  background:none;}
 							<input type="hidden" name="old_stu_code" id="old_stu_code" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="old_degree" id="old_degree" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="old_grade" id="old_grade" dojoType="dijit.form.TextBox" />
+							<input type="hidden" name="degree_type" id="degree_type" dojoType="dijit.form.TextBox" />
 							
 							<td width="20%"><?php echo $tr->translate("DEGREE");?><label class="red">*</label></td>
 							<td width="80%"><input id="dept" /></td>
@@ -809,24 +837,6 @@ function checkValidateAddRow(){
 	return true;
 }
 
-function calculateAmountDay(){
-	payment_term = dijit.byId('payment_term').get('value');
-	if(payment_term == 5){
-		start_date = dijit.byId('start_date').get('value');
-		end_date = dijit.byId('end_date').get('value');
-		//alert(start_date+" , "+end_date)
-		
-		//day = end_date - start_date;
-		
-		var timeDiff = (end_date.getTime() - start_date.getTime());
-		if(timeDiff>=0){
-			var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1 ; // +1 because they also count the first day that register
-			dijit.byId('amount_section').attr('value',diffDays);
-		}else{
-			dijit.byId('amount_section').attr('value',0);
-		}
-	}
-}
 
 function loading(){
     document.getElementsByClassName("overlay")[0].style.display="block";
@@ -1107,9 +1117,13 @@ function printSave(new_stu_id,new_receipt_no){
 		 }
 		 dojo.byId("lb_discount").innerHTML = discount;
 		 
-		 dojo.byId("lb_total_payment").innerHTML ="$ " + dijit.byId("total").get('value');
+		 after_discount = (study_fee - dis_fix) - ((study_fee - dis_fix) * (dis_percent/100));
+		 
+		 dojo.byId("lb_total_payment").innerHTML ="$ " + after_discount.toFixed(2);
 		 
 		 dojo.byId("lb_admin_fee").innerHTML ="$ "+dijit.byId("addmin_fee").get('value');
+		 
+		 dojo.byId("lb_total_product_fee").innerHTML ="$ " + dijit.byId('material_fee').get('value');
 		 
 		 dojo.byId("lb_grand_total").innerHTML ="$ "+dijit.byId('grand_total').get('value');
 		 
@@ -1121,13 +1135,13 @@ function printSave(new_stu_id,new_receipt_no){
 		 
 		 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		 
-		dojo.byId("lb_total_product_fee").innerHTML ="$ " + dijit.byId('material_fee').get('value');
+		
 		
 		
 		if(payment_term==5){
-			pay_term = dijit.byId('amount_section').get('value') + dijit.byId('payment_term').attr('displayedValue');
+			pay_term = dijit.byId('amount_section').get('value') + " " + dijit.byId('payment_term').attr('displayedValue');
 		}else{
-			pay_term = dijit.byId('payment_term').attr('displayedValue');
+			pay_term = "1 " + dijit.byId('payment_term').attr('displayedValue');
 		}
 		
 		dojo.byId("lb_payment_term").innerHTML = pay_term;

@@ -335,6 +335,14 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     	}
     }
     
-    
+    function getDegreeTypeAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Registrar_Model_DbTable_DbRegister();
+    		$degree_type = $db->getDegreeType($data['degree']);
+    		print_r(Zend_Json::encode($degree_type));
+    		exit();
+    	}
+    }
 	
 }
