@@ -1,0 +1,20 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("SERVICE"));
+?>	
+<?php $frm =  $this->frm_search;?>
+
+<form id="list" name="list" action="<?php echo $this->url(array('module'=>'global','controller'=>'service','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+	<table style="width:60%">
+	  <tr> 
+		<td> <input dojoType="dijit.form.TextBox"   id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->adv_search['txtsearch']; ?>" type="text">
+		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+	  </tr>
+	</table>
+
+</form>
+
+<?php echo $this->list;?>
+
+
+
