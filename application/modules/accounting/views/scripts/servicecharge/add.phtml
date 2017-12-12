@@ -37,7 +37,7 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 						<tr>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("ACADEMIC_YEAR");?></td>
 							<td>
-								<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" id="academic_year" name="academic_year" type="text">
+								<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" autoComplete="false" queryExpr="*${0}*" id="academic_year" name="academic_year" type="text">
 									
 									<?php if(!empty($this->academic_year)){foreach ($this->academic_year as $year){?>
 										<option value="<?php echo $year['id'];?>"> <?php echo $year['name'];?></option>
@@ -150,7 +150,7 @@ function addRow() {
 		}
 			template+='<td width="4%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="4%" align="center">'+no+'</td>';
-			template+='<td width="30%"><lable id="acc_label'+col+'"><select dojoType="dijit.form.FilteringSelect" id="class_'+col+'" class="fullside" onchange="showpopup('+col+');" name="class_'+col+'">'+faculty+'</select></lable></td>';			
+			template+='<td width="30%"><lable id="acc_label'+col+'"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" id="class_'+col+'" class="fullside" onchange="showpopup('+col+');" name="class_'+col+'">'+faculty+'</select></lable></td>';			
 			column = 0;
 			//template+='<td width="15%"> <input type="text" required="true" name="monthly'+col+'" id="monthly'+col+'" dojoType="dijit.form.NumberTextBox" style=""/><label id="subsub"></label></td>';
 			for(j=0;j<payment_term;j++){ column++;

@@ -11,10 +11,11 @@ class Registrar_StudentpaymentlateController extends Zend_Controller_Action {
 				$search=$this->getRequest()->getPost();
 			}else{
 				$search=array(
-						'adv_search' =>'',
-						'study_year' =>-1,
-						'service' =>-1,
-						'end_date'=> date('Y-m-d'),
+						'adv_search'=>'',
+						'degree_all'=>'',
+						'grade_all'	=>'',
+						'service'	=>-1,
+						'end_date'	=> date('Y-m-d'),
 				);
 			}
 			$db = new Registrar_Model_DbTable_DbRptStudentPaymentLate();

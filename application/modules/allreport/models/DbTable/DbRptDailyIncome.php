@@ -25,6 +25,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	st.`stu_code`,
 			    	st.`stu_enname`,
@@ -118,6 +121,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 	    if($search['branch'] > 0){
 	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
 	    }
+	    if($search['user'] > 0){
+	    	$where.= " AND sp.`user_id` = ".$search['user'];
+	    }
 	    //echo $sql.$where.$order;exit();
 	    return $db->fetchAll($sql.$where.$order);
     
@@ -133,6 +139,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 					sp.*,
 					sp.id,
+					(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 					sp.`student_id`,
 					st.`stu_code`,
 					st.`stu_enname`,
@@ -226,6 +235,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND sp.`user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     	 
     }
@@ -239,6 +251,10 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	st.`stu_code`,
 			    	st.`stu_enname`,
@@ -333,6 +349,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND sp.`user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     
     }
@@ -347,12 +366,16 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=4) as stu_code ,
 			    	st.`stu_enname`,
 			    	st.`stu_khname`,
 			    	(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code = st.`sex`) AS sex,
-			    	
+			    	(select title from rms_program_name as p where p.service_id = s.service_id) as service_name,
 			    	(select carid from rms_car where rms_car.id = (select car_id from rms_program_name where rms_program_name.service_id = spd.service_id)) as car_id,
 			    	
 			    	st.`tel`,
@@ -435,6 +458,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND sp.`user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     
     }
@@ -449,6 +475,10 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=5) as stu_code ,
 			    	st.`stu_enname`,
@@ -537,6 +567,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND sp.`user_id` = ".$search['user'];
+    	}
     	
     	return $db->fetchAll($sql.$where.$order);
     
@@ -552,6 +585,10 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	st.`stu_code`,
 			    	st.`stu_enname`,
@@ -641,6 +678,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND sp.`user_id` = ".$search['user'];
+    	}
     	 
     	return $db->fetchAll($sql.$where.$order);
     
@@ -655,6 +695,10 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     
     	$sql = "SELECT
 			    	cp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = cp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = cp.user_id) as user_name,
+			    	
 			    	c.customer_code,
 			    	c.first_name,
 			    	cp.rent_receipt_no,
@@ -713,6 +757,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     
     	if($search['branch'] > 0){
     		$where.= " AND cp.`branch_id` = ".$search['branch'];
+    	}
+    	if($search['user'] > 0){
+    		$where.= " AND cp.`user_id` = ".$search['user'];
     	}
     
     	return $db->fetchAll($sql.$where.$order);

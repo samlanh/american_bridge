@@ -55,7 +55,7 @@ class Application_Form_FrmOther extends Zend_Dojo_Form
     	$_arr_type = array(
     					1=>$this->tr->translate("Khmer Fulltime"),
     					2=>$this->tr->translate("English Fulltime"),
-    					3=>$this->tr->translate("English Parttime")
+    					3=>$this->tr->translate("English Parttime & Others")
     				);
     	$_type = new Zend_Dojo_Form_Element_FilteringSelect("type");
     	$_type->setAttribs(array(

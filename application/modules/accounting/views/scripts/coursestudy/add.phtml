@@ -25,7 +25,8 @@
 		
 		new dijit.form.FilteringSelect({
 		    store: dept_store,
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                       
 		    required: true,
 		    id: "dept",
 		    name: "dept",           
@@ -640,7 +641,7 @@ fieldset{  background:none;}
 						<tr>
 							<td><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select name="branch" id="branch" class="fullside" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(7,'');getNewReceiptNo('');" dojoType="dijit.form.FilteringSelect" type="text" >
+								<select name="branch" id="branch" class="fullside" autoComplete="false" queryExpr="*${0}*"  onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(7,'');getNewReceiptNo('');" dojoType="dijit.form.FilteringSelect" type="text" >
 									<option value="-1">-------- select branch ------</option>
 									<?php if(!empty($this->branch)){foreach ($this->branch as $branch){?>
 									<option value="<?php echo $branch['id'];?>"><?php echo $branch['name'];?></option>
@@ -738,7 +739,7 @@ fieldset{  background:none;}
 						<tr>
 							<td title="ចាប់ពីម៉ោង"><?php echo $tr->translate("SESSION");?>*</td>
 							<td>
-								<select class="fullside"  tabindex="24" name="session" id="session" onchange="setStudyTime();" dojoType="dijit.form.FilteringSelect" >
+								<select class="fullside"  tabindex="24" name="session" id="session" onchange="setStudyTime();" dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*"  >
 									<option value='1'><?php echo $tr->translate('MORNING')?></option>
 									<option value='2'><?php echo $tr->translate('AFTERNOON')?></option>
 									<option value='3'><?php echo $tr->translate('EVERNING')?></option>

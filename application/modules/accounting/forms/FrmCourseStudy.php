@@ -133,6 +133,8 @@ Class Accounting_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		$generation->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',
 				//'onkeyup'=>'CheckReceipt()'
 				'required'=>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 				'onchange'=>'paymentTerm();',
 		));
@@ -254,6 +256,8 @@ Class Accounting_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		  $_term->setAttribs(array(
 		  		'dojoType'=>$this->filter,
 		  		'required'=>'true',
+		  		'autoComplete'=>'false',
+		  		'queryExpr'=>'*${0}*',
 		  		'class'=>'fullside',
 		  		'onchange'=>'paymentTerm();getDateTerm();'
 		  		));
@@ -371,6 +375,8 @@ Class Accounting_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'changControll();',
 		));
 		$opts = array(  3=>$this->tr->translate('OLD_STUDENT'),

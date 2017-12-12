@@ -19,11 +19,13 @@
 	      </td>
 		</tr>
 	</table>
-	<table width="70%">
+	<table width="100%">
 		<tr> 
 			 <td><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->search['adv_search']?>" placeholder="Search" type="text" ></td>
+			 <td> <?php echo $frm->getElement("degree_all");?></td>
+			 <td> <?php echo $frm->getElement("grade_all");?></td>
 			 <td> <?php echo $frm->getElement("service");?></td>
-			 <td><input dojoType="dijit.form.DateTextBox" class="fullside" id="end_date" name="end_date" value="<?php echo $this->search['end_date']; ?>"  type="text"></td>
+			 <td><input dojoType="dijit.form.DateTextBox" class="fullside" id="end_date" name="end_date" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $this->search['end_date']; ?>"  type="text"></td>
 			 <td> <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
 		</tr>
 	</table>
@@ -64,10 +66,10 @@
 			                <td>&nbsp;<?php echo $tr->translate("AMOUNT_LATE"); ?>&nbsp;</td>
 						</tr>
 					<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
-						$date1=date_create($row['end']);
-						$date2=date_create($this->search['end_date']);
-						$diff=date_diff($date1,$date2);
-						$day=$diff->format("%R%a");
+						
+						$end_dat=date($row['end']);
+						$total_day=strtotime($end_dat)-strtotime($this->search['end_date']);
+						$day=$total_day/(60*60*24);
 						
 						if($row['payfor_type']==3){
 							$stu_code = $row['transport_code'];

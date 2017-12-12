@@ -2,7 +2,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$this->headTitle('Report Service Charge'); 
 	echo $this->headTitle(''); 
-	
+	$frm=$this->form_search;
 ?>	
 <div style="width: 28cm;margin: 0 auto;">
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-service-charge')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -12,13 +12,8 @@
 				<input dojoType="dijit.form.TextBox" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
 			</td>
 			<td>
-				<select class="fullside"   name="year" id="year" dojoType="dijit.form.FilteringSelect">
-					<option value=""> Select Year </option>
-					<?php if(!empty($this->row)){foreach ($this->row as $id ){?>
-						<option value="<?php echo $id['id']?>" <?php if($id['id']==$this->search['year']) echo 'selected="selected"' ?>><?php echo $id['year'];?></option>
-					<?php }}?>
-				</select>
-			</td>
+				<?php echo $frm->getElement('study_year')?>
+			</td>	
 			
 			<td>
 				<select class="fullside"   name="service_type" id="service_type" dojoType="dijit.form.FilteringSelect">
@@ -71,7 +66,6 @@
 						<tr style="font-size:13px;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center" >
 							<td ><?php echo $tr->translate('N_O')?></td>
 							<td ><?php echo $tr->translate('ACADEMIC_YEAR')?></td>
-							<td ><?php echo $tr->translate('GENERATION')?></td>
 							<td><?php echo $tr->translate('SERVICE_CATE')?></td>
 							<td><?php echo $tr->translate('SERVICE_NAME')?></td>
 							<td><?php echo $tr->translate('MONTHLY')?></td>
@@ -84,15 +78,14 @@
 					<?php $i=0; foreach ($this->rs AS $row) { $i++;?>
 						<tr class="hover" style="font-size:12px; height: 20px;" align="center" >
 							<td ><?php echo $i;?></td>
-							<td ><?php echo $row['academic'];?></td>
-							<td ><?php echo $row['generation'];?></td>
+							<td ><?php echo $row['years'].$row['time'];?></td>
 							<td align="left">&nbsp;&nbsp;<?php echo $row['ser_type'];?></td>
 							<td align="left">&nbsp;&nbsp;<?php echo $row['service_name'];?></td>	
-							<td ><?php echo "$ ".$row['monthly'];?></td>
-							<td ><?php echo "$ ".$row['quarter'];?></td>
-							<td ><?php echo "$ ".$row['semester'];?></td>
-							<td ><?php echo "$ ".$row['year'];?></td>
-							<td ><?php echo "$ ".$row['day'];?></td>
+							<td style="width: 50px;"><?php echo "$ ".$row['monthly'];?></td>
+							<td style="width: 50px;"><?php echo "$ ".$row['quarter'];?></td>
+							<td style="width: 50px;"><?php echo "$ ".$row['semester'];?></td>
+							<td style="width: 50px;"><?php echo "$ ".$row['year'];?></td>
+							<td style="width: 50px;"><?php echo "$ ".$row['day'];?></td>
 							<td ><?php echo $row['remark'];?></td>
 						</tr>
 					<?php }?>	

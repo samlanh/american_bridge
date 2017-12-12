@@ -56,7 +56,7 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 							</td>
 							<td ><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" id="branch" name="branch" type="text">								
+								<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" autoComplete="false" queryExpr="*${0}*" id="branch" name="branch" type="text">								
 									<option value="">Select Branch</option>
 									<?php if(!empty($this->branch)){ foreach ($this->branch as $branch){?>	
 										<option value="<?php echo $branch['id'];?>"<?php if($branch['id']==$this->rs['branch_id']) echo 'selected="selected"'?>><?php echo $branch['name'];?></option>
@@ -214,7 +214,7 @@ function addRow() {
 		}
 			template+='<td width="3%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="3%" align="center">'+no+'</td>';
-			template+='<td  width="17%"><select dojoType="dijit.form.FilteringSelect"  class="fullside" id="class_'+col+'" name="class_'+col+'">'+grade+'</select></td>';			
+			template+='<td  width="17%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'">'+grade+'</select></td>';			
 			//template+='<td><select dojoType="dijit.form.FilteringSelect" id="session_'+col+'" name="session_'+col+'">'+session+'</select></td>';
 			
 			column = 0;
@@ -263,7 +263,7 @@ function initailize(){
 		template+='<td width="3%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="3%" align="center">'+no+'</td>';
 
-		template+='<td width="17%"><select dojoType="dijit.form.FilteringSelect" class="fullside" id="class_'+col+'" name="class_'+col+'">'+grade+'</select></td>';			
+		template+='<td width="17%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'">'+grade+'</select></td>';			
 		//template+='<td><select dojoType="dijit.form.FilteringSelect" id="session_'+col+'" name="session_'+col+'">'+session+'</select></td>';
 		
 		column = 0;

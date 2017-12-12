@@ -1249,7 +1249,17 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     
     function getGradeAllDept(){
     	$db=$this->getAdapter();
-    	$sql="SELECT major_id AS id,CONCAT(major_enname,'(',(select shortcut from rms_dept as d where d.dept_id=rms_major.dept_id),')') AS `name` FROM rms_major where is_active=1 ";
+    	$sql="SELECT 
+    				major_id AS id,
+    				CONCAT(major_enname,' (',d.shortcut,')') AS `name`
+    			FROM
+    				rms_major AS m,
+    				rms_dept AS d
+    			WHERE 
+    				d.dept_id = m.dept_id	
+    				AND m.is_active=1
+    				AND m.major_enname != ''
+    		";
     	return $db->fetchAll($sql);
     }
     
@@ -1261,49 +1271,84 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     
     function getAllDegree(){
     	$db=$this->getAdapter();
-    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE is_active=1 ";
+    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE is_active=1 and en_name!='' ";
     	return $db->fetchAll($sql);
     }
     
     function getAllDegreeKhmer(){
     	$db=$this->getAdapter();
-    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE dept_id IN(1,2,3) AND is_active=1 ";
+    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE type=1 AND is_active=1 and en_name!='' ";
     	return $db->fetchAll($sql);
     }
     
     function getAllDegreeFulltime(){
     	$db=$this->getAdapter();
-    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE dept_id IN(1,2,3,4,5,6) AND is_active=1 ";
+    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE type IN(1,2) AND is_active=1 and en_name!='' ";
     	return $db->fetchAll($sql);
     }
     
     function getAllDegreeEnglishFulltime(){
     	$db=$this->getAdapter();
-    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE dept_id IN(4,5,6) AND is_active=1 ";
+    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE type=2 AND is_active=1 and en_name!='' ";
     	return $db->fetchAll($sql);
     }
     
     function getAllDegreeGEP(){
     	$db=$this->getAdapter();
-    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE dept_id > 6 AND is_active=1 ";
+    	$sql="SELECT dept_id AS id,en_name AS `name` FROM rms_dept WHERE type=3 AND is_active=1 and en_name!=''  ";
     	return $db->fetchAll($sql);
     }
    
     function getAllGradeFulltime(){
     	$db=$this->getAdapter();
-    	$sql="SELECT major_id AS id,CONCAT(major_enname,' (',(select shortcut from rms_dept as d where d.dept_id=rms_major.dept_id),')') AS `name` FROM rms_major WHERE dept_id IN(1,2,3,4,5,6) AND is_active=1 ";
+    	$sql="SELECT 
+    				major_id AS id,
+    				CONCAT(major_enname,' (',d.shortcut,')') AS `name`
+    			FROM
+    				rms_major AS m,
+    				rms_dept AS d
+    			WHERE 
+    				d.dept_id = m.dept_id	
+    				AND m.is_active=1
+    				AND m.major_enname != ''
+    				AND d.`type` IN(1,2)
+    		";
     	return $db->fetchAll($sql);
     }
     
     function getGradeEnglishFulltime(){
     	$db=$this->getAdapter();
-    	$sql="SELECT major_id AS id,CONCAT(major_enname,' (',(select shortcut from rms_dept as d where d.dept_id=rms_major.dept_id),')') AS `name` FROM rms_major WHERE dept_id IN(4,5,6) AND is_active=1 ";
+    	$sql="SELECT 
+    				major_id AS id,
+    				CONCAT(major_enname,' (',d.shortcut,')') AS `name`
+    			FROM
+    				rms_major AS m,
+    				rms_dept AS d
+    			WHERE 
+    				d.dept_id = m.dept_id	
+    				AND m.is_active=1
+    				AND m.major_enname != ''
+    				AND d.`type`=2
+    		";
+    	
     	return $db->fetchAll($sql);
     }
     
     function getGradeKhmerFulltime(){
     	$db=$this->getAdapter();
-    	$sql="SELECT major_id AS id,CONCAT(major_enname,' (',(select shortcut from rms_dept as d where d.dept_id=rms_major.dept_id),')') AS `name` FROM rms_major WHERE dept_id IN(1,2,3) AND is_active=1 ";
+    	$sql="SELECT 
+    				major_id AS id,
+    				CONCAT(major_enname,' (',d.shortcut,')') AS `name`
+    			FROM
+    				rms_major AS m,
+    				rms_dept AS d
+    			WHERE 
+    				d.dept_id = m.dept_id	
+    				AND m.is_active=1
+    				AND m.major_enname != ''
+    				AND d.`type`=1
+    		";
+    	
     	return $db->fetchAll($sql);
     }
     
@@ -1321,7 +1366,18 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     
     function getGradeGepAll(){
     	$db=$this->getAdapter();
-    	$sql="SELECT major_id AS id,CONCAT(major_enname,' (',(select shortcut from rms_dept as d where d.dept_id=rms_major.dept_id),')') AS `name` FROM rms_major WHERE dept_id >6 AND is_active=1 ";
+    	$sql="SELECT 
+    				major_id AS id,
+    				CONCAT(major_enname,' (',d.shortcut,')') AS `name`
+    			FROM
+    				rms_major AS m,
+    				rms_dept AS d
+    			WHERE 
+    				d.dept_id = m.dept_id	
+    				AND m.is_active=1
+    				AND m.major_enname != ''
+    				AND d.`type` = 3
+    		 ";
     	return $db->fetchAll($sql);
     }
     function getAllGrades(){

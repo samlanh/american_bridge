@@ -135,22 +135,23 @@
 		
 		dijit.byId('student_name_new').attr('value','');
 		branch_id = dijit.byId('branch').get('value');
-		
-		dojo.xhrPost({
-			url:url_new_student,
-			content:{
-				'branch_id':branch_id
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_new_student,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					new_student_store  = getDataStorefromJSON('id','name', data);
+					dijit.byId('student_name_new').set('store',new_student_store);   
 				},
-			handleAs:"json",
-			load: function(data) {
-				//alert(data);
-				new_student_store  = getDataStorefromJSON('id','name', data);
-				dijit.byId('student_name_new').set('store',new_student_store);   
-			},
-			error: function(err) {
-				alert(err);
-			}
-		});
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
 	}
 	
 	
@@ -193,25 +194,26 @@
 	function getAllDropStudentByBranch(){
 		
 		branch_id = dijit.byId('branch').get('value');
-		
-		dojo.xhrPost({
-			url:url_drop_student,
-			content:{
-				'branch_id':branch_id
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_drop_student,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					drop_student_name_store  = getDataStorefromJSON('id','name', data[1]);
+					dijit.byId('stu_drop_name').set('store',drop_student_name_store);   
+					
+					drop_student_id_store  = getDataStorefromJSON('id','name', data[0]);
+					dijit.byId('stu_drop_id').set('store',drop_student_id_store);  
 				},
-			handleAs:"json",
-			load: function(data) {
-				//alert(data);
-				drop_student_name_store  = getDataStorefromJSON('id','name', data[1]);
-				dijit.byId('stu_drop_name').set('store',drop_student_name_store);   
-				
-				drop_student_id_store  = getDataStorefromJSON('id','name', data[0]);
-				dijit.byId('stu_drop_id').set('store',drop_student_id_store);  
-			},
-			error: function(err) {
-				alert(err);
-			}
-		});
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
 	}
 	
 	
@@ -266,7 +268,7 @@ fieldset{  background:none;}
 						<tr>
 							<td><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select name="branch" id="branch" class="fullside" onchange="getAllNewStudentByBranch();getAllOldStudentByBranch();getAllDropStudentByBranch();getNewReceiptNo('','');" dojoType="dijit.form.FilteringSelect" type="text" >
+								<select name="branch" id="branch" class="fullside" autoComplete="false" queryExpr="*${0}*" onchange="getAllNewStudentByBranch();getAllOldStudentByBranch();getAllDropStudentByBranch();getNewReceiptNo('','');" dojoType="dijit.form.FilteringSelect" type="text" >
 									<option value="-1">----- select branch -----</option>
 									<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
 									<option value="<?php echo $branch['id'];?>"><?php echo $branch['name'];?></option>
@@ -278,7 +280,7 @@ fieldset{  background:none;}
 						<tr>
 							<td width="20%"><?php echo $tr->translate("STUDENT_TYPE");?></td>
 							<td width="80%">
-								<select name="student_type" id="student_type" onchange="changeControl();getStudentInfo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select name="student_type" id="student_type" onchange="changeControl();getStudentInfo();" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="3">Old Student</option>
 									<option value="1">New Student</option>
 									<option value="4">Drop Student</option>
@@ -350,7 +352,7 @@ fieldset{  background:none;}
 						<tr>		
 							<td><?php echo $tr->translate('PAYMENT_TERM');?></td>
 							<td>
-								<select class="fullside" class="fullside" name="term" id="term" onchange="getservicefee();getValidate(1);" dojoType="dijit.form.FilteringSelect" type="text"   >
+								<select class="fullside" class="fullside" name="term" id="term" onchange="getservicefee();getValidate(1);" autoComplete="false" queryExpr="*${0}*" dojoType="dijit.form.FilteringSelect" type="text"   >
 									<?php if(!empty($this->payment_term)){foreach ($this->payment_term as $key => $term){?>
 										<option value="<?php echo $key?>"><?php echo $term;?></option>
 									<?php  }}?>

@@ -61,7 +61,9 @@
 				<td align="center" width="70%">
 					<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 15px;font-family:'Khmer MEF2';"><?php echo $tr->translate('Student Attendance List');?></strong><br >
 				</td>
-				<td align="right" width="15%">&nbsp;</td>
+				<td align="center" width="15%">
+					<?php if($this->search['branch']>0 && !empty($this->rs)){echo "Branch : ".$this->rs[0]['branch_name'];}?>
+				</td>
 			</tr>
 			<tr> 
 				<td colspan="3"  id="exportExcel" >

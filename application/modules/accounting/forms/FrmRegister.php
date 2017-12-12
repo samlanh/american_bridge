@@ -104,6 +104,8 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 				'dojoType'=>$this->filter,
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'paymentTerm();setHourDefault();'
 				));
 		//	$pay_date = date('Y-m-d', mktime(date('h'), date('i'), date('s'), date('m'), date('d')+45, date('Y')));
@@ -152,6 +154,8 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 				//'onkeyup'=>'CheckReceipt()'
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'paymentTerm();',
 		));
 		$db_years=new Accounting_Model_DbTable_DbRegister();
@@ -194,6 +198,8 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 				'dojoType'=>$this->filter,
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'changeMajor();'));
 		
 		$opt_marjor = array(-1=>$this->tr->translate("SELECT_MAJOR"));
@@ -216,6 +222,8 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		  		'dojoType'=>$this->filter,
 		  		'required'=>'true',
 		  		'class'=>'fullside',
+		  		'autoComplete'=>'false',
+		  		'queryExpr'=>'*${0}*',
 		  		'onchange'=>'paymentTerm();getDateTerm(1);'
 		  		));
 		
@@ -330,6 +338,8 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		$student_type->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required'=>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 				'onchange'=>'changControll();paymentTerm();',
 		));
@@ -343,8 +353,8 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		$old_studens->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 						'class'=>'fullside',
 						'required'=>'true',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
+						'autoComplete'=>'false',
+						'queryExpr'=>'*${0}*',
 						'class'=>'fullside',
 				        'onchange'=>'getGeneralOldStudentById();paymentTerm();getStartDate();',
 				));

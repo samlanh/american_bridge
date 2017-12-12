@@ -19,11 +19,13 @@
 		      </td>
 		</tr>
 	</table>
-	<table width="70%">	
+	<table width="100%">	
 		<tr> 
 			 <td><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->search['adv_search']?>" placeholder="Search" type="text" ></td>
+			 <td> <?php echo $frm->getElement("degree_all");?></td>
+			 <td> <?php echo $frm->getElement("grade_all");?></td>
 			 <td> <?php echo $frm->getElement("service");?></td>
-		     <td><input dojoType="dijit.form.DateTextBox"  class="fullside" id="end_date" name="end_date" value="<?php echo date('Y-m-d',strtotime($this->search['end_date'])); ?>" type="text"></td>
+		     <td><input dojoType="dijit.form.DateTextBox"  class="fullside" id="end_date" constraints="{datePattern:'dd/MM/yyyy'}" name="end_date" value="<?php echo date('Y-m-d',strtotime($this->search['end_date'])); ?>" type="text"></td>
 			 <td> <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
 		</tr>
 	</table>
@@ -48,7 +50,7 @@
 			</tr>
 			<tr>
 				<td colspan="3" id="exportExcel">
-					<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family: 'Hanuman';"  border="1" >
+					<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family: Khmer OS Battambang , Times New Roman;"  border="1" >
 						<tr style="font-size:12px; height: 20px;border: 1px solid #000; background: #ccc; line-height: 30px; font-weight: bold;" align="center" >
 							<td>&nbsp;<?php echo $tr->translate("N_O"); ?>&nbsp;</td>
 						    <td>&nbsp;<?php echo $tr->translate("STUDENT_ID"); ?>&nbsp;</td>
@@ -65,11 +67,14 @@
 						</tr>
 					<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
 					
-						$date1=date_create($row['end']);
-						$date2=date_create($this->search['end_date']);
-						$diff=date_diff($date1,$date2);
-						$day=$diff->format("%R%a");
+// 						$date1=date_create($row['end']);
+// 						$date2=date_create($this->search['end_date']);
+// 						$diff=date_diff($date1,$date2);
+// 						$day=$diff->format("%R%a");
 						
+						$end_dat=date($row['end']);
+						$total_day=strtotime($end_dat)-strtotime($this->search['end_date']);
+						$day=$total_day/(60*60*24);
 						
 						if($row['payfor_type']==3){
 							$stu_code = $row['transport_code'];
@@ -91,7 +96,7 @@
 							<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['service'];?></td>
 							<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['start']));?>&nbsp;</td>
 							<td style="border: 1px solid #000;color: red;">&nbsp;<?php echo date("d-M-Y",strtotime($row['end']));?>&nbsp;</td>
-							<?php if($day>=0){
+							<?php if($day<0){
 								$daylate ="Late ".abs($day);
 							}else{
 								$daylate ="Remain ".abs($day);

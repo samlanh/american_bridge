@@ -19,7 +19,7 @@
 			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
 			 	</select>
 			</td>
-	    	
+	    	<td><?php echo $frm->getElement('user');?></td>
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -67,7 +67,10 @@
 				<strong style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 13px;">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong> <br />   
 				<?php if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
 			</td>
-			<td width="15%" > </td>
+			<td width="15%" >
+				<?php if($this->search['branch']>0 && !empty($this->rs)){echo "Branch : ".$this->rs[0]['branch_name']."</br>";}?>
+				<?php if($this->search['user']>0 && !empty($this->rs)){echo "User : ".$this->rs[0]['user_name'];}?>
+			</td>
 			
 		</tr>
 		<tr>

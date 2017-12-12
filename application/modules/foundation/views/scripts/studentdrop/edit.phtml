@@ -31,7 +31,7 @@
 									<tr>
 										<td><?php echo $tr->translate("STUDENT_ID")?></td><input type="hidden" name="id" value="<?php echo $this->row['id'];?>" />
 										<td>
-											<select readonly="readonly" class="fullside" name="studentid" id="studentid" dojoType="dijit.form.FilteringSelect" onchange="getStudentInfo();" >
+											<select readonly="readonly" class="fullside" name="studentid" id="studentid" autoComplete="false" queryExpr="*${0}*" dojoType="dijit.form.FilteringSelect" onchange="getStudentInfo();" >
 										    	<?php if(!empty($this->stu_id))foreach ($this->stu_id as $row){?>
 													<option value="<?php echo $row['stu_id']?>"<?php if($row['stu_id']==$this->row['stu_id']) echo 'selected="selected"';?>><?php echo $row['stu_code']?></option>
 												<?php }?>
@@ -39,7 +39,7 @@
 										</td>
 										<td><?php echo $tr->translate("STUDENT_NAME")?></td>
 										<td>
-											<select class="fullside" name="studentname" id="studentname" readonly="readonly" dojoType="dijit.form.FilteringSelect"  >
+											<select class="fullside" name="studentname" id="studentname" autoComplete="false" queryExpr="*${0}*" readonly="readonly" dojoType="dijit.form.FilteringSelect"  >
 										    	<?php if(!empty($this->stu_name))foreach ($this->stu_name as $row){?>
 													<option value="<?php echo $row['stu_id']?>"<?php if($row['stu_id']==$this->row['stu_id']) echo 'selected="selected"';?>><?php echo $row['name']?></option>
 												<?php }?>
@@ -71,7 +71,7 @@
 									<tr>
 										<td><?php echo $tr->translate("TYPE")?></td>
 										<td>
-											<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" id="type" name="type" type="text">
+											<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" id="type" autoComplete="false" queryExpr="*${0}*" name="type" type="text">
 												<option value="1" <?php if($this->row['type']==1) echo 'selected="selected"';?>>Suspend</option>
 												<option value="2" <?php if($this->row['type']==2) echo 'selected="selected"';?>>Stop</option>
 											</select>

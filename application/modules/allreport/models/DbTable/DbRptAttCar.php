@@ -19,6 +19,10 @@ class Allreport_Model_DbTable_DbRptAttCar extends Zend_Db_Table_Abstract
     	
     	$sql = "SELECT
 				  ser.`stu_code`,
+				  
+				  (select branch_namekh from rms_branch where br_id = ser.branch_id) as branch_name,
+			      (select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+				  
 				  CONCAT(st.`stu_khname`,'-',st.`stu_enname`) AS name,
 				  (SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code=st.`sex`) AS sex,
 				  st.`tel` as stu_phone,
@@ -39,7 +43,6 @@ class Allreport_Model_DbTable_DbRptAttCar extends Zend_Db_Table_Abstract
 				  `rms_student_payment` AS sp,
 				  `rms_student_paymentdetail` AS spd,
 				  `rms_car` AS c
-				  
 				WHERE
 				  ser.`stu_id`=st.`stu_id`
 				  AND ser.`service_id`=pn.`service_id`

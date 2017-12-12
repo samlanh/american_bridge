@@ -1005,6 +1005,10 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$sql = "SELECT
     				sp.*,
 					sp.id,
+					
+					(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+					(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+					
 					sp.`student_id`,
 					st.`stu_code`,
 					st.`stu_enname`,
@@ -1120,6 +1124,10 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$sql = "SELECT
     				sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+					(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	st.`stu_code`,
 			    	st.`stu_enname`,
@@ -1169,7 +1177,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     			";
     	 
     	$where = " ";
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`student_id` ASC,sp.create_date ASC ";
     		
 //     	if(!empty($search['for_month'])){
 //     		$first_day = 1;
@@ -1229,6 +1237,10 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+					(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	st.`stu_code`,
 			    	st.`stu_enname`,
@@ -1264,11 +1276,11 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	spd.`start_date`,
 			    	spd.`validate`,
 			    	spd.`payment_term`
-			    	FROM
+			    FROM
 			    	`rms_student_payment` AS sp,
 			    	`rms_student_paymentdetail` AS spd,
 			    	`rms_student` AS st
-			    	WHERE
+			    WHERE
 			    	sp.id=spd.`payment_id`
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=2
@@ -1278,7 +1290,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     			";
     	 
     	$where = " ";
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`student_id` ASC,sp.create_date ASC ";
     		
     	 
     	if(empty($search)){
@@ -1338,6 +1350,10 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+					(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=4) as stu_code ,
 			    	st.`stu_enname`,
@@ -1435,6 +1451,10 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	$sql = "SELECT
 			    	sp.*,
 			    	sp.id,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			    	(select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+			    	
 			    	sp.`student_id`,
 			    	(select stu_code from rms_service where rms_service.stu_id = sp.student_id and rms_service.type=5) as stu_code ,
 			    	st.`stu_enname`,

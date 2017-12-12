@@ -13,7 +13,8 @@ class Registrar_StudentnearlyendserviceController extends Zend_Controller_Action
 				$search=array(
 						'adv_search' =>'',
 						'service'	=>-1,
-						//'start_date'=> date('Y-m-d'),
+						'degree_all'=>'',
+						'grade_all'	=>'',
 						'end_date'	=>date('Y-m-d'),
 				);
 			}

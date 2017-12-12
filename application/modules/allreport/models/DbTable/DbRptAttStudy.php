@@ -19,6 +19,10 @@ class Allreport_Model_DbTable_DbRptAttStudy extends Zend_Db_Table_Abstract
     	
     	$sql = "SELECT
 				  st.`branch_id`,
+				  
+				  (select branch_namekh from rms_branch where br_id = st.branch_id) as branch_name,
+			      (select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+				  
 				  st.`stu_code`,
 				  CONCAT(st.`stu_khname`,'-',st.`stu_enname`) AS name,
 				  (SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code=st.`sex`) AS sex,

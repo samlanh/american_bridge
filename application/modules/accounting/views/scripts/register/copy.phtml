@@ -19,7 +19,8 @@
 		addRow();
 		new dijit.form.FilteringSelect({
 		    store: dept_store,
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                     
 		    required: true,
 		    id: "dept",
 		    name: "dept",           
@@ -780,7 +781,7 @@ fieldset{  background:none;}
 						<tr>
 							<td ><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select type="text" name="branch" id="branch" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(1);getNewReceiptNo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select type="text" name="branch" id="branch" autoComplete="false" queryExpr="*${0}*" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(1);getNewReceiptNo();" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">Select branch</option>
 								<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
 									<option value="<?php echo $branch['id'];?>" <?php if($branch['id']==$this->degree_row['branch_id']){echo 'selected="selected"';}?>><?php echo $branch['name'];?></option>
@@ -873,7 +874,7 @@ fieldset{  background:none;}
 						<tr>		
 							<td><?php echo $tr->translate("ROOM_NAME");?><label class="red">*</label></td>
 							<td>
-								<select name="room" id="room" dojoType="dijit.form.FilteringSelect" class="fullside" >
+								<select name="room" id="room" dojoType="dijit.form.FilteringSelect" class="fullside" autoComplete="false" queryExpr="*${0}*" >
 									<option value="-1">----- select room -----</option>
 									<?php if(!empty($this->room)){foreach ($this->room as $room){?>
 										<option value="<?php echo $room['id']?>" <?php if($room['id']==$this->degree_row['room_id']){echo "selected='selected'";}?>><?php echo $room['name']?></option>

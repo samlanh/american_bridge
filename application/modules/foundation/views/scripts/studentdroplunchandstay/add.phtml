@@ -32,7 +32,7 @@ dojo.require("dijit.form.CheckBox");
 		<tr>
 			<td>
 				<fieldset>
-					<legend align="center"><strong><?php echo $tr->translate("ADD_STUDENT_DROP");?></strong></legend>
+					<legend align="center"><strong><?php echo $tr->translate("ADD_STUDENT_DROP_LUNCH_AND_STAY");?></strong></legend>
 					<table cellspacing="20" width="100%" >
 						<tr>
 							<td align="center" valign="top">
@@ -40,7 +40,7 @@ dojo.require("dijit.form.CheckBox");
 									<tr>
 										<td><?php echo $tr->translate("STUDENT_ID")?></td>
 										<td>
-											<select class="fullside"  name="studentid" id="studentid" dojoType="dijit.form.FilteringSelect" placeholder="Select student " onchange="getStudentInfo(1);" >
+											<select class="fullside"  name="studentid" id="studentid" autoComplete="false" queryExpr="*${0}*" dojoType="dijit.form.FilteringSelect" placeholder="Select student " onchange="getStudentInfo(1);" >
 										    	<option value="-1"> </option>
 										    	<?php if(!empty($this->stu_id))foreach ($this->stu_id as $row){?>
 													<option value="<?php echo $row['stu_id']?>"><?php echo $row['stu_code']?></option>
@@ -50,7 +50,7 @@ dojo.require("dijit.form.CheckBox");
 										
 										<td><?php echo $tr->translate("STUDENT_NAME")?></td>
 										<td>
-											<select class="fullside"  name="studentname" id="studentname" dojoType="dijit.form.FilteringSelect" placeholder="Select student " onchange="getStudentInfo(2);" >
+											<select class="fullside"  name="studentname" id="studentname" autoComplete="false" queryExpr="*${0}*" dojoType="dijit.form.FilteringSelect" placeholder="Select student " onchange="getStudentInfo(2);" >
 										    	<option value="-1"> </option>
 										    	<?php if(!empty($this->stu_name))foreach ($this->stu_name as $row){?>
 													<option value="<?php echo $row['stu_id']?>"><?php echo $row['name']?></option>
@@ -84,7 +84,7 @@ dojo.require("dijit.form.CheckBox");
 										
 										<td><?php echo $tr->translate("TYPE")?></td>
 										<td>
-											<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" id="type" name="type" type="text">
+											<select dojoType="dijit.form.FilteringSelect" required="true" autoComplete="false" queryExpr="*${0}*" class="fullside" id="type" name="type" type="text">
 												<option value="1">Suspend</option>
 												<option value="2">Stop</option>
 											</select>
@@ -137,21 +137,22 @@ dojo.require("dijit.form.CheckBox");
 			studentid = dijit.byId('studentname').get('value');
 			dijit.byId("studentid").attr("value",studentid);
 		}
-		
-		dojo.xhrPost({
-			url:url_student,
-			content:{
-				'studentid':studentid
+		if(studentid>0){
+			dojo.xhrPost({
+				url:url_student,
+				content:{
+					'studentid':studentid
+					},
+				handleAs:"json",
+				load: function(data) {
+					dijit.byId("phone").attr("value",data.tel);
+					dijit.byId("gender").attr("value",data.sex);
+					dijit.byId("service").attr("value",data.service);
 				},
-			handleAs:"json",
-			load: function(data) {
-				dijit.byId("phone").attr("value",data.tel);
-				dijit.byId("gender").attr("value",data.sex);
-				dijit.byId("service").attr("value",data.service);
-			},
-			error: function(err) {
-				alert(err);
-			}
-		});
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
 	}
 </script>

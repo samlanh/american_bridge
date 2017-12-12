@@ -18,6 +18,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		else{
 			$search=array(
 					'title' 		=>'',
+					'branch' 		=>'',
 					'study_year' 	=>'',
 					'grade_all' 	=>'',
 					'session' 		=>'',
@@ -43,6 +44,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		else{
 			$search=array(
 					'title' 		=>'',
+					'branch' 		=>'',
 					'study_year' 	=>'',
 					'grade_all' 	=>'',
 					'session' 		=>'',
@@ -299,6 +301,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search = array(
 						'txtsearch' => $data['txtsearch'],
 						'branch'	=> $data['branch'],
+						'degree_all'=> $data['degree_all'],
+						'grade_all'	=> $data['grade_all'],
 						'end_date'	=>$data['to_date'],
 						'service'	=>$data['service']
 				);
@@ -306,6 +310,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' =>'',
 						'branch'	=> '',
+						'degree_all'=> '',
+						'grade_all'	=> '',
 						'end_date'	=>date('Y-m-d'),
 						'service'	=>''
 				);
@@ -334,6 +340,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search = array(
 						'txtsearch' => $data['txtsearch'],
 						'branch'	=> $data['branch'],
+						'degree_all'=> $data['degree_all'],
+						'grade_all'	=> $data['grade_all'],
 						'end_date'	=>$data['to_date'],
 						'service'	=>$data['service'],
 				);
@@ -341,6 +349,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' =>'',
 						'branch'	=> $data['branch'],
+						'degree_all'=> '',
+						'grade_all'	=> '',
 						'end_date'	=>date('Y-m-d'),
 						'service'	=>'',
 				);;
@@ -370,7 +380,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		else{
 			$search=array(
 					'txtsearch' 	=>'',
-					'year' 			=>'',
+					'study_year' 	=>'',
 					'grade_all' 	=>0,
 					'degree_all' 	=>0,
 					'branch' 		=>'',
@@ -442,6 +452,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				'id' 	  => $rs['id'],
 				'academic'=> $rs['academic'],
 				'generation'=> $rs['generation'],
+				'branch_name'=> $rs['branch_name'],
 				'degree'=>'',
 				'class'=>'',
 				'month'=>'',
@@ -465,7 +476,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		else{
 			$search=array(
 					'txtsearch' =>'',
-					'year' =>'',
+					'study_year' =>'',
 					'service_type'=>-1,
 					'service' =>-1,
 			);
@@ -537,7 +548,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 	public function headAddRecordServiceFee($rs,$key){
 		$result[$key] = array(
 				'id' 	  => $rs['id'],
-				'academic'=> $rs['academic'],
+				'years'		=> $rs['years'],
+				'time'		=> $rs['time'],
 				'generation'=> $rs['generation'],
 				'monthly'=>'',
 				'quarter'=>'',
@@ -1084,6 +1096,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'grade_en_ft'	=>0,
 						'room'			=>0,
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1123,6 +1136,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'grade_gep'		=>0,
 						'room'			=>0,
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1163,6 +1177,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'grade_kh_ft'	=>0,
 						'room'			=>0,
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1200,6 +1215,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' 	=>'',
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1237,6 +1253,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' 	=>'',
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1274,6 +1291,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' 	=>'',
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1311,6 +1329,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' 	=>'',
 						'branch'		=>0,
+						'user'			=>0,
 						'shift'			=>0,
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
@@ -1638,6 +1657,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			}else{
 				$search=array(
 						'txtsearch' 	=>'',
+						'branch'		=>'',
 						'grade_en_ft'	=>'',
 						'degree_en_ft'	=>'',
 						'for_month'		=>date('m'),
@@ -1670,7 +1690,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=$this->getRequest()->getPost();
 			}else{
 				$search=array(
-						'txtsearch' =>'',
+						'txtsearch' 	=>'',
+						'branch'		=>'',
 						'grade_kh_ft'	=>'',
 						'degree_kh_ft'	=>'',
 						'for_month'	=>date('m'),
@@ -1704,8 +1725,9 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			}else{
 				$search=array(
 						'txtsearch' =>'',
-						//'start_date'=> date('Y-m-d'),
-						'end_date'	=>date('Y-m-d'),
+						'branch'	=>'',
+						'degree_gep'=>'',
+						'grade_gep'	=>'',
 						'service'	=>'',
 						'for_month'	=>date('m'),
 						'for_year'	=>date('Y'),
@@ -1738,8 +1760,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			}else{
 				$search=array(
 						'txtsearch' =>'',
-						//'start_date'=> date('Y-m-d'),
-						'end_date'	=>date('Y-m-d'),
+						'branch'	=>'',
 						'service'	=>'',
 						'for_month'	=>date('m'),
 						'for_year'	=>date('Y'),
@@ -1772,8 +1793,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			}else{
 				$search=array(
 						'txtsearch' =>'',
-						//'start_date'=> date('Y-m-d'),
-						'end_date'	=>date('Y-m-d'),
+						'branch'	=>'',
 						'service'	=>'',
 						'for_month'	=>date('m'),
 						'for_year'	=>date('Y'),

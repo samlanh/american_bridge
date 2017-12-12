@@ -134,6 +134,8 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 				//'onkeyup'=>'CheckReceipt()'
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'paymentTerm();',
 		));
 		$db_years=new Registrar_Model_DbTable_DbRegister();
@@ -286,6 +288,8 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		  		'dojoType'=>$this->filter,
 		  		'required'=>'true',
 		  		'class'=>'fullside',
+		  		'autoComplete'=>'false',
+		  		'queryExpr'=>'*${0}*',
 		  		'onchange'=>'paymentTerm();getDateTerm();displayAmountSection();'
 		  		));
 		
@@ -400,6 +404,8 @@ Class Registrar_Form_FrmCourseStudy extends Zend_Dojo_Form {
 		$student_type->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
 				'required'=>'true',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'class'=>'fullside',
 				'onchange'=>'changControll();',
 		));

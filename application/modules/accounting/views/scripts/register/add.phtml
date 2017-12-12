@@ -21,7 +21,8 @@
 		
 		new dijit.form.FilteringSelect({
 		    store: dept_store,
-		    autoComplete: true,                        
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
 		    required: true,
 		    id: "dept",
 		    name: "dept",           
@@ -31,10 +32,12 @@
 		    	dept_id = dijit.byId('dept').get('value');
 		    	dijit.byId('grade').attr('value','');
 		    	getallModel(dept_id,a=''); 
-		    	getStudentNo(dept_id,'');
-		    	getNewReceiptNo('');
-		    	setHourDefault();
 				getDegreeType(dept_id);
+				
+		    	getStudentNo(dept_id,'');
+		    	
+		    	setHourDefault();
+				
 				oldStudentChangeDegree();
 		    }
 		}, "dept");
@@ -267,16 +270,17 @@
 	
 	var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','controller'=>'coursestudy','action'=>'get-receipt-no')); ?>';
 	function getNewReceiptNo(new_stu_id){
-
-		degree = dijit.byId('dept').get('value');
-		if(degree<=3){
+		
+		degree_type = dijit.byId('degree_type').get('value');
+		//alert(degree_type);
+		if(degree_type==1){
 			type = 1; // khmer fulltime
 		}else{
 			type = 6; // english fulltime
 		}
 
 		branch_id = dijit.byId('branch').get('value');
-		if(degree>0 && branch_id>0){
+		if(type>0 && branch_id>0){
 			dojo.xhrPost({
 				url:url_getreceiptno,
 				content:{
@@ -285,6 +289,7 @@
 					},
 				handleAs:"json",
 				load: function(data) {
+					//alert(data);
 					dijit.byId('reciept_no').attr('value',data);   
 					if(new_stu_id!=''){
 						printSave(new_stu_id,data);
@@ -660,6 +665,7 @@
 				     if(data){
 				    	  dijit.byId('degree_type').attr('value',data);
 				     }
+					 getNewReceiptNo('');
 				},
 				error: function(err) {
 					alert(err);
@@ -702,7 +708,7 @@ fieldset{  background:none;}
 						<tr>
 							<td ><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select  type="text" name="branch" id="branch" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(1,'');getNewReceiptNo('');" class="fullside" dojoType="dijit.form.FilteringSelect" >
+								<select  type="text" name="branch" id="branch" autoComplete="false" queryExpr="*${0}*" onchange="getYearByBranch();getOldStuIdByBranch();getDropStuIdByBranch();getStudentNo(1,'');getNewReceiptNo('');" class="fullside" dojoType="dijit.form.FilteringSelect" >
 									<option value="-1">Select branch</option>
 								<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
 									<option value="<?php echo $branch['id'];?>"><?php echo $branch['name'];?></option>
@@ -830,7 +836,7 @@ fieldset{  background:none;}
 					<table style="margin: 0 auto; width: 100%;padding:0px 10px 10px 10px;white-space:nowrap;" cellspacing="5" >
 						<tr>
 							<td width="20%"><?php echo $tr->translate("RECEIPT_NO");?></td>
-							<td width="80%"><?php echo $register->getElement('reciept_no');?>
+							<td width="80%"><input type="text" style="color:red;" name="reciept_no" id="reciept_no" class="fullside" dojoType="dijit.form.TextBox" />
 								<?php echo $register->getElement('id');?>
 							</td>
 						</tr>

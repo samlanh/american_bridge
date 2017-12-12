@@ -18,6 +18,8 @@
 				<input dojoType="dijit.form.TextBox" id="txtsearch" class="fullside" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
 			</td>
 			<td> <?php echo $frm->getElement("branch");?></td>
+			<td > <?php echo $frm->getElement("degree_all");?></td>
+			<td > <?php echo $frm->getElement("grade_all");?></td>
 			<td> <?php echo $frm->getElement("service");?></td>
 			<td>
 				<input class="fullside" name="to_date" id="to_date" constraints="{datePattern:'dd/MM/yyyy'}" dojoType="dijit.form.DateTextBox" placeholder="to date" value="<?php echo $this->search['end_date'];?>" type="text">
@@ -48,41 +50,51 @@
 				<tr>
 					<td colspan="3">
 						<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
-							<tr style="font-size:12px; height: 20px;border: 1px solid #000;background: #ccc;" align="center" >
-								<td style="border: 1px solid #000;">&nbsp;No.&nbsp;</td>
-								<td style="border: 1px solid #000;">&nbsp;Branch&nbsp;</td>
-								<td style="border: 1px solid #000;">&nbsp;Receipt No.&nbsp;</td>
-								<td style="border: 1px solid #000;">Code</td>
-								<td style="border: 1px solid #000;">&nbsp;Student Name&nbsp;</td>
-								<td style="border: 1px solid #000;">&nbsp;Sex&nbsp;</td>
-								<td style="border: 1px solid #000;">Service Name</td>
-								<td style="border: 1px solid #000;">Paid Date</td>
-								<td style="border: 1px solid #000;">Validate</td>
-								<td style="border: 1px solid #000;">Late (Days)</td>
-								
+							<tr style="font-size:12px; font-weight:bold; border: 1px solid #000; background: #ccc; line-height: 30px;" align="center" >
+								<td>&nbsp;<?php echo $tr->translate("N_O"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("BRANCH"); ?>&nbsp;</td>
+				                <td>&nbsp;<?php echo $tr->translate("STUDENT_ID"); ?>&nbsp;</td>
+				     			<td>&nbsp;<?php echo $tr->translate("STUDENT_NAME"); ?>&nbsp;</td>
+							    <td>&nbsp;<?php echo $tr->translate("SEX"); ?>&nbsp;</td>
+							    <td>&nbsp;<?php echo $tr->translate("PHONE"); ?>&nbsp;</td>
+							    <td>&nbsp;<?php echo $tr->translate("DEGREE"); ?>&nbsp;</td>
+								<td>&nbsp;<?php echo $tr->translate("GRADE"); ?>&nbsp;</td>
+				                <td>&nbsp;<?php echo $tr->translate("RECEIPT"); ?>&nbsp;</td>
+				                <td>&nbsp;<?php echo $tr->translate("SERVICE_NAME"); ?>&nbsp;</td>
+				                <td>&nbsp;<?php echo $tr->translate("PAID_DATE"); ?>&nbsp;</td>
+				                <td>&nbsp;<?php echo $tr->translate("VALIDATE"); ?>&nbsp;</td>
+				                <td>&nbsp;<?php echo $tr->translate("AMOUNT_LATE"); ?>&nbsp;</td>
 							</tr>
-						<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
+							<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
 												
-								$date1=date_create($row['end']);
-								$date2=date_create($this->search['end_date']);
-								$diff=date_diff($date1,$date2);
-								$day=$diff->format("%R%a");
-// 													echo $diff->format('%R'); // use for point out relation: smaller/greater
-// 													echo $diff->days;
+								$end_dat=date($row['end']);
+								$total_day=strtotime($end_dat)-strtotime($this->search['end_date']);
+								$day=$total_day/(60*60*24);
+								
+								if($row['payfor_type']==3){
+									$stu_code = $row['transport_code'];
+								}else if($row['payfor_type']==4){
+									$stu_code = $row['lunch_code'];
+								}else{
+									$stu_code = $row['stu_code'];
+								}
 							?>
-							<tr class="hover" style="font-size:11px; height: 20px;border: 1px solid #000;" align="center" >
-								<td style="border: 1px solid #000;"><?php echo $i;?></td>
-								<td style="border: 1px solid #000;"><?php echo $row['branch_name'];?></td>
-								<td style="border: 1px solid #000;"><?php echo $row['receipt'];?></td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $row['code'];?>&nbsp;</td>
-								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['name'];?></td>	
-								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['sex'];?></td>
-								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['service'];?></td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['start']));?>&nbsp;</td>
-								<td style="border: 1px solid #000;color: red;">&nbsp;<?php echo date("d-M-Y",strtotime($row['end']));?>&nbsp;</td>
-								<td align="center" style="border: 1px solid #000;color: red;font-weight: bold;">&nbsp;<?php echo abs($day);?> days</td>
- 													</tr>
-												<?php }}?>	 
+							<tr style="font-size:11px; height: 20px;border: 1px solid #000;" align="center" class="hover" >
+								<td style=""><?php echo $i;?></td>
+								<td align="left" style="">&nbsp;<?php echo $row['branch_name'];?></td>	
+								<td style="">&nbsp;<?php echo $stu_code;?>&nbsp;</td>
+								<td align="left" style="">&nbsp;<?php echo $row['name'];?></td>	
+								<td align="left" style="">&nbsp;<?php echo $row['sex'];?></td>
+								<td align="left" style="">&nbsp;<?php echo $row['tel'];?></td>
+								<td align="left" style="">&nbsp;<?php echo $row['degree'];?></td>
+								<td align="left" style="">&nbsp;<?php echo $row['grade'];?></td>
+								<td style=""><?php echo $row['receipt'];?></td>
+								<td align="left" style="">&nbsp;<?php echo $row['service'];?></td>
+								<td style="">&nbsp;<?php echo date("d-M-Y",strtotime($row['start']));?>&nbsp;</td>
+								<td style="color: red;">&nbsp;<?php echo date("d-M-Y",strtotime($row['end']));?>&nbsp;</td>
+								<td align="center" style="color: red;font-weight: bold;">&nbsp;<?php echo abs($day);?> days</td>
+	 						</tr>
+							<?php }}?>	 
 						</table>	
 					</td>
 				</tr>

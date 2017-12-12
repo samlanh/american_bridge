@@ -11,10 +11,12 @@ class Global_importController extends Zend_Controller_Action {
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-public function indexAction(){
+	
+	public function indexAction(){
 		try{
 			include  PUBLIC_PATH.'/Classes/PHPExcel/IOFactory.php';
 			$db=new Global_Model_DbTable_DbImport();
+			
 			if($this->getRequest()->isPost()){
 				$data=$this->getRequest()->getPost();
 				
@@ -32,7 +34,7 @@ public function indexAction(){
 				}
 				
 				$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-				$db->updateItemsByImport($sheetData);
+				$db->updateItemsByImportEFT($sheetData);
 				Application_Form_FrmMessage::message("Import Successfully");
 			}
 		}catch (Exception $e){

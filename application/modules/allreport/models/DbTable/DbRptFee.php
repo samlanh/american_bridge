@@ -10,9 +10,20 @@ class Allreport_Model_DbTable_DbRptFee extends Zend_Db_Table_Abstract
     }
     function getAllTuitionFee($search){
     	$db=$this->getAdapter();
-    	$sql = "SELECT id,CONCAT(from_academic,' - ',to_academic) AS academic,note,
-    		    generation,(select name_en from `rms_view` where `rms_view`.`type`=7 and `rms_view`.`key_code`=`rms_tuitionfee`.`time`)AS time,
-    			create_date ,status FROM `rms_tuitionfee` where status=1 ";
+    	$sql = "SELECT 
+    				id,
+    				(select branch_namekh from rms_branch where br_id = branch_id) as branch_name,
+    				CONCAT(from_academic,' - ',to_academic) AS academic,
+    				note,
+    		    	generation,
+    		    	(select name_en from `rms_view` where `rms_view`.`type`=7 and `rms_view`.`key_code`=`rms_tuitionfee`.`time`)AS time,
+    				create_date ,
+    				status 
+    			FROM 
+    				`rms_tuitionfee` 
+    			where 
+    				status=1 
+    		";
     	$where= ' ';
     	$order= " ORDER BY id DESC ";
     	
@@ -20,8 +31,8 @@ class Allreport_Model_DbTable_DbRptFee extends Zend_Db_Table_Abstract
     		return $db->fetchAll($sql.$order);
     	}
     	
-    	if(!empty($search['year'])){
-    		$where.=" AND id = ".$search['year'] ;
+    	if(!empty($search['study_year'])){
+    		$where.=" AND id = ".$search['study_year'] ;
     	}
     	if(!empty($search['branch'])){
     		$where.=" AND branch_id = ".$search['branch'] ;

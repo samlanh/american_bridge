@@ -55,31 +55,33 @@
 					<td colspan="3">
 						<table cellpadding="5"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family: Khmer OS Battambang , Times New Roman;"  border="1" >
 							<tr style="font-size:13px; height: 20px; background: #ccc;" align="center" >
-								<th >No.</th>
-								<th >Student ID</th>
-								<th >Student Name</th>
-								<th >Gender</th>
-								<th >AcademicYear</th>
-								<th >Degree</th>
-								<th >Grade</th>
-								<th >Session</th>
-								<th >Type</th>
-								<th >Date Stop</th>
-								<th >Reason</th>
+								<td >No.</td>
+								<td >Branch</td>
+								<td >Student ID</td>
+								<td >Student Name</td>
+								<td >Gender</td>
+								<td >AcademicYear</td>
+								<td >Degree</td>
+								<td >Grade</td>
+								<td >Session</td>
+								<td >Type</td>
+								<td >Date Stop</td>
+								<td >Reason</td>
 							</tr>
 						<?php $i=0; foreach ($this->rs AS $row) { $i++;?>
 							<tr class="hover" style="font-size:12px; height: 20px;" align="center" >
-								<th ><?php echo $i;?></th>
-								<th ><?php echo $row['stu_id'];?></th>
-								<th align="left">&nbsp;&nbsp;<?php echo $row['name'];?></th>
-								<th ><?php echo $row['sex'];?></th>
-								<th ><?php echo $row['academic_year'];?></th>
-								<th ><?php echo $row['degree'];?></th>
-								<th ><?php echo $row['grade'];?></th>
-								<th ><?php echo $row['session'];?></th>
-								<th ><?php echo $row['type'];?></th>
-								<th ><?php echo $row['date'];?></th>
-								<th ><?php echo $row['note'];?></th>
+								<td ><?php echo $i;?></td>
+								<td ><?php echo $row['branch_name'];?></td>
+								<td ><?php echo $row['stu_id'];?></td>
+								<td align="left">&nbsp;&nbsp;<?php echo $row['name'];?></td>
+								<td ><?php echo $row['sex'];?></td>
+								<td ><?php echo $row['academic_year'];?></td>
+								<td ><?php echo $row['degree'];?></td>
+								<td ><?php echo $row['grade'];?></td>
+								<td ><?php echo $row['session'];?></td>
+								<td ><?php echo $row['type'];?></td>
+								<td ><?php echo $row['date'];?></td>
+								<td ><?php echo $row['note'];?></td>
 							</tr>
 						<?php }?>	
 						</table>	

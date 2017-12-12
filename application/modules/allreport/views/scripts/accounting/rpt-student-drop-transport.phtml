@@ -63,6 +63,7 @@
 						<table cellpadding="5"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family: Khmer OS Battambang , Times New Roman;"  border="1" >
 							<tr style="font-size:13px; height: 20px; background: #ccc;" align="center" >
 								<td >No.</td>
+								<td >Branch</td>
 								<td >Student ID</td>
 								<td >Student Name</td>
 								<td >Gender</td>
@@ -75,6 +76,7 @@
 						<?php $i=0;if(!empty($this->rs)){ foreach ($this->rs AS $row) { $i++;?>
 							<tr class="hover" style="font-size:12px; height: 20px;" align="center" >
 								<td ><?php echo $i;?></td>
+								<td ><?php echo $row['branch_name'];?></td>
 								<td ><?php echo $row['stu_code'];?></td>
 								<td align="left">&nbsp;&nbsp;<?php echo $row['name'];?></td>
 								<td ><?php echo $row['sex'];?></td>

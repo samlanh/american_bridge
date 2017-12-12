@@ -7,6 +7,7 @@
 	<table width="60%">
 	    <tr>
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
+	    	<td><?php echo $frm->getElement('branch');?></td>
 	    	<td><?php echo $frm->getElement('service');?></td>
 	    <?php /*?>	
 	    	<td>
@@ -25,7 +26,7 @@
 	    		</select>
 	    	</td>
 	    <?php */?>	
-	    	<td><?php echo $frm->getElement('branch');?></td>
+	    	
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -66,7 +67,9 @@
 			<td align="center" width="70%" style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';​">
 				<strong  style="font-weight:bold;color:#000; font-size: 14px;font-family:'Khmer OS Muol';​"><?php echo $tr->translate("បញ្ជីសិស្សចុះឈ្មោះទទួលសេវាកម្មជិះរថយន្ត និង តាមដានការបង់ប្រាក់");?></strong><br />
 			</td>
-			<td width="15%" > </td>
+			<td width="15%" >
+				<?php if($this->search['branch']>0 && !empty($this->rs)){echo "Branch : ".$this->rs[0]['branch_name'];}?>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="3" id="exportExcel">

@@ -25,7 +25,10 @@
 	<table>	
 		<tr>
 			<td>
-				<input dojoType="dijit.form.TextBox" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+				<input dojoType="dijit.form.TextBox" id="txtsearch" name="txtsearch" class="fullside" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
+			</td>
+			<td>
+				<?php echo $frm->getElement("branch");?>
 			</td>
 			<td>
 				<?php echo $frm->getElement("lunch_service");?>
@@ -67,6 +70,7 @@
 						<?php if(!empty($this->search['for_month'])){echo "For ".$array_month[$this->search['for_month']]." ".$this->search['for_year'];}?>
 					</td>
 					<td width="20%" align="right">
+						<?php if($this->search['branch']>0 && !empty($this->row)){echo "Branch : ".$this->row[0]['branch_name'];}?>
 					</td>
 				</tr>
 				<tr>

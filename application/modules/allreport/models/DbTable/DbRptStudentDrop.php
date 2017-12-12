@@ -18,11 +18,16 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     public function getAllStudentDrop($search){
     	$db = $this->getAdapter();
     	
+    	//print_r($search);exit();
+    	
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$branch_id = $_db->getAccessPermission();
     	
     	$sql = "SELECT 
     				st.stu_code as stu_id, 
+    				
+    				(select branch_namekh from rms_branch where br_id = st.branch_id) as branch_name,
+    				
     				CONCAT(st.stu_khname,' - ',st.stu_enname) as name,
 			    	(select CONCAT(from_academic,'-',to_academic,'(',generation,')') from rms_tuitionfee where rms_tuitionfee.id=st.academic_year) as academic_year,
 			    	(select name_en from rms_view where rms_view.type=4 and rms_view.key_code=st.session limit 1)AS session,
@@ -63,7 +68,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     	
     	$from_date =(empty($search['start_date']))? '1': "stdp.date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': "stdp.date <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     	
     	if(!empty($search['study_year'])){
     		$where.=' AND st.academic_year='.$search['study_year'];
@@ -83,6 +88,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     	if($search['user'] > 0){
     		$where.= " AND stdp.`user_id` = ".$search['user'];
     	}
+    	//echo $sql.$where;
     	return $db->fetchAll($sql.$where.$order);
     	 
     }
@@ -96,6 +102,9 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     	 
     	$sql = "SELECT
 			    	s.stu_code ,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = st.branch_id) as branch_name,
+			    	
 			    	CONCAT(st.stu_khname,' - ',st.stu_enname) as name,
 			    	(SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=2 and `rms_view`.`key_code`=st.sex )AS sex,
 			    	st.tel,
@@ -130,7 +139,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 	    if(!empty($search['title'])){
 		    $s_where = array();
 		    $s_search = addslashes(trim($search['title']));
-		    $s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+		    $s_where[] = " s.stu_code LIKE '%{$s_search}%'";
 		    $s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
 		    $s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
 		    $s_where[] = " (SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=5 and `rms_view`.`key_code`=`stdp`.`type`) LIKE '%{$s_search}%'";
@@ -139,7 +148,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 	    
 	    $from_date =(empty($search['start_date']))? '1': "stdp.date >= '".$search['start_date']." 00:00:00'";
 	    $to_date = (empty($search['end_date']))? '1': "stdp.date <= '".$search['end_date']." 23:59:59'";
-	    $where = " AND ".$from_date." AND ".$to_date;
+	    $where .= " AND ".$from_date." AND ".$to_date;
 	     
 	    if(!empty($search['service'])){
 	    	$where.=' AND s.service_id='.$search['service'];
@@ -162,6 +171,9 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
     	 
     	$sql = "SELECT
 			    	s.stu_code ,
+			    	
+			    	(select branch_namekh from rms_branch where br_id = st.branch_id) as branch_name,
+			    	
 			    	CONCAT(st.stu_khname,' - ',st.stu_enname) as name,
 			    	(SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=2 and `rms_view`.`key_code`=st.sex )AS sex,
 			    	st.tel,
@@ -196,7 +208,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 	    if(!empty($search['title'])){
 		    $s_where = array();
 		    $s_search = addslashes(trim($search['title']));
-		    $s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+		    $s_where[] = " s.stu_code LIKE '%{$s_search}%'";
 		    $s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
 		    $s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
 		    $s_where[] = " (SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=5 and `rms_view`.`key_code`=`stdp`.`type`) LIKE '%{$s_search}%'";
@@ -205,7 +217,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 	    
 	    $from_date =(empty($search['start_date']))? '1': "stdp.date >= '".$search['start_date']." 00:00:00'";
 	    $to_date = (empty($search['end_date']))? '1': "stdp.date <= '".$search['end_date']." 23:59:59'";
-	    $where = " AND ".$from_date." AND ".$to_date;
+	    $where .= " AND ".$from_date." AND ".$to_date;
 	     
 	    if(!empty($search['service'])){
 	    	$where.=' AND s.service_id='.$search['service'];

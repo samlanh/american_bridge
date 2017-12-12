@@ -147,10 +147,12 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$_invoice_no->setValue($opt);
 		
 		$generation = new Zend_Dojo_Form_Element_FilteringSelect('study_year');
-		$generation->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',
-				//'onkeyup'=>'CheckReceipt()'
+		$generation->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'paymentTerm();',
 		));
 		$db_years=new Registrar_Model_DbTable_DbRegister();
@@ -221,6 +223,8 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		  		'dojoType'=>$this->filter,
 		  		'required'=>'true',
 		  		'class'=>'fullside',
+		  		'autoComplete'=>'false',
+		  		'queryExpr'=>'*${0}*',
 		  		'onchange'=>'paymentTerm();getDateTerm(1);displayAmountSection();'
 		  		));
 		
@@ -228,6 +232,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$_fee->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'required'=>'true','class'=>'fullside',
+				
 				//'onkeyup'=>'CheckAmount();',
 				'onkeyup'=>'getDisccount();getTotale();netTotal();',
 				//'readOnly'=>'true'
@@ -337,6 +342,8 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required'=>'true',
 				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'changControll();paymentTerm();',
 		));
 		$opts = array(  3=>$this->tr->translate('OLD_STUDENT'),

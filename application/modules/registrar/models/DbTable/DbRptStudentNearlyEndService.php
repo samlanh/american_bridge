@@ -43,6 +43,7 @@ class Registrar_Model_DbTable_DbRptStudentNearlyEndService extends Zend_Db_Table
 				  AND s.stu_id=sp.student_id 
 				  AND sp.id=spd.`payment_id`
 				  AND spd.`service_id`=pn.`service_id` 
+				  and sp.is_subspend=0
     			  and sp.reg_from=0 
     			  $branch_id
     		";
@@ -58,14 +59,23 @@ class Registrar_Model_DbTable_DbRptStudentNearlyEndService extends Zend_Db_Table
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
     			$s_where[] = " sp.receipt_number LIKE '%{$s_search}%'";
-    			$s_where[] = " (select stu_code from rms_student where rms_student.stu_id=sp.student_id) LIKE '%{$s_search}%'";
-    			$s_where[] = " (select CONCAT(stu_khname,stu_enname) from rms_student where rms_student.stu_id=sp.student_id) LIKE '%{$s_search}%'";
+    			$s_where[] = " s.stu_code  LIKE '%{$s_search}%'";
+    			$s_where[] = " (select ser.stu_code from rms_service as ser where ser.stu_id= sp.student_id and ser.type=4 limit 1)  LIKE '%{$s_search}%'";
+    			$s_where[] = " (select ser.stu_code from rms_service as ser where ser.stu_id= sp.student_id and ser.type=5 limit 1)  LIKE '%{$s_search}%'";
+    			$s_where[] = " s.stu_khname LIKE '%{$s_search}%'";
+    			$s_where[] = " s.stu_enname LIKE '%{$s_search}%'";
     			$s_where[] = " (select title from rms_program_name where rms_program_name.service_id=spd.service_id) LIKE '%{$s_search}%'";
     			$s_where[] = " spd.comment LIKE '%{$s_search}%'";
     			$where .=' AND ( '.implode(' OR ',$s_where).')';
     		}
     		if($search['service']>0){
     			$where.=" AND spd.service_id=".$search['service'];
+    		}
+    		if($search['degree_all']>0){
+    			$where.=" AND s.degree=".$search['degree_all'];
+    		}
+    		if($search['grade_all']>0){
+    			$where.=" AND s.grade=".$search['grade_all'];
     		}
     		//echo $sql.$where;
     	return $db->fetchAll($sql.$where.$order);

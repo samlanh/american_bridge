@@ -30,7 +30,7 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 						<tr>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("ACADEMIC_YEAR");?></td>
 							<td>
-								<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" id="academic_year" name="academic_year" type="text">
+								<select dojoType="dijit.form.FilteringSelect" required="true" class="fullside" autoComplete="false" queryExpr="*${0}*" id="academic_year" name="academic_year" type="text">
 									
 									<?php if(!empty($this->academic_year)){foreach ($this->academic_year as $year){?>
 										<option value="<?php echo $year['id'];?>" <?php if($year['id']==$this->rs['academic_year']){echo 'selected="selected"';}?>> <?php echo $year['name'];?></option>
@@ -147,7 +147,7 @@ function addRow() {
 		}
 			template+='<td width="4%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="4%" align="center">'+no+'</td>';
-			template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" class="fullside" id="class_'+col+'" name="class_'+col+'">'+faculty+'</select></td>';			
+			template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'">'+faculty+'</select></td>';			
 			
 			column = 0;
 			for(j=0;j<payment_term;j++){ column++;
@@ -195,7 +195,7 @@ function initailize(){
 	}
 		template+='<td width="4%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="4%" align="center">'+no+'</td>';
-		template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" class="fullside" id="class_'+col+'" name="class_'+col+'">'+faculty+'</select></td>';			
+		template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'">'+faculty+'</select></td>';			
 		
 		column = 0;
 		for(j=0;j<payment_term;j++){ column++;

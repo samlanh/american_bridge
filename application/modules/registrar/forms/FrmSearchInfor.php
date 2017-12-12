@@ -30,7 +30,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$generation->setAttribs(array(
 				'dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$generation->setValue($request->getParam("study_year"));
 		$db_years=new Registrar_Model_DbTable_DbRegister();
@@ -43,7 +45,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 				'dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("SESSION"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				));
 		$_session->setValue($request->getParam("session"));
 		$opt_ses=new Application_Model_DbTable_DbGlobal();
@@ -56,7 +60,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_time->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("TIME"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				));
 		$_time->setValue($request->getParam("time"));
 		$opt_time = array(''=>$this->tr->translate("TIME"),
@@ -70,7 +76,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_degree_all->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("DEGREE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_degree_all->setValue($request->getParam('degree_all'));
 		$opt_deg = array(''=>$this->tr->translate("DEGREE"));
@@ -83,7 +91,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_degree_ft->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("DEGREE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_degree_ft->setValue($request->getParam('degree_ft'));
 		$opt_deg = array(''=>$this->tr->translate("DEGREE"));
@@ -96,7 +106,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_degree_kh_ft->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("DEGREE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_degree_kh_ft->setValue($request->getParam('degree_kh_ft'));
 		$opt_deg = array(''=>$this->tr->translate("DEGREE"));
@@ -109,7 +121,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_degree_en_ft->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("DEGREE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_degree_en_ft->setValue($request->getParam('degree_en_ft'));
 		$opt_deg = array(''=>$this->tr->translate("DEGREE"));
@@ -122,7 +136,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_degree_gep->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("DEGREE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_degree_gep->setValue($request->getParam('degree_gep'));
 		$opt_deg = array(''=>$this->tr->translate("DEGREE"));
@@ -135,7 +151,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_grade_en_ft->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("GRADE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 				));
 		$_grade_en_ft->setValue($request->getParam('grade_en_ft'));
 		$opt_g = array(''=>$this->tr->translate("GRADE"));
@@ -148,7 +166,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_grade_kh_ft->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("GRADE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_grade_kh_ft->setValue($request->getParam('grade_kh_ft'));
 		$opt_g = array(''=>$this->tr->translate("GRADE"));
@@ -163,7 +183,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_grade_ft->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("GRADE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_grade_ft->setValue($request->getParam('grade_ft'));
 		$opt_g_ft = array(''=>$this->tr->translate("GRADE"));
@@ -179,7 +201,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_grade_kid->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("GRADE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_grade_kid->setValue($request->getParam('grade_kid'));
 		$opt_g_kid = array(''=>$this->tr->translate("GRADE"));
@@ -192,7 +216,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_grade_all->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("GRADE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_grade_all->setValue($request->getParam('grade_all'));
 		$opt_g_all = array(''=>$this->tr->translate("GRADE"));
@@ -206,7 +232,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_grade_gep->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("GRADE"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_grade_gep->setValue($request->getParam('grade_gep'));
 		$opt_gep = array(''=>$this->tr->translate("GRADE"));
@@ -219,15 +247,19 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$user->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("USER"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		
 		
 		$_room = new Zend_Dojo_Form_Element_FilteringSelect('room');
 		$_room->setAttribs(array('dojoType'=>$this->filter,
-				'placeholder'=>$this->tr->translate("GRADE"),
+				'placeholder'=>$this->tr->translate("ROOM"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_room->setValue($request->getParam('room'));
 		$opt_room = array(''=>$this->tr->translate("ROOM_NAME"));
@@ -240,11 +272,10 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$user->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("USER"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
-		
-		
-		
 		$user->setValue($request->getParam('user'));
 		$opt_user = array(''=>$this->tr->translate("USER"));
 		$opt_all_user=$db_years->getAllUser();
@@ -256,7 +287,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$sess_gep->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("TIME"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$sess_gep->setValue($request->getParam("sess_gep"));
 		$ses_gep = array(''=>$this->tr->translate("TIME"),
@@ -269,7 +302,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$service = new Zend_Dojo_Form_Element_FilteringSelect('service');
 		$service->setAttribs(array('dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$service->setValue($request->getParam("service"));
 		$opt_ser = array(''=>$this->tr->translate("SERVICE"));
@@ -281,7 +316,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$service_product = new Zend_Dojo_Form_Element_FilteringSelect('service_and_product');
 		$service_product->setAttribs(array('dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$service_product->setValue($request->getParam("service_and_product"));
 		$opt_ser = array(''=>$this->tr->translate("SERVICE"));
@@ -293,7 +330,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$transport_service = new Zend_Dojo_Form_Element_FilteringSelect('transport_service');
 		$transport_service->setAttribs(array('dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$transport_service->setValue($request->getParam("transport_service"));
 		$opt_ser = array(''=>$this->tr->translate("SERVICE"));
@@ -305,7 +344,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$lunch_service = new Zend_Dojo_Form_Element_FilteringSelect('lunch_service');
 		$lunch_service->setAttribs(array('dojoType'=>$this->filter,
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$lunch_service->setValue($request->getParam("lunch_service"));
 		$opt_ser = array(''=>$this->tr->translate("SERVICE"));
@@ -318,7 +359,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$pay_term->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("PAYMENT_TERM"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$pay_term->setValue($request->getParam("pay_term"));
 		$opt_term = array(
@@ -338,6 +381,7 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 				0=>$this->tr->translate("DACTIVE"));
 		$_status->setMultiOptions($_status_opt);
 		$_status->setValue($request->getParam("status_search"));
+		
 		//date 
 		$start_date= new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$dates = date("Y-m-d");
@@ -369,7 +413,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$_branch->setAttribs(array('dojoType'=>$this->filter,
 				'placeholder'=>$this->tr->translate("----- select branch -----"),
 				'class'=>'fullside',
-				'required'=>false
+				'required'=>false,
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
 		));
 		$_branch->setValue($request->getParam('branch'));
 		$opt_branch = array(''=>$this->tr->translate("----- select branch -----"));

@@ -106,7 +106,7 @@
 						<tr>
 							<td width="12%"><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select name="branch" id="branch" dojoType="dijit.form.FilteringSelect" class="fullside" onchange="getStudentByBranch();getNewReceiptNo('');" >
+								<select name="branch" id="branch" dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" onchange="getStudentByBranch();getNewReceiptNo('');" >
 									<option value="-1">select branch</option>
 									<?php if(!empty($this->branch)){foreach ($this->branch as $branch){?>
 										<option value="<?php echo $branch['id']?>"><?php echo $branch['name']?></option>
@@ -385,7 +385,7 @@ function addRow() {
 		}
 			template+='<td width="50px" align="center"><img onclick="deleteRecord('+col+');calculateDiscount('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="50px" align="center">'+no+'</td>';
-			template+='<td width="300px"><select class="fullside" dojoType="dijit.form.FilteringSelect" onchange="getprice('+col+');" id="service_'+col+'" name="service_'+col+'">'+service+'</select></td>';			
+			template+='<td width="300px"><select class="fullside" dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" onchange="getprice('+col+');" id="service_'+col+'" name="service_'+col+'">'+service+'</select></td>';			
 			template+='<td width="600px"> <input type="text" style="width: 100%;" class="fullside" name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ" style="width:160px;" /><label id="subsub"></label></td>';
 			column = 0;
 			template+='<td width="250px"> <input type="text" style="width: 100%;" class="fullside"  onkeyup="calculateDiscount('+col+');" name="qty_'+col+'" id="qty_'+col+'" value="1" dojoType="dijit.form.NumberTextBox" /><label id="qty"></label></td>';

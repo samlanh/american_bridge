@@ -10,8 +10,19 @@ class Allreport_Model_DbTable_DbRptServiceCharge extends Zend_Db_Table_Abstract
 //     }
     function getAllServiceFee($search){
     	$db=$this->getAdapter();
-    	$sql = "SELECT sf.id,CONCAT(from_academic,' - ',to_academic) AS academic,
-    		    generation FROM `rms_servicefee` as sf,rms_tuitionfee as tf where sf.academic_year=tf.id and sf.status=1 ";
+    	$sql = "SELECT 
+    				sf.id,
+    				CONCAT(from_academic,'-',to_academic,'(',(SELECT branch_namekh FROM rms_branch WHERE br_id = branch_id),')') AS years,
+    				(select name_en from rms_view where type=7 and key_code=time) as time,
+    		    	generation 
+    			FROM 
+    				`rms_servicefee` as sf,
+    				rms_tuitionfee as tf 
+    			where 
+    				sf.academic_year=tf.id 
+    				and sf.status=1 
+    		";
+    	
     	$order=" ORDER BY sf.id DESC ";
     	$where=' ';
     	

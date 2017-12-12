@@ -517,7 +517,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    
    function getAllAcademicYear(){
 	   	$db=$this->getAdapter();
-	   	$sql=" SELECT id,CONCAT(from_academic,'-',to_academic,'(',generation,')',(SELECT name_en FROM rms_view WHERE TYPE=7 AND key_code=TIME)) AS name FROM rms_tuitionfee
+	   	$sql=" SELECT id,CONCAT(from_academic,'-',to_academic,'(',(select branch_namekh from rms_branch where br_id = branch_id),')',(SELECT name_en FROM rms_view WHERE TYPE=7 AND key_code=TIME)) AS name FROM rms_tuitionfee
     	        WHERE `status`=1 ";
 	   	return $db->fetchAll($sql);
    }

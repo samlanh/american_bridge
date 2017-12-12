@@ -9,6 +9,11 @@ class Allreport_Model_DbTable_DbRptPayableNextMonth extends Zend_Db_Table_Abstra
     	$db=$this->getAdapter();
     	
     	$sql="SELECT 
+    			  sp.id,
+    			  
+    			  (select branch_namekh from rms_branch where br_id = sp.branch_id) as branch_name,
+			      (select last_name from rms_users as u where u.id = sp.user_id) as user_name,
+    			  
 				  sp.`receipt_number` AS receipt,
 				  s.stu_code AS code,
 				  (select ser.stu_code from rms_service as ser where ser.stu_id = s.stu_id and ser.type=4) as transport_code,
@@ -23,7 +28,7 @@ class Allreport_Model_DbTable_DbRptPayableNextMonth extends Zend_Db_Table_Abstra
 				  `rms_student_paymentdetail` AS spd,
 				  `rms_student_payment` AS sp,
 				  `rms_program_name` AS pn,
-				  rms_student as s
+				   rms_student as s
 				WHERE spd.`is_start` = 1 
 				  and s.stu_id = sp.student_id
 				  AND sp.id=spd.`payment_id`
@@ -75,7 +80,9 @@ class Allreport_Model_DbTable_DbRptPayableNextMonth extends Zend_Db_Table_Abstra
      	if(!empty($search['lunch_service'])){
      		$where .= " AND spd.service_id = ".$search['lunch_service'];
      	}
-     	
+     	if(!empty($search['branch'])){
+     		$where .= " AND sp.branch_id = ".$search['branch'];
+     	}
     	if(!empty($search['txtsearch'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['txtsearch']));

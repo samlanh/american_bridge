@@ -799,7 +799,7 @@ function getMonthByNumber(m){
 						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-15px;font-weight:bold;line-height: 20px;">
 							<tr>
 								<td width="25%" align="left" style="font-size:11px;">
-									<div style="font-size:15px;">Branch 17 </div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+									<div style="font-size:15px;">Branch 6 (ចំការដូង​) </div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
 								</td>
 								<td width="50%" align="center">
 									<img style="width: 20%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
@@ -1107,9 +1107,9 @@ function getMonthByNumber(m){
 								</td>
 								<td width="30%" valign="top" align="center"> 
 									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office <br />
-									- 085 591 007 <br />
-									- 069 25 6666 <br />
-									- 097 81 88888 <br />
+									- 092 36 36 42 <br />
+									- 087 53 99 99 <br />
+									- 023 99 99 98 <br />
 								</td>
 								
 							</tr>
@@ -1704,27 +1704,27 @@ function netTotal() {
 }
 
 function readMoneyInKhmer(netTotal){
-	//alert(netTotal);
 	var str = netTotal.toString();
 	str_cent = 'សេន';
 	first_decimal = str.substr(-2);
 	last_decimal = str.substr(-1);
-	if(first_decimal>0){string='ក្បៀស';}else{string="";str_cent=""}
+	
+	if(first_decimal>0){string='ដុល្លា និង ';last_string="សេន"}else{string="";str_cent="";last_string="ដុល្លាគត់";}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
 	first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
-	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal)
+	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal);
 	money_khmer=read_money_in_khmer(netTotal);
 
 	if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
 	if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
 	first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
-	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal)
+	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal);
 	money_english=read_money_in_english(netTotal);
-	read_eng = money_english.trim()+string+ first_money_decimal+str_zero+last_money_decimal+'ដុល្លាគត់'
-
-	read_eng = '( '+money_english.trim()+string_en+ first_money_decimal_en+str_zero_en+last_money_decimal_en+' Dollar Only )'
 	
-	dijit.byId('readmoney').attr('value',money_khmer.trim()+string+ first_money_decimal+str_zero+last_money_decimal+'ដុល្លាគត់');
+	//read_eng = money_english.trim()+string+ first_money_decimal+str_zero+last_money_decimal+last_string;
+	//read_eng = '( '+money_english.trim()+string_en+ first_money_decimal_en+str_zero_en+last_money_decimal_en+' Dollar Only )';
+	
+	dijit.byId('readmoney').attr('value',money_khmer.trim()+string+ first_money_decimal+str_zero+last_money_decimal+last_string);
 }
 
 
