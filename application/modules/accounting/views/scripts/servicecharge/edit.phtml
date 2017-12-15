@@ -7,6 +7,30 @@
 <script type="text/javascript">
     dojo.require("dojo.NodeList-manipulate");
     dojo.require("dojo.parser");
+    dojo.require("dojo.data.ItemFileWriteStore");  
+    dojo.require("dijit.form.NumberTextBox");
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.DateTextBox");
+    dojo.require("dijit.form.CheckBox"); 
+    var service_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->service));?> );
+    dojo.ready(function(){	
+    	new dijit.form.FilteringSelect({
+    		store: service_store,
+    		autoComplete: true,                        
+    		required: true,                      
+    	    id: "title",
+    	    name: "title",  
+    	    tabindex: "1",         
+    	    class: 'fullside',  
+    	    placeHolder:"Selecte Category", 
+    	    onChange: function() {          
+    		   	service_id = dijit.byId('title').get('value');
+    		    if(service_id==-1){
+    		   		dijit.byId("popup_dept").show();
+    		    }
+    	   }
+    	}, "title");
+    }); 
 </script>
 <style>
 select{ width:100%;}
@@ -17,6 +41,24 @@ table .set-style td,table .set-style th{ padding: 2px; border:1px solid #ccc;}
 table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255, 1);}
 </style>
 <form id='office_receipt' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'servicecharge','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">   
+   if(this.validate()) {
+	var rowId = $('#identity').val();
+    			if(rowId!=''){ 
+					var rowIDArray = rowId.split(',');
+					for(var n = 0; n < rowIDArray.length; n++){
+					var book_id = dijit.byId('class_'+rowIDArray[n]).get('value');
+					if(book_id=='' || book_id==0){
+							alert("Please select service name!!!");
+							return false;
+						}
+					}
+				}
+    return true;
+   }else {
+    return false;
+   }
+</script>
 <table cellspacing="10" style="margin: 0 auto;width:100%;" >
 	<tr>
 		<td>
@@ -54,6 +96,16 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 					<table class="set-style" border="2px" style="border:1px solid #ccc; border-collapse: collapse;margin: 0 auto; width: 100%; background:#DFF7FD;" >
 						<thead>
 							<tr>
+								<td colspan="8">
+									
+									<table id="table_row" border="1px" style="border-collapse: collapse; border: 1px solid #ccc;" >
+										<tr id="head-title" class="head-td" align="right" >
+											
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
 								<td colspan="8" align="left">
 									<input type="button" label="<?php echo $tr->translate('ADD_ROW');?>" dojoType="dijit.form.Button" 
 								 		iconClass="dijitIconEditProperty" onclick="addRow();" />
@@ -64,16 +116,6 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 									<input type="hidden" name="iden_term" id="iden_term"  value="<?php echo $term;?>" >
 									<input type="hidden" name="identity" id="identity"  value="" >
 								 </td>
-							</tr>
-							<tr>
-								<td colspan="8">
-									
-									<table id="table_row" border="1px" style="border-collapse: collapse; border: 1px solid #ccc;" >
-										<tr id="head-title" class="head-td" align="right" >
-											
-										</tr>
-									</table>
-								</td>
 							</tr>
 						</thead>
 						<tfoot>
@@ -146,13 +188,13 @@ function addRow() {
 		}
 			template+='<td width="4%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="4%" align="center">'+no+'</td>';
-			template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'">'+faculty+'</select></td>';			
+			template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'"  onchange="showAddBlock('+col+');">'+faculty+'</select></td>';			
 			
 			column = 0;
 			for(j=0;j<payment_term;j++){ column++;
 				template+='<td width="8%"><input type="text" value="0" class="fullside" id="fee'+col+'_'+column+'" name="fee'+col+'_'+column+'" dojoType="dijit.form.NumberTextBox" style="width: 100%;" /></td>';
 			}
-			template+='<td width="13%"> <input type="text" class="fullside" name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"style=""/><label id="subsub"></label></td>';
+			template+='<td width="13%"> <input type="text" class="fullside" name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"style=""/><label id="subsub"></label><input type="hidden" class="fullside" name="one_value'+col+'" id="one_value'+col+'" value="'+col+'" dojoType="dijit.form.TextBox" /></td>';
 		tmp='<tr id="row'+col+'">';
 		tmp+="</tr>";
 		dojo.query("#table_row").append(tmp);
@@ -194,14 +236,14 @@ function initailize(){
 	}
 		template+='<td width="4%"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 		template+='<td width="4%" align="center">'+no+'</td>';
-		template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'">'+faculty+'</select></td>';			
+		template+='<td width="30%"><select dojoType="dijit.form.FilteringSelect" autoComplete="false" queryExpr="*${0}*" class="fullside" id="class_'+col+'" name="class_'+col+'" onchange="showAddBlock('+col+');">'+faculty+'</select></td>';			
 		
 		column = 0;
 		for(j=0;j<payment_term;j++){ column++;
 			template+='<td width="8%"><input type="text" class="fullside" id="fee'+col+'_'+column+'" name="fee'+col+'_'+column+'" dojoType="dijit.form.NumberTextBox" style="width: 100%;" /></td>';
 			
 		}
-		template+='<td width="13%"> <input type="text" class="fullside" name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"style=""/><label id="subsub"></label></td>';
+		template+='<td width="13%"> <input type="text" class="fullside" name="remark'+col+'" id="remark'+col+'" dojoType="dijit.form.TextBox" placeholder="ផ្សេងៗ"style=""/><label id="subsub"></label><input type="hidden" class="fullside" name="one_value'+col+'" id="one_value'+col+'" value="'+col+'" dojoType="dijit.form.TextBox" /></td>';
 	tmp='<tr id="row'+col+'">';
 	tmp+="</tr>";
 	dojo.query("#table_row").append(tmp);
@@ -286,4 +328,174 @@ function addNewDepartment(){
 		$('#identity').val(strings);
 		dojo.query("#row"+index).remove();
 	}
+
+ function showAddBlock(r){
+		service_id=dijit.byId("class_"+r).get("value");
+		one_value=dijit.byId("one_value"+r).get("value");
+		$('#tow_value').val(one_value);
+		if(service_id==-1){
+			dijit.byId('pop_service').show();
+		}
+	}
+
+var b_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->all_service));?> );
+var url_add_service = '<?php echo $this->url(array("module"=>"accounting","controller"=>"servicecharge","action"=>"add-ajaxservice")); ?>';
+function addStudentService(){
+	if(dijit.byId('frm_add').validate()){
+			language = dijit.byId('add_title').get('value');
+			dojo.xhrPost({
+					url:url_add_service,
+					form: dojo.byId("frm_add"),
+					handleAs:"json",
+					load: function(data) {
+					var Itemmake = { 
+				        id: data,
+				        name: dijit.byId('add_title').get('value')
+				         };
+					index=$("#tow_value").val();
+				    addDataToSelectbox(dijit.byId('class_'+index), b_store, Itemmake, data);
+				    dijit.byId('frm_add').reset();
+				  	dijit.byId("pop_service").hide();
+					},
+					error: function(err) {
+						alert(err);
+					}
+			});
+	}
+}
+
+var url_add_service_type = '<?php echo $this->url(array("module"=>"accounting","controller"=>"servicecharge","action"=>"submit")); ?>';
+function addCategory(){
+	if(dijit.byId('frm_add_service').validate()){
+	language = dijit.byId('p_title').get('value');
+	dojo.xhrPost({
+			url:url_add_service_type,
+			form: dojo.byId("frm_add_service"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+				     id: data,
+					         name: dijit.byId('p_title').get('value')
+					   };
+		 	addDataToSelectbox(dijit.byId('title'), service_store, Itemmake, data);
+		   dijit.byId('frm_add_service').reset();
+		   hideDialog();
+				
+			},
+			error: function(err) {
+				//alert(err);
+			}
+	});
+}
+}
 </script>
+	
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_dept" >
+		<form style="background-color: buttonface;" id='frm_add_service' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<legend align="center" ><?php echo $tr->translate("បន្ថែមប្រភេទសេវាកម្ម");?></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("Title")?></td>
+							<td><input class="fullside" tabindex="1" value="" dojoType="dijit.form.ValidationTextBox" name="p_title" id="p_title" type="text" required="required" /></td>
+						</tr>
+						<tr>
+							<td>ពណ៌នា</td>
+							<td>
+								<textarea class="fullside"   style=" height: 40px !important;"
+										tabindex="2" dojoType=""  id="note" name=note ></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("Type")?></td>
+							<td>
+								<select class="fullside" readonly tabindex="3" name="type" id="type" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1" selected="selected"><?php echo $tr->translate("SERVICE")?></option>
+									    <option value="2"><?php echo $tr->translate("PROGRAM")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("Status")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="status_p" id="status_p" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1"><?php echo $tr->translate("Active")?></option>
+									    <option value="0"><?php echo $tr->translate("Deactive")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconUndo" type="button" value="close" label="Close" dojoType="dijit.form.Button" onclick="hideDialog();"/>
+								<input type="button" value="save" name="save" label="Save" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+
+		</form>
+	</div>
+</div>
+
+<div class="dijitHidden" >
+	<div data-dojo-type="dijit.Dialog" data-dojo-type="dijit.Dialog" id="pop_service" style="width:40%;" >
+		<form name="frm_add" id='frm_add' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		 <table cellspacing="10" width="100%" style="margin: 0 auto; ">
+			<tr>
+				<td>
+					<fieldset>
+						<legend align="center" ><strong style="font-size: 18px;"><?php echo $tr->translate("ADD_SERVICE")?></strong></legend>
+						<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="10"  >
+							<tr>
+								<td nowrap="nowrap"><?php echo $tr->translate("SERVICE_TYPE")?></td>
+								<td>
+									<input id="title" />
+								</td>
+							</tr>
+							<tr>
+								<td nowrap="nowrap"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
+								<td> 
+									<input dojoType="dijit.form.ValidationTextBox" required="1" name="add_title" class="fullside"  id="add_title" value=""  type="text">
+									<input dojoType="dijit.form.TextBox" name="service_type" id="service_type" value="2"  type="hidden">
+							   </td>
+							</tr>
+							<tr>
+								<td nowrap="nowrap"><?php echo $tr->translate("DISCRIPTION")?></td>
+								    <td>
+										<textarea class="fullside"   style=" height: 40px !important;"
+											tabindex="2" dojoType=""  id="description" name="description" ></textarea>
+									</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("STATUS")?></td>
+								<td>
+									<select name="service_status" id="service_status" dojoType="dijit.form.FilteringSelect" class="fullside" >
+									    <option value="1" label="ប្រើប្រាស់">ប្រើប្រាស់</option>
+									    <option value="0" label="មិនប្រើប្រាស់">មិនប្រើប្រាស់</option>
+									</select>
+								</td>
+							</tr>
+							<input type="hidden" name="tow_value" id="tow_value" value="" />
+							<tr>
+								<td colspan="4" align="center" style="padding-left:40px;">
+									<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+									<input type="button" value="save_service" name="save_service" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+										onclick="addStudentService();" iconClass="dijitEditorIcon dijitEditorIconSave" />
+								</td>
+							</tr>
+						</table>	
+					</fieldset>		
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+</div>	

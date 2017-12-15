@@ -6,6 +6,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	public function setName($name){
 		$this->_name=$name;
 	}
+	
+	public function getUserId(){
+		$session_user=new Zend_Session_Namespace('auth');
+		return $session_user->user_id;
+	}
+	
 	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -452,6 +458,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    			WHERE is_active=1  Order BY major_id DESC";
    	return $db->fetchAll($sql);
    }
+   
+   function getAllDepts(){
+   	$db = $this->getAdapter();
+   	$sql="select dept_id as id,en_name as name from rms_dept where en_name!='' AND is_active=1 ";
+   	return $db->fetchAll($sql);
+   }
+   
    public function getAllRoom(){
    	$db = $this->getAdapter();
    	$sql=" SELECT room_id AS id ,room_name As name FROM `rms_room` WHERE is_active=1 AND room_name!='' order by room_id DESC ";
@@ -542,5 +555,47 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   		return $result;
 	   	}
    }
+   
+   public function addGradeAjax($_data){
+   	$this->_name='rms_major';
+   		$arr = array(
+   				'major_enname'  => $_data['major_enname'],
+   				'shortcut'	  => $_data['shortcut'],
+   				'dept_id'	  => $_data['degree_popup1'],
+   				'modify_date' => Zend_Date::now(),
+   				'is_active'	  => $_data['grade_status'],
+   				'user_id'	  => $this->getUserId()
+   		);
+   		return $this->insert($arr);
+   }
+   
+   public function AddDegreeajax($_data){
+   	$this->_name='rms_dept';
+   	$_arr=array(
+   			'en_name'	  => $_data['en_name'],
+   			'shortcut'    => $_data['shortcut_fac'],
+   			'type'		  => $_data['type'],
+   			'modify_date' => new Zend_Date(),
+   			'is_active'   => 1,
+   			'user_id'	  => $this->getUserId()
+   	);
+   	return $this->insert($_arr);
+   }
+   
+   public function getAllSerives($type=null){
+   	$db = $this->getAdapter();
+   	if($type!=null){
+   		$sql = " SELECT service_id As id,title As name FROM `rms_program_name` WHERE
+   		type=$type AND status = 1 AND title!=''";
+   		return $db->fetchAll($sql);
+   	}else{
+   		$sql = 'SELECT service_id As id,pn.title as name FROM `rms_program_type` AS pt,`rms_program_name` AS pn
+   		WHERE pt.id = pn.ser_cate_id AND pt.type=1
+   		AND pn.status = 1 AND pn.title!=""';
+   	}
+   	return $db->fetchAll($sql);
+   }
+    
+   
 }
 ?>

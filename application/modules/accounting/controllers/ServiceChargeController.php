@@ -88,7 +88,15 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 		$this->view->payment_term = $model->getAllPaymentTerm(null,null,null);
 		 
 		$this->view->academic_year =$test = $model->getAllAcademicYear();
-
+		
+		$db = new Accounting_Model_DbTable_DbService();
+		$rs= $db->getServiceType(1);
+		array_unshift($rs, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->service = $rs;
+		$db_g=new Application_Model_DbTable_DbGlobal();
+		$row=$db_g->getAllSerives(2);
+		array_unshift($row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->all_service=$row;
 	}
 	public function editAction(){
 	if($this->getRequest()->isPost()){
@@ -154,8 +162,15 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 				
 			   $test = $this->view->rows =$rs_rows;
 			  // print_r($test);exit();
-			   
-	
+			  
+			   $db = new Accounting_Model_DbTable_DbService();
+			   $rs= $db->getServiceType(1);
+			   array_unshift($rs, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+			   $this->view->service = $rs;
+			   $db_g=new Application_Model_DbTable_DbGlobal();
+			   $row=$db_g->getAllSerives(2);
+			   array_unshift($row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+			   $this->view->all_service=$row;
 	}
 	
 	public function copyAction(){
@@ -222,7 +237,14 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 	
 		$test = $this->view->rows =$rs_rows;
 		// print_r($test);exit();
-	
+		$db = new Accounting_Model_DbTable_DbService();
+		$rs= $db->getServiceType(1);
+		array_unshift($rs, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->service = $rs;
+		$db_g=new Application_Model_DbTable_DbGlobal();
+		$row=$db_g->getAllSerives(2);
+		array_unshift($row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->all_service=$row;
 	
 	}
 	
@@ -256,6 +278,40 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 			$rs = $db->getAllServiceItemOption($_data["type"]);
 			print_r(Zend_Json::encode($rs));
 			exit();
+		}
+	}
+	
+	function addAjaxserviceAction(){
+		if($this->getRequest()->isPost()){
+			try{
+				$data = $this->getRequest()->getPost();
+				$db = new Accounting_Model_DbTable_DbService();
+				$row = $db->AddServiceAjax($data);
+				$result = array("id"=>$row);
+				print_r(Zend_Json::encode($row));
+				exit();
+				//Application_Form_FrmMessage::message("INSERT_SUCCESS");
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+	}
+	
+	function submitAction(){
+		if($this->getRequest()->isPost()){
+			try{
+				$data = $this->getRequest()->getPost();
+				$db = new Accounting_Model_DbTable_DbService();
+				$row = $db->AddServiceType($data);
+				$result = array("id"=>$row);
+				print_r(Zend_Json::encode($row));
+				exit();
+				//Application_Form_FrmMessage::message("INSERT_SUCCESS");
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
 		}
 	}
 	

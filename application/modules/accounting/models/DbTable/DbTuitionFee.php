@@ -61,7 +61,7 @@ class Accounting_Model_DbTable_DbTuitionFee extends Zend_Db_Table_Abstract
     }
     ////////////////
     public function addTuitionFee($_data){
-    //	print_r($_data);exit();
+//      	print_r($_data);exit();
     	$db = $this->getAdapter();
     	$db->beginTransaction();
 		
@@ -69,7 +69,7 @@ class Accounting_Model_DbTable_DbTuitionFee extends Zend_Db_Table_Abstract
     	 
     	try{
     		if(!empty($fee_id)){
-    			
+    			 
     		}else{
 	    		$_arr = array(
 	    				'from_academic'=>$_data['from_year'],
@@ -173,6 +173,15 @@ class Accounting_Model_DbTable_DbTuitionFee extends Zend_Db_Table_Abstract
     public function getFeeDetailById($id){
     	$db = $this->getAdapter();
     	$sql = "SELECT * FROM rms_tuitionfee_detail WHERE fee_id = ".$id ." ORDER BY id";
+    	return $db->fetchAll($sql);
+    
+    }
+    
+    public function getFeeDetailsById($id){
+    	$db = $this->getAdapter();
+    	$sql = "SELECT td.*,
+	     (SELECT CONCAT(major_enname,'(',(SELECT shortcut FROM rms_dept WHERE rms_dept.dept_id=rms_major.dept_id),')') AS NAME FROM `rms_major` WHERE rms_major.major_id=td.class_id LIMIT 1) AS grade_name
+         FROM rms_tuitionfee_detail AS td where  td.fee_id = ".$id ." ORDER BY id";
     	return $db->fetchAll($sql);
     
     }

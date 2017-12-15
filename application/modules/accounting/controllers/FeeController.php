@@ -78,7 +78,7 @@ class Accounting_FeeController extends Zend_Controller_Action {
 	    		}else{
 	    			Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/fee/add");
 	    		}
-	    		Application_Form_FrmMessage::message("INSERT_SUCCESS");
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/fee/add");
 	    		
     		}catch(Exception $e){
     			Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -87,8 +87,13 @@ class Accounting_FeeController extends Zend_Controller_Action {
     	}
     	
     	$_model = new Application_Model_GlobalClass();
+    	$db_glopbl=new Application_Model_DbTable_DbGlobal();
     	$this->view->all_metion = $_model ->getAllMetionOption();
     	$this->view->all_grade = $_model ->getAllFacultyOption();
+    	$d_row=$db_glopbl ->getAllMajor();
+    	array_unshift($d_row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	$this->view->names_grade = $d_row;
+    	
     	$data=$this->view->all_session=$_model->getAllSession();
     	$model = new Application_Model_DbTable_DbGlobal();
     	$this->view->payment_term = $model->getAllPaymentTerm(null,null,null);
@@ -100,6 +105,14 @@ class Accounting_FeeController extends Zend_Controller_Action {
     	
     	$db = new Accounting_Model_DbTable_DbTuitionFee();
     	$this->view->branch = $db->getAllBranch();
+    	
+    	$dept = $db_glopbl->getAllDepts();
+    	array_unshift($dept, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	$this->view->dept = $dept;
+    	$frm = new Application_Form_FrmOther();
+    	$frm->FrmAddDept();
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm_dept = $frm;
     }
  	
     public function editAction()
@@ -142,14 +155,15 @@ class Accounting_FeeController extends Zend_Controller_Action {
 		
 		$row=0;$indexterm=1;$key=0;
 
-				$rows = $db->getFeeDetailById($id);
-				//print_r($rows);exit();
+				//$rows = $db->getFeeDetailById($id);
+				$rows = $db->getFeeDetailsById($id);
 // 				print_r($rows);exit();
 				$fee_row=1;$rs_rows=array();
 				if(!empty($rows))foreach($rows as $payment_tran){
 					if($payment_tran['payment_term']==1){
 						$rs_rows[$key] = array(
 								'class_id'=>$payment_tran['class_id'],
+								'grade_name'=>$payment_tran['grade_name'],
 								'session_id'=>$payment_tran['session'],
 								'section'=>$payment_tran['tuition_fee'],
 								'semester'=>'',
@@ -173,6 +187,19 @@ class Accounting_FeeController extends Zend_Controller_Action {
 					}
 				}
 			   $this->view->rows =$rs_rows;
+			   
+			   $db_glopbl=new Application_Model_DbTable_DbGlobal();
+			   $d_row=$db_glopbl ->getAllMajor();
+			   array_unshift($d_row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+			   $this->view->names_grade = $d_row;
+			   
+			   $dept = $db_glopbl->getAllDepts();
+			   array_unshift($dept, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+			   $this->view->dept = $dept;
+			   $frm = new Application_Form_FrmOther();
+			   $frm->FrmAddDept();
+			   Application_Model_Decorator::removeAllDecorator($frm);
+			   $this->view->frm_dept = $frm;
 	}
 	
 	function copyAction(){
@@ -213,13 +240,15 @@ class Accounting_FeeController extends Zend_Controller_Action {
 		
 		$row=0;$indexterm=1;$key=0;
 		
-		$rows = $db->getFeeDetailById($id);
+		//$rows = $db->getFeeDetailById($id);
+		$rows = $db->getFeeDetailsById($id);
 		//print_r($rows);exit();
 		$fee_row=1;$rs_rows=array();
 		if(!empty($rows))foreach($rows as $payment_tran){
 			if($payment_tran['payment_term']==1){
 				$rs_rows[$key] = array(
 						'class_id'=>$payment_tran['class_id'],
+						'grade_name'=>$payment_tran['grade_name'],
 						'session_id'=>$payment_tran['session'],
 						'monthly'=>$payment_tran['tuition_fee'],
 						'semester'=>'',
@@ -243,14 +272,45 @@ class Accounting_FeeController extends Zend_Controller_Action {
 			}
 		}
 		$this->view->rows =$rs_rows;
+		
+		$db_glopbl=new Application_Model_DbTable_DbGlobal();
+		$d_row=$db_glopbl ->getAllMajor();
+		array_unshift($d_row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->names_grade = $d_row;
+		
+		$dept = $db_glopbl->getAllDepts();
+		array_unshift($dept, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+		$this->view->dept = $dept;
+		$frm = new Application_Form_FrmOther();
+		$frm->FrmAddDept();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_dept = $frm;
+		 
 	}
 	
+	function addGraddjaxAction(){
+		if($this->getRequest()->isPost()){
+			try{
+				$data = $this->getRequest()->getPost();
+				$db = new Application_Model_DbTable_DbGlobal();
+				$row = $db->addGradeAjax($data);
+				print_r(Zend_Json::encode($row));
+				exit();
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+	}
 	
+	function adddegreeAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$_dbmodel = new Application_Model_DbTable_DbGlobal();
+			$result=$_dbmodel->AddDegreeajax($data);
+			print_r(Zend_Json::encode($result));
+			exit();
+		}
+	}
 	
-	
-	
-	
-	
-	
-    
 }
