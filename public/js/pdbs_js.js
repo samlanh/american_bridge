@@ -335,7 +335,7 @@ function read_in_khmer_from_10_to_99(value)
 		if(calc==10) read='ដប់';
 		else if(calc==11) read='ដប់មួយ';
 		else if(calc==12) read='ដប់ពីរ';
-		else if(calc==13) read='ដបបី់';
+		else if(calc==13) read='ដប់បី';
 		else if(calc==14) read='ដប់បួន';
 		else if(calc==15) read='ដប់ប្រាំ';
 		else if(calc==16) read='ដប់ប្រាំមួយ';
