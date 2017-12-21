@@ -30,6 +30,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 					`rms_student_paymentdetail` AS spd
 				WHERE
 					sp.id=spd.`payment_id`
+					and sp.is_void=0
 				    $branch_id 
     		  ";
     	
@@ -107,6 +108,99 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	
     }
     
+    function getAllCurrencyFromDailyIncome($search,$payfor_type){
+    	$db = $this->getAdapter();
+    
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("branch_id");
+    
+    	$sql = "SELECT
+			    	sdi.*
+			    FROM
+			    	`rms_submit_daily_income` AS sdi
+			    WHERE
+			    	sdi.status=1
+			    	and shift != 0
+			    	$branch_id
+    		";
+    
+    	$where = " ";
+    	
+    	if($payfor_type>0){
+    		$where .= " and payfor_type = $payfor_type ";
+    	}else{
+    		$where .= " and payfor_type IN (1,2,6) ";
+    	}
+    	
+    
+    	$from_date =(empty($search['start_date']))? '1': "sdi.for_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "sdi.for_date <= '".$search['end_date']." 23:59:59'";
+    	$where .= " AND ".$from_date." AND ".$to_date;
+    	 
+    	$order=" ORDER BY sdi.id ASC ";
+    
+    	if(empty($search)){
+    		return $db->fetchAll($sql.$order);
+    	}
+    	if(!empty($search['txtsearch'])){
+	    	$s_where = array();
+	    	$s_search = addslashes(trim($search['txtsearch']));
+	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    
+	    if($search['branch'] > 0){
+	    	$where.= " AND sdi.`branch_id` = ".$search['branch'];
+	    }
+	    
+	    //echo $sql.$where.$order;
+	    
+	    return $db->fetchAll($sql.$where.$order);
+     
+    }
+    
+    
+    function getAllRentPaymentCurrency($search,$payfor_type){
+    	$db = $this->getAdapter();
+    
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission("branch_id");
+    
+    	$sql = "SELECT
+			    	sdi.*
+			    FROM
+			    	`rms_submit_daily_income` AS sdi
+			    WHERE
+			    	sdi.status=1
+			    	and payfor_type = $payfor_type
+			    	and shift != 0
+			    	$branch_id
+    		";
+    	
+    	$where = " ";
+    
+    	$from_date =(empty($search['start_date']))? '1': "sdi.for_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "sdi.for_date <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    
+    	$order=" ORDER BY sdi.id ASC ";
+    
+    	if(empty($search)){
+    		return $db->fetchAll($sql.$order);
+    	}
+    	if(!empty($search['txtsearch'])){
+	    	$s_where = array();
+	    	$s_search = addslashes(trim($search['txtsearch']));
+	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    
+    	if($search['branch'] > 0){
+	    	$where.= " AND sdi.`branch_id` = ".$search['branch'];
+	    }
+    	return $db->fetchAll($sql.$where.$order);
+     
+    }
+    
+    
     function getAllOtherIncome($search){
     	$db = $this->getAdapter();
     	
@@ -167,6 +261,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	`rms_student_payment` AS sp
 			    WHERE
 			    	payfor_type = 1
+			    	and sp.is_void=0
 			    	$branch_id
     			";
     	 
@@ -220,6 +315,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	`rms_student_payment` AS sp
 			    WHERE
 			    	payfor_type = 6
+			    	and sp.is_void=0
 			    	$branch_id
     			";
     
@@ -273,6 +369,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	`rms_student_payment` AS sp
 			    WHERE
 			    	payfor_type = 2
+			    	and sp.is_void=0
 			    	$branch_id
 			  ";
     
@@ -325,6 +422,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	`rms_student_payment` AS sp
 			    WHERE
 			    	payfor_type = 5
+			    	and sp.is_void=0
 			    	$branch_id
     		";
     
@@ -377,6 +475,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	`rms_student_payment` AS sp
 			    WHERE
 			    	payfor_type = 3
+			    	and sp.is_void=0
 			    	$branch_id
     			";
     
@@ -428,6 +527,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	`rms_student_payment` AS sp
 			    WHERE
 			    	payfor_type = 4
+			    	and sp.is_void=0
 			    	$branch_id
     			";
     

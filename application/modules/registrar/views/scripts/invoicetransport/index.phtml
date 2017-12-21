@@ -1,0 +1,39 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('INVOICE_TRANSPORT'));
+	$frm =  $this->form_search;
+?>
+<meta charset="utf-8">
+ <form  action="<?php echo $this->url(array('module'=>'registrar','controller'=>'invoicetransport','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+	   <table style="width:100%">
+		  <tr> 
+		    <td><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->adv_search['adv_search']?>" placeholder="Search" type="text" ></td>
+		    <td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+		    <td> <?php echo $frm->getElement('user');?></td>
+		    <td> <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
+	   	  </tr>
+	   </table>
+ </form>
+
+<?php echo $this->list; ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

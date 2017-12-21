@@ -10,7 +10,7 @@ echo $this->headTitle($tr->translate("ADD_USER"));
 	dojo.require('dijit.form.FilteringSelect');
 </script>
 
-<form action="<?php echo $this->url(array('module'=>'user','controller'=>'index','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<form action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	<script type="dojo/method" event="onSubmit">				
 			if(this.validate()) {
 				if(dojo.byId('password').value != dojo.byId('con_password').value ){

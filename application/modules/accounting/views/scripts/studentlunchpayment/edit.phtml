@@ -298,7 +298,12 @@ fieldset{  background:none;}
 								<input class="fullside" name="balance" id="balance" value="<?php echo $this->detail['balance']?>" readOnly="readOnly" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
-						
+						<tr>	
+							<td><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td>
+								<input type="text" name="create_date" id="create_date" dojoType="dijit.form.DateTextBox" class="fullside" value="<?php echo date("Y-m-d",strtotime($this->row['create_date']));?>" constraints="{datePattern:'dd/MM/yyyy'}" />
+							</td>
+						</tr>
 					</table>	
 					
 				</fieldset>		
@@ -463,7 +468,7 @@ fieldset{  background:none;}
 		dijit.byId("start_date").set('readOnly',true);
 		dijit.byId("end_date").set('readOnly',true);
 		dijit.byId("other").set('readOnly',true);
-		//dijit.byId("readmoney").set('readOnly',true);
+		dijit.byId("create_date").set('readOnly',true);
 	}
 
 	function setID(){

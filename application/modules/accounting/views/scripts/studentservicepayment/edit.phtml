@@ -256,6 +256,18 @@ fieldset{  background:none;}
 								</table>
 							</td>
 						</tr>
+						
+						<tr>
+							<td colspan="2" align="left">
+								<table>
+									<tr>
+										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==3){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="return false" />01:30 pm</td>
+										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==4){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="return false" />04:30 pm</td>
+										<input type="hidden" id="time_identity" name="time_identity" />
+									</tr>
+								</table>
+							</td>
+						</tr>
 					</table>	
 				</fieldset>		
 			</td>
@@ -319,18 +331,13 @@ fieldset{  background:none;}
 								<input class="fullside" name="balance" id="balance"  readOnly="readOnly" value="<?php echo $this->detail['balance']?>" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
-						
-						<tr>
-							<td colspan="2" align="left">
-								<table>
-									<tr>
-										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==3){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="return false" />01:30 pm</td>
-										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==4){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="return false" />04:30 pm</td>
-										<input type="hidden" id="time_identity" name="time_identity" />
-									</tr>
-								</table>
+						<tr>	
+							<td><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td>
+								<input type="text" name="create_date" id="create_date" dojoType="dijit.form.DateTextBox" class="fullside" value="<?php echo date("Y-m-d",strtotime($this->row['create_date']));?>" constraints="{datePattern:'dd/MM/yyyy'}" />
 							</td>
 						</tr>
+						
 						
 					</table>	
 				</fieldset>		
@@ -496,6 +503,7 @@ fieldset{  background:none;}
 		dijit.byId("other").set('readOnly',true);
 		//dijit.byId("readmoney").set('readOnly',true);
 		dijit.byId("reciept_no").set('readOnly',true);
+		dijit.byId("create_date").set('readOnly',true);
 		
 	}
 

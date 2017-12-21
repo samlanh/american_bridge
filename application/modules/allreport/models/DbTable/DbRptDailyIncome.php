@@ -414,6 +414,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=3
 			    	AND spd.`type`=3
+			    	and s.type=4
 			    	and sp.is_void=0
 			    	$branch_id
     		";
@@ -523,6 +524,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=4
 			    	AND spd.`type`=5
+			    	and s.type=5
 			    	and sp.is_void=0
 			    	$branch_id
     		";

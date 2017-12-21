@@ -28,8 +28,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td><input dojoType="dijit.form.DateTextBox" class="fullside"  id="start_date" name="start_date" placeholder="Search....." value="<?php echo $this->search['start_date'];?>" type="text"></td>
-				<td><input dojoType="dijit.form.DateTextBox" class="fullside"  id="end_date" name="end_date"  value="<?php echo $this->search['end_date'];?>" type="text"></td>
+				<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	    <td> <?php echo $frm->getElement("end_date");?></td>
 				<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
 
 		 	</tr>

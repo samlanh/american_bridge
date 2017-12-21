@@ -394,6 +394,17 @@ fieldset{  background:none;}
 								</table>
 							</td>
 						</tr>
+						<tr>
+							<td colspan="2" align="left">
+								<table>
+									<tr>
+										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="getValue();" />01:30 pm</td>
+										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="getValue();" />04:30 pm</td>
+										<input type="hidden" id="time_identity" name="time_identity" />
+									</tr>
+								</table>
+							</td>
+						</tr>
 					</table>	
 				</fieldset>		
 			</td>
@@ -454,17 +465,13 @@ fieldset{  background:none;}
 								<input class="fullside" name="balance" id="balance"  readOnly="readOnly" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
-						<tr>
-							<td colspan="2" align="left">
-								<table>
-									<tr>
-										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="getValue();" />01:30 pm</td>
-										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="getValue();" />04:30 pm</td>
-										<input type="hidden" id="time_identity" name="time_identity" />
-									</tr>
-								</table>
+						<tr>	
+							<td><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td>
+								<input type="text" name="create_date" id="create_date" dojoType="dijit.form.DateTextBox" class="fullside" value="now" constraints="{datePattern:'dd/MM/yyyy'}" />
 							</td>
 						</tr>
+						
 						
 					</table>	
 				</fieldset>		

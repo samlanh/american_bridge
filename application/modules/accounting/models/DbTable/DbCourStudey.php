@@ -55,7 +55,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 								
 							'is_stu_new' 	=>1,
 							'stu_type'		=>3,
-							'create_date'	=>date("Y-m-d H:i:s"),
+							'create_date'	=>$data['create_date'],
 							'user_id'		=>$this->getUserId(),
 							'branch_id'		=>$data['branch'],
 							'reg_from'		=>1, // from accounting
@@ -169,7 +169,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'is_new'			=>$is_new,
 						
 						'student_type'		=>$data['student_type'],
-						'create_date'		=>date('Y-m-d'),
+						'create_date'		=>$data['create_date'],
 						'payfor_type'		=>2,//parttime
 						'user_id'			=>$this->getUserId(),
 						'branch_id'			=>$data['branch'],
@@ -816,7 +816,8 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				  spd.start_date,
 				  spd.validate,
 				  spd.is_start,
-				  spd.is_parent 
+				  spd.is_parent,
+				  sp.create_date 
 				FROM
 				  rms_student AS s,
 				  rms_student_payment AS sp,

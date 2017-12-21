@@ -62,6 +62,9 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 			$s_where[]="(SELECT name_kh FROM `rms_view` WHERE type=2 AND key_code = sex) LIKE '%{$s_search}%'";
 			$where .=' AND ( '.implode(' OR ',$s_where).')';
 		}
+		if(!empty($search['branch'])){
+			$where.=" AND s.branch_id=".$search['branch'];
+		}
 		if(!empty($search['study_year'])){
 			$where.=" AND s.academic_year=".$search['study_year'];
 		}
@@ -360,7 +363,7 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 	
 	function getAllYear(){
 		$db = $this->getAdapter();
-		$sql = "select id,CONCAT(from_academic,'-',to_academic,'(',generation,')')as years,(select name_en from rms_view where type=7 and key_code=time) as time from rms_tuitionfee ";
+		$sql = "select id,CONCAT(from_academic,'-',to_academic,'(',(select branch_namekh from rms_branch where br_id = branch_id),')')as years,(select name_en from rms_view where type=7 and key_code=time) as time from rms_tuitionfee ";
 		$group = " group by from_academic,to_academic,generation,time ";
 		return $db->fetchAll($sql);
 	}

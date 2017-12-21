@@ -229,6 +229,17 @@ fieldset{  background:none;}
 								</table>
 							</td>
 						</tr>
+						<tr>
+							<td colspan="2" align="left">
+								<table>
+									<tr>
+										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="getValue();" />01:30 pm</td>
+										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="getValue();" />04:30 pm</td>
+										<input type="hidden" id="time_identity" name="time_identity" />
+									</tr>
+								</table>
+							</td>
+						</tr>
 					</table>	
 				</fieldset>		
 			</td>
@@ -289,17 +300,7 @@ fieldset{  background:none;}
 								<input class="fullside" name="balance" id="balance"  readOnly="readOnly" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
-						<tr>
-							<td colspan="2" align="left">
-								<table>
-									<tr>
-										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="getValue();" />01:30 pm</td>
-										<td><input type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="getValue();" />04:30 pm</td>
-										<input type="hidden" id="time_identity" name="time_identity" />
-									</tr>
-								</table>
-							</td>
-						</tr>
+						
 					</table>	
 				</fieldset>		
 			</td>
@@ -1069,7 +1070,7 @@ function getMonthByNumber(m){
 								<td width="25%" align="center">ប្រធានគណនេយ្យ/Accounting Manager</td>
 								<td width="25%" align="center">អ្នកបង់ប្រាក់/Payer</td>
 								<td width="25%" align="center">បេឡា/Cashier</td>
-								<td width="25%" align="center">អ្នកផ្តល់ព័ត៌មាន​/Receiptionist</td>
+								<td width="25%" align="center">អ្នកផ្តល់ពត៌មាន​/Receiptionist</td>
 							</tr>
 							
 							
@@ -1116,17 +1117,17 @@ function getMonthByNumber(m){
 										</tr>
 										<tr>
 											<td>
-												<div>- ការបង់ប្រាក់យឺតចាប៉ពី........ថ្ងៃ សាលានឹងពិន័យស្មើទឹកប្រាក់ ប្រាំដុល្លាមួយថ្ងៃ/Late payment after......days of the valid date will be fined 5$ per day.</div>
+												<div>- ការបង់ប្រាក់យឺតចាប់ពី........ថ្ងៃ សាលានឹងពិន័យស្មើទឹកប្រាក់ ប្រាំដុល្លាមួយថ្ងៃ/Late payment after......days of the valid date will be fined 5$ per day.</div>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<div>- ប្រា់ដែលបង់ហើយមិនអាចដកវិញបានឡើយ/Your payment is non-returnable.</div>
+												<div>- ប្រាក់ដែលបង់ហើយមិនអាចដកវិញបានឡើយ/Your payment is non-returnable.</div>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<div>- ប្រា់ដែលបានបង់មិនអាចផ្ទេរអោយអ្នកផ្សេងបានឡើយ/Your payment is not transferable.</div>
+												<div>- ប្រាក់ដែលបានបង់មិនអាចផ្ទេរអោយអ្នកផ្សេងបានឡើយ/Your payment is not transferable.</div>
 											</td>
 										</tr>
 										<tr>
@@ -1155,7 +1156,7 @@ function getMonthByNumber(m){
 									</table>
 								</td>
 								<td width="30%" valign="top" align="center"> 
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office <br />
+									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
 									- 092 36 36 42 <br />
 									- 087 53 99 99 <br />
 									- 023 99 99 98 <br />

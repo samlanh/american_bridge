@@ -149,6 +149,14 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 		$opt=$reciept->getRecieptNo(1,3);
 		$_invoice_no->setValue($opt);
 		
+		$create_date= new Zend_Dojo_Form_Element_DateTextBox('create_date');
+		$create_date->setAttribs(array(
+				'dojoType'=>"dijit.form.DateTextBox",
+				'class'=>'fullside',
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				));
+		$create_date->setValue(date("Y-m-d"));
+		
 		$generation = new Zend_Dojo_Form_Element_FilteringSelect('study_year');
 		$generation->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',
 				//'onkeyup'=>'CheckReceipt()'
@@ -459,9 +467,11 @@ Class Accounting_Form_FrmRegister extends Zend_Dojo_Form {
 			$old_studens->setValue($data['stu_id']);
 			$start_date->setValue($data['start_date']);
 			$end_date->setValue($data['validate']);
+			$create_date->setValue(date("Y-m-d",strtotime($data['create_date'])));
 		}
+		//echo $data['create_date'];
 		$this->addElements(array(
-			  $material_fee,$parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
+			  $create_date,$material_fee,$parent,$old_studens,$old_studen_name,$_studname,$student_type,$ids,$id,$generation,$char_price,$end_date,$start_date,$not,$books,$addmin_fee,$remaining,$total,$_invoice_no, $_pay_date, $_khname, $_enname,$_studid, $_sex,$_dob,$_degree,$metion,
 			  $_phone,$_dept,$_major,$_batch,$_year,$_session,$_term,$_fee,$_disc_fix,$_disc,$_paid,$_paid_kh,$_remark, ));
 		
 		return $this;

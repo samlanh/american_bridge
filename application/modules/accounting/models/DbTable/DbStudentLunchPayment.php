@@ -60,7 +60,7 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 				'stu_id'		=>$data['student_name_new'],
 				'stu_code'		=>$new_lunch_id,
 				'service_id'	=>$data['service'],
-				'create_date'	=>date('Y-m-d'),
+				'create_date'	=>$data['create_date'],
 				'reg_from'		=>1 , // from accounting
 				'is_new'		=>1,
 				);
@@ -169,7 +169,7 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 					'is_new'			=>$is_new,
 					'student_type'		=>$data['student_type'],
 					'payfor_type'		=>4 ,// lunch payment 
-					'create_date'		=>date("Y-m-d H:i:s"),
+					'create_date'		=>$data['create_date'],
 					'user_id'			=>$this->getUserId(),
 					'branch_id'			=>$data['branch'],
 					'reg_from'			=>1 ,

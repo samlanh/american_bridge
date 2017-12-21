@@ -234,8 +234,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$data=$this->getRequest()->getPost();
 				$search = array(
 						'txtsearch' => $data['txtsearch'],
-						'start_date'=> $data['from_date'],
-                        'end_date'=>$data['to_date'],
+						'start_date'=> $data['start_date'],
+                        'end_date'=>$data['end_date'],
 						'service'=>$data['service'],
 						'status'=>$data['status'],
 						'payfor_type'=>$data['payfor_type'],
@@ -1103,6 +1103,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				);
 			}
 	
+			
 			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
 			$this->view->rs = $db->getDailyIncomeEnglishFulltime($search);
 	
@@ -1378,6 +1379,9 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$this->view->rs = $db->getAllResultIncome($search);
 			
 			$this->view->rent_payment = $db->getAllRentPayment($search);
+			
+			$this->view->rent_payment_currency = $db->getAllRentPaymentCurrency($search,7);//7=payfor_type(canteen)
+			
 			$this->view->other_income = $db->getAllOtherIncome($search);
 			
 			$this->view->search = $search;
@@ -1819,5 +1823,96 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		}
 	}
 	
+	
+	function rptInvoiceParttimeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'branch'	=>'',
+						'degree_gep'=>'',
+						'grade_gep'	=>'',
+						'start_date'=>date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptInvoice();
+			$abc = $this->view->row = $db->getAllInvoiceParttime($search); // 4=payfor_type(lunch)
+		
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+		
+			$this->view->search = $search;
+		
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	function rptInvoiceTransportAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'branch'	=>'',
+						'transport_service'=>'',
+						'start_date'=>date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptInvoice();
+			$abc = $this->view->row = $db->getAllInvoiceTransport($search); // 4=payfor_type(lunch)
+	
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
+	
+	function rptParkingPaymentAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$search=$this->getRequest()->getPost();
+			}else{
+				$search=array(
+						'txtsearch' =>'',
+						'branch'	=>'',
+						'transport_service'=>'',
+						'start_date'=>date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
+				);
+			}
+			$db = new Allreport_Model_DbTable_DbRptParkingPayment();
+			$abc = $this->view->row = $db->getAllInvoiceTransport($search); // 4=payfor_type(lunch)
+	
+			$form=new Registrar_Form_FrmSearchInfor();
+			$form->FrmSearchRegister();
+			Application_Model_Decorator::removeAllDecorator($form);
+			$this->view->form_search=$form;
+	
+			$this->view->search = $search;
+	
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+	}
 	
 }

@@ -61,7 +61,7 @@ function addStudentServicePayment($data){
 				'stu_id'=>$data['student_name_new'],
 				'stu_code'=>$new_car_id,
 				'service_id'=>$data['service'],
-				'create_date'=>date('Y-m-d'),
+				'create_date'=>$data['create_date'],
 				'reg_from'			=>1,
 				'is_new'=>1,
 				);
@@ -172,7 +172,7 @@ function addStudentServicePayment($data){
 					'is_new'			=>$is_new,
 					'student_type'		=>$data['student_type'],
 					'payfor_type'		=>3 , // for service
-					'create_date'		=>date("Y-m-d H:i:s"),
+					'create_date'		=>$data['create_date'],
 					'user_id'			=>$this->getUserId(),
 					
 					'branch_id'			=>$data['branch'],

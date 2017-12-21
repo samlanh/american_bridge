@@ -39,12 +39,8 @@
 					<option value="4" <?php if($this->search['payfor_type']==4){echo "selected='selected'";}?>>Lunch and Stay</option>
 				</select>
 			</td>
-			<td>
-				<input class="fullside" name="from_date" id="from_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['start_date'];?>" type="text">
-			</td>
-			<td>
-				<input class="fullside" name="to_date" id="to_date" dojoType="dijit.form.DateTextBox"  value="<?php echo $this->search['end_date'];?>" type="text">
-			</td>
+			<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
 			<td>
 				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
 			</td>

@@ -113,6 +113,11 @@
 									<?php }}?>
 								</select>
 							</td>
+							
+							<td align="right" ><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td>
+								<input type="text" name="create_date" id="create_date" dojoType="dijit.form.DateTextBox" class="fullside" value="now" constraints="{datePattern:'dd/MM/yyyy'}" />
+							</td>
 						</tr>
 						
 						<tr>
@@ -157,7 +162,7 @@
 						<tr>
 							<td colspan="2">
 								<input type="hidden" id="identity" name="identity" />
-								<input type="text" class="fullside" name="readmoney" readonly="readonly" id="readmoney" dojoType="dijit.form.TextBox" />
+								<input type="hidden" class="fullside" name="readmoney" readonly="readonly" id="readmoney" dojoType="dijit.form.TextBox" />
 							</td>
 							<td colspan="2" align="right">
 								<table style="width:80%;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >

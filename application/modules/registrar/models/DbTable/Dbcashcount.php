@@ -11,12 +11,25 @@ class Registrar_Model_DbTable_Dbcashcount extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('authstu');
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;
+		$where = " And ".$from_date." AND ".$to_date;
 	
-		$sql=" SELECT id,input_date,total_dollar,total_reil,exchange_rate,dollar_fromreil,tototal_all,note,
-		(select first_name from rms_users where rms_users.id = rms_cashcount.user_id LIMIT 1) as user,
-		 (select name_en from rms_view where type=1 and key_code = rms_cashcount.status LIMIT 1) as status
-		 FROM rms_cashcount ";
+		$sql=" SELECT 
+					id,
+					input_date,
+					total_dollar,
+					total_reil,
+					exchange_rate,
+					dollar_fromreil,
+					tototal_all,
+					note,
+					(select first_name from rms_users where rms_users.id = rms_cashcount.user_id LIMIT 1) as user,
+		 			(select name_en from rms_view where type=1 and key_code = rms_cashcount.status LIMIT 1) as status
+		 		FROM 
+		 			rms_cashcount 
+		 		where 
+		 			status =1 
+		
+			";
 	
 		if (!empty($search['adv_search'])){
 			$s_where = array();
@@ -26,13 +39,14 @@ class Registrar_Model_DbTable_Dbcashcount extends Zend_Db_Table_Abstract
 			$s_where[] = " invoice LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-		if($search['branch_id']>0){
-			$where.= " AND user_id = ".$search['branch_id'];
+		if($search['branch']>0){
+			$where.= " AND branch_id = ".$search['branch'];
 		}
 		if($search['user']>0){
 			$where.= " AND user_id = ".$search['user'];
 		}
 		$order=" order by id desc ";
+		//echo $sql.$where.$order;
 		return $db->fetchAll($sql.$where.$order);
 	}
 	function addCashCount($data){

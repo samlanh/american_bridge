@@ -916,16 +916,34 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
    
     function getAllYearsProgramFee(){
     	$db = $this->getAdapter();
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('branch_id');
+    	
     	$sql = "SELECT id,CONCAT(from_academic,'-',to_academic,'(',(SELECT branch_namekh FROM rms_branch WHERE br_id = branch_id),')') AS years,(select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee
-    	        WHERE `status`=1 GROUP BY from_academic,to_academic,generation,time,branch_id ";
+    	        WHERE `status`=1 $branch_id GROUP BY from_academic,to_academic,generation,time,branch_id ";
     	$order=' ORDER BY id DESC';
     	return $db->fetchAll($sql.$order);
     }
     
     function getAllYears(){
     	$db = $this->getAdapter();
-    	$sql = "SELECT id,CONCAT(from_academic,'-',to_academic,'(',(SELECT branch_namekh FROM rms_branch WHERE br_id = branch_id),')') AS years , (select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee WHERE `status`=1 
-    	        GROUP BY from_academic,to_academic,generation,time,branch_id";
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('branch_id');
+    	
+    	$sql = "SELECT 
+    				id,CONCAT(from_academic,'-',to_academic,'(',(SELECT branch_namekh FROM rms_branch WHERE br_id = branch_id),')') AS years , (select name_en from rms_view where type=7 and key_code=time) as time FROM rms_tuitionfee 
+    			WHERE 
+    				`status`=1 
+    	        	$branch_id
+    			GROUP BY 
+    				from_academic,
+    				to_academic,
+    				generation,
+    				time,
+    				branch_id
+    	";
     	$order=' ORDER BY id DESC';
     	return $db->fetchAll($sql.$order);
     }
@@ -964,7 +982,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	}
     	return $pre.$new_acc_no;
     }
-    public function getRecieptNo($type,$branch){
+    public function getRecieptNo($payfor_type,$branch){
     	$db = $this->getAdapter();
     	
     	if($branch>0){
@@ -973,32 +991,74 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     		$branch_id = $this->getBranchId();
     	}
     	
-    	$sql="SELECT count(id) FROM rms_student_payment where payfor_type = $type and branch_id = $branch_id LIMIT 1 ";
+    	$sql="SELECT count(id) FROM rms_student_payment where payfor_type = $payfor_type and branch_id = $branch_id LIMIT 1 ";
     	$acc_no = $db->fetchOne($sql);
     	$new_acc_no= (int)$acc_no+1;
     	$acc_no= strlen((int)$acc_no+1);
     	
     	$pre="";
     	
-    	if($type==1){
+    	if($payfor_type==1){
     		$pre="K";
     	}
-    	else if($type==6){
+    	else if($payfor_type==6){
     		$pre="FE";
     	}
-    	else if($type==2){
+    	else if($payfor_type==2){
     		$pre="PE";
     	}
-    	else if($type==3){
+    	else if($payfor_type==3){
     		$pre="TR";
     	}
-    	else if($type==4){
+    	else if($payfor_type==4){
     		$pre="F";
     	}
-    	else if($type==5){
+    	else if($payfor_type==5){
     		$pre="";
     	}
     	
+    	for($i = $acc_no;$i<6;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
+    
+    
+    public function getInvoiceNo($payfor_type,$branch){
+    	$db = $this->getAdapter();
+    	 
+    	if($branch>0){
+    		$branch_id = $branch;
+    	}else{
+    		$branch_id = $this->getBranchId();
+    	}
+    	 
+    	$sql="SELECT count(id) FROM rms_invoice where payfor_type = $payfor_type and branch_id = $branch_id LIMIT 1 ";
+    	$acc_no = $db->fetchOne($sql);
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	 
+    	$pre="";
+    	 
+    	if($payfor_type==1){
+    		$pre="K";
+    	}
+    	else if($payfor_type==6){
+    		$pre="FE";
+    	}
+    	else if($payfor_type==2){
+    		$pre="Inc-PE";
+    	}
+    	else if($payfor_type==3){
+    		$pre="Inc-TR";
+    	}
+    	else if($payfor_type==4){
+    		$pre="F";
+    	}
+    	else if($payfor_type==5){
+    		$pre="";
+    	}
+    	 
     	for($i = $acc_no;$i<6;$i++){
     		$pre.='0';
     	}

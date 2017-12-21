@@ -1401,7 +1401,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 		    	";
     
     	$where = " ";
-    	$order=" ORDER BY sp.`student_id` ASC,sp.id ASC  ";
+    	$order=" ORDER BY sp.`student_id` ASC,sp.id ASC,sp.create_date ASC  ";
     
     
     	if(empty($search)){
@@ -1436,7 +1436,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
-    	
+    	//echo $sql.$where.$order;exit();
     	return $db->fetchAll($sql.$where.$order);
     
     }

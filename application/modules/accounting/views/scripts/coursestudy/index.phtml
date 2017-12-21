@@ -20,8 +20,8 @@
 	   	  </tr>
 	   	  <tr>
 	   	  	   <td ><?php echo $formList->showCopyBuntton($url_copy);?></td>
-	   	       <td><input dojoType="dijit.form.DateTextBox" class="fullside"  id="start_date" name="start_date" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $this->adv_search['start_date'];?>"  type="text"></td>
-	           <td><input dojoType="dijit.form.DateTextBox"  class="fullside" id="end_date" name="end_date"     constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $this->adv_search['end_date'];?>" type="text"></td>
+	   	  	   <td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	   <td> <?php echo $frm->getElement("end_date");?></td>
 			   <td> <?php echo $frm->getElement("user");?></td>
 			   <td> <button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
 	   	  </tr>

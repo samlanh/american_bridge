@@ -216,7 +216,7 @@ var url_getstuno = '<?php echo $this->url(array('module'=>'foundation','controll
 									<td ><?php echo $tr->translate("NATIONALITY");?></td>
 									<td><input class="fullside" tabindex="4" dojoType="dijit.form.TextBox"  id="studen_national" name="studen_national" value="" type="text" ></td>
 									<td title="ថ្ងៃខែឆ្នាំកំនើត"><?php echo $tr->translate("DOB");?></td>
-									<td><input class="fullside"  tabindex="5"  name="date_of_birth" id="date_of_birth" dojoType="dijit.form.DateTextBox"  value="<?php echo date("2000-m-d")?>" type="text"/></td>
+									<td><input class="fullside"  tabindex="5" constraints="{datePattern:'dd/MM/yyyy'}" name="date_of_birth" id="date_of_birth" dojoType="dijit.form.DateTextBox"  value="<?php echo date("2000-m-d")?>" type="text"/></td>
 									<td title="លេខទូរស័ព្ទ"><?php echo $tr->translate("PHONE");?></td>
 									<td><input class="fullside"  tabindex="6" dojoType="dijit.form.ValidationTextBox"  id="st_phone" name="st_phone" value="" type="text" ></td>
 					      		</tr>

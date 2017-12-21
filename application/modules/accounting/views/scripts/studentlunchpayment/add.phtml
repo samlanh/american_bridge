@@ -415,8 +415,6 @@ fieldset{  background:none;}
 							<td> 
 								<input class="fullside" name="total_payment" id="total_payment" readOnly="readOnly" dojoType="dijit.form.TextBox" type="text" >
 							</td>
-							
-							
 						</tr>
 						<tr>
 						
@@ -431,7 +429,12 @@ fieldset{  background:none;}
 								<input class="fullside" name="balance" id="balance"  readOnly="readOnly" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
-						
+						<tr>	
+							<td><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td>
+								<input type="text" name="create_date" id="create_date" dojoType="dijit.form.DateTextBox" class="fullside" value="now" constraints="{datePattern:'dd/MM/yyyy'}" />
+							</td>
+						</tr>
 					</table>	
 				</fieldset>		
 			</td>

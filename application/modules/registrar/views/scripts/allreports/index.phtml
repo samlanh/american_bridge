@@ -23,8 +23,8 @@
 	<tr> 
 		 <td><input dojoType="dijit.form.TextBox" class="fullside" id="adv_search" name="adv_search" value="<?php echo $this->search['adv_search']?>" placeholder="Search" type="text" ></td>
 		 <td> <?php echo $frm->getElement("service_and_product");?></td>
-		 <td> <input dojoType="dijit.form.DateTextBox" class="fullside" onchange="CalculateDate();" id="start_date" name="start_date" value="<?php  echo $this->search['start_date']; ?>"  type="text"></td>
-	     <td><input dojoType="dijit.form.DateTextBox" required="true" class="fullside" id="end_date" name="end_date" value="<?php echo $this->search['end_date'];?>" type="text"></td>
+		 <td> <?php echo $frm->getElement("start_date");?></td>
+	   	 <td> <?php echo $frm->getElement("end_date");?></td>
 		 <td> <?php echo $frm->getElement("user");?></td>
 	</tr>
 	

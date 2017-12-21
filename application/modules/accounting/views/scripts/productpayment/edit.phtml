@@ -46,7 +46,12 @@ fieldset{  background:none;}
 		<fieldset>
 					<legend align="center"><strong style="font-size: 18px;"><?php echo $tr->translate("EDIT_STUDENT_PRODUCT_PAYMENT");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" >
-						
+						<tr>
+							<td colspan="3"></td>
+							<td >
+								<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
+							</td>
+						</tr>
 						<tr>
 							<td width="12%"><?php echo $tr->translate("BRANCH");?></td>
 							<td>
@@ -57,10 +62,11 @@ fieldset{  background:none;}
 									<?php }}?>
 								</select>
 							</td>
-							<td></td>		
-							<td >
-								<input type="checkbox" value="1" name="is_void" id="is_void" <?php if($this->row['is_void']==1){echo 'onclick="return false;"';}?> dojoType="dijit.form.CheckBox"  /> Void
-							</td>
+							<td align="right" ><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td>
+								<input type="text" name="create_date" id="create_date" dojoType="dijit.form.DateTextBox" readonly class="fullside" value="now" constraints="{datePattern:'dd/MM/yyyy'}" />
+							</td>		
+							
 						</tr>
 						
 						<tr>

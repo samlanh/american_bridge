@@ -5,10 +5,10 @@
 ?>	
 <title><?php echo $tr->translate('របាយការណ៍លទ្ធផលចំណូល');?></title>
 	<form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-result-income')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-		<table width="95%">
+		<table width="100%">
 		    <tr>
-		    	<td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->search['start_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
-		    	<td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->search['end_date'];?>" dojoType="dijit.form.DateTextBox" /></td>
+		    	<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	    <td> <?php echo $frm->getElement("end_date");?></td>
 		    	<td><?php echo $frm->getElement('branch');?></td>
 		    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 		    </tr>

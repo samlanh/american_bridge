@@ -12,12 +12,8 @@
 	    	<td>
 	    		<?php echo $frm->getElement('branch');?>
 	    	</td>
-	    	<td>
-	    		<input type="text" name="start_date" id="start_date" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $this->search['start_date']?>" class="fullside" dojoType="dijit.form.DateTextBox" /> 
-	    	</td>
-	    	<td>
-	    		<input type="text" name="end_date" id="end_date" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo $this->search['end_date']?>" class="fullside" dojoType="dijit.form.DateTextBox" />
-	    	</td>
+	    	<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
 	    	<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
@@ -39,28 +35,29 @@
 </style>
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
-<div id="divPrint">
-<style>
-	table{ page-break-inside:auto }
-    tr{ page-break-inside:avoid; page-break-after:auto }
-	#header {
-		display: table-header-group;
-		page-break-inside:avoid; page-break-after:auto;
-	}
-	.bor{
-		border-right: 1px solid #000;	
-		border-bottom: 1px solid #000;
-		font-size:13px;
-	}
-	.bor_r{
-		border-right: 1px solid #000;	
-		font-size:13px;
-	}
-	.padd{
-		padding: 3px;	
-	}
-	#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
-</style>
+	<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'product')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<div id="divPrint">
+		<style>
+			table{ page-break-inside:auto }
+		    tr{ page-break-inside:avoid; page-break-after:auto }
+			#header {
+				display: table-header-group;
+				page-break-inside:avoid; page-break-after:auto;
+			}
+			.bor{
+				border-right: 1px solid #000;	
+				border-bottom: 1px solid #000;
+				font-size:13px;
+			}
+			.bor_r{
+				border-right: 1px solid #000;	
+				font-size:13px;
+			}
+			.padd{
+				padding: 3px;	
+			}
+			#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		</style>
 
 	<?php 
 		$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
@@ -230,7 +227,7 @@
 										</td>
 										<td style="border: 1px solid #000;">
 											<div id="input_usd">
-												<input type="text" name="amount_usd" id="amount_usd" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
+												<input type="text" name="amount_usd" id="amount_usd" value="0" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
 											</div>
 											<div id="hide_amount_usd">
 												<label id="lb_amount_usd"></label>
@@ -240,6 +237,11 @@
 									<tr>
 										<td>
 											Amount in Riel
+											<input type="hidden" name="total_amount" id="total_amount" value="<?php echo number_format($grand_total,2);?>" dojoType="dijit.form.TextBox" />
+											<input type="hidden" name="amount_riel" id="amount_riel" dojoType="dijit.form.TextBox" />
+											<input type="hidden" name="shift_id" id="shift_id" value="<?php echo $this->search['shift'];?>" dojoType="dijit.form.TextBox" />
+											<input type="hidden" name="branch_id" id="branch_id" value="<?php echo $this->search['branch'];?>" dojoType="dijit.form.TextBox" />
+											<input type="hidden" name="user_id" id="user_id" value="<?php echo $this->search['user'];?>" dojoType="dijit.form.TextBox" />
 										</td>
 										<td style="border: 1px solid #000;">
 											<label id="lb_amount_reil"></label>
@@ -314,11 +316,25 @@
 				</td>
 			</tr>
 		</table>
-	</div>		
+	</div>	
+		<table width="100%">
+			<tr>
+				<td align="center">
+					<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />	
+						
+					<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+						
+				</td>
+			</tr>
+		</table>	
+	</form>
 </div>
 <script type="text/javascript">
 dojo.ready(function(){
 	document.getElementById('hide_amount_usd').style.display="none";
+
+	calculateRemainReil();
 });
 					
 function calculateRemainReil(){
@@ -327,10 +343,16 @@ function calculateRemainReil(){
 	exchange_rate = '<?php echo $this->rate?>';
 	total_reil = (total_amount - amount_usd)*exchange_rate;
 	//alert(total_reil);
-	var total_reil = total_reil.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+	var result = 100 * Math.ceil(total_reil / 100);
 	
-	dojo.byId("lb_amount_usd").innerHTML = "&nbsp;$ " + amount_usd;
-	dojo.byId("lb_amount_reil").innerHTML = "&nbsp;៛ " + total_reil;
+	//alert(rounded);
+	var total_reil = result.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+	dijit.byId('amount_riel').attr('value',result);
+	
+	dojo.byId("lb_amount_usd").innerHTML = " $ " + amount_usd;
+	dojo.byId("lb_amount_reil").innerHTML = " ៛ " + total_reil;
 	
 }
 					

@@ -260,6 +260,17 @@ fieldset{  background:none;}
 								</table>
 							</td>
 						</tr>
+						<tr>
+							<td colspan="2" align="left">
+								<table>
+									<tr>
+										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==3){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="return false" />01:30 pm</td>
+										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==4){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="return false" />04:30 pm</td>
+										<input type="hidden" id="time_identity" name="time_identity" />
+									</tr>
+								</table>
+							</td>
+						</tr>
 					</table>	
 				</fieldset>		
 			</td>
@@ -320,22 +331,6 @@ fieldset{  background:none;}
 								<input class="fullside" name="balance" id="balance"  readOnly="readOnly" value="<?php echo $this->detail['balance']?>" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
-						
-						
-						
-						<tr>
-							<td colspan="2" align="left">
-								<table>
-									<tr>
-										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==3){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="01:30 pm" id="time3" name="time3" onclick="return false" />01:30 pm</td>
-										<td><input <?php if(!empty($time_id)){foreach($time_id as $time){if($time==4){echo "checked";}}}?> type="checkBox" dojoType="dijit.form.CheckBox" value="04:30 pm" id="time4" name="time4" onclick="return false" />04:30 pm</td>
-										<input type="hidden" id="time_identity" name="time_identity" />
-									</tr>
-								</table>
-							</td>
-						</tr>
-						
-						
 						
 					</table>	
 				</fieldset>		
@@ -1347,7 +1342,7 @@ function printSubmit(){
 						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-15px;font-weight:bold;line-height: 20px;">
 							<tr>
 								<td width="25%" align="left" style="font-size:11px;">
-									<div style="font-size:15px;">Branch 17 </div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+									<div style="font-size:15px;">Branch 6 (ចំការដូង​)</div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
 								</td>
 								<td width="50%" align="center">
 									<img style="width: 20%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
@@ -1600,7 +1595,7 @@ function printSubmit(){
 								<td width="25%" align="center">ប្រធានគណនេយ្យ/Accounting Manager</td>
 								<td width="25%" align="center">អ្នកបង់ប្រាក់/Payer</td>
 								<td width="25%" align="center">បេឡា/Cashier</td>
-								<td width="25%" align="center">អ្នកផ្តល់ព័ត៌មាន​/Receiptionist</td>
+								<td width="25%" align="center">អ្នកផ្តល់ពត៌មាន​/Receiptionist</td>
 							</tr>
 							
 							
@@ -1647,17 +1642,17 @@ function printSubmit(){
 										</tr>
 										<tr>
 											<td>
-												<div>- ការបង់ប្រាក់យឺតចាប៉ពី........ថ្ងៃ សាលានឹងពិន័យស្មើទឹកប្រាក់ ប្រាំដុល្លាមួយថ្ងៃ/Late payment after......days of the valid date will be fined 5$ per day.</div>
+												<div>- ការបង់ប្រាក់យឺតចាប់ពី........ថ្ងៃ សាលានឹងពិន័យស្មើទឹកប្រាក់ ប្រាំដុល្លាមួយថ្ងៃ/Late payment after......days of the valid date will be fined 5$ per day.</div>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<div>- ប្រា់ដែលបង់ហើយមិនអាចដកវិញបានឡើយ/Your payment is non-returnable.</div>
+												<div>- ប្រាក់ដែលបង់ហើយមិនអាចដកវិញបានឡើយ/Your payment is non-returnable.</div>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<div>- ប្រា់ដែលបានបង់មិនអាចផ្ទេរអោយអ្នកផ្សេងបានឡើយ/Your payment is not transferable.</div>
+												<div>- ប្រាក់ដែលបានបង់មិនអាចផ្ទេរអោយអ្នកផ្សេងបានឡើយ/Your payment is not transferable.</div>
 											</td>
 										</tr>
 										<tr>
@@ -1686,10 +1681,10 @@ function printSubmit(){
 									</table>
 								</td>
 								<td width="30%" valign="top" align="center"> 
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office <br />
-									- 085 591 007 <br />
-									- 069 25 6666 <br />
-									- 097 81 88888 <br />
+									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
+									- 092 36 36 42 <br />
+									- 087 53 99 99 <br />
+									- 023 99 99 98 <br />
 								</td>
 								
 							</tr>

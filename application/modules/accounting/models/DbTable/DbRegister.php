@@ -142,7 +142,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					
 							'is_stu_new' 	=>1,
 							'stu_type'		=>$stu_type,
-							'create_date'	=>date('Y-m-d H:i:s'),
+							'create_date'	=>$data['create_date'],
 							'user_id'		=>$this->getUserId(),
 							'branch_id'		=>$data['branch'],
 							'reg_from'		=>1,
@@ -261,7 +261,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						'grand_total_balance'			=>$data['total_balance'],
 						
 						'student_type'	=>$data['student_type'],
-						'create_date'	=>date('Y-m-d H:i:s'),
+						'create_date'	=>$data['create_date'],
 						'payfor_type'	=>$payfor_type,
 						
 						'is_new'		=>$is_new,
@@ -876,7 +876,8 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  spd.start_date,
 				  spd.validate,
 				  spd.is_start,
-				  spd.is_parent 
+				  spd.is_parent,
+				  sp.create_date 
 				FROM
 				  rms_student AS s,
 				  rms_student_payment AS sp,

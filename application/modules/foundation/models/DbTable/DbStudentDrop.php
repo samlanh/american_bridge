@@ -9,14 +9,22 @@ class Foundation_Model_DbTable_DbStudentDrop extends Zend_Db_Table_Abstract
 	}
 	public function getAllStudentID(){
 		$_db = $this->getAdapter();
-		$sql = "SELECT stu_id,stu_code FROM `rms_student` where status = 1 and is_subspend=0 ";
+		
+		$db=new Application_Model_DbTable_DbGlobal();
+		$branch_id = $db->getAccessPermission();
+		
+		$sql = "SELECT stu_id,stu_code FROM `rms_student` where status = 1 and is_subspend=0 $branch_id ";
 		$orderby = " ORDER BY stu_code ";
 		return $_db->fetchAll($sql.$orderby);		
 	}
 	
 	function getAllStudentName(){
 		$_db = $this->getAdapter();
-		$sql = "SELECT stu_id,CONCAT(stu_khname,'-',stu_enname) as name FROM `rms_student` where status = 1 and is_subspend=0 ";
+		
+		$db=new Application_Model_DbTable_DbGlobal();
+		$branch_id = $db->getAccessPermission();
+		
+		$sql = "SELECT stu_id,CONCAT(stu_khname,'-',stu_enname) as name FROM `rms_student` where status = 1 and is_subspend=0 $branch_id ";
 		$orderby = " ORDER BY stu_code ";
 		return $_db->fetchAll($sql.$orderby);
 	}

@@ -16,7 +16,7 @@ class Registrar_CalculatorController extends Zend_Controller_Action {
 			else{
 				$search = array(
 						'adv_search' => '',
-						'branch_id'=>0,
+						'branch'=>0,
 						'user'=>0,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'));
@@ -31,6 +31,7 @@ class Registrar_CalculatorController extends Zend_Controller_Action {
 			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('input_date'=>$link,'total_dollar'=>$link,'total_reil'=>$link,'exchange_rate'=>$link,'dollar_fromreil'=>$link));
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
 		}
 		$form=new Registrar_Form_FrmSearchInfor();
 		$form->FrmSearchRegister();

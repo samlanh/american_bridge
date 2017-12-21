@@ -67,7 +67,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
 		$db_user=new Application_Model_DbTable_DbUsers();
 		 
 		if ($db_user->getMaxUser() > self::MAX_USER) {
-			Application_Form_FrmMessage::Sucessfull('អ្នក​ប្រើ​ប្រាស់​របស់​អ្នក​បាន​ត្រឹម​តែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL);
+			Application_Form_FrmMessage::Sucessfull('អ្នក​ប្រើ​ប្រាស់​របស់​អ្នក​បាន​ត្រឹម​តែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL. '/rsvacl/user/index');
 		}
 		$this->view->user_typelist =$this->user_typelist;
 	
@@ -76,7 +76,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
 				
 			try {
 				$db = $db_user->insertUser($userdata);
-				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL . '/user/add');
 			} catch (Exception $e) {
 				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}

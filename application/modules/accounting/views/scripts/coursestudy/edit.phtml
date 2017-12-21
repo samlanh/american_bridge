@@ -279,6 +279,7 @@
 		dijit.byId("remaining").set('readOnly',true);
 		dijit.byId("readmoney").set('readOnly',true);
 		dijit.byId("reciept_no").set('readOnly',true);
+		dijit.byId("create_date").set('readOnly',true);
 	}
 	
 	
@@ -504,7 +505,10 @@ fieldset{  background:none;}
 							<td><?php echo $tr->translate("BALANCE");?></td>
 							<td><?php echo $register->getElement('remaining');;?></td>
 						</tr>
-						
+						<tr>	
+							<td><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td><?php echo $register->getElement('create_date');;?></td>
+						</tr>
 					</table>	
 				</fieldset>		
 			</td>

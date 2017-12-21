@@ -65,7 +65,7 @@ class Accounting_Model_DbTable_DbProductPayment extends Zend_Db_Table_Abstract
 					'grand_total_paid_amount'		=>$data['grand_total'],
 					'grand_total_balance'			=>0,
 					
-					'create_date'		=>date("Y-m-d H:i:s"),
+					'create_date'	=>$data['create_date'],
 					'user_id'			=>$this->getUserId(),
 				);
 			$id = $this->insert($arr);

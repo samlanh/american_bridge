@@ -46,21 +46,21 @@ class Accounting_BookAndUniformController extends Zend_Controller_Action {
 	}
 	public function addAction(){
 		if($this->getRequest()->isPost()){
-				try{
-					$_data = $this->getRequest()->getPost();
-					$_model = new Accounting_Model_DbTable_DbBookAndUniform();
-					$_model->addservice($_data);
-					if(isset($_data['save_close'])){
-						Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/bookanduniform");
-					}else{
-						Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/bookanduniform/add");
-					}
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-				}catch(Exception $e){
-					Application_Form_FrmMessage::message("INSERT_FAIL");
-					Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			try{
+				$_data = $this->getRequest()->getPost();
+				$_model = new Accounting_Model_DbTable_DbBookAndUniform();
+				$_model->addservice($_data);
+				if(isset($_data['save_close'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/bookanduniform");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/bookanduniform/add");
 				}
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
+		}
 	}
 	public function editAction(){
 		$id=$this->getRequest()->getParam("id");

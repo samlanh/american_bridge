@@ -19,9 +19,8 @@
 				</select>
 			</td>
 			
-			<td><input type="text" name="start_date" id="start_date" class="fullside" value="<?php echo $this->adv_search['start_date'];?>" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}"/></td>
-		    <td><input type="text" name="end_date" id="end_date" class="fullside" value="<?php echo $this->adv_search['end_date'];?>" dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"/></td>
-			
+			<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
 			<td>
 				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
 			</td>
