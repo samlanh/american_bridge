@@ -53,10 +53,11 @@
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-transport'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_TRANSPORTATION');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-foodandstay'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_FOOD_AND_STAY');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-material'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_STUDY_MATERIAL');?></a></li>
-  		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-parking-canteen'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_PARKING_AND_CANTEEN');?></a></li>
+  		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-parking-canteen'), null, true);?>"><?php echo $tr->translate('Daily Income Canteen');?></a></li>
+  		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-parking-payment'), null, true);?>"><?php echo $tr->translate('PARKING_PAYMENT_REPORT');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-result-income'), null, true);?>"><?php echo $tr->translate('RESULT_INCOME_RPT');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-summary-total-income'), null, true);?>"><?php echo $tr->translate('SUMMARY_TOTAL_INCOME');?></a></li>
-  		<li><a href="<?php echo $rpt_student_balance;?>"><?php echo $tr->translate('STUDENT_BALANCE_REPORT');?></a></li>
+  		
   	</ul>
   </div>
   
@@ -70,9 +71,10 @@
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-stay-and-lunch-payment-list'), null, true);?>"><?php echo $tr->translate('STAY_AND_LUNCH_PAYMENT_LIST');?></a></li>
   		
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-rent-and-payment-list'), null, true);?>"><?php echo $tr->translate('RENTAL_PAYMENT_LIST');?></a></li>
-  		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-parking-payment'), null, true);?>"><?php echo $tr->translate('PARKING_PAYMENT_REPORT');?></a></li>
+  		
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-invoice-parttime'), null, true);?>"><?php echo $tr->translate('INVOICE_PARTTIME_REPORT');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-invoice-transport'), null, true);?>"><?php echo $tr->translate('INVOICE_TRANSPORT_REPORT');?></a></li>
+  		<li><a href="<?php echo $rpt_student_balance;?>"><?php echo $tr->translate('STUDENT_BALANCE_REPORT');?></a></li>
   	</ul>
   </div>
   

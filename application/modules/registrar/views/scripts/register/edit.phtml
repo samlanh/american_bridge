@@ -867,6 +867,7 @@ fieldset{  background:none;}
 			 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("reciept_no").get('value');
 			 dojo.byId("lb_stu_id").innerHTML = dijit.byId("old_studens").attr('displayedValue');
 			
+			 dojo.byId("lb_note").innerHTML = dijit.byId("not").attr('value');
 			
 			 dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');
 			 dojo.byId("lb_en_name").innerHTML = dijit.byId("en_name").get('value');
@@ -1024,12 +1025,12 @@ fieldset{  background:none;}
 	//save daata when sub button print 
 	function printSubmit(){
 		
-		//$('#office_receipt').submit();
+		$('#office_receipt').submit();
 		 
 		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
 		window.frames["print_frame"].window.focus();
 		window.frames["print_frame"].window.print();
-		//dijit.byId("terms").hide();	//hideDialog();
+		dijit.byId("terms").hide();	//hideDialog();
 	}
 	function hideDialog(){
 		dijit.byId('terms').hide();
@@ -1189,9 +1190,14 @@ fieldset{  background:none;}
 				
 				<tr>
 					<td colspan="2">លេខទូរស័ព្ទ/Phone Number</td>
-					<td colspan="10" align="left">
+					<td colspan="4" align="left">
 						&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
-						<div class="underline" style="text-align: left;">&nbsp;.......................................................................................................................................................................................................................</div>
+						<div class="underline" style="text-align: left;">&nbsp;.............................................................................</div>
+					</td>
+					<td colspan="1" align="center">សម្គាល់/Note</td>
+					<td colspan="5" align="left">
+						&nbsp;:&nbsp; <label id="lb_note" class="data" ></label>
+						<div class="underline" style="text-align: left;">&nbsp;................................................................................................................</div>
 					</td>
 				</tr>
 				

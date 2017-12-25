@@ -98,7 +98,6 @@
 			} 
 			dijit.byId('discount').attr('value','0');
 	    	dijit.byId('books').attr('value','0');
-	    	dijit.byId('addmin_fee').attr('value','0');
 	    	dijit.byId('remaining').attr('value','0');
 	    	dijit.byId('remark').attr('value','0');
 	    	//dijit.byId('char_price').attr('value','0');
@@ -112,7 +111,6 @@
     	dijit.byId('total').attr('value',0);
     	dijit.byId('books').attr('value',0);
     	dijit.byId('discount').attr('value',0);
-    	dijit.byId('addmin_fee').attr('value',0);
     	dijit.byId('remaining').attr('value',0);
     	dijit.byId('remark').attr('value',0);
 
@@ -145,7 +143,6 @@
 				    	 dijit.byId('total').attr('value','0'); 
 				    	 dijit.byId('discount').attr('value','0');
 				    	 dijit.byId('books').attr('value','0');
-					     dijit.byId('addmin_fee').attr('value','0');
 					     dijit.byId('remaining').attr('value','0');
 					     dijit.byId('remark').attr('value','0');
 					    // dijit.byId('char_price').attr('value','0');
@@ -161,7 +158,6 @@
     	dijit.byId('total').attr('value','<?php echo $this->row_gep['total_payment'];?>');
     	dijit.byId('discount').attr('value','<?php echo $this->row_gep['discount_percent'];?>');
     	dijit.byId('books').attr('value','<?php echo $this->row_gep['paid_amount'];?>');
-    	dijit.byId('addmin_fee').attr('value','<?php echo $this->row_gep['admin_fee'];?>');
     	dijit.byId('remaining').attr('value','<?php echo $this->row_gep['balance_due'];?>');
     	dijit.byId('remark').attr('value','<?php echo $this->row_gep['other_fee'];?>');
     	//dijit.byId('char_price').attr('value','<?php echo $this->row_gep['amount_in_khmer'];?>');
@@ -184,9 +180,7 @@
 		//alert('hello');
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
-		addmin_fee=dijit.byId('addmin_fee').get('value');
-		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
-		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee);
+		totals=parseFloat(old_totale)+parseFloat(remark);
 		  dijit.byId('total').attr('value',totals.toFixed(2));
 		  dijit.byId('books').attr('value',totals.toFixed(2));
 		  getRemaining();
@@ -269,8 +263,6 @@
 		dijit.byId("discount").set('readOnly',true);
 		dijit.byId("discount_fix").set('readOnly',true);
 		dijit.byId("remark").set('readOnly',true);
-		dijit.byId("addmin_fee").set('readOnly',true);
-		dijit.byId("material_fee").set('readOnly',true);
 		
 		dijit.byId("books").set('readOnly',true);
 		dijit.byId("not").set('readOnly',true);
@@ -482,14 +474,6 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>	
-							<td><?php echo $tr->translate("ADMIN_FEE");?></td>
-							<td><?php echo $register->getElement('addmin_fee');?></td>
-						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("MATERIAL_FEE");?></td>
-							<td><?php echo $register->getElement('material_fee');?></td>	
-						</tr>
-						<tr>	
 							<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 							<td><?php echo $register->getElement('remark');;?></td>
 						</tr>
@@ -538,7 +522,7 @@ fieldset{  background:none;}
 		</tr>
 		<tr>
 			<td colspan="1">
-				<input type="text" class="fullside" name="readmoney" id="readmoney" readonly dojoType="dijit.form.TextBox" />
+				<input type="hidden" class="fullside" name="readmoney" id="readmoney" readonly dojoType="dijit.form.TextBox" />
 			</td>
 			<td colspan="2" align="right">
 				<table style="width:400px;border-collapse: collapse;white-space:nowrap;" cellpadding="10" cellspacing="10" >
@@ -790,7 +774,6 @@ fieldset{  background:none;}
 						 dijit.byId('total').attr('value','0'); 
 						 dijit.byId('discount').attr('value','0');
 						 dijit.byId('books').attr('value','0');
-						 dijit.byId('addmin_fee').attr('value','0');
 						 dijit.byId('remaining').attr('value','0');
 						 dijit.byId('remark').attr('value','0');
 						 //dijit.byId('char_price').attr('value','0');

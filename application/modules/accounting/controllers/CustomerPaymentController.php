@@ -15,16 +15,19 @@ class Accounting_CustomerPaymentController extends Zend_Controller_Action {
     		}
     		else{
     			$search=array(
-    					'title'	        =>	'',
-    					'cus_name'		=>	0,
-    					'status_search'	=> 1
+    					'title'	        =>'',
+    					'cus_name'		=>0,
+    					'status_search'	=> 1,
+    					'start_date'	=> date("Y-m-d"),
+    					'end_date'		=> date("Y-m-d"),
+    					'branch'		=> "",
 				);
     		}
 			$db = new Accounting_Model_DbTable_DbCustomerPayment();
 			$rs_rows = $db->getAllCustomer($search);
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("CUS_ID","RECEIPT_NO","CUS_NAME","PHONE","EMAIL","START_DATE","END_DATE","STATUS_PAID","USER","STATUS","PRINT");
+    		$collumns = array("BRANCH","RECEIPT_NO","CUS_ID","CUS_NAME","PHONE","EMAIL","START_DATE","END_DATE","STATUS_PAID","USER","CREATE_DATE","STATUS");
     		$link=array(
     				'module'=>'accounting','controller'=>'customerpayment','action'=>'edit',
     		);
@@ -33,9 +36,6 @@ class Accounting_CustomerPaymentController extends Zend_Controller_Action {
     		);
     		$this->view->list=$list->getCheckList(0, $collumns, $rs_rows , array('customer_code'=>$link,'rent_receipt_no'=>$link,'first_name'=>$link,'phone'=>$link,'view'=>$link1));
 			
-			$db = new Registrar_Model_DbTable_DbRegister();
-			$this->view->all_student_name = $db->getAllGerneralOldStudentName();
-			$this->view->all_student_code = $db->getAllGerneralOldStudent();
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
@@ -44,6 +44,11 @@ class Accounting_CustomerPaymentController extends Zend_Controller_Action {
 		$frm_search = $frm_major->FrmMajors();
 		Application_Model_Decorator::removeAllDecorator($frm_search);
 		$this->view->frm_search = $frm_search;
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
 		
 	}
 	
@@ -70,6 +75,10 @@ class Accounting_CustomerPaymentController extends Zend_Controller_Action {
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$_db = new Registrar_Model_DbTable_DbRegister();
+    	$this->view->branch = $_db->getAllBranch();
+    	
     }
     
 	public function editAction(){
@@ -99,6 +108,9 @@ class Accounting_CustomerPaymentController extends Zend_Controller_Action {
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$_db = new Registrar_Model_DbTable_DbRegister();
+    	$this->view->branch = $_db->getAllBranch();
     }
     
     public function viewAction(){
@@ -136,6 +148,36 @@ class Accounting_CustomerPaymentController extends Zend_Controller_Action {
     		$db = new Accounting_Model_DbTable_DbCustomerPayment();
     		$cus_info= $db->getCustomerInfo($data['cus_id']);
     		print_r(Zend_Json::encode($cus_info));
+    		exit();
+    	}
+    }
+    
+    function getOldCustomerByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbCustomerPayment();
+    		$old_cus = $db->getOldCustomerByBranch($data['branch_id']);
+    		print_r(Zend_Json::encode($old_cus));
+    		exit();
+    	}
+    }
+    
+    function getCustomerIdByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbCustomerPayment();
+    		$cus_id= $db->getCusIdByBranch($data['branch_id']);
+    		print_r(Zend_Json::encode($cus_id));
+    		exit();
+    	}
+    }
+    
+    function getReceiptByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbCustomerPayment();
+    		$cus_id= $db->getReceiptByBranch($data['branch_id']);
+    		print_r(Zend_Json::encode($cus_id));
     		exit();
     	}
     }

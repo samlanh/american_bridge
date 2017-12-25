@@ -149,8 +149,6 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'tuition_fee_after_discount'=>($tuitionfee - $data['discount_fix']) - (($tuitionfee - $data['discount_fix'])*($data['discount']/100)),             
 						
 						'other_fee'			=>$data['remark'],
-						'admin_fee'			=>$data['addmin_fee'],
-						'material_fee'		=>$data['material_fee'],
 						
 						'total_payment'		=>$data['total'],
 						'paid_amount'		=>$data['books'],
@@ -377,9 +375,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'discount_percent'	=>$discount,
 							'discount_fix'		=>$data['discount_fix'],
 							
-							'admin_fee'			=>$data['addmin_fee'],
 							'other_fee'			=>$data['remark'],
-							'material_fee'		=>$data['material_fee'],
 							
 							'subtotal'			=>$subtotal,
 							'paidamount'		=>$paidamount,

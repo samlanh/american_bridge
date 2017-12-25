@@ -12,12 +12,24 @@ class Allreport_Model_DbTable_DbRenAndPaymentList extends Zend_Db_Table_Abstract
 function getCustomer($search=null){
     	//print_r($search);exit();
     	$db=$this->getAdapter();
-    	$sql="SELECT c.*,cp.status As cp_status FROM rms_customer AS c,rms_customer_paymentdetail AS cp
-            		WHERE c.id=cp.cus_id";
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('cp.branch_id');
+    	
+    	$sql="SELECT 
+    				c.*,
+    				(select branch_namekh from rms_branch where br_id = cp.branch_id) as branch_name,
+    				cp.status As cp_status 
+    			FROM 
+    				rms_customer AS c,
+    				rms_customer_paymentdetail AS cp
+            	WHERE 
+            		c.id=cp.cus_id
+    				and cp.status=1 
+    				$branch_id
+    		";
     	$where = '';
-    	$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	
     	if(!empty($search["title"])){
     		$s_where=array();
     		$s_search = addslashes(trim($search['title']));
@@ -44,6 +56,9 @@ function getCustomer($search=null){
     	 
     	if($search['cus_name']>0){
     		$where.=' AND c.id='.$search["cus_name"];
+    	}
+    	if($search['branch']>0){
+    		$where.=' AND cp.branch_id='.$search["branch"];
     	}
     	
     	$group_by = " GROUP BY c.id ";

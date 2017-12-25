@@ -455,7 +455,7 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	 
     	//echo date("Y-m-d",strtotime($data[26]['K']));exit();
     	
-//     	$date = $data[26]['K'];//exit();
+//     	$date = $data[22]['K'];//exit();
 //     	$date = str_replace("/", "-", $date);
 //     	$create_date = date("Y-m-d",strtotime($date));
 //     	echo $create_date;exit();
@@ -464,9 +464,9 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	
     	for($i=3; $i<=$count; $i++){
     
-    		if(empty($data[$i]['K']) && empty($data[$i]['M']) && empty($data[$i]['Z'])){
-    			continue;
-    		}
+//     		if(empty($data[$i]['K']) && empty($data[$i]['M']) && empty($data[$i]['Z'])){
+//     			continue;
+//     		}
     
     		$date = $data[$i]['K'];//exit();
     		$date = str_replace("/", "-", $date);
@@ -493,6 +493,7 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		if(empty($current_grade_id)){
     			$arr = array(
     					'major_enname'=>$data[$i]['G'],
+    					'dept_id'=>1,
     					'modify_date'=>date("Y-m-d"),
     					'is_active'=>1,
     					'user_id'=>1,
@@ -505,6 +506,7 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		if(empty($grade_id)){
     			$arr = array(
     					'major_enname'=>$data[$i]['F'],
+    					'dept_id'=>1,
     					'modify_date'=>date("Y-m-d"),
     					'is_active'=>1,
     					'user_id'=>1,
@@ -542,6 +544,9 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     					'room'=>$room_id,
     					'session'=>$session,
     					'tel'=>$data[$i]['AC'],
+    					
+    					'is_subspend'=>(empty($data[$i]['AE']))?0:2,
+    					
     					'create_date'=>$create_date,
     			);
     			$stu_id = $this->insert($arr);
@@ -570,132 +575,132 @@ class Global_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			$this->insert($arr_drop);
     		}
     		
-    		$this->_name='rms_student';
-    		if($i!=$count && !empty($data[$i]['AE'])){	
-	    		if($data[$i]['B'] != $data[$i+1]['B']){
-	    			$arra = array(
-	    					'is_subspend'=>2,
-	    					);
-	    			$where = " stu_id = $stu_id ";
-	    			$this->update($arra, $where);
+//     		$this->_name='rms_student';
+//     		if($i!=$count && !empty($data[$i]['AE'])){	
+// 	    		if($data[$i]['B'] != $data[$i+1]['B']){
+// 	    			$arra = array(
+// 	    					'is_subspend'=>2,
+// 	    					);
+// 	    			$where = " stu_id = $stu_id ";
+// 	    			$this->update($arra, $where);
+// 	    		}else{
+// 	    			$arra = array(
+// 	    					'is_comeback'=>1,
+// 	    			);
+// 	    			$where = " stu_id = $stu_id ";
+// 	    			$this->update($arra, $where);
+// 	    		}
+//     		}
+    
+    		
+    		if(empty($data[$i]['AE'])){
+	    		$qty=1;
+	    		$qty_day=0;
+	    		$mystring = $data[$i]['R'];
+	    		$findme   = 'day';
+	    		$pos = strpos($mystring, $findme);
+	    		if(!empty($pos)){
+	    			$payment_term = 5;
+	    			$qty_day = str_replace("day", "", $data[$i]['R']);
+	    			$qty = $qty_day;
+	    		}else if($data[$i]['R']==3){
+	    			$payment_term = 2;//
+	    		}else if($data[$i]['R']==6){
+	    			$payment_term = 3;
+	    		}else if($data[$i]['R']==12){
+	    			$payment_term = 4;
 	    		}else{
-	    			$arra = array(
-	    					'is_comeback'=>1,
-	    			);
-	    			$where = " stu_id = $stu_id ";
-	    			$this->update($arra, $where);
+	    			$payment_term = 1;
+	    			$qty = $data[$i]['R'];
 	    		}
+	    
+	    		$this->_name = 'rms_student_payment';
+	    		$_arr = array(
+	    				'branch_id'=>6,
+	    				'student_id'=>$stu_id,
+	    				'receipt_number'=>$data[$i]['L'],
+	    				'degree'=>1,
+	    				'grade'=>$grade_id,
+	    				'session'=>$session,
+	    				'room_id'=>$room_id,
+	    
+	    				'payment_term'=>$payment_term,
+	    				'amount_sec'=>$qty_day,
+	    
+	    				'exchange_rate'=>4100,
+	    				'tuition_fee'=>$data[$i]['M'],
+	    				'discount_percent'=>$data[$i]['N'],
+	    				'tuition_fee_after_discount'=>$data[$i]['O'],
+	    	    
+	    				'material_fee'=>$data[$i]['V'],
+	    				'admin_fee'=>$data[$i]['S'],
+	    	    
+	    				'total_payment'=>$data[$i]['Z'],
+	    				'receive_amount'=>$data[$i]['Z'],
+	    				'paid_amount'=>$data[$i]['Z'],
+	    				'balance_due'=>$data[$i]['Y'],
+	    	    
+	    				'payfor_type'=>1,
+	    	    
+	    				'grand_total_payment'=>$data[$i]['Z'],
+	    				'grand_total_payment_in_riel'=>$data[$i]['Z'] * 4100,
+	    				'grand_total_paid_amount'=>$data[$i]['Z'],
+	    				'grand_total_balance'=>$data[$i]['Y'],
+	    	    
+	    				'note'=>$data[$i]['AB'],
+	    				'user_id'=>1,
+	    				'create_date'=>$create_date,
+	    				'is_new'=>(empty($data[$i]['J']))?0:1,
+	    				
+	    				'is_subspend'=>(empty($data[$i]['AE']))?0:2,
+	    	    
+	    				'student_type'=>3,
+	    		);
+	    		$paymentid = $this->insert($_arr);
+	    
+	    		
+	    		$is_start = 1;
+// 	    		if($i<$count){
+// 		    		if($data[$i]['B'] != $data[$i+1]['B']){
+// 		    			$is_start = 1;
+// 		    		}
+// 	    		}else{
+// 	    			$is_start = 1;
+// 	    		}
+	    		
+	    		
+	    		$_arr2 = array(
+	    				'payment_id'=>$paymentid,
+	    				'type'=>1,
+	    				'service_id'=>4,
+	    				'payment_term'=>$payment_term,
+	    					
+	    				'fee'=>$data[$i]['M'],
+	    				'qty'=>$qty,
+	    
+	    				'discount_percent'=>$data[$i]['N'],
+	    					
+	    				'material_fee'=>$data[$i]['V'],
+	    				'admin_fee'=>$data[$i]['S'],
+	    					
+	    				'subtotal'=>$data[$i]['Z'],
+	    				'paidamount'=>$data[$i]['Z'],
+	    				'balance'=>$data[$i]['Y'],
+	    
+	    				'start_date'=>$start_date,
+	    				'validate'=>$end_date,
+	    					
+	    				'note'=>$data[$i]['AB'],
+	    				'user_id'=>1,
+	    				'is_complete'=>1,
+	    				'comment'=>'បង់រួច',
+	    					
+	    				'is_start'=>$is_start,
+	    		);
+	    		$this->_name ='rms_student_paymentdetail';
+	    		$this->insert($_arr2);
+	    		//exit();
     		}
-    
-    		
-    		
-    		$qty=1;
-    		$qty_day=0;
-    		$mystring = $data[$i]['R'];
-    		$findme   = 'day';
-    		$pos = strpos($mystring, $findme);
-    		if(!empty($pos)){
-    			$payment_term = 5;
-    			$qty_day = str_replace("day", "", $data[$i]['R']);
-    			$qty = $qty_day;
-    		}else if($data[$i]['R']==3){
-    			$payment_term = 2;//
-    		}else if($data[$i]['R']==6){
-    			$payment_term = 3;
-    		}else if($data[$i]['R']==12){
-    			$payment_term = 4;
-    		}else{
-    			$payment_term = 1;
-    			$qty = $data[$i]['R'];
-    		}
-    
-    
-    		$this->_name = 'rms_student_payment';
-    		$array = array(
-    				'branch_id'=>6,
-    				'student_id'=>$stu_id,
-    				'receipt_number'=>$data[$i]['L'],
-    				'degree'=>1,
-    				'grade'=>$grade_id,
-    				'session'=>$session,
-    				'room_id'=>$room_id,
-    
-    				'payment_term'=>$payment_term,
-    				'amount_sec'=>$qty_day,
-    
-    				'exchange_rate'=>4100,
-    				'tuition_fee'=>$data[$i]['M'],
-    				'discount_percent'=>$data[$i]['N'],
-    				'tuition_fee_after_discount'=>$data[$i]['O'],
-    	    
-    				'material_fee'=>$data[$i]['S'],
-    				'admin_fee'=>$data[$i]['V'],
-    	    
-    				'total_payment'=>$data[$i]['Z'],
-    				'receive_amount'=>$data[$i]['Z'],
-    				'paid_amount'=>$data[$i]['Z'],
-    				'balance_due'=>$data[$i]['Y'],
-    	    
-    				'payfor_type'=>1,
-    	    
-    				'grand_total_payment'=>$data[$i]['Z'],
-    				'grand_total_payment_in_riel'=>$data[$i]['Z'] * 4100,
-    				'grand_total_paid_amount'=>$data[$i]['Z'],
-    				'grand_total_balance'=>$data[$i]['Y'],
-    	    
-    				'note'=>$data[$i]['AB'],
-    				'user_id'=>1,
-    				'create_date'=>$create_date,
-    				'is_new'=>(empty($data[$i]['J']))?0:1,
-    				
-    				'is_subspend'=>(empty($data[$i]['AE']))?0:2,
-    	    
-    				'student_type'=>3,
-    		);
-    		$payment_id = $this->insert($array);
-    
-    
-    		$this->_name = 'rms_student_paymentdetail';
-    		
-    		$is_start = 0;
-    		if($i<$count){
-	    		if($data[$i]['B'] != $data[$i+1]['B']){
-	    			$is_start = 1;
-	    		}
-    		}else{
-    			$is_start = 1;
-    		}
-    		
-    		
-    		$array1 = array(
-    				'payment_id'=>$payment_id,
-    				'type'=>1,
-    				'service_id'=>4,
-    				'payment_term'=>$payment_term,
-    					
-    				'fee'=>$data[$i]['M'],
-    				'qty'=>$qty,
-    
-    				'discount_percent'=>$data[$i]['N'],
-    					
-    				'material_fee'=>$data[$i]['S'],
-    				'admin_fee'=>$data[$i]['V'],
-    					
-    				'subtotal'=>$data[$i]['Z'],
-    				'paidamount'=>$data[$i]['Z'],
-    				'balance'=>$data[$i]['Y'],
-    
-    				'start_date'=>$start_date,
-    				'validate'=>$end_date,
-    					
-    				'note'=>$data[$i]['AB'],
-    				'user_id'=>1,
-    				'is_complete'=>1,
-    				'comment'=>'បង់រួច',
-    					
-    				'is_start'=>$is_start,
-    		);
-    		$this->insert($array1);
     	}
     }
     

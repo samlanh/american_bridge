@@ -387,9 +387,9 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate('MATERIAL_FEE');?></td>
+							<td><?php echo $tr->translate('OTHER_FEE');?></td>
 							<td> 
-								<input class="fullside" value="0" name="material_fee" id="material_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
+								<input class="fullside" value="0" name="other_fee" id="other_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
 							</td>
 						</tr>
 						<tr>
@@ -814,8 +814,8 @@ function calculateTotalPayment(){
 	qty = dijit.byId('qty').get('value');
 	qty = isNaN(qty)?1:qty;
 	
-	material_fee = dijit.byId('material_fee').get('value');
-	material_fee = isNaN(material_fee)?0:material_fee;
+	other_fee = dijit.byId('other_fee').get('value');
+	other_fee = isNaN(other_fee)?0:other_fee;
 	
 	service_fee = service_fee * qty;
 	
@@ -825,7 +825,7 @@ function calculateTotalPayment(){
 	discount_fix = dijit.byId('discount_fix').get('value');
 	discount_fix = isNaN(discount_fix)?0:discount_fix;
 	
-	total_payment = ((service_fee-discount_fix)-((service_fee-discount_fix)*discount/100)) + parseFloat(material_fee);
+	total_payment = ((service_fee-discount_fix)-((service_fee-discount_fix)*discount/100)) + parseFloat(other_fee);
 	
 	dijit.byId('total_payment').attr('value',total_payment.toFixed(2));
 	dijit.byId('paid_amount').attr('value',total_payment.toFixed(2));

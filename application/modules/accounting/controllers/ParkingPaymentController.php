@@ -1,5 +1,5 @@
 <?php
-class Registrar_CustomerPaymentController extends Zend_Controller_Action {
+class Accounting_ParkingPaymentController extends Zend_Controller_Action {
 	protected $tr;
 	public function init()
     {    	
@@ -15,37 +15,30 @@ class Registrar_CustomerPaymentController extends Zend_Controller_Action {
     		}
     		else{
     			$search=array(
-    					'title'	        =>'',
-    					'cus_name'		=>0,
-    					'status_search'	=>1,
-    					'start_date'	=> date("Y-m-d"),
-    					'end_date'		=> date("Y-m-d"),
+    					'title'	        =>	'',
+    					'cus_name'		=>	'',
+    					'start_date'	=>	date("Y-m-d"),
+    					'end_date'		=>	date("Y-m-d"),
+    					'branch'		=> ""
 				);
     		}
-			$db = new Registrar_Model_DbTable_DbCustomerPayment();
-			$rs_rows = $db->getAllCustomer($search);
+			$db = new Accounting_Model_DbTable_DbParkingPayment();
+			$rs_rows = $db->getAllParkingPayment($search);
+			
+			$this->view->old_cus = $db->getAllCustomerName();
+			
+			$this->view->search = $search;
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("RECEIPT_NO","CUS_ID","CUS_NAME","PHONE","EMAIL","START_DATE","END_DATE","STATUS_PAID","USER","CREATE_DATE","STATUS");
+    		$collumns = array("RECEIPT_NO","CUS_ID","NAME","PHONE","ថ្លៃកិបសំបុត្រម៉ូតូ","ថ្លៃកិបសំបុត្រកង់","លក់អេតចាយ","TOTAL","NOTE","USER","CREATE_DATE");
     		$link=array(
-    				'module'=>'registrar','controller'=>'customerpayment','action'=>'edit',
+    				'module'=>'accounting','controller'=>'parkingpayment','action'=>'edit',
     		);
-    		$link1=array(
-    				'module'=>'registrar','controller'=>'customerpayment','action'=>'view',
-    		);
-    		$this->view->list=$list->getCheckList(0, $collumns, $rs_rows , array('customer_code'=>$link,'rent_receipt_no'=>$link,'first_name'=>$link,'phone'=>$link,'view'=>$link1));
+    		$this->view->list=$list->getCheckList(0, $collumns, $rs_rows , array('customer_code'=>$link,'receipt_no'=>$link,'name'=>$link,'phone'=>$link));
 			
-			$db = new Registrar_Model_DbTable_DbRegister();
-			$this->view->all_student_name = $db->getAllGerneralOldStudentName();
-			$this->view->all_student_code = $db->getAllGerneralOldStudent();
 		}catch (Exception $e){
 			echo $e->getMessage();
 		}
-		
-		$frm_major = new Accounting_Form_FrmSearchMajor();
-		$frm_search = $frm_major->FrmMajors();
-		Application_Model_Decorator::removeAllDecorator($frm_search);
-		$this->view->frm_search = $frm_search;
 		
 		$form=new Registrar_Form_FrmSearchInfor();
 		$form->FrmSearchRegister();
@@ -55,15 +48,15 @@ class Registrar_CustomerPaymentController extends Zend_Controller_Action {
 	
     public function addAction()
     {
-    	$db = new Registrar_Model_DbTable_DbCustomerPayment();
+    	$db = new Accounting_Model_DbTable_DbParkingPayment();
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
     		try {
-    			$db->addCusPayment($_data);
+    			$db->addParkingPayment($_data);
     			if(!empty($_data['save_new'])){
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/registrar/customerpayment/add");
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/accounting/parkingpayment/add");
     			}else{
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/registrar/customerpayment/index");
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/accounting/parkingpayment/index");
     			}
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
@@ -76,10 +69,13 @@ class Registrar_CustomerPaymentController extends Zend_Controller_Action {
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$_db = new Registrar_Model_DbTable_DbRegister();
+    	$this->view->branch = $_db->getAllBranch();
     }
     
 	public function editAction(){
-    	$db = new Registrar_Model_DbTable_DbCustomerPayment();
+    	$db = new Accounting_Model_DbTable_DbParkingPayment();
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
@@ -87,9 +83,9 @@ class Registrar_CustomerPaymentController extends Zend_Controller_Action {
     		try {
     			$db->editCustomerPayment($_data);
     			if(!empty($_data['save_new'])){
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/registrar/customerpayment/index");
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/accounting/parkingpayment/index");
     			}else{
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/registrar/customerpayment/index");
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), "/accounting/parkingpayment/index");
     			}
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
@@ -97,18 +93,19 @@ class Registrar_CustomerPaymentController extends Zend_Controller_Action {
     			echo $e->getMessage();
     		}
     	}
-    	$row=$this->view->row=$db->getCustomerById($id);
-    	if($row['last_piad']==0){
-    		Application_Form_FrmMessage::Sucessfull($this->tr->translate('Can not edit.!!!'), "/registrar/customerpayment/index");
-    	}
+    	$row=$this->view->row=$db->getParkingById($id);
+    	
     	$this->view->cus_id=$db->getCusId();
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$_db = new Registrar_Model_DbTable_DbRegister();
+    	$this->view->branch = $_db->getAllBranch();
     }
     
     public function viewAction(){
-    	$db = new Registrar_Model_DbTable_DbCustomerPayment();
+    	$db = new Accounting_Model_DbTable_DbParkingPayment();
     	$id=$this->getRequest()->getParam('id');
     	if($this->getRequest()->isPost()){
     		$_data = $this->getRequest()->getPost();
@@ -134,15 +131,50 @@ class Registrar_CustomerPaymentController extends Zend_Controller_Action {
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$_db = new Registrar_Model_DbTable_DbRegister();
+    	$this->view->branch = $_db->getAllBranch();
     }
     
     function getCustomerInfoAction(){
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
-    		$db = new Registrar_Model_DbTable_DbCustomerPayment();
+    		$db = new Accounting_Model_DbTable_DbParkingPayment();
     		$cus_info= $db->getCustomerInfo($data['cus_id']);
     		print_r(Zend_Json::encode($cus_info));
     		exit();
     	}
     }
+    
+    function getOldCustomerByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbParkingPayment();
+    		$old_cus = $db->getOldCustomerByBranch($data['branch_id']);
+    		print_r(Zend_Json::encode($old_cus));
+    		exit();
+    	}
+    }
+    
+    function getCustomerIdByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbParkingPayment();
+    		$cus_id= $db->getCusIdByBranch($data['branch_id']);
+    		print_r(Zend_Json::encode($cus_id));
+    		exit();
+    	}
+    }
+    
+    function getReceiptByBranchAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Accounting_Model_DbTable_DbParkingPayment();
+    		$cus_id= $db->getReceiptByBranch($data['branch_id']);
+    		print_r(Zend_Json::encode($cus_id));
+    		exit();
+    	}
+    }
+    
+    
 }

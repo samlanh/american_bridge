@@ -1100,6 +1100,7 @@ function printSave(new_stu_id,new_receipt_no){
 		 dojo.byId("lb_dob").innerHTML = dijit.byId('dob').attr('displayedValue');
 		 dojo.byId("lb_grade").innerHTML = dijit.byId("grade").attr('displayedValue');
 		 
+		 dojo.byId("lb_note").innerHTML = dijit.byId("not").attr('value');
 		 
 		 payment_term = dijit.byId('payment_term').get('value');
 		 tuitionfee = dijit.byId('tuitionfee').get('value');
@@ -1346,9 +1347,14 @@ function printSave(new_stu_id,new_receipt_no){
 				
 				<tr>
 					<td colspan="2">លេខទូរស័ព្ទ/Phone Number</td>
-					<td colspan="10" align="left">
+					<td colspan="4" align="left">
 						&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
-						<div class="underline" style="text-align: left;">&nbsp;.......................................................................................................................................................................................................................</div>
+						<div class="underline" style="text-align: left;">&nbsp;.............................................................................</div>
+					</td>
+					<td colspan="1" align="center">សម្គាល់/Note</td>
+					<td colspan="5" align="left">
+						&nbsp;:&nbsp; <label id="lb_note" class="data" ></label>
+						<div class="underline" style="text-align: left;">&nbsp;................................................................................................................</div>
 					</td>
 				</tr>
 				

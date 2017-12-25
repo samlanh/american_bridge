@@ -241,7 +241,6 @@
     	dijit.byId('books').attr('value',0);
     	//dijit.byId('discount').attr('value',0);
 		//dijit.byId('discount_fix').attr('value',0);
-    	//dijit.byId('addmin_fee').attr('value',0);
     	//dijit.byId('remaining').attr('value',0);
     	//dijit.byId('remark').attr('value',0);
     	//dijit.byId('char_price').attr('value',0);
@@ -269,7 +268,6 @@
 					dijit.byId('books').attr('value',data.tuition_fee);
 					dijit.byId('price_per_section').attr('value',data.tuition_fee);
 					//dijit.byId('discount').attr('value','0');
-					//dijit.byId('addmin_fee').attr('value','0');
 					//dijit.byId('remaining').attr('value','0');
 					//dijit.byId('remark').attr('value','0');
 				  }else {
@@ -311,13 +309,8 @@
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
 		
-		addmin_fee=dijit.byId('addmin_fee').get('value');
-		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
 		
-		material_fee=dijit.byId('material_fee').get('value');
-		material_fee=isNaN(material_fee)?0:material_fee;
-		
-		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee)+parseFloat(material_fee);
+		totals=parseFloat(old_totale)+parseFloat(remark);
 		
 		dijit.byId('total').attr('value',totals.toFixed(2));
 		dijit.byId('books').attr('value',totals.toFixed(2));
@@ -622,14 +615,7 @@ fieldset{  background:none;}
 								</table>
 							</td>
 						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("ADMIN_FEE");?></td>
-							<td><?php echo $register->getElement('addmin_fee');?></td>	
-						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("MATERIAL_FEE");?></td>
-							<td><?php echo $register->getElement('material_fee');?></td>	
-						</tr>
+						
 						<tr>	
 							<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 							<td><?php echo $register->getElement('remark');;?></td>
@@ -1059,7 +1045,7 @@ function printSave(new_stu_id,new_receipt_no){
 		 dojo.byId("lb_dob").innerHTML = dijit.byId('dob').attr('displayedValue');
 		 dojo.byId("lb_grade").innerHTML = dijit.byId("grade").attr('displayedValue');
 		 
-		 
+		 dojo.byId("lb_note").innerHTML = dijit.byId("not").attr('value');
 		 
 		 payment_term = dijit.byId('payment_term').get('value');
 		 tuitionfee = dijit.byId('tuitionfee').get('value');
@@ -1105,12 +1091,12 @@ function printSave(new_stu_id,new_receipt_no){
 		 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		 
 		
-		dojo.byId("lb_total_product_fee").innerHTML = "$ " + dijit.byId('material_fee').get('value');
+		//dojo.byId("lb_total_product_fee").innerHTML = "";
 		
 		if(payment_term==5){
 			pay_term = dijit.byId('amount_section').get('value') + dijit.byId('payment_term').attr('displayedValue');
 		}else{
-			pay_term = dijit.byId('payment_term').attr('displayedValue');
+			pay_term = "1 "+dijit.byId('payment_term').attr('displayedValue');
 		}
 		
 		dojo.byId("lb_payment_term").innerHTML = pay_term;
@@ -1304,9 +1290,14 @@ function printSave(new_stu_id,new_receipt_no){
 				
 				<tr>
 					<td colspan="2">លេខទូរស័ព្ទ/Phone Number</td>
-					<td colspan="10" align="left">
+					<td colspan="4" align="left">
 						&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
-						<div class="underline" style="text-align: left;">&nbsp;.......................................................................................................................................................................................................................</div>
+						<div class="underline" style="text-align: left;">&nbsp;......................................................................</div>
+					</td>
+					<td colspan="1" align="center">សម្គាល់/Note</td>
+					<td colspan="5" align="left">
+						&nbsp;:&nbsp; <label id="lb_note" class="data" ></label>
+						<div class="underline" style="text-align: left;">&nbsp;................................................................................................................</div>
 					</td>
 				</tr>
 				
@@ -1314,55 +1305,34 @@ function printSave(new_stu_id,new_receipt_no){
 					<td colspan="12" style="border:1px solid #000;">
 						<table width="100%" border="0" class="data2" style="white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
 							<tr>
-								<td width="8%"></td>
-								<td width="3%"></td>
-								<td width="4%"></td>
-								<td width="7%"></td>
-								<td width="7%"></td>
-								<td width="7%"></td>
-								<td width="8%"></td>
-								<td width="7%"></td>
-								<td width="8%"></td>
-								<td width="6%"></td>
-								<td width="10%"></td>
-								<td width="6%"></td>
-							</tr>
-							
-							<tr>
-								<td colspan="3">&nbsp;ថ្លៃសិក្សាក្រៅម៉ោង/Part Time Study Fee</td>
-								<td>
+								<td width="20%">&nbsp;ថ្លៃសិក្សាក្រៅម៉ោង/Part Time Study Fee</td>
+								<td width="12%">
 									: <label id="lb_study_fee" class="data1" ></label>
-									<div class="underline">.................</div>
+									<div class="underline">..............................</div>
 								</td>
 								
-								<td >បញ្ចុះថ្លៃ/Discount</td>
-								<td>
+								<td width="10%">បញ្ចុះថ្លៃ/Discount</td>
+								<td width="12%">
 									: <label id="lb_discount" class="data1" ></label>
-									<div class="underline">................</div>
+									<div class="underline">..................................</div>
 								</td>
 								
-								<td >ថ្លៃសិក្សានៅសល់/Amount</td>
-								<td>
+								<td width="12%">ថ្លៃសិក្សានៅសល់/Amount</td>
+								<td width="10%">
 									: <label id="lb_total_payment" class="data1" ></label>
-									<div class="underline">................</div>
+									<div class="underline">..........................</div>
 								</td>
 								
-								<td>ថ្លៃផ្សេងៗ / Other Fee</td>
-								<td>
+								<td width="12%">ថ្លៃផ្សេងៗ / Other Fee</td>
+								<td width="8%">
 									: <label id="lb_other_fee" class="data1" ></label>
-									<div class="underline">.............</div>
+									<div class="underline">....................</div>
 								</td>
 								
-								<td >ថ្លៃសម្ភារៈ/Material Fee</td>
-								<td>
-									: <label id="lb_total_product_fee" class="data1" ></label>
-									<div class="underline">..............</div>
-								</td>
 							</tr>
 							
 							<tr>
-								
-								<td colspan="12">
+								<td colspan="8">
 									<table width="100%" border="0" style="margin-top: -5px;white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
 										<tr>
 											<td width="15%">ទឹកប្រាក់សរុប/Total Amount : </td>
@@ -1387,7 +1357,7 @@ function printSave(new_stu_id,new_receipt_no){
 							</tr>
 							
 							<tr>
-								<td colspan="12">
+								<td colspan="8">
 									<table width="100%" border="0" style="margin-top: -5px;white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
 										<tr>
 											<td width="18%">ទឹកប្រាក់ទទួលបានជាអក្សរ/In Words : </td>
@@ -1401,7 +1371,7 @@ function printSave(new_stu_id,new_receipt_no){
 							</tr>
 							
 							<tr>
-								<td colspan="12">
+								<td colspan="8">
 									<table  width="100%" border="0" style="margin-top: -5px;white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
 										<tr>
 											<td width="18%">មានសុពលភាពរយៈពេល/Payment Period : </td>

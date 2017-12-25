@@ -346,7 +346,6 @@
 				    	 dijit.byId('total').attr('value','0'); 
 				    	 dijit.byId('discount').attr('value','0');
 				    	 dijit.byId('books').attr('value','0');
-					     dijit.byId('addmin_fee').attr('value','0');
 					     dijit.byId('remaining').attr('value','0');
 					     dijit.byId('remark').attr('value','0');
 					    // dijit.byId('char_price').attr('value','0');
@@ -365,7 +364,6 @@
     	dijit.byId('total').attr('value',0);
     	dijit.byId('books').attr('value',0);
     	// dijit.byId('discount').attr('value',0);
-    	// dijit.byId('addmin_fee').attr('value',0);
     	// dijit.byId('remaining').attr('value',0);
     	// dijit.byId('remark').attr('value',0);
     	//dijit.byId('char_price').attr('value',0);
@@ -393,7 +391,6 @@
 				    	dijit.byId('books').attr('value',data.tuition_fee);
 				    	dijit.byId('price_per_section').attr('value',data.tuition_fee);
 				    	//dijit.byId('discount').attr('value','0');
-				    	//dijit.byId('addmin_fee').attr('value','0');
 				    	//dijit.byId('remaining').attr('value','0');
 				    	//dijit.byId('remark').attr('value','0');
 				      }else {
@@ -401,7 +398,6 @@
 						 dijit.byId('total').attr('value','0'); 
 						 //dijit.byId('discount').attr('value','0');
 						 dijit.byId('books').attr('value','0');
-						 //dijit.byId('addmin_fee').attr('value','0');
 						 dijit.byId('remaining').attr('value','0');
 						 //dijit.byId('remark').attr('value','0');
 					  }
@@ -443,13 +439,7 @@
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
 		
-		addmin_fee=dijit.byId('addmin_fee').get('value');
-		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
-		
-		material_fee=dijit.byId('material_fee').get('value');
-		material_fee=isNaN(material_fee)?0:material_fee;
-		
-		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee)+parseFloat(material_fee);
+		totals=parseFloat(old_totale)+parseFloat(remark);
 		
 		dijit.byId('total').attr('value',totals.toFixed(2));
 		dijit.byId('books').attr('value',totals.toFixed(2));
@@ -811,14 +801,6 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>	
-							<td><?php echo $tr->translate("ADMIN_FEE");?></td>
-							<td><?php echo $register->getElement('addmin_fee');?></td>
-						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("MATERIAL_FEE");?></td>
-							<td><?php echo $register->getElement('material_fee');?></td>	
-						</tr>
-						<tr>	
 							<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 							<td><?php echo $register->getElement('remark');;?></td>
 						</tr>
@@ -1105,217 +1087,10 @@ function setStudyTime(){
 	}
 }
 
-
-
-function printSave(new_stu_id,new_receipt_no){		
-		if(dijit.byId('office_receipt').validate() ) {
-			if(dijit.byId('study_year').get('value')==-1){
-               dijit.byId("study_year").focus();
-               return false;
-			}
-			dojo.byId("lb_term").innerHTML = dijit.byId("payment_term").attr('displayedValue');
-			
-			//	 var d = dojo.byId("start_date").value.split('/');
-			//   dojo.byId("lb_term_start").innerHTML = d[1] + "/" + d[0] +"/"+d[2];
-				 var d=dijit.byId('start_date').get('value');
-				 var day = d.getDate();
-				 var x = d.toDateString().substr(4,3);
-				 var year = d.getFullYear();
-				 dojo.byId("lb_term_start").innerHTML = day+'-'+x+'-'+year;
-				// var d = dojo.byId("end_date").value.split('/');
-				// dojo.byId("lb_term_end").innerHTML = d[1] + "/" + d[0] +"/"+d[2];
-				 var d=dijit.byId('end_date').get('value');
-				 var day = d.getDate();
-				 var x = d.toDateString().substr(4,3);
-				 var year = d.getFullYear();
-				 dojo.byId("lb_term_end").innerHTML = day+'-'+x+'-'+year;
-			
-		 dojo.byId("lb_student").innerHTML =dijit.byId("kh_name").get('value')+" - "+ dijit.byId("en_name").get('value');
-
-		 degree = dijit.byId('dept').get('value');
-
-		 stu_type = dijit.byId('student_type').get('value');
-		 if(stu_type==1){
-			 if(new_stu_id==''){
-				 getStudentNo(degree,1);
-			 }else{
-				 dojo.byId("lb_student_id").innerHTML = new_stu_id;			
-				 dojo.byId("lb_enroll_id").innerHTML = new_receipt_no;
-			 }
-		 }else{
-			 dojo.byId("lb_enroll_id").innerHTML = dijit.byId("reciept_no").get('value');
-			 dojo.byId("lb_student_id").innerHTML = dijit.byId("old_studens").attr('displayedValue');
-		 }
-		 
-		 
-		 
-		 
-		 dojo.byId("lb_level").innerHTML = dijit.byId("grade").attr('displayedValue');
-		 dojo.byId("lb_session").innerHTML = dijit.byId("session").attr('displayedValue');
-		 
-		 dojo.byId("lb_study_time").innerHTML =dijit.byId("study_time").get('value');
-		// dojo.byId("lb_room").innerHTML = dijit.byId("room").attr('displayedValue');
-		 dojo.byId("lb_note").innerHTML = dijit.byId("not").get('value');
-		 dojo.byId("lb_course_cost").innerHTML ="$ "+dijit.byId("tuitionfee").get('value').toFixed(2);
-		 // សិក្សាបើ discount=0 កុំអោយវាចេញ​​ (blank) , if discount>0 it show discount%
-		 var discount = dijit.byId("discount").get('value');
-		 if(discount == 0){
-			discount = '';
-		 }else{
-			 discount = discount+" %";
-		 }
-		 dojo.byId("lb_discount").innerHTML = discount;
-		 dojo.byId("lb_total").innerHTML ="$ "+dijit.byId("total").get('value');
-		 dojo.byId("lb_adminfee").innerHTML ="$ "+dijit.byId("addmin_fee").get('value');
-		 dojo.byId("lb_remark").innerHTML ="$ "+dijit.byId("remark").get('value');
-		 dojo.byId("lb_book").innerHTML ="$ "+dijit.byId("books").get('value').toFixed(2);
-		 dojo.byId("lb_balance").innerHTML ="$ "+dijit.byId("remaining").get('value');
-		 dijit.byId("terms").show();	
-		}
-}
 </script>
-<div class="dijitHidden" style="width: 20cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-<?php $keycode = $this->keycode;?>
-	<div data-dojo-type="dijit.Dialog" style="width:24cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("STUDENT_PAYMENT_RECEIPT");?>'" id="terms" >
-		 <div class="header">
-		     <table     bgcolor="fef7e4" cellspacing="0"  cellpadding="0" style="width: 19cm;  font-size:14px; color:rgba(14, 0, 107, 1); padding: 0px; margin: 0px;">
-		          <tr>
-		              <td colspan="8"  align="center"><strong style="font-family:'Khmer OS Muol';font-size: 20px;color: rgb(47, 70, 149);"> សាលារៀន &nbsp;<font style="color: rgb(246, 86, 74);">អាស៊ាន </font>&nbsp;ហ៊ែរីថេជ</strong>
-		              ​​​​​<br/><strong style="font-size: 20px;font-weight:bold;color: rgb(47, 70, 149);">ASEAN <font style="color: rgb(246, 86, 74);">HERITAGE</font> SCHOOL</strong>
-		              </td>
-		          </tr>
-		     </table>
-		</div>
-		<div id="divPrint" style="width: 19cm !important; height: 12cm ; padding: 0px; margin: 0px;">
-			<style>
-				.fontbig{
-					font-size: 15px;	
-				}
-				.fonttel{
-					font-size: 18px;	
-				}
-				.pleft{
-					width: 110px;	
-				}
-				.label{ font-weight: bold;font-size: 22px;}
-				.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 25px; padding: 0 2px;width: 98%; display: block;
-						line-height: 25px;
-					    text-align: center;
-						}
-				.values{ border: 1px solid rgba(14, 0, 107, 1);; height: 25px; padding: 0 10px;display: block;
-						line-height: 25px;}
-				.h{}
-​​               .print td{ font:bold 12px 'Khmer OS Battambang';}
-			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
-			   .khmer{font:12px 'Khmer OS Battambang';}
-			   .one{white-space:nowrap;}
-			   .h{ margin-top: -10px;/*margin-left:4px;*/}
-			</style>	
-			<table style="white-space: nowrap;" style="white-space: nowrap;" class="print" bgcolor="fef7e4" cellspacing="0"  cellpadding="0" style="width: 19cm !important;height: 11cm; font-size:12px; color:rgba(14, 0, 107, 1); padding:25px 10px 0px 5px; margin: 0px;">
-				<tr>
-				    <td colspan="5"  style="font:bold 18px 'Kh Muol';" align="center"><u><b><strong style=" font-family: Arial Black;font-family:'Khmer MEF2';">បង្កាន់ដៃបង់ប្រាក់</strong></b></u>
-				        <div style="line-height:5px;"><strong style="font-size: 18px;font-weight:bold">OFFICIAL RECEIPT</strong></div>
-				    </td>
-				</tr>
-				<tr> <td colspan="5" height="10px"></td></tr>
-				<tr style="white-space: nowrap;">
-				    <td class="one khmerbold" style="width:100px;">អត្តលេខសិស្ស<div class="h">Student ID</div></td>
-				    <td width="35%"><strong><label id="lb_student_id" class="value"></label></strong></td>
-				    <td style="width:5px;"></td>
-				    <td class="one khmerbold" style="width:100px;">លេខបង្កាន់ដៃ<div class="h">Receipt No.</div></td>
-				    <td  width="35%"><strong><label id="lb_enroll_id" class="value"></label></strong></td>
-				 </tr>
-				<tr style="white-space: nowrap;">
-				    <td class="one khmerbold">ឈ្មោះ​សិស្ស <div class="h">Student Name</div></td>
-				    <td ><strong><label id="lb_student" class="value"></label></strong></td>
-				    <td style="width:10px;"></td>
-				    <td class="one khmerbold">រយះពេលនៃការបង់<div class="h">Payment Period</div></td>
-                    <td><strong><label id="lb_term" class="value"></label></strong></td>
-                </tr>
-				<tr style="white-space: nowrap;">
-				    <td class="one khmerbold">កម្រិត<div class="h">Level</div></td>
-				    <td><strong><label id="lb_level" class="value"></label></strong></td>
-				    <td style="width:10px;"></td>
-				    <td class="one khmerbold">តម្លៃវគ្គសិក្សា<div class="h">Tution Fee</div></td>
-				    <td><strong><label id="lb_course_cost" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">វេនសិក្សា<div class="h">Session</div></td>
-				    <td><strong><label id="lb_session" class="value"></label></strong></td>
-				    <td style="width:10px;" ></td>
-					<td class="one khmerbold">បញ្ចុះតម្លៃ<div class="h">Discount</div></td>
-					<td><strong><label id="lb_discount" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">ម៉ោងសិក្សា<div class="h">Study Time</div></td>
-				    <td ><strong><label id="lb_study_time" class="value"></label></strong></td>
-				    <td style="width:10px;" ></td>
-					<td class="one khmerbold">តម្លៃរដ្ឋបាល <div class="h">Admin fee</div></td>
-					<td><strong><label id="lb_adminfee" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold" >ថ្ងៃចាប់ផ្តើម<div class="h">Term Start</div></td>
-				    <td style="white-space: nowrap;"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_term_start" class="value"></label></strong></td>
-				    <td style="width:10px;"></td>
-					<td class="one khmerbold">ទឹកប្រាក់ត្រូវបង់សរុប<div class="h">Total​ Amount</div></td>
-					<td><strong><label id="lb_total" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">មានសុពលភាពត្រឹម<div class="h">Payment Valid</div></td>
-				    <td style="white-space: nowrap;"><strong style="white-space: nowrap;"><label style="white-space: nowrap;" id="lb_term_end" class="value"></label></strong></td>
-				    <td style="width:10px;" ></td>
-					<td class="one khmerbold">ទឹកប្រាក់បានបង់ <div class="h">Amount Paid</div></td>
-					<td><strong><label id="lb_book" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">ផ្សេងៗ <div class="h">Others</div></td>
-					<td><strong><label id="lb_remark" class="value"></label></strong></td>
-					
-					<td style="width:10px;"></td>
-					<td class="one khmerbold">ទឹកប្រាក់នៅខ្វះ <div class="h">Balance</div></td>
-				    <td><strong><label id="lb_balance" class="value"></label></strong></td>
-				</tr>
-				<tr style="white-space: nowrap;">
-					<td class="one khmerbold">សម្គាល់ <div class="h">Note</div></td>
-				    <td ><strong><label id="lb_note" class="value"></label></strong></td>
-					<td style="width:10px;" ></td>
-				    <td class="one khmerbold" >ថ្ងៃបានបង់ប្រាក់<div class="h">Paid Date</div>
-				    </td>
-				    <td class="one khmerbold" style="white-space: nowrap;"><label style="white-space: nowrap;" class="value"> &nbsp;&nbsp;
-				    	<?php  $today = date("F j, Y, g:i a");echo $today; ?></label>
-				    </td>
-				</tr>
-				<tr style="white-space: nowrap;">
-				    <td colspan="2" class="khmerbold" style="line-height: 14px;">&nbsp;&nbsp; </td>
-				    <td></td>
-				    <td colspan="2" align="right" class="khmerbold" style="line-height: 14px;">
-				        <h4 style="padding-right: 5px ! important;margin-bottom: -10px  !important;">
-				              <?php $session_user=new Zend_Session_Namespace('auth');
-						           $last_name=$session_user->last_name;
-						           $username = $session_user->first_name;
-						           echo " Official's Signature : ".$last_name." ".$username;?>
-				        </h4><br/>
-				    </td>
-				</tr>
-				<tr><td style="height: 10px;" colspan="5"></td></tr>
-			</table>
-		</div>
-		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
-		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
-				showLabel="false" type="button" onclick="doPrint();printSubmit();">Print</button>
-		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel"
-				showLabel="false" type="button" onclick="hideDialog();">Cancel</button>
-	</div>
-</div>
 
 <script>
-//save daata when sub button print 
-function printSubmit(){
-	 $('#office_receipt').submit();
-}
-function hideDialog(){
-	dijit.byId('terms').hide();
-}
+
 function calculatePrice() {
 	var total = $('#tuitionfee').val();
 	var ds = $('#discount').val();

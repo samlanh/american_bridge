@@ -119,9 +119,9 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
     			$db = new Registrar_Model_DbTable_DbStudentLunchPayment();
     			$db->updateStudentLunchPayment($_data);
     			if(isset($_data['save_close'])){
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/studentlunchpayment/index');
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('EDIT_SUCCESS'), self::REDIRECT_URL . '/studentlunchpayment/index');
     			}else{
-    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/studentlunchpayment/index');
+    				Application_Form_FrmMessage::Sucessfull($this->tr->translate('EDIT_SUCCESS'), self::REDIRECT_URL . '/studentlunchpayment/index');
     			}
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));

@@ -1,0 +1,413 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("ADD_PARKING_PAYMENT"));
+	//print_r($this->reil);
+?>	
+<style>
+ 
+</style>
+<script type="text/javascript" src="js/dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script src="<?php echo $this->baseUrl();?>/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    dojo.require("dojo.NodeList-manipulate");
+    dojo.require("dojo.parser");
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.CheckBox");
+    dojo.require("dojox.form.BusyButton");
+	dojo.require("dojo.data.ItemFileWriteStore");
+	
+	dojo.ready(function(){	
+			
+			hidendOldCus();
+			
+			new dijit.form.FilteringSelect({
+				autoComplete: false,
+				queryExpr: "*${0}*",                        
+				id: "old_cus",
+				name: "old_cus",
+				required: false,           
+				class: 'fullside',  
+				placeHolder:"----- select customer -----",          
+				onChange: function() {  
+					getOldCustomerInfo();
+					setCusName();
+				}
+			}, "old_cus");
+		
+	});
+		
+		
+	var customer_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var url_customer = '<?php echo $this->url(array('module'=>'accounting','controller'=>'parkingpayment','action'=>'get-old-customer-by-branch')); ?>';
+	function getOldCustomerByBranch(){
+		branch_id = dijit.byId('branch').get('value');
+		//alert(branch_id);
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_customer,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					customer_store  = getDataStorefromJSON('id','name', data);
+					dijit.byId('old_cus').set('store',customer_store);   
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+	
+	var url_customer_id = '<?php echo $this->url(array('module'=>'accounting','controller'=>'parkingpayment','action'=>'get-customer-id-by-branch')); ?>';
+	function getCustomerIDByBranch(){
+		branch_id = dijit.byId('branch').get('value');
+		new_cus = dijit.byId('is_new_cu').get('value');
+		//alert(branch_id);
+		if(branch_id>0 && new_cus==1){
+			dojo.xhrPost({
+				url:url_customer_id,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					dijit.byId('cus_id').attr('value',data);   
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+	
+	var url_receipt = '<?php echo $this->url(array('module'=>'accounting','controller'=>'parkingpayment','action'=>'get-receipt-by-branch')); ?>';
+	function getReceiptByBranch(){
+		branch_id = dijit.byId('branch').get('value');
+		//alert(branch_id);
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_receipt,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					dijit.byId('receipt_no').attr('value',data);   
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}	
+		
+</script>
+
+<form  id='frm_parking' action="" dojoType="dijit.form.Form" method="post"  enctype="multipart/form-data" >
+	<script type="dojo/method" event="onSubmit" enctype="multipart/form-data">			
+		if(this.validate()) {
+		   dijit.byId('save_new').set('disabled',true);
+		   dijit.byId('save_close').set('disabled',true);
+		   return true;
+		} else {
+			return false;
+		}
+	</script>
+	
+	<table cellspacing="2" width="100%" style="margin: 0 auto; ">
+		<tr>
+			<td width="33%;" valign="top">
+				<fieldset>
+					<legend align="center" ><strong><?php echo $tr->translate("CUSTOMER_INFO")?></strong></legend>
+					<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+							
+							<tr>
+								<td><?php echo $tr->translate("BRANCH");?></td>
+								<td>
+									<select dojoType='dijit.form.FilteringSelect' id="branch" name="branch" class="fullside" onChange="getOldCustomerByBranch();getCustomerIDByBranch();getReceiptByBranch();" ​​>
+										<option value=""><?php echo $tr->translate("Select Branch");?></option>
+										<?php if(!empty($this->branch)){foreach($this->branch as $branch){?>
+											<option value="<?php echo $branch['id']?>"><?php echo $branch['name']?></option>
+										<?php }}?>
+									</select>
+								</td>
+							</tr>
+							
+							<tr>
+								<td><?php echo $tr->translate("OLD_CUS");?></td>
+								<td>
+									<select dojoType='dijit.form.FilteringSelect' class="fullside" ​​name="is_new_cu" id="is_new_cu" onchange="hidendOldCus();getCustomerIDByBranch();">
+										<option value="0"><?php echo $tr->translate("Old Customer");?></option>
+										<option value="1"><?php echo $tr->translate("New Customer");?> </option>
+									</select>
+								</td>
+							</tr>
+							
+							<tr>
+								<td><?php echo $tr->translate("CUS_ID");?></td>
+								<td><input type="text" name="cus_id" class="fullside" id="cus_id"  style="color:red;" dojoType="dijit.form.ValidationTextBox" required="required" /> </td> 
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("CUS_NAME");?></td>
+								<td>
+									<div id="cus_name_div">
+										<input type="text" name="cus_name" class="fullside" id="cus_name"   dojoType="dijit.form.ValidationTextBox" required="required"/> 
+									</div>
+									
+									<!-- old Customer  -->
+									
+									<div id="old_cus_div">
+										<input id="old_cus" />
+									</div>
+									
+									<!-- /end old Customer  -->
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("SEX");?></td>
+								<td>
+									<select dojoType='dijit.form.FilteringSelect' id="sex" name="sex"   class="fullside"  ​​  placeholder=" ">
+										<option value="1"><?php echo $tr->translate("MALE");?></option>
+										<option value="2"><?php echo $tr->translate("FEMALE");?> </option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("PHONE");?></td>
+								<td><input type="text" name="phone" class="fullside" id="phone"   dojoType="dijit.form.TextBox" /> </td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("EMAIL");?></td>
+								<td><input type="text" name="email" class="fullside" id="email"   dojoType="dijit.form.TextBox" /> </td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("ADDRESS");?></td>
+								 <td><textarea class="fullside"  style=" height: 30px !important;" tabindex="20" dojoType=""  id="address" name="address"  ></textarea> </td>  
+							</tr>
+					</table>	
+				</fieldset>	
+			</td>
+			<td colspan="2" width="67%" valign="top">
+				<table width="100%" >
+					<tr>
+						<td width="50%;" valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
+											<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="calculateMotoFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("FOR_DATE");?></td>
+											<td><input type="text" name="moto_for_date" class="fullside" id="moto_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("EXC_RATE");?>($)</td>
+											<td><input type="text" name="moto_total_in_dollar" class="fullside" id="moto_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
+										</tr>
+									</table>
+							</fieldset>	
+						</td>
+						<td width="50%;" valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
+											<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="calculateBikeFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("FOR_DATE");?></td>
+											<td><input type="text" name="bike_for_date" class="fullside" id="bike_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("EXC_RATE");?>($)</td>
+											<td><input type="text" name="bike_total_in_dollar" class="fullside" id="bike_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
+										</tr>
+									</table>	
+							</fieldset>	
+						</td>
+					</tr>
+					
+					<tr>
+						<td valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("លក់អេតចាយ")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
+											<td><input type="text" name="broken_in_riel" class="fullside" id="broken_in_riel" onKeyUp="calculateBrokenFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("FOR_DATE");?></td>
+											<td><input type="text" name="broken_for_date" class="fullside" id="broken_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("EXC_RATE");?>($)</td>
+											<td><input type="text" name="broken_total_in_dollar" class="fullside" id="broken_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
+										</tr>
+									</table>
+							</fieldset>	
+						</td>
+						<td valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("PAID_AMOUN")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("ទឹកប្រាក់សរុប");?>($)​</td>
+											<td><input type="text" name="all_total_amount" class="fullside" id="all_total_amount"  value="0" dojoType="dijit.form.NumberTextBox" readOnly="true"/> </td> 
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("លេខបង្កាន់ដៃ");?></td>
+											<td><input type="text" name="receipt_no" class="fullside" id="receipt_no" style="color:red;"  dojoType="dijit.form.ValidationTextBox" required="required" value="<?php echo $this->receipt_no;?>"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("CREATE_DATE");?></td>
+											<td><input type="text" name="create_date" class="fullside" id="create_date"   dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("NOTE");?></td>
+											<td><input type="text" name="note" class="fullside" id="note"   dojoType="dijit.form.TextBox" /> </td> 
+										</tr>
+									</table>	
+							</fieldset>	
+						</td>
+					</tr>
+					
+				</table>
+			</td>
+		</tr>
+		
+		
+		<tr>
+			<td colspan="4" align="center" style="padding-left:40px;">
+				<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+				<input type="submit" value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+					iconClass="dijitEditorIcon dijitEditorIconSave" />
+				<input type="submit" value="save_new" name="save_new"  id="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+					 iconClass="dijitEditorIcon dijitEditorIconSave" />
+			</td>
+		</tr>
+	</table>	
+</form>
+<script>
+var reil_exc="<?php echo $this->reil['reil']?>";
+
+
+function hidendOldCus(){
+	if(dijit.byId('is_new_cu').get('value')==0){
+		$('#old_cus_div').show();
+		$("#cus_name_div").hide();
+		//dijit.byId("old_cus").attr("value",'0');
+	}else {
+		$("#cus_name_div").show();
+		$('#old_cus_div').hide();
+		clearCusOld();
+	}
+}
+
+function clearCusOld(){
+	//dijit.byId("cus_id").attr('value','<?php echo $this->cus_id;?>');
+	dijit.byId("cus_name").attr("value","");
+	dijit.byId("phone").attr("value","");
+	dijit.byId("email").attr("value","");
+	$("#address").val("");
+}
+
+function setCusName(){
+	 dijit.byId("cus_name").attr('value',dijit.byId("old_cus").attr('displayedValue'));
+}
+
+function calculateMotoFee(){
+
+	  moto_in_riel = dijit.byId("moto_total_in_riel").get("value");
+	  if(isNaN(moto_in_riel)){
+		moto_in_riel=0;
+	  }
+	  total_in_dollar = moto_in_riel / reil_exc;
+	  dijit.byId("moto_total_in_dollar").attr("value",total_in_dollar.toFixed(2));
+	  
+	 getTotal();
+}
+function calculateBikeFee(){
+
+	  bike_in_riel = dijit.byId("bike_total_in_riel").get("value");
+	  if(isNaN(bike_in_riel)){
+		bike_in_riel=0;
+	  }
+	  total_in_dollar = bike_in_riel / reil_exc;
+	  dijit.byId("bike_total_in_dollar").attr("value",total_in_dollar.toFixed(2));
+	  
+	 getTotal();
+}
+function calculateBrokenFee(){
+
+	  broken_in_riel = dijit.byId("broken_in_riel").get("value");
+	  if(isNaN(broken_in_riel)){
+		broken_in_riel=0;
+	  }
+	  total_in_dollar = broken_in_riel / reil_exc;
+	  dijit.byId("broken_total_in_dollar").attr("value",total_in_dollar.toFixed(2));
+	  
+	 getTotal();
+}
+
+//functon get sum money All total
+function getTotal(){
+	var total=0;
+	var moto=dijit.byId("moto_total_in_dollar").get("value");
+	var bike=dijit.byId("bike_total_in_dollar").get("value");
+	var broken=dijit.byId("broken_total_in_dollar").get("value");
+
+	if(isNaN(moto)){
+		moto=0;
+	}
+	if(isNaN(bike)){
+		bike=0;
+	}
+	if(isNaN(broken)){
+		broken=0;
+	}
+	total=parseFloat(moto+bike+broken);
+	
+	dijit.byId("all_total_amount").attr("value",total.toFixed(2));
+	
+}
+
+
+//get old customer info 
+var url_getcusinfo = '<?php echo $this->url(array('module'=>'registrar','controller'=>'parkingpayment','action'=>'get-customer-info')); ?>';
+function getOldCustomerInfo(){
+	var old_cus = dijit.byId("old_cus").get('value');
+	if(old_cus==0 || old_cus==''){
+		return  false;
+	}
+	dojo.xhrPost({
+		url:url_getcusinfo,
+		content:{
+			'cus_id':old_cus
+			},
+		handleAs:"json",
+		load: function(data) {
+			 //set customer 
+			dijit.byId("cus_id").attr("value",data.customer_code); 
+			dijit.byId("cus_name").attr("value",data.first_name);	
+			dijit.byId("sex").attr("value",data.sex);
+			dijit.byId("phone").attr("value",data.phone);
+			dijit.byId("email").attr("value",data.email);
+			$("#address").val(data.address);
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
+
+</script>

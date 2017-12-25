@@ -2,7 +2,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm =  $this->form_search;
 ?>	
-<title><?php echo $tr->translate('Daily Income Parking and Canteen');?></title>
+<title><?php echo $tr->translate('Daily Income Canteen');?></title>
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-parking-canteen')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	<table width="95%">
 	    <tr>
@@ -63,7 +63,7 @@
 					<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
 				</td>
 				<td align="center" width="70%" style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 14px;">
-					<strong  style="font-weight:bold;color:#000; font-size: 17px;font-family: Khmer OS Battambang,Times New Roman;​"><?php echo $tr->translate("Daily Income Report(Parking and Canteen Fee)");?></strong><br />
+					<strong  style="font-weight:bold;color:#000; font-size: 17px;font-family: Khmer OS Battambang,Times New Roman;​"><?php echo $tr->translate("Daily Income Report(Canteen Fee)");?></strong><br />
 					<strong style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 13px;">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong> <br />   
 					<?php if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
 				</td>
@@ -82,7 +82,7 @@
 							<td rowspan="2" class="padd">Receipt No.</td>
 							<td rowspan="2" class="padd">ID</td>
 							<td rowspan="2" class="padd">Name</td>
-							<td colspan="6" class="padd">Description</td>
+							<td colspan="5" class="padd">Description</td>
 							<td rowspan="2" class="padd">Total in<br />USD</td>
 							<td rowspan="2" class="padd">Remark</td>
 	 					 </tr>
@@ -91,7 +91,6 @@
 							<td rowspan="1" class="padd">Water Supply</td>
 							<td rowspan="1" class="padd">Electricity</td>
 							<td rowspan="1" class="padd">Garbage</td>
-							<td rowspan="1" class="padd">Parking</td>
 							<td rowspan="1" class="padd">Other</td>
 	 					 </tr>
 	 					 
@@ -115,7 +114,6 @@
 							<td class="padd"><?php echo "$ ".$rs['water_exc_rate'];?></td>
 							<td class="padd"><?php echo "$ ".$rs['fire_exc_rate'];?></td>
 							<td class="padd"><?php echo "$ ".$rs['hygiene_price'];?></td>
-							<td class="padd"><?php echo "$ ".$rs['parking_price'];?></td>
 							<td class="padd"><?php echo "$ ".$rs['other_price'];?></td>
 							
 							<td class="padd"><?php echo "$ ".$rs['all_total_amount'];?></td>
@@ -123,7 +121,7 @@
 	 					</tr>
 	 						
 	 					<?php 
-	 						$grand_total = $rs['rent_paid'] + $rs['water_exc_rate'] + $rs['fire_exc_rate'] + $rs['hygiene_price'] + $rs['parking_price'] + $rs['other_price'];
+	 						$grand_total = $rs['rent_paid'] + $rs['water_exc_rate'] + $rs['fire_exc_rate'] + $rs['hygiene_price'] + $rs['other_price'];
 	 					?>	
 	 						
 	 				<?php }}?>

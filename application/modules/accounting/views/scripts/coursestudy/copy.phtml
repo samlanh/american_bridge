@@ -310,7 +310,6 @@
     	dijit.byId('total').attr('value',0);
     	dijit.byId('books').attr('value',0);
     	// dijit.byId('discount').attr('value',0);
-    	// dijit.byId('addmin_fee').attr('value',0);
     	// dijit.byId('remaining').attr('value',0);
     	// dijit.byId('remark').attr('value',0);
 
@@ -343,7 +342,6 @@
 				    	 dijit.byId('total').attr('value','0'); 
 				    	 //dijit.byId('discount').attr('value','0');
 				    	 dijit.byId('books').attr('value','0');
-					     //dijit.byId('addmin_fee').attr('value','0');
 					     dijit.byId('remaining').attr('value','0');
 					     //dijit.byId('remark').attr('value','0');
 					    // dijit.byId('char_price').attr('value','0');
@@ -362,7 +360,6 @@
     	dijit.byId('total').attr('value','<?php echo $this->row_gep['total_payment'];?>');
     	dijit.byId('discount').attr('value','<?php echo $this->row_gep['discount_percent'];?>');
     	dijit.byId('books').attr('value','<?php echo $this->row_gep['paid_amount'];?>');
-    	dijit.byId('addmin_fee').attr('value','<?php echo $this->row_gep['admin_fee'];?>');
     	dijit.byId('remaining').attr('value','<?php echo $this->row_gep['balance_due'];?>');
     	dijit.byId('remark').attr('value','<?php echo $this->row_gep['other_fee'];?>');
     	//dijit.byId('char_price').attr('value','<?php echo $this->row_gep['amount_in_khmer'];?>');
@@ -402,13 +399,7 @@
 		remark=dijit.byId('remark').get('value');
 		remark=isNaN(remark)?0:remark;
 		
-		addmin_fee=dijit.byId('addmin_fee').get('value');
-		addmin_fee=isNaN(addmin_fee)?0:addmin_fee;
-		
-		material_fee=dijit.byId('material_fee').get('value');
-		material_fee=isNaN(material_fee)?0:material_fee;
-		
-		totals=parseFloat(old_totale)+parseFloat(remark)+parseFloat(addmin_fee)+parseFloat(material_fee);
+		totals=parseFloat(old_totale)+parseFloat(remark);
 		
 		dijit.byId('total').attr('value',totals.toFixed(2));
 		dijit.byId('books').attr('value',totals.toFixed(2));
@@ -803,14 +794,6 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>	
-							<td><?php echo $tr->translate("ADMIN_FEE");?></td>
-							<td><?php echo $register->getElement('addmin_fee');?></td>	
-						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("MATERIAL_FEE");?></td>
-							<td><?php echo $register->getElement('material_fee');?></td>	
-						</tr>
-						<tr>	
 							<td><?php echo $tr->translate("OTHERS_PRICE");?></td>
 							<td><?php echo $register->getElement('remark');;?></td>
 						</tr>
@@ -1121,7 +1104,6 @@ function getBalancePrice(servce_id,student_id){
 			    	 dijit.byId('total').attr('value','0'); 
 			    	 dijit.byId('discount').attr('value','0');
 			    	 dijit.byId('books').attr('value','0');
-				     dijit.byId('addmin_fee').attr('value','0');
 				     dijit.byId('remaining').attr('value','0');
 				     dijit.byId('remark').attr('value','0');
 				    // dijit.byId('char_price').attr('value','0');

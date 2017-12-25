@@ -261,9 +261,9 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate('MATERIAL_FEE');?></td>
+							<td><?php echo $tr->translate('OTHER_FEE');?></td>
 							<td> 
-								<input class="fullside" value="<?php echo $this->detail['material_fee']?>" name="material_fee" id="material_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
+								<input class="fullside" value="<?php echo $this->detail['other_fee']?>" name="other_fee" id="other_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
 							</td>
 						</tr>
 						<tr>
@@ -464,7 +464,7 @@ fieldset{  background:none;}
 		dijit.byId("service").set('readOnly',true);
 		dijit.byId("term").set('readOnly',true);
 		dijit.byId("service_fee").set('readOnly',true);
-		dijit.byId("material_fee").set('readOnly',true);
+		dijit.byId("other_fee").set('readOnly',true);
 		dijit.byId("qty").set('readOnly',true);
 		dijit.byId("discount").set('readOnly',true);
 		dijit.byId("paid_amount").set('readOnly',true);
@@ -588,21 +588,9 @@ function printSave(new_stu_id,new_receipt_no){
 		
 		dojo.byId("lb_read_money").innerHTML = dijit.byId('readmoney').get('value');
 		
-		total_product_fee = 0;
+		dojo.byId("lb_note").innerHTML = dijit.byId('other').get('value');
 		
-		checkbox = dijit.byId('buy_product').get('value');
-		
-		if(checkbox==1){
-			var rowId = $('#identity').val();
-			if(rowId==""){
-				return false;
-			}
-			var rowIDArray = rowId.split(',');
-			for(var n = 0; n < rowIDArray.length; n++) {
-				total_product_fee += dijit.byId('subtotal_'+rowIDArray[n]).get('value');
-			}
-		}
-		dojo.byId("lb_total_product_fee").innerHTML ="$ "+total_product_fee;
+		dojo.byId("lb_other_fee").innerHTML ="$ " + dijit.byId('other_fee').get('value');
 		
 		
 		pay_term = dijit.byId('qty').get('value') + dijit.byId('term').attr('displayedValue');
@@ -795,7 +783,21 @@ function getMonthByNumber(m){
 						</table>
 					</td>
 				</tr>
-					
+				<tr>
+					<td colspan="8">
+						<table width="100%" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+							<tr>
+								<td width="15%">សម្គាល់/Note</td>
+								<td width="85%">
+									&nbsp;:&nbsp; <label id="lb_note" class="data" ></label>
+									<div class="underline">
+										...............................................................................................................................................................................................................................
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 				<tr>
 					<td colspan="8" style="border:1px solid #000;">
 						<table width="100%" border="0" class="data2" style="white-space:nowrap; font-family:Khmer OS Battambang,Times New Roman;font-size:11px;line-height: 21px;">
@@ -839,9 +841,9 @@ function getMonthByNumber(m){
 								</td>
 								
 								
-								<td >ថ្លៃសម្ភារៈ/Material Fee</td>
+								<td >ថថ្លៃផ្សេងៗ / Other Fee</td>
 								<td>
-									: <label id="lb_total_product_fee" class="data1" ></label>
+									: <label id="lb_other_fee" class="data1" ></label>
 									<div class="underline">..............</div>
 								</td>
 							</tr>
@@ -1044,7 +1046,7 @@ function getMonthByNumber(m){
 
 //save daata when sub button print 
 function printSubmit(){
-	//$('#office_receipt').submit();
+	$('#office_receipt').submit();
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();

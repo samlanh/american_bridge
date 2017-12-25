@@ -709,7 +709,6 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	water_exc_rate,
 			    	fire_exc_rate,
 			    	hygiene_price,
-			    	parking_price,
 			    	other_price,
 			    	
 			    	all_total_amount,

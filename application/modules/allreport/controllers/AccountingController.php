@@ -1467,6 +1467,11 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 		$frm_search = $frm_major->FrmMajors();
 		Application_Model_Decorator::removeAllDecorator($frm_search);
 		$this->view->frm_search = $frm_search;
+		
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
 	}
 	
 	public function rptCusNearlyEndServiceAction(){

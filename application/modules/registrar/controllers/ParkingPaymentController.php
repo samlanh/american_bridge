@@ -16,14 +16,17 @@ class Registrar_ParkingPaymentController extends Zend_Controller_Action {
     		else{
     			$search=array(
     					'title'	        =>	'',
-    					'cus_name'		=>	0,
+    					'cus_name'		=>	"",
     					'start_date'	=>	date("Y-m-d"),
     					'end_date'		=>	date("Y-m-d"),
-    					'status_search'	=> 1
 				);
     		}
 			$db = new Registrar_Model_DbTable_DbParkingPayment();
 			$rs_rows = $db->getAllParkingPayment($search);
+			
+			$this->view->old_cus = $db->getAllCustomerName();
+				
+			$this->view->search = $search;
 			
 			$list = new Application_Form_Frmtable();
     		$collumns = array("RECEIPT_NO","CUS_ID","NAME","PHONE","ថ្លៃកិបសំបុត្រម៉ូតូ","ថ្លៃកិបសំបុត្រកង់","លក់អេតចាយ","TOTAL","NOTE","USER","CREATE_DATE");
@@ -39,10 +42,6 @@ class Registrar_ParkingPaymentController extends Zend_Controller_Action {
 			echo $e->getMessage();
 		}
 		
-		$frm_major = new Accounting_Form_FrmSearchMajor();
-		$frm_search = $frm_major->FrmMajors();
-		Application_Model_Decorator::removeAllDecorator($frm_search);
-		$this->view->frm_search = $frm_search;
 		
 		$form=new Registrar_Form_FrmSearchInfor();
 		$form->FrmSearchRegister();

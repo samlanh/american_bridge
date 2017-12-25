@@ -137,7 +137,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 					//'year'				=>$data['study_year'],
 					'exchange_rate'		=>$data['ex_rate'],
 					'tuition_fee'		=>$tuitionfee,
-					'material_fee'		=>$data['material_fee'],
+					'other_fee'			=>$data['other_fee'],
 					
 					'discount_percent'	=>$data['discount'],
 					'discount_fix'		=>$data['discount_fix'],
@@ -185,7 +185,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 						'payment_term'	=>$data['term'],
 						'fee'			=>$data['service_fee'],
 						'qty'			=>$data['qty'],
-						'material_fee'	=>$data['material_fee'],
+						'other_fee'		=>$data['other_fee'],
 						'discount_percent'=>$data['discount'],
 						'discount_fix'	=>$data['discount_fix'],
 						'subtotal'		=>$data['total_payment'],

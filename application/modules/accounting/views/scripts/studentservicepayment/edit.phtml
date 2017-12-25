@@ -288,9 +288,9 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>
-							<td><?php echo $tr->translate('MATERIAL_FEE');?></td>
+							<td><?php echo $tr->translate('OTHER_FEE');?></td>
 							<td> 
-								<input class="fullside" value="<?php echo $this->detail['material_fee']?>" name="material_fee" id="material_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
+								<input class="fullside" value="<?php echo $this->detail['other_fee']?>" name="other_fee" id="other_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
 							</td>
 						</tr>
 						<tr>
@@ -395,7 +395,6 @@ fieldset{  background:none;}
 		
 		<tr>
 			<td colspan="4" align="center">
-				<input iconClass="dijitIconClear" type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
 				<input type="submit" name="save_close" id="save_close" value="រក្សាទុក" label="<?php echo $tr->translate('GO_EDIT');?>"  dojoType="dijit.form.Button" 
 				 iconClass="dijitEditorIcon dijitEditorIconSave" />
 			</td>
@@ -493,7 +492,7 @@ fieldset{  background:none;}
 		dijit.byId("service").set('readOnly',true);
 		dijit.byId("term").set('readOnly',true);
 		dijit.byId("service_fee").set('readOnly',true);
-		dijit.byId("material_fee").set('readOnly',true);
+		dijit.byId("other_fee").set('readOnly',true);
 		dijit.byId("qty").set('readOnly',true);
 		dijit.byId("discount").set('readOnly',true);
 		dijit.byId("discount_fix").set('readOnly',true);

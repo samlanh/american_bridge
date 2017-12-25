@@ -1,6 +1,6 @@
 <?php
 
-class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
+class Accounting_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 {
  	protected $_name = 'rms_parking';
  	
@@ -57,12 +57,17 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
     		$s_where[]="  p.phone LIKE '%{$s_search}%'";
     		$s_where[]="  p.email LIKE '%{$s_search}%'";
     		$s_where[]="  p.address LIKE '%{$s_search}%'";
+    		
     		$s_where[]="  pd.receipt_no LIKE '%{$s_search}%'";
     		$where.=' AND ('.implode(' OR ', $s_where).')';
     	}
     	
+    	
     	if($search['cus_name']>0){
     		$where.=' AND p.id='.$search["cus_name"];
+    	}
+    	if($search['branch']>0){
+    		$where.=' AND pd.branch_id='.$search["branch"];
     	}
     	
     	$order=" ORDER BY pd.id DESC";
@@ -82,7 +87,7 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 		$db->beginTransaction();
 		try{
 			$arr=array(
-					"branch_id" 	=> 	$this->getBranchId(),
+					"branch_id" 	=> 	$data["branch"],
 					"customer_code" => 	$data["cus_id"],
 					"name"    		=> 	$data["cus_name"],
 					"sex"  			=> 	$data["sex"],
@@ -90,7 +95,7 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 					"email"  		=> 	$data['email'],
 					"address"		=> 	$data['address'],
 					"user_id"       => 	$this->getUserId(),
-					"create_date"   => 	date("Y-m-d"),
+					"create_date"   => 	$data["create_date"],
 					
 			);
 			if(empty($data['is_new_cu'])){
@@ -100,8 +105,6 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 				$parking_id=$data['old_cus'];
 				$this->update($arr, $where);
 			}
-			
-			//check customer 
 			
 			$arr_payment=array(
 					"parking_id"     	=> 	$parking_id,
@@ -123,8 +126,8 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 					
 					"note"  			=> 	$data["note"],
 					
-					"create_date"		=>	date('Y-m-d H:i:s'),
-					"branch_id"     	=> 	$this->getBranchId(),
+					"create_date"   	=> 	$data["create_date"],
+					"branch_id" 		=> 	$data["branch"],
 					"user_id"     		=> 	$this->getUserId(),
 			);
 			$this->_name="rms_parking_detail";
@@ -143,7 +146,7 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 		$db->beginTransaction();
 		try{
 			$arr=array(
-					"branch_id" 	=> 	$this->getBranchId(),
+					"branch_id" 	=> 	$data["branch"],
 					"customer_code" => 	$data["cus_id"],
 					"name"    		=> 	$data["cus_name"],
 					"sex"  			=> 	$data["sex"],
@@ -179,7 +182,7 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 					
 					"note"  			=> 	$data["note"],
 					
-					"branch_id"     	=> 	$this->getBranchId(),
+					"branch_id" 		=> 	$data["branch"],
 					"user_id"     		=> 	$this->getUserId(),
 			);
 			$this->_name="rms_parking_detail";
@@ -296,6 +299,51 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 		$sql="SELECT reil FROM rms_exchange_rate WHERE active=1";
 		return $db->fetchRow($sql);
 	}
+	
+	function getOldCustomerByBranch($branch_id){
+		$db=$this->getAdapter();
+		$sql="SELECT id,name FROM rms_parking WHERE status=1 and branch_id = $branch_id ";
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$order);
+	}
+	
+	function getCusIdByBranch($branch_id){
+		$db=$this->getAdapter();
+		$sql="SELECT count(id) as id FROM rms_parking where 1 and branch_id=$branch_id LIMIT 1 ";
+		$amount=$db->fetchOne($sql);
+	
+		$new_amount = $amount + 1;
+	
+		$length = strlen($new_amount);
+	
+		$prefix = 'P';
+	
+		for($i=$length;$i<4;$i++){
+			$prefix.='0';
+		}
+	
+		$cus_id = $prefix.$new_amount;
+	
+		return $cus_id;
+	}
+	
+	function getReceiptByBranch($branch_id){
+		$db=$this->getAdapter();
+		$sql="SELECT count(id) FROM rms_parking_detail WHERE 1 and branch_id=$branch_id limit 1 ";
+		$amount=$db->fetchOne($sql);
+	
+		$new_amount = $amount + 1;
+	
+		$length = strlen($new_amount);
+	
+		$prefix = '';
+	
+		for($i=$length;$i<6;$i++){
+			$prefix.='0';
+		}
+		return $prefix.$new_amount;
+	}
+	
 	
 }
 

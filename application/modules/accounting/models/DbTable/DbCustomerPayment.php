@@ -17,16 +17,37 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
     
     function getAllCustomer($search=null){
     	$db=$this->getAdapter();
-    	$sql=" SELECT cp.id,c.customer_code,cp.rent_receipt_no,c.first_name,
-		      c.phone,c.email,c.start_date,c.end_date,
-		      (SELECT name_en FROM rms_view WHERE key_code=cp.last_piad AND TYPE=11 LIMIT 1 ) AS `last_piad`,
-		      (SELECT CONCAT(first_name,' ',last_name) FROM rms_users WHERE rms_users.id=cp.user_id LIMIT 1) AS user_name,
-		      (SELECT name_en FROM rms_view WHERE key_code=cp.status AND TYPE=1 LIMIT 1) AS `status`,'view'  
-		      FROM rms_customer AS c,rms_customer_paymentdetail AS cp
-		      WHERE c.id=cp.cus_id  ";
+    	
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission('cp.branch_id');
+    	
+    	$sql="SELECT 
+    				cp.id,
+    				(select branch_namekh from rms_branch where br_id = cp.branch_id) as branch_name,
+    				cp.rent_receipt_no,
+    				c.customer_code,
+    				c.first_name,
+		      		c.phone,
+		      		c.email,
+		      		c.start_date,
+		      		c.end_date,
+			        (SELECT name_en FROM rms_view WHERE key_code=cp.last_piad AND TYPE=11 LIMIT 1 ) AS `last_piad`,
+			        (SELECT CONCAT(first_name,' ',last_name) FROM rms_users WHERE rms_users.id=cp.user_id LIMIT 1) AS user_name,
+			        cp.create_date,
+			        (SELECT name_en FROM rms_view WHERE key_code=cp.status AND TYPE=1 LIMIT 1) AS `status` 
+		      	FROM 
+		      		rms_customer AS c,
+		      		rms_customer_paymentdetail AS cp
+		      	WHERE 
+    				c.id=cp.cus_id  
+    				and cp.status=1
+    				$branch_id
+    		";
+    	
     	$where = '';
-    	$from_date =(empty($search['start_date']))? '1': "c.start_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': "c.end_date <= '".$search['end_date']." 23:59:59'";
+    	
+    	$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
     	if(!empty($search["title"])){
     		$s_where=array();
@@ -55,6 +76,9 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
     	if($search['cus_name']>0){
     		$where.=' AND c.id='.$search["cus_name"];
     	}
+    	if($search['branch']>0){
+    		$where.=' AND cp.branch_id='.$search["branch"];
+    	}
     	
     	$group=" GROUP BY cp.rent_receipt_no ";
     	$order=" ORDER BY c.customer_code DESC";
@@ -64,7 +88,7 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
     
     function getCheckCustomer($id){
     	$db=$this->getAdapter();
-    	$sql="SELECT cus_id FROM rms_customer_paymentdetail WHERE STATUS=1 AND cus_id=$id";
+    	$sql="SELECT cus_id FROM rms_customer_paymentdetail WHERE status=1 AND cus_id=$id";
     	return $db->fetchRow($sql);
     }
  
@@ -74,7 +98,8 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 		$db->beginTransaction();
 		try{
 			$arr=array(
-					"customer_code" => 	$this->getCusId(),
+					"branch_id" 	=> 	$data["branch"],
+					"customer_code" => 	$data["cus_id"],
 					"first_name"    => 	$data["cus_name"],
 					"sex"  			=> 	$data["sex"],
 					"phone"  		=> 	$data["phone"],
@@ -92,7 +117,7 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 				$cus_id=$data['old_cus'];
 				$this->update($arr, $where);
 			}
-			unset($info_purchase_order);
+			
 			//check customer 
 			$cus=$this->getCheckCustomer($cus_id);
 			if(!empty($cus)){
@@ -102,7 +127,7 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 				$this->_name="rms_customer_paymentdetail";
 				$where=" cus_id=".$cus['cus_id'];
 				$this->update($arr_status, $where);
-			}else{}
+			}
 			$arr_payment=array(
 					"cus_id"     		=> 	$cus_id,
 					"water_old_congtor" => 	$data["water_old_congtor"],
@@ -124,7 +149,7 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 					"fire_end_date"     => 	date("Y-m-d",strtotime($data['fire_end_date'])),
 					
 					"rent_date_paid"    => 	date("Y-m-d",strtotime($data['rent_date'])),
-					"rent_receipt_no"   => 	$this->getReceiptNo(),
+					"rent_receipt_no"   => 	$data["receipt_no"],
 					"rent_paid"     	=> 	$data["rent_paid"],
 					"rent_start_date"   => 	date("Y-m-d",strtotime($data['rent_start_date'])),
 					"rent_end_date"   	=> 	date("Y-m-d",strtotime($data['rent_end_date'])),
@@ -134,17 +159,13 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 					"hygiene_end_date"  => 	date("Y-m-d",strtotime($data['hygiene_end_date'])),
 					"hygiene_note"  	=> 	$data['hygiene_note'],
 					
-					"parking_price"     => 	$data['parking_price'],
-					"parking_start_date"=> 	date("Y-m-d",strtotime($data['parking_start_date'])),
-					"parking_end_date"  => 	date("Y-m-d",strtotime($data['parking_end_date'])),
-					"parking_note"  	=> 	$data['parking_note'],
 					
 					"other_price"     	=> 	$data['other_price'],
 					"other_start_date"	=> 	date("Y-m-d",strtotime($data['other_start_date'])),
 					"other_end_date"  	=> 	date("Y-m-d",strtotime($data['other_end_date'])),
 					"other_note"  		=> 	$data['other_note'],
 					
-					"create_date"		=>	date('Y-m-d H:i:s'),
+					"create_date"		=>	$data['create_date'],
 					
 					"all_total_amount"  => 	$data["all_total_amount"],
 					"paid"     			=> 	$data["paid"],
@@ -152,7 +173,7 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 					"status"  			=> 	$data["status"],
 					"note"  			=> 	$data['note'],
 					
-					"branch_id"     	=> 	$this->getBranchId(),
+					"branch_id" 		=> 	$data["branch"],
 					"user_id"     		=> 	$this->getUserId(),
 					"last_piad"  		=> 	1,
 			);
@@ -192,7 +213,6 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 				$cus_id=$data['old_cus'];
 				$this->update($arr, $where);
 			}
-			unset($info_purchase_order);
 			//check customer
 			$cus=$this->getCheckCustomer($cus_id);
 			if(!empty($cus)){
@@ -276,7 +296,11 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 	
 	function getCusId(){
 		$db=$this->getAdapter();
-		$sql="SELECT id FROM rms_customer ORDER BY id DESC";
+		
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$branch_id = $_db->getAccessPermission('branch_id');
+		
+		$sql="SELECT id FROM rms_customer where 1 $branch_id ORDER BY id DESC";
 		$amount=$db->fetchOne($sql);
 		
 		$new_amount = $amount + 1;
@@ -293,7 +317,11 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 	
 	function getReceiptNo(){
 		$db=$this->getAdapter();
-		$sql="SELECT id FROM rms_customer_paymentdetail WHERE 1 ORDER BY id DESC";
+		
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$branch_id = $_db->getAccessPermission('branch_id');
+		
+		$sql="SELECT id FROM rms_customer_paymentdetail WHERE 1 $branch_id ORDER BY id DESC";
 		$amount=$db->fetchOne($sql);
 		
 		$new_amount = $amount + 1;
@@ -310,7 +338,11 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 	
 	function getOldCustomer(){
 		$db=$this->getAdapter();
-		$sql="SELECT id,first_name AS cus_name FROM rms_customer WHERE STATUS=1";
+		
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$branch_id = $_db->getAccessPermission('branch_id');
+		
+		$sql="SELECT id,first_name AS cus_name FROM rms_customer WHERE status=1 $branch_id ";
 		return $db->fetchAll($sql);
 	}
 	
@@ -327,7 +359,11 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 	//select custoemr name
 	function getAllCustomerName(){
 		$db=$this->getAdapter();
-		$sql="SELECT id,first_name AS `name` FROM rms_customer WHERE STATUS=1";
+		
+		$_db = new Application_Model_DbTable_DbGlobal();
+		$branch_id = $_db->getAccessPermission('branch_id');
+		
+		$sql="SELECT id,first_name AS `name` FROM rms_customer WHERE status=1 $branch_id ";
 		$order=" ORDER BY id DESC";
 		return $db->fetchAll($sql.$order);
 	}
@@ -337,6 +373,58 @@ class Accounting_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 		$sql="SELECT reil FROM rms_exchange_rate WHERE active=1";
 		return $db->fetchRow($sql);
 	}
+	
+	
+	function getOldCustomerByBranch($branch_id){
+		$db=$this->getAdapter();
+		$sql="SELECT id,first_name as name FROM rms_customer WHERE status=1 and branch_id = $branch_id ";
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$order);
+	}
+	
+	function getCusIdByBranch($branch_id){
+		$db=$this->getAdapter();
+		$sql="SELECT count(id) as id FROM rms_customer where 1 and branch_id=$branch_id LIMIT 1 ";
+		$amount=$db->fetchOne($sql);
+		
+		$new_amount = $amount + 1;
+		
+		$length = strlen($new_amount);
+		
+		$prefix = 'C';
+		
+		for($i=$length;$i<4;$i++){
+			$prefix.='0';
+		}
+		
+		$cus_id = $prefix.$new_amount;
+		
+		return $cus_id;
+	}
+	
+	function getReceiptByBranch($branch_id){
+		$db=$this->getAdapter();
+		$sql="SELECT count(id) FROM rms_customer_paymentdetail WHERE 1 and branch_id=$branch_id limit 1 ";
+		$amount=$db->fetchOne($sql);
+		
+		$new_amount = $amount + 1;
+		
+		$length = strlen($new_amount);
+		
+		$prefix = '';
+		
+		for($i=$length;$i<6;$i++){
+			$prefix.='0';
+		}
+		return $prefix.$new_amount;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }
 

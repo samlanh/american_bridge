@@ -37,6 +37,17 @@ dojo.require("dojo.data.ItemFileWriteStore");
 				<legend align="center" ><strong><?php echo $tr->translate("CUSTOMER_INFO")?></strong></legend>
 				<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
 				        <tr>
+							<td><?php echo $tr->translate("BRANCH");?></td>
+							<td>
+								<select dojoType='dijit.form.FilteringSelect' id="branch" name="branch" class="fullside" onChange="getOldCustomerByBranch();getCustomerIDByBranch();getReceiptByBranch();" ​​>
+									<option value=""><?php echo $tr->translate("Select Branch");?></option>
+									<?php if(!empty($this->branch)){foreach($this->branch as $branch){?>
+										<option value="<?php echo $branch['id']?>" <?php if($branch['id']==$row['branch_id']){echo "selected='selected'";}?>><?php echo $branch['name']?></option>
+									<?php }}?>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<td><?php echo $tr->translate("OLD_CUS");?></td>
 							<td align="left" style="height: 0px;"> <input type="checkbox" name="is_new_cu" id="is_new_cu" value="1" onClick="hidendOldCus();"   ></td> 
 						</tr>
@@ -227,32 +238,6 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		
 		<td width="33%;" valign="top">
 			<fieldset>
-				<legend align="center" ><strong><?php echo $tr->translate("ទូទាត់ថ្លៃផ្ញើរកង់-ម៉ូតូ-ឡាន")?></strong></legend>
-				<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-						<tr>
-							<td><?php echo $tr->translate("តម្លៃ");?>($)</td>
-							<td><input type="text" name="parking_price" class="fullside" id="parking_price" value="<?php echo $row['parking_price'];?>"  dojoType="dijit.form.NumberTextBox" onKeyup="getTotal();"/> </td> 
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("ថ្ងៃចាប់ផ្តើម");?></td>
-							<td><input type="text" name="parking_start_date" class="fullside" id="parking_start_date" value="<?php echo $row['parking_start_date'];?>"  dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("ថ្ងៃផុតកំណត់");?></td>
-							<td><input type="text" name="parking_end_date" class="fullside" id="parking_end_date"  value="<?php echo $row['parking_end_date'];?>" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now" /> </td>
-					    </tr>
-						<tr>
-							<td><?php echo $tr->translate("NOTE");?></td>
-							<td><input type="text" name="parking_note" class="fullside" id="parking_note"  value="<?php echo $row['parking_note'];?>" dojoType="dijit.form.TextBox" /> </td> 
-						</tr>
-				</table>	
-			</fieldset>
-		</td>
-	</tr>
-	
-	<tr>
-		<td width="33%;" valign="top">
-			<fieldset>
 				<legend align="center" ><strong><?php echo $tr->translate("OTHERS")?></strong></legend>
 				<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
 						<tr>
@@ -274,6 +259,10 @@ dojo.require("dojo.data.ItemFileWriteStore");
 				</table>	
 			</fieldset>
 		</td>
+	</tr>
+	
+	<tr>
+		
 		
 		<td width="33%;" valign="top">
 			<fieldset>
@@ -295,7 +284,10 @@ dojo.require("dojo.data.ItemFileWriteStore");
 							<td><?php echo $tr->translate("ប្រាក់ជំពាក់");?>($)</td>
 							<td><input type="text" name="balance" class="fullside" id="balance" value="<?php echo $row['balance'];?>"  dojoType="dijit.form.NumberTextBox" readOnly="true"/> </td>
 					    </tr>
-					    
+					    <tr>
+							<td><?php echo $tr->translate("CREATE_DATE");?></td>
+							<td><input type="text" name="create_date" class="fullside" id="create_date" value="<?php echo date("Y-m-d",strtotime($row['create_date']));?>"  dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+						</tr>
 					    <tr>
 							<td><?php echo $tr->translate("NOTE");?></td>
 							<td><input type="text" name="note" class="fullside" id="note" value="<?php echo $row['note'];?>"  dojoType="dijit.form.TextBox" /> </td> 
@@ -331,7 +323,54 @@ var reil_exc="<?php echo $this->reil['reil']?>";
 $(document).ready(function() {
 	hidendOldCus();
 	$("#is_new_cu").attr('disabled','disabled');
+
+	setReadonlyPageEdit();
+	
 });
+
+
+function setReadonlyPageEdit(){
+	
+	dijit.byId("branch").set('readOnly',true);
+	
+	dijit.byId("cus_id").set('readOnly',true);
+	dijit.byId("start_date").set('readOnly',true);
+	dijit.byId("end_date").set('readOnly',true);
+	
+	dijit.byId("water_old_congtor").set('readOnly',true);
+	dijit.byId("water_new_congtor").set('readOnly',true);
+	dijit.byId("water_cost").set('readOnly',true);
+	dijit.byId("water_start_date").set('readOnly',true);
+	dijit.byId("water_end_date").set('readOnly',true);		
+	
+	dijit.byId("fire_old_congtor").set('readOnly',true);
+	dijit.byId("fire_new_congtor").set('readOnly',true);
+	dijit.byId("fire_cost").set('readOnly',true);
+	dijit.byId("fire_start_date").set('readOnly',true);
+	dijit.byId("fire_end_date").set('readOnly',true);
+	
+	dijit.byId("rent_date").set('readOnly',true);
+	dijit.byId("receipt_no").set('readOnly',true);
+	dijit.byId("rent_paid").set('readOnly',true);
+	dijit.byId("rent_start_date").set('readOnly',true);
+	dijit.byId("rent_end_date").set('readOnly',true);
+	
+	dijit.byId("hygiene_price").set('readOnly',true);
+	dijit.byId("hygiene_start_date").set('readOnly',true);
+	dijit.byId("hygiene_end_date").set('readOnly',true);
+	dijit.byId("hygiene_note").set('readOnly',true);
+	
+	dijit.byId("other_price").set('readOnly',true);
+	dijit.byId("other_start_date").set('readOnly',true);
+	dijit.byId("other_end_date").set('readOnly',true);
+	dijit.byId("other_note").set('readOnly',true);
+	
+	dijit.byId("paid").set('readOnly',true);
+	dijit.byId("note").set('readOnly',true);
+	
+	dijit.byId("create_date").set('readOnly',true);
+	
+}
 
 function hidendOldCus(){
 	if($('#is_new_cu').is(':checked')){
