@@ -201,10 +201,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				$this->_name='rms_study_history';
 				if($data['student_type']==1){
 						
-					if($data['dept']<=3){
-						$stu_type=1;
+					if($data['degree_type']==1){
+						$stu_type=1;  // khmer fulltime
 					}else{
-						$stu_type=2;
+						$stu_type=2;  // english fulltime
 					}
 						
 					$arr=array(

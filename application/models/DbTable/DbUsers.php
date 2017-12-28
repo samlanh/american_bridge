@@ -269,5 +269,18 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
+	
+	public function getArrAclReport($user_type_id){
+		$db = $this->getAdapter();
+		$sql = "SELECT aa.label,aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa
+		ON (ua.acl_id=aa.acl_id) WHERE aa.status=1 AND ua.user_type_id='".$user_type_id."'
+		AND aa.module='allreport' GROUP BY  aa.module ,aa.controller,aa.action
+		ORDER BY aa.module ,aa.controller ASC , aa.acl_id ASC ";
+	
+		// 		echo $sql;exit();
+	
+		$rows = $db->fetchAll($sql);
+		return $rows;
+	}
 }
 

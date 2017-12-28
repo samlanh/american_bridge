@@ -123,7 +123,5 @@ function getAllAsset($search=null){
 	return $db->fetchAll($sql.$where);
    
 }
-
-
-
+ 
 }

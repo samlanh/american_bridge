@@ -430,11 +430,18 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo number_format($grand_total,2);?>';
+	total_amount = <?php echo $grand_total;?>;
+	
 	amount_usd = dijit.byId("amount_usd").get('value');
-	exchange_rate = '<?php echo $this->rate?>';
-	total_reil = (total_amount - amount_usd)*exchange_rate;
-	//alert(total_reil);
+
+	exchange_rate = <?php echo $this->rate?>;
+	
+	dollar_to_convert = (total_amount - amount_usd).toFixed(2);
+	//alert(dollar_to_convert);
+	
+	total_reil = dollar_to_convert*exchange_rate;
+	
+	//alert("total="+total_amount+",usd="+amount_usd+",exchange_rate="+exchange_rate+",riel="+total_reil);
 
 	var result = 100 * Math.ceil(total_reil / 100);
 	

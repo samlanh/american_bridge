@@ -27,10 +27,10 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$fm = new Accounting_Form_Frmasset();
-		$frm = $fm->FrmAsset();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_fixedasset = $frm;
+		//$fm = new Accounting_Form_Frmasset();
+		//$frm = $fm->FrmAsset();
+		//Application_Model_Decorator::removeAllDecorator($frm);
+		//$this->view->frm_fixedasset = $frm;
 	}
 	
 	
@@ -63,15 +63,15 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 		
-		$fm = new Application_Form_FrmAdvanceSearch();
-		$frm = $fm->AdvanceSearch();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_search = $frm;
+		//$fm = new Application_Form_FrmAdvanceSearch();
+		//$frm = $fm->AdvanceSearch();
+		//Application_Model_Decorator::removeAllDecorator($frm);
+		//$this->view->frm_search = $frm;
 		
-		$fms = new Accounting_Form_Frmasset();
-		$frms = $fms->FrmAsset();
-		Application_Model_Decorator::removeAllDecorator($frms);
-		$this->view->frm_fixedasset = $frms;
+		//$fms = new Accounting_Form_Frmasset();
+		//$frms = $fms->FrmAsset();
+		//Application_Model_Decorator::removeAllDecorator($frms);
+		//$this->view->frm_fixedasset = $frms;
 	}
 		public function editAction()
 		{

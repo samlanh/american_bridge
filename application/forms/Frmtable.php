@@ -8,6 +8,7 @@ class Application_Form_Frmtable
     /*
      * Multi cells in one row list
      */    	
+	
     public function getMultiCellList($type,$columns,$rows,$merge_column=NULL,$link=null,$link_difference=false,$icon=0)
     {        
     	/*------------------------Check param id----------------------------------*/
