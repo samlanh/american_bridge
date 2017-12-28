@@ -255,7 +255,7 @@ class Registrar_Model_DbTable_DbInvoiceTransport extends Zend_Db_Table_Abstract
     	$db=$this->getAdapter();
     	
     	$_db = new Application_Model_DbTable_DbGlobal();
-    	$branch_id = $_db->getAccessPermission('sp.branch_id');
+    	$branch_id = $_db->getAccessPermission('i.branch_id');
     	
     	$sql="select 
 	    			i.id,

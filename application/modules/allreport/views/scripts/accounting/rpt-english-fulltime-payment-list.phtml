@@ -114,7 +114,7 @@
 							<td class="bor" colspan="4"><?php echo $tr->translate("NAME_EN"); ?></td>
 							<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
 							<td class="bor" colspan="6"><?php echo $tr->translate("PHONE"); ?></td>
-							<td  style="border-bottom: 1px solid #000;" colspan="4"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+							<td  style="border-bottom: 1px solid #000;" colspan="2"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
 							<td  style="border-bottom: 1px solid #000;" colspan="1"><?php echo $tr->translate("CURRENT_GRADE"); ?></td>
 					      </tr>
 				<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
@@ -126,7 +126,7 @@
 							<td class="bor_r" colspan="4"><?php echo $rs['stu_enname'];?> </td>
 							<td class="bor_r"><?php echo $rs['sex'];?> </td>
 							<td class="bor_r" colspan="6"><?php echo $rs['tel'];?> </td>
-							<td colspan="4"><?php echo $rs['degree'];?> </td>
+							<td colspan="2"><?php echo $rs['degree'];?> </td>
 							<td colspan="1"><?php echo $rs['current_grade'];?> </td>
 	 					 </tr>
 	 					 
@@ -145,8 +145,8 @@
 							<td rowspan="2" class="padd">Total <br />Amount</td>
 							<td rowspan="2" class="padd">Paid & <br />Payable</td>
 							<td rowspan="2" class="padd">Remark</td>
-							<td rowspan="2"  class="padd">Stop <br />Student</td>
-							<td colspan="2" rowspan="2" class="padd">Date Stop</td>
+							<!-- <td rowspan="2"  class="padd">Stop <br />Student</td>
+							<td colspan="2" rowspan="2" class="padd">Date Stop</td>-->
 	 					 </tr>
 						 <tr id="row" align="center" style="background: #ccc;">
 							<td class="padd">IssueDate</td>
@@ -227,8 +227,8 @@
 							<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 							
 							<td class="padd"><?php echo $rs['note'];?></td>
-							<td class="padd" style="color: red;"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
-							<td class="padd" colspan="2" style="color: red;"><?php if($rs['is_subspend']>0){ echo date("d-m-Y",strtotime($rs['date_stop']));}?></td>
+							<!-- <td class="padd" style="color: red;"><?php //if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>
+							<td class="padd" colspan="2" style="color: red;"><?php //if($rs['is_subspend']>0){ echo date("d-m-Y",strtotime($rs['date_stop']));}?></td> -->
 	 					</tr>
 	 					
 	 				<?php }?>

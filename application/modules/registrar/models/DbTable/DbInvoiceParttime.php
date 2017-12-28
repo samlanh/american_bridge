@@ -370,7 +370,7 @@ class Registrar_Model_DbTable_DbInvoiceParttime extends Zend_Db_Table_Abstract
     	$where = " AND ".$from_date." AND ".$to_date;
     	
     	$_db = new Application_Model_DbTable_DbGlobal;
-    	$branch_id = $_db->getAccessPermission('branch_id');
+    	$branch_id = $_db->getAccessPermission('i.branch_id');
     	
     	$sql=" SELECT 
 				  i.id,

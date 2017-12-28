@@ -47,6 +47,8 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	
 	function getAllIncome($search=null){
 		$db = $this->getAdapter();
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$branch_id = $dbgb->getAccessPermission('branch_id');
 		$session_user=new Zend_Session_Namespace('auth');
 		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
@@ -85,6 +87,7 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 			if(!empty($search['branch'])){
 				$where.= " AND branch_id= ".$search['branch'];
 			}
+			$where.=$branch_id;
 			return $db->fetchAll($sql.$where);
 	}
 	function getAllExpenseReport($search=null){
