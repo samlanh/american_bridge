@@ -33,8 +33,7 @@ class Foundation_Model_DbTable_DbStudentDropLunchAndStay extends Zend_Db_Table_A
 		$_db = $this->getAdapter();
 		
 		$db=new Application_Model_DbTable_DbGlobal();
-		$branch_id = $db->getAccessPermission();
-		
+		$branch_id = $db->getAccessPermission("s.branch_id");
 		$sql = "SELECT s.stu_id, s.stu_code FROM `rms_student` as st,rms_service as s where s.status = 1 and s.stu_id=st.stu_id and s.type=5 $branch_id  ";
 		$orderby = " ORDER BY s.id ";
 		return $_db->fetchAll($sql.$orderby);
@@ -44,8 +43,7 @@ class Foundation_Model_DbTable_DbStudentDropLunchAndStay extends Zend_Db_Table_A
 		$_db = $this->getAdapter();
 	
 		$db=new Application_Model_DbTable_DbGlobal();
-		$branch_id = $db->getAccessPermission();
-	
+		$branch_id = $db->getAccessPermission("s.branch_id");
 		$sql = "SELECT s.stu_id, CONCAT(st.stu_enname,'-',st.stu_khname) as name FROM `rms_student` as st,rms_service as s where s.status = 1 and s.stu_id=st.stu_id and s.type=5 $branch_id ";
 		$orderby = " ORDER BY s.id ";
 		return $_db->fetchAll($sql.$orderby);
@@ -54,7 +52,7 @@ class Foundation_Model_DbTable_DbStudentDropLunchAndStay extends Zend_Db_Table_A
 		$_db = $this->getAdapter();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$branch_id = $db->getAccessPermission();
+		$branch_id = $db->getAccessPermission("s.branch_id");
 		
 		$sql = "SELECT 
 					sd.id,
