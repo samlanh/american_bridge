@@ -54,7 +54,7 @@ class Foundation_Model_DbTable_DbStudentDropTransport extends Zend_Db_Table_Abst
 		$_db = $this->getAdapter();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$branch_id = $db->getAccessPermission();
+		$branch_id = $db->getAccessPermission('s.branch_id');
 		
 		$sql = "SELECT 
 					sd.id,
