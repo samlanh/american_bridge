@@ -53,6 +53,8 @@ class Application_Form_FrmOther extends Zend_Dojo_Form
     			'class'=>'fullside height-text',));
     	
     	$_arr_type = array(
+    					''=>$this->tr->translate("SELECT_TYPE"),
+    					-1=>$this->tr->translate("ADD_NEW"),
     					1=>$this->tr->translate("Khmer Fulltime"),
     					2=>$this->tr->translate("English Fulltime"),
     					3=>$this->tr->translate("English Parttime & Others")
@@ -61,6 +63,7 @@ class Application_Form_FrmOther extends Zend_Dojo_Form
     	$_type->setAttribs(array(
     			'dojoType'=>'dijit.form.FilteringSelect',
     			'required'=>'true',
+    			'onchange'=>'getPopupCat()',
     			'class'=>'fullside',));
     	$_type->setMultiOptions($_arr_type);
     	

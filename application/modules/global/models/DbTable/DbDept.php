@@ -214,6 +214,24 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		$this->update($_arr, $where);
 	}
 	
+	public function addCatDree($data){
+		$this->_name='rms_view';
+		try{
+			$db= $this->getAdapter();
+			$arr = array(
+					'name_en'=>$data['fac_enname'],
+					// 					'kh_name'=> $data['fac_khname'],
+					'name_kh'=> $data['shortcut_fac'],
+					'user_id'=>$this->getUserId(),
+					'is_active'=>$data['status_fac'],
+					'modify_date'=>Zend_Date::now(),
+			);
+			return $this->insert($arr);
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
+	
 }
 
 

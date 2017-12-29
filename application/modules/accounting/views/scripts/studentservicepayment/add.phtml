@@ -1142,6 +1142,10 @@ function getValue(){
 
 var url_add_service = '<?php echo $this->url(array("module"=>"accounting","controller"=>"studentservicepayment","action"=>"add-popup-service")); ?>';
 function addService(){
+	if(dijit.byId('frm_add_service').validate()){
+		if(dijit.byId("frm_add_service").get("value")==''){
+			return false;
+		}
 	dojo.xhrPost({
 			url:url_add_service,
 			form: dojo.byId("frm_add_service"),
@@ -1161,6 +1165,7 @@ function addService(){
 				alert(err);
 			}
 	});
+	}
 }
 
 function hidePopup() {		
@@ -1380,7 +1385,7 @@ function getCarIdByService(){
 							<tr>
 								<td style="width:100px"><?php echo $tr->translate("SERVICE_TYPE")?></td>
 								<td>
-									<select dojoType="dijit.form.FilteringSelect"   class="fullside" id="service_type" name="service_type" value="" type="text">
+									<select dojoType="dijit.form.FilteringSelect"   class="fullside" id="service_type" name="service_type" value="" type="text" onChange="getPopUpServiceTyep()">
 										<?php if(!empty($this->service_type)){ foreach ($this->service_type as $service_type){?>
 											<option value="<?php echo $service_type['id']?>"><?php echo $service_type['name']?></option>
 										<?php }}?>
@@ -1390,7 +1395,7 @@ function getCarIdByService(){
 							<tr>
 								<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
 								<td>
-									<input dojoType="dijit.form.TextBox"  class="fullside" id="service_name" name="service_name" value="" type="text">
+									<input dojoType="dijit.form.ValidationTextBox"  class="fullside" id="service_name" name="service_name" value="" type="text"  required="required" ​​​>
 								</td>
 							</tr>
 							<tr>
@@ -1411,8 +1416,7 @@ function getCarIdByService(){
 							</tr>
 							<tr>
 								<td colspan="4" align="center">
-									<input type="button" value="ចាកចេញ" label="Close" id="close" name="close" dojoType="dijit.form.Button" 
-									​ ​​iconClass="dijitIconUndo" onclick="hidePopup();"/>
+									<input iconClass="dijitIconUndo" type="button" value="close" label="<?php echo $tr->translate("GO_BACK")?>" dojoType="dijit.form.Button" onclick="hidePopup();"/>
 									<input type="button" value="save" label="SAVE" id="save" name="save" dojoType="dijit.form.Button" 
 									 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addService();"/>
 								</td>
@@ -1444,3 +1448,97 @@ function getCarIdByService(){
 }
 .overlay-msg{margin-bottom: 10px;bottom: 0px;position: absolute;font-style: italic;color: rgb(19, 19, 19);} 
 </style>
+
+<script>
+function getPopUpServiceTyep(){
+	service_id = dijit.byId('service_type').get('value');
+    if(service_id==-1){
+   		dijit.byId("popup_dept").show();
+    }
+}
+
+var service_type  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->service_type));?>);
+var url_add_service_type = '<?php echo $this->url(array("module"=>"accounting","controller"=>"servicecharge","action"=>"submit")); ?>';
+function addCategory(){
+	if(dijit.byId('frm_service_type').validate()){
+	language = dijit.byId('p_title').get('value');
+	dojo.xhrPost({
+			url:url_add_service_type,
+			form: dojo.byId("frm_service_type"),
+			handleAs:"json",
+			load: function(data) {
+				var Itemmake = { 
+				     id: data,
+					         name: dijit.byId('p_title').get('value')
+					   };
+		 	addDataToSelectbox(dijit.byId('service_type'), service_type, Itemmake, data);
+		   dijit.byId('frm_service_type').reset();
+		   dijit.byId("popup_dept").hide();
+				
+			},
+			error: function(err) {
+				//alert(err);
+			}
+	});
+}
+}
+
+function hideDialog(){
+	dijit.byId("popup_dept").hide();
+}
+</script>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_dept" >
+		<form style="background-color: buttonface;" id='frm_service_type' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+			<tr>
+				<td>
+					<fieldset style="background-color: buttonface;">
+					<legend align="center" ><?php echo $tr->translate("ADD_SERVICE_TYPE");?></legend><br />
+					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("TITLE")?></td>
+							<td><input class="fullside" tabindex="1" value="" dojoType="dijit.form.ValidationTextBox" name="p_title" id="p_title" type="text" required="required" /></td>
+						</tr>
+						<tr>
+							<td><?php echo $tr->translate("NOTE")?></td>
+							<td>
+								<textarea class="fullside"   style=" height: 40px !important;"
+										tabindex="2" dojoType=""  id="note" name=note ></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("TYPE")?></td>
+							<td>
+								<select class="fullside" readonly tabindex="3" name="type" id="type" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1" selected="selected"><?php echo $tr->translate("SERVICE")?></option>
+									    <option value="2"><?php echo $tr->translate("PROGRAM")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("STATUS")?></td>
+							<td>
+								<select class="fullside"  tabindex="3" name="status_p" id="status_p" dojoType="dijit.form.FilteringSelect" >
+									    <option value="1"><?php echo $tr->translate("Active")?></option>
+									    <option value="0"><?php echo $tr->translate("Deactive")?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input iconClass="dijitIconUndo" type="button" value="close" label="<?php echo $tr->translate("GO_BACK")?>" dojoType="dijit.form.Button" onclick="hideDialog();"/>
+								<input type="button" value="save" name="save" label="<?php echo $tr->translate("SAVE_CLOSE")?>" dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+
+		</form>
+	</div>
+</div>

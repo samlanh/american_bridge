@@ -88,7 +88,11 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
        array_unshift($service, array ( 'id' => -1, 'name' => 'Select Service') );
        $this->view->service = $service;
        
+        
+       
        $servicetype = $db->getAllServiceType();
+       array_unshift($servicetype, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
+       array_unshift($servicetype, array ( 'id' => '', 'name' => 'Select Service') );
        $this->view->service_type = $servicetype;
        
        $this->view->new_stu_name =  $db->getAllNewStudentName();

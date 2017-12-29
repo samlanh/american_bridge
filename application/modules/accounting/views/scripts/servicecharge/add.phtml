@@ -387,21 +387,21 @@ function submitDataClose(){
 			<tr>
 				<td>
 					<fieldset style="background-color: buttonface;">
-					<legend align="center" ><?php echo $tr->translate("បន្ថែមប្រភេទសេវាកម្ម");?></legend><br />
+					<legend align="center" ><?php echo $tr->translate("ADD_SERVICE_TYPE");?></legend><br />
 					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
 						<tr>
-							<td style="width:100px"><?php echo $tr->translate("Title")?></td>
+							<td style="width:100px"><?php echo $tr->translate("TITLE")?></td>
 							<td><input class="fullside" tabindex="1" value="" dojoType="dijit.form.ValidationTextBox" name="p_title" id="p_title" type="text" required="required" /></td>
 						</tr>
 						<tr>
-							<td>ពណ៌នា</td>
+							<td><?php echo $tr->translate("NOTE")?></td>
 							<td>
 								<textarea class="fullside"   style=" height: 40px !important;"
 										tabindex="2" dojoType=""  id="note" name=note ></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td style="width:100px"><?php echo $tr->translate("Type")?></td>
+							<td style="width:100px"><?php echo $tr->translate("TYPE")?></td>
 							<td>
 								<select class="fullside" readonly tabindex="3" name="type" id="type" dojoType="dijit.form.FilteringSelect" >
 									    <option value="1" selected="selected"><?php echo $tr->translate("SERVICE")?></option>
@@ -410,7 +410,7 @@ function submitDataClose(){
 							</td>
 						</tr>
 						<tr>
-							<td style="width:100px"><?php echo $tr->translate("Status")?></td>
+							<td style="width:100px"><?php echo $tr->translate("STATUS")?></td>
 							<td>
 								<select class="fullside"  tabindex="3" name="status_p" id="status_p" dojoType="dijit.form.FilteringSelect" >
 									    <option value="1"><?php echo $tr->translate("Active")?></option>

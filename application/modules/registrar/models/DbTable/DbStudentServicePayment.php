@@ -596,7 +596,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     }
     public function getAllServiceType(){
     	$db=$this->getAdapter();
-    	$sql="SELECT id , title as name  FROM rms_program_type WHERE status=1";
+    	$sql="SELECT id, title as name  FROM rms_program_type WHERE status=1";
     	return $db->fetchAll($sql);
     }
     

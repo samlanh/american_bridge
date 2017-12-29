@@ -92,6 +92,8 @@ class Accounting_StudentlunchpaymentController extends Zend_Controller_Action {
        $this->view->service = $service;
        
        $servicetype = $db->getAllServiceType();
+       array_unshift($servicetype, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
+       array_unshift($servicetype, array ( 'id' => '', 'name' => 'Select Service') );
        $this->view->service_type = $servicetype;
        
        $db = new Registrar_Model_DbTable_DbRegister();

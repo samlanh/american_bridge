@@ -111,6 +111,9 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'session'	=>$data['session'],
 							'degree'	=>$data['dept'],
 							'grade'		=>$data['grade'],
+							'tel'		=>$data['phone'],
+							'address'	=>$data['address'],
+							'dob'		=>$data['dob'],
 							'room'		=>$data['room'],
 							'academic_year'=>$data['study_year'],
 							'stu_type'	=>$stu_type,
@@ -201,10 +204,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				$this->_name='rms_study_history';
 				if($data['student_type']==1){
 						
-					if($data['degree_type']==1){
-						$stu_type=1;  // khmer fulltime
+					if($data['dept']<=3){
+						$stu_type=1;
 					}else{
-						$stu_type=2;  // english fulltime
+						$stu_type=2;
 					}
 						
 					$arr=array(

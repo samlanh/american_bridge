@@ -165,7 +165,7 @@ Class Registrar_Form_FrmStudentServicePayment extends Zend_Dojo_Form {
 		
 		$_db = new Application_Model_DbTable_DbGlobal();
 		$rows = $_db->getAllFecultyName();
-		$opt = array();//array(-1=>$this->tr->translate("SELECT_DEPT"));
+		$opt = '' ;//array(-1=>$this->tr->translate("SELECT_DEPT"));
 		if(!empty($rows))foreach($rows AS $row) $opt[$row['dept_id']]=$row['en_name'];
 		 
 		$_dept = new Zend_Dojo_Form_Element_FilteringSelect("dept");

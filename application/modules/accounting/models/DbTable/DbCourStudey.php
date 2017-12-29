@@ -88,6 +88,11 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'degree'	=>$data['dept'],
 							'grade'		=>$data['grade'],
 							'room'		=>$data['room'],
+							
+							'dob'			=>$data['dob'],
+							'tel'			=>$data['phone'],
+							'address'		=>$data['address'],
+							
 							'academic_year'=>$data['study_year'],
 							'stu_type'	=>3,
 							

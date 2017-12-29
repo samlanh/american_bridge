@@ -34,7 +34,7 @@ class Global_importController extends Zend_Controller_Action {
 				}
 				
 				$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-				$db->updateItemsByImportFood($sheetData);
+				$db->updateItemsByImportKID($sheetData);
 				Application_Form_FrmMessage::message("Import Successfully");
 			}
 		}catch (Exception $e){

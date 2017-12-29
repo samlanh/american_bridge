@@ -546,7 +546,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   	$session_user=new Zend_Session_Namespace('auth');
 	   	$branch_id = $session_user->branch_id;
 	   	$level = $session_user->level;
-	   	if($level==1 || $level==12 || $level==13 || $level==14){
+	   	if($level==1){
 	   		$result = "";
 	   		return $result;
 	   	}
