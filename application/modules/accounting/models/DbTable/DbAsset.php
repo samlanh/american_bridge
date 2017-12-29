@@ -7,20 +7,21 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 		$db->beginTransaction();
 		try{	
 		$arr = array(
-				'branch_id'=>$data['branch'],
-				'fixed_assetname'=>$data['asset_name'],
-				'fixed_asset_type'=>$data['asset_type'],
-				'asset_cost'=>$data['asset_cost'],
-				'asset_code'=>$data['asset_code'],
-				'pay_type'=>$data['paid_type'],
-				'status'=>$data['status'],
-				'usefull_life'=>$data['usefull_life'],
-				'salvagevalue'=>$data['salvage_value'],
-				'total_amount'=>$data['amount'],
-				'payment_method'=>$data['payment_method'],
-				'date'=>$data['date'],
+				'branch_id'			=>$data['branch'],
+				'fixed_assetname'	=>$data['asset_name'],
+				'fixed_asset_type'	=>$data['asset_type'],
+				'asset_cost'		=>$data['asset_cost'],
+				'asset_code'		=>$data['asset_code'],
+				'pay_type'			=>$data['paid_type'],
+				'status'			=>$data['status'],
+				'usefull_life'		=>$data['usefull_life'],
+				'term_type'			=>$data['tem_type'],
+				'salvagevalue'		=>$data['salvage_value'],
+				'total_amount'		=>$data['amount'],
+				'payment_method'	=>$data['payment_method'],
+				'date'				=>$data['date'],
 				'depreciation_start'=>$data['start_date'],
-				'auto_post'=>$data['journal'],
+				//'auto_post'=>$data['journal'],
 				'note'=>$data['note']
 		);
 		 $ass_id = $this->insert($arr);
@@ -65,63 +66,63 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 }
 function updatasset($data){
 		$arr = array(
-				'branch_id'=>$data['branch'],
-				'fixed_assetname'=>$data['asset_name'],
-				'fixed_asset_type'=>$data['asset_type'],
-				'asset_cost'=>$data['asset_cost'],
-				'asset_code'=>$data['asset_code'],
-				'pay_type'=>$data['paid_type'],
-				'status'=>$data['status'],
-				'usefull_life'=>$data['usefull_life'],
-				'salvagevalue'=>$data['salvage_value'],
-				'total_amount'=>$data['amount'],
-				'payment_method'=>$data['payment_method'],
-				'date'=>$data['date'],
+				'branch_id'			=>$data['branch'],
+				'fixed_assetname'	=>$data['asset_name'],
+				'fixed_asset_type'	=>$data['asset_type'],
+				'asset_cost'		=>$data['asset_cost'],
+				'asset_code'		=>$data['asset_code'],
+				'pay_type'			=>$data['paid_type'],
+				'status'			=>$data['status'],
+				'usefull_life'		=>$data['usefull_life'],
+				'term_type'			=>$data['tem_type'],
+				'salvagevalue'		=>$data['salvage_value'],
+				'total_amount'		=>$data['amount'],
+				'payment_method'	=>$data['payment_method'],
+				'date'				=>$data['date'],
 				'depreciation_start'=>$data['start_date'],
-				'some_payamount'=>$data['some_payamount'],
-				'auto_post'=>$data['journal'],
-				'note'=>$data['note']
+				'some_payamount'	=>$data['some_payamount'],
+				//'auto_post'			=>$data['journal'],
+				'note'				=>$data['note']
 		);
 	$where=" id = ".$data['id'];
 	$this->update($arr, $where);
 }
+
 function getassetbyid($id){
 	$db = $this->getAdapter();
 	$sql=" SELECT id,
- 	branch_id,fixed_assetname,fixed_asset_type,asset_cost,asset_code,pay_type,
+ 	branch_id,fixed_assetname,fixed_asset_type,asset_cost,asset_code,pay_type,term_type,
 	status,usefull_life,salvagevalue,auto_post,total_amount,payment_method,date,depreciation_start,some_payamount,note FROM $this->_name where id=$id ";
 	return $db->fetchRow($sql);
 }
 
 function getAllAsset($search=null){
+	
 	$db = $this->getAdapter();
-	$sql=" SELECT id,
-	(SELECT branch_namekh FROM ln_branch WHERE br_id = branch_id limit 1)as branch_name,fixed_assetname,
-	(SELECT name_en FROM ln_view WHERE TYPE=17 AND key_code=fixed_asset_type LIMIT 1)AS fixed_asset_type,asset_cost,
-	(SELECT name_en FROM ln_view WHERE type=19 AND key_code=pay_type LIMIT 1) AS pay_type,usefull_life,salvagevalue,auto_post,total_amount,
-	(SELECT name_en FROM ln_view WHERE type=16 AND key_code=payment_method LIMIT 1) AS payment_method ,status,note FROM $this->_name ";
+	$sql="SELECT id,
+		(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=branch_id AND  STATUS=1 LIMIT 1)AS branch_name,
+		fixed_assetname,
+		 asset_cost,usefull_life,salvagevalue,total_amount,note,status FROM  $this->_name ";
 	$where = ' WHERE 1 ';
-	if($search['status']>-1){
-		$where.= " AND status = ".$search['status'];
+
+	if(!empty($search['branch'])){
+		$where.= " AND branch_id = ".$search['branch'];
 	}
-	if(!empty($search['branch_id'])){
-		$where.= " AND branch_id = ".$search['branch_id'];
-	}
-	if(!empty($search['asset_type'])){
-		$where.= " AND fixed_asset_type = ".$search['asset_type'];
-	}
-	if(!empty($search['payment_method'])){
-		$where.= " AND payment_method = ".$search['payment_method'];
-	}
-	if(!empty($search['adv_search'])){
+	if(!empty($search['title'])){
 		$s_where = array();
-		$search = $search['adv_search'];
-		$s_where[] = " fixed_assetname LIKE '%{$search}%'";
-		$s_where[] = "branch_id LIKE '%{$search}%'";
+		$s_search = str_replace(' ', '', addslashes(trim($search['title'])));
+		$s_where[] = "REPLACE(asset_code,' ','')LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(asset_code,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(asset_cost,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(usefull_life,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(salvagevalue,' ','')  LIKE '%{$s_search}%'";
 		$where.=' AND ('.implode(' OR ',$s_where).')';
 	}
-	return $db->fetchAll($sql.$where);
+	$order="	ORDER BY id DESC";
+	return $db->fetchAll($sql.$where.$order);
    
 }
- 
+
+
+
 }
