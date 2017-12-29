@@ -27,6 +27,9 @@
 
 <style>
 .hover:hover{background: #ddd;}
+tr.row_control {
+    display: table-row !important;
+}
 </style>
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
@@ -52,6 +55,12 @@
 			padding: 3px;	
 		}
 		#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+	  th{padding: 5px;}
+	  
+	  table { page-break-inside:auto }
+	    tr{ page-break-inside:avoid; page-break-after:auto; }
 	</style>
 		<?php 
 			$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
@@ -77,32 +86,33 @@
 			<tr>
 				<td colspan="3" id="exportExcel">
 					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
-	 			
-	 					 <tr id="row" align="center" style="background: #ccc;">
-							<td rowspan="2" class="padd">N<sup>o</sup></td>
-							<td rowspan="2" class="padd">Receipt No.</td>
-							<td rowspan="2" class="padd">Student ID</td>
-							<td rowspan="2" class="padd">Student Name</td>
-							<td rowspan="2" class="padd">Sex</td>
-							<td rowspan="2" class="padd">Service Name</td>
-							<td rowspan="2" class="padd">Car<br />Number</td>
-							<td colspan="2" class="padd">Type</td>
-							<td colspan="2" class="padd">Shift 1</td>
-							<td colspan="2" class="padd">Shift 2</td>
-							<td rowspan="2" class="padd">Transportation<br />Fee</td>
-							<td rowspan="2" class="padd">Study<br />Material Fee</td>
-							<td rowspan="2" class="padd">Credit</td>
-							<td rowspan="2" class="padd">Total in<br />USD</td>
-							<td rowspan="2" class="padd">Remark</td>
-	 					 </tr>
-						 <tr id="row" align="center" style="background: #ccc;">
-							<td colspan="1" class="padd">New</td>
-							<td rowspan="1" class="padd">Old</td>
-							<td rowspan="1" class="padd">07:30am</td>
-							<td rowspan="1" class="padd">10:30am</td>
-							<td rowspan="1" class="padd">01:30pm</td>
-							<td rowspan="1" class="padd">04:30pm</td>
-	 					 </tr>
+	 					<thead>
+		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+								<td rowspan="2" class="padd">N<sup>o</sup></td>
+								<td rowspan="2" class="padd">Receipt No.</td>
+								<td rowspan="2" class="padd">Student ID</td>
+								<td rowspan="2" class="padd">Student Name</td>
+								<td rowspan="2" class="padd">Sex</td>
+								<td rowspan="2" class="padd">Service Name</td>
+								<td rowspan="2" class="padd">Car<br />Number</td>
+								<td colspan="2" class="padd">Type</td>
+								<td colspan="2" class="padd">Shift 1</td>
+								<td colspan="2" class="padd">Shift 2</td>
+								<td rowspan="2" class="padd">Transportation<br />Fee</td>
+								<td rowspan="2" class="padd">Study<br />Material Fee</td>
+								<td rowspan="2" class="padd">Credit</td>
+								<td rowspan="2" class="padd">Total in<br />USD</td>
+								<td rowspan="2" class="padd">Remark</td>
+		 					 </tr>
+							 <tr id="row" align="center" style="background: #c1d0f3;">
+								<td colspan="1" class="padd">New</td>
+								<td rowspan="1" class="padd">Old</td>
+								<td rowspan="1" class="padd">07:30am</td>
+								<td rowspan="1" class="padd">10:30am</td>
+								<td rowspan="1" class="padd">01:30pm</td>
+								<td rowspan="1" class="padd">04:30pm</td>
+		 					 </tr>
+		 				</thead>
 	 					 
 				<?php ////////////////////////////////// value //////////////////////////////////////////////////////////////////////////////////?>
 				
@@ -192,11 +202,11 @@
 							</tr>
 							<tr>
 								<td width="70%" style="border: 1px solid #000;">
-									<u>Summary Report:</u>
-									<table width="100%" style="font-size: 15px;">
+									&nbsp;<u>Summary Report:</u>
+									<table width="100%" style="font-size: 14px;line-height: 24px;" cellspacing="1">
 										<tr class="hover">
 											<td>
-												I. Total number of new&old student
+												&nbsp;I. Total number of new&old student
 											</td>
 											<td>
 												
@@ -229,7 +239,7 @@
 										
 										<tr class="hover">
 											<td colspan="2">
-												II. Total student number on each way
+												&nbsp;II. Total student number on each way
 											</td>
 										</tr>
 										
@@ -271,7 +281,7 @@
 										
 										<tr class="hover">
 											<td>
-												III. Total amount of study material fee
+												&nbsp;III. Total amount of study material fee
 											</td>
 											<td>
 												<?php echo "$ ".number_format($total_study_material_fee,2);?>
@@ -279,7 +289,7 @@
 										</tr>
 										<tr class="hover">
 											<td>
-												IV. Total amount of student credit
+												&nbsp;IV. Total amount of student credit
 											</td>
 											<td>
 												<?php echo "$ ".number_format($total_balance,2);?>
@@ -288,7 +298,7 @@
 										
 										<tr class="hover">
 											<td style="border-top:2px solid #000;">
-												Total number of new student
+												&nbsp;Total number of new student
 											</td>
 											<td style="border-top:2px solid #000;">
 												<?php echo $amont_new_student;?> student(s)
@@ -296,7 +306,7 @@
 										</tr>
 										<tr class="hover">
 											<td>
-												Total number of old student
+												&nbsp;Total number of old student
 											</td>
 											<td>
 												<?php echo $amont_old_student;?> student(s)
@@ -304,7 +314,7 @@
 										</tr>
 										<tr class="hover">
 											<td>
-												Total Amount
+												&nbsp;Total Amount
 											</td>
 											<td>
 												<?php echo "$ ".number_format($grand_total,2);?>
@@ -313,7 +323,7 @@
 									</table>
 								</td>
 								<td width="30%" valign="top">
-									<table width="100%" style="white-space: nowrap;">
+									<table width="100%" style="white-space: nowrap; font-size: 14px;">
 										<tr>
 											<td width="50%">
 												&nbsp;
@@ -359,6 +369,22 @@
 											</td>
 										</tr>
 										
+										<tr class="row_control" style="display: none;">
+												<td>
+													For Date
+												</td>
+												<td>
+													<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+												</td>
+											</tr>
+											<tr class="row_control" style="display: none;">
+												<td>
+												</td>
+												<td>
+													<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+													iconClass="dijitEditorIcon dijitEditorIconSave" />
+												</td>
+											</tr>
 									</table>							
 								</td>
 							</tr>
@@ -429,18 +455,6 @@
 				</tr>
 		</table>
 	</div>
-	<table width="100%">
-		<tr>
-			<td align="center">
-				<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
-					iconClass="dijitEditorIcon dijitEditorIconSave" />	
-					
-				<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
-					
-			</td>
-		</tr>
-	</table>
-	
 	</form>		
 </div>
 <script type="text/javascript">

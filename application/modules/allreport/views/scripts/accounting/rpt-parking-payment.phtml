@@ -44,6 +44,13 @@
 </div>
 <div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 	<div id="divPrint">
+		<style>
+			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+			th{padding: 5px;}
+			  
+			table { page-break-inside:auto }
+			tr{ page-break-inside:avoid; page-break-after:auto; }
+		</style>
 		<div id="exportExcel">
 			<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;">
 				
@@ -62,21 +69,23 @@
 				<tr>
 					<td colspan="3">
 						<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family: Khmer OS Battambang , Times New Roman; "  border="1" >
-							<tr style="font-size:13px; height: 20px;border: 1px solid #000;background: #ccc;font-weight: bold;" align="center" >
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("N_O");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("RECEIPT_NO");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("CUS_ID");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("NAME");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("PHONE");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("EMAIL");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("លក់អេតចាយ");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("TOTAL");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("USER");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("CREATE_DATE");?></td>
-							</tr>
+							<thead>
+								<tr style="font-size:13px; height: 20px;border: 1px solid #000;background: #c1d0f3;font-weight: bold;" align="center" >
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("N_O");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("RECEIPT_NO");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("CUS_ID");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("NAME");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("PHONE");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("EMAIL");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("លក់អេតចាយ");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("TOTAL");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("USER");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("CREATE_DATE");?></td>
+								</tr>
+							</thead>
 						<?php $i=0;$grand_total=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
 							?>
 							<tr class="hover" style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
@@ -98,7 +107,7 @@
 								$grand_total = $grand_total + $row['total_fee'];
 								}}
 							?>	 
-							<tr style="background: #c7ffc6;">
+							<tr style="background: #c1d0f3;">
 								<td colspan="11" align="center">
 									<?php echo $tr->translate("GRAND_TOTAL");?>&nbsp;&nbsp;&nbsp;
 								</td>

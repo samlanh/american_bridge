@@ -26,6 +26,9 @@
 
 <style>
 .hover:hover{background: #ddd;}
+.row_control {
+    display: table-row !important;
+}
 </style>
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
@@ -51,6 +54,11 @@
 			padding: 3px;	
 		}
 		#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+		th{padding: 5px;}
+		  
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
 	</style>
 	<?php 
 		$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
@@ -76,23 +84,24 @@
 			<tr>
 				<td colspan="3" id="exportExcel">
 					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
-	 			
-	 					 <tr id="row" align="center" style="background: #ccc;font-weight: bold;font-size: 13px;">
-							<td rowspan="2" class="padd">N<sup>o</sup></td>
-							<td rowspan="2" class="padd">Receipt No.</td>
-							<td rowspan="2" class="padd">ID</td>
-							<td rowspan="2" class="padd">Name</td>
-							<td colspan="5" class="padd">Description</td>
-							<td rowspan="2" class="padd">Total in<br />USD</td>
-							<td rowspan="2" class="padd">Remark</td>
-	 					 </tr>
-						 <tr id="row" align="center" style="background: #ccc;font-weight: bold;font-size: 12px;">
-							<td colspan="1" class="padd">Canteen Rental</td>
-							<td rowspan="1" class="padd">Water Supply</td>
-							<td rowspan="1" class="padd">Electricity</td>
-							<td rowspan="1" class="padd">Garbage</td>
-							<td rowspan="1" class="padd">Other</td>
-	 					 </tr>
+	 					<thead>
+		 					 <tr id="row" align="center" style="background: #c1d0f3;font-weight: bold;font-size: 13px;">
+								<td rowspan="2" class="padd">N<sup>o</sup></td>
+								<td rowspan="2" class="padd">Receipt No.</td>
+								<td rowspan="2" class="padd">ID</td>
+								<td rowspan="2" class="padd">Name</td>
+								<td colspan="5" class="padd">Description</td>
+								<td rowspan="2" class="padd">Total in<br />USD</td>
+								<td rowspan="2" class="padd">Remark</td>
+		 					 </tr>
+							 <tr id="row" align="center" style="background: #c1d0f3;font-weight: bold;font-size: 12px;">
+								<td colspan="1" class="padd">Canteen Rental</td>
+								<td rowspan="1" class="padd">Water Supply</td>
+								<td rowspan="1" class="padd">Electricity</td>
+								<td rowspan="1" class="padd">Garbage</td>
+								<td rowspan="1" class="padd">Other</td>
+		 					 </tr>
+		 				</thead>
 	 					 
 				<?php ////////////////////////////////// value //////////////////////////////////////////////////////////////////////////////////?>
 				
@@ -130,7 +139,7 @@
 					
 					<?php if(!empty($grand_total)){?>
 						<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
-							<tr style="line-height: 25px;background: #ccc;">
+							<tr style="line-height: 25px; font-size:13px; background: #c1d0f3;">
 								<td width="25%">
 									Grand Total 
 								</td>
@@ -171,6 +180,13 @@
 								
 								<td style="border: 1px solid #000;">
 									<label id="lb_amount_reil"></label>
+								</td>
+							</tr>
+							<tr class="row_control" style="display: none;" >
+								<td colspan="4" align="center">
+									<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+									<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />	
 								</td>
 							</tr>
 						</table>
@@ -241,17 +257,7 @@
 				</tr>
 		</table>
 	</div>
-		<table width="100%">
-			<tr>
-				<td align="center">
-					<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />	
-						
-					<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
-						
-				</td>
-			</tr>
-		</table>
+		
 	</form>		
 </div>
 <script type="text/javascript">

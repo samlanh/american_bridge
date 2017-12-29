@@ -32,6 +32,9 @@
 
 <style>
 .hover:hover{background: #ddd;}
+tr.row_control {
+    display: table-row !important;
+}
 </style>
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
@@ -57,6 +60,11 @@
 				padding: 3px;	
 			}
 			#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+			th{padding: 5px;}
+			  
+			table { page-break-inside:auto }
+			tr{ page-break-inside:avoid; page-break-after:auto; }
 		</style>
 
 	<?php 
@@ -81,17 +89,18 @@
 		<tr>
 			<td colspan="3" id="exportExcel">
 				<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
- 			
- 					 <tr id="row" align="center" style="background: #ccc;">
-						<td class="padd">N<sup>o</sup></td>
-						<td class="padd">Receipt No.</td>
-						<td class="padd">Student Name</td>
-						<td class="padd">Sex</td>
-						<td class="padd">Level/Grade</td>
-						<td class="padd">Material</td>
-						<td class="padd">Description</td>
-						<td class="padd">Total in USD</td>
- 					 </tr>
+ 					<thead>
+	 					 <tr id="row" align="center" style="background: #c1d0f3;">
+							<td class="padd">N<sup>o</sup></td>
+							<td class="padd">Receipt No.</td>
+							<td class="padd">Student Name</td>
+							<td class="padd">Sex</td>
+							<td class="padd">Level/Grade</td>
+							<td class="padd">Material</td>
+							<td class="padd">Description</td>
+							<td class="padd">Total in USD</td>
+	 					 </tr>
+	 				</thead>
  					 
 			<?php ////////////////////////////////// value //////////////////////////////////////////////////////////////////////////////////?>
 			
@@ -104,12 +113,8 @@
 					$grand_total=0;
 				?>		
 						
-						
-				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
-					
-				?>
+				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;?>
  					<tr id="row" align="center" class="hover" >
- 					
 						<td class="padd"><?php echo $i;?></td>
 						<td class="padd"><?php echo $rs['receipt_number'];?></td>
 						<td class="padd"><?php echo $rs['stu_enname']."-".$rs['stu_khname'];?></td>
@@ -120,7 +125,6 @@
 						<td class="padd"><?php echo $rs['service_name'];?></td>
 						<td class="padd" align="left"><?php echo $rs['note'];?></td>
 						<td class="padd"><?php echo "$ ".$rs['paidamount'];?></td>
-						
  					</tr>
  					
 					<?php 
@@ -152,11 +156,11 @@
 						</tr>
 						<tr>
 							<td width="70%" style="border: 1px solid #000;">
-								<u>Summary Report:</u>
-								<table width="100%" style="font-size: 15px;">
+								&nbsp;<u>Summary Report:</u>
+								<table width="100%" style="font-size: 14px;line-height: 24px;" cellspacing="1">
 									<tr class="hover">
 										<td colspan="2">
-											I. Income from Material Fee
+											&nbsp;I. Income from Material Fee
 										</td>
 									</tr>
 									<tr class="hover">
@@ -195,7 +199,7 @@
 									
 									<tr class="hover">
 										<td style="border-top:2px solid #000;">
-											Total Amount
+											&nbsp;Total Amount
 										</td>
 										<td style="border-top:2px solid #000;">
 											<?php echo "$ ".number_format($grand_total,2);?>
@@ -204,7 +208,7 @@
 								</table>
 							</td>
 							<td width="30%" valign="top">
-								<table width="100%" style="white-space: nowrap;">
+								<table width="100%" style="white-space: nowrap; font-size: 14px;">
 									<tr>
 										<td width="50%">
 											&nbsp;
@@ -245,6 +249,22 @@
 										</td>
 										<td style="border: 1px solid #000;">
 											<label id="lb_amount_reil"></label>
+										</td>
+									</tr>
+									<tr class="row_control" style="display: none;">
+										<td>
+											For Date
+										</td>
+										<td>
+											<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>
+										</td>
+									</tr>
+									<tr class="row_control" style="display: none;">
+										<td>
+										</td>
+										<td>
+											<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+											iconClass="dijitEditorIcon dijitEditorIconSave" />
 										</td>
 									</tr>
 								</table>							
@@ -317,17 +337,6 @@
 			</tr>
 		</table>
 	</div>	
-		<table width="100%">
-			<tr>
-				<td align="center">
-					<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />	
-						
-					<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
-						
-				</td>
-			</tr>
-		</table>	
 	</form>
 </div>
 <script type="text/javascript">

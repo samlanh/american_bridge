@@ -31,6 +31,9 @@
 
 <style>
 .hover:hover{background: #ddd;}
+tr.row_control {
+    display: table-row !important;
+}
 </style>
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
@@ -56,6 +59,11 @@
 				padding: 3px;	
 			}
 			#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+			  th{padding: 5px;}
+			  
+			  table { page-break-inside:auto }
+			    tr{ page-break-inside:avoid; page-break-after:auto; }
 		</style>
 
 	<?php 
@@ -82,35 +90,34 @@
 			<tr>
 				<td colspan="3" id="exportExcel">
 					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
-	 			
-	 					 <tr id="row" align="center" style="background: #ccc;">
-							<td rowspan="3" class="padd">ល.រ</sup></td>
-							<td rowspan="3" class="padd">វិក័យបត្រ<br />លេខ</td>
-							<td rowspan="3" class="padd">អត្តលេខ<br />សិស្ស</td>
-							<td rowspan="3" class="padd">ឈ្មោះសិស្ស</td>
-							<td rowspan="3" class="padd">ភេទ</td>
-							<td rowspan="3" class="padd">កម្រិត/<br />ថ្នាក់</td>
-							<td rowspan="3" class="padd">សិក្សាវេន</td>
-							<td colspan="5" class="padd">ការបង់ថ្លៃសិក្សាចំណេះទូទៅភាសាខ្មែរ</td>
-							<td rowspan="3" class="padd">តម្លៃ<br />រដ្ឋបាល</td>
-							<td rowspan="3" class="padd">តម្លៃសម្ភារៈ<br />សិក្សា</td>
-							<td rowspan="3" class="padd">តម្លៃ<br />ផ្សេងៗ</td>
-							<td rowspan="3" class="padd">ជំពាក់<br />ប្រាក់</td>
-							<td rowspan="3" class="padd">ទឹកប្រាក់<br />សរុប</td>
-							<td rowspan="3" class="padd">ផ្សេងៗ</td>
-	 					 </tr>
-						 <tr id="row" align="center" style="background: #ccc;">
-							<td colspan="2" class="padd">សិស្ស</td>
-							<td rowspan="2" class="padd">តម្លៃ<br />សិក្សា</td>
-							<td rowspan="2" class="padd">បញ្ចុះតម្លៃ</td>
-							<td rowspan="2" class="padd">ទឹកប្រាក់</td>
-	 					 </tr>
-	 					 
-	 					 <tr id="row" align="center" style="background: #ccc;">
-							<td class="padd">ថ្មី</td>
-							<td class="padd">ចាស់</td>
-	 					 </tr>
-				
+	 					<thead>
+		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+								<td rowspan="3" class="padd">ល.រ</td>
+								<td rowspan="3" class="padd">វិក័យបត្រ<br />លេខ</td>
+								<td rowspan="3" class="padd">អត្តលេខ<br />សិស្ស</td>
+								<td rowspan="3" class="padd">ឈ្មោះសិស្ស</td>
+								<td rowspan="3" class="padd">ភេទ</td>
+								<td rowspan="3" class="padd">កម្រិត/<br />ថ្នាក់</td>
+								<td rowspan="3" class="padd">សិក្សាវេន</td>
+								<td colspan="5" class="padd">ការបង់ថ្លៃសិក្សាចំណេះទូទៅភាសាខ្មែរ</td>
+								<td rowspan="3" class="padd">តម្លៃ<br />រដ្ឋបាល</td>
+								<td rowspan="3" class="padd">តម្លៃសម្ភារៈ<br />សិក្សា</td>
+								<td rowspan="3" class="padd">តម្លៃ<br />ផ្សេងៗ</td>
+								<td rowspan="3" class="padd">ជំពាក់<br />ប្រាក់</td>
+								<td rowspan="3" class="padd">ទឹកប្រាក់<br />សរុប</td>
+								<td rowspan="3" class="padd">ផ្សេងៗ</td>
+		 					 </tr>
+							 <tr id="row" align="center" style="background: #c1d0f3;">
+								<td colspan="2" class="padd">សិស្ស</td>
+								<td rowspan="2" class="padd">តម្លៃ<br />សិក្សា</td>
+								<td rowspan="2" class="padd">បញ្ចុះតម្លៃ</td>
+								<td rowspan="2" class="padd">ទឹកប្រាក់</td>
+		 					 </tr>
+		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+								<td class="padd">ថ្មី</td>
+								<td class="padd">ចាស់</td>
+		 					 </tr>
+					</thead>
 				<?php ////////////////////////////////// value //////////////////////////////////////////////////////////////////////////////////?>
 				
 					<?php 
@@ -202,11 +209,11 @@
 						</tr>
 						<tr>
 							<td width="70%" style="border: 1px solid #000;">
-								<u>បូកសរុបទិន្នន័យ:</u>
-								<table width="100%" style="font-size: 15px;">
+								&nbsp;<u>បូកសរុបទិន្នន័យ:</u>
+								<table width="100%" style="font-size: 14px;line-height: 24px;" cellspacing="1">
 									<tr class="hover">
 										<td>
-											I. ចំណូលសេវាសិក្សាចំណេះទូទៅភាសាខ្មែរ
+											&nbsp;I. ចំណូលសេវាសិក្សាចំណេះទូទៅភាសាខ្មែរ
 										</td>
 										<td>
 											
@@ -238,7 +245,7 @@
 									</tr>
 									<tr class="hover">
 										<td>
-											II. ចំណូលទទួលបានពីតម្លៃរដ្ឋបាល
+											&nbsp;II. ចំណូលទទួលបានពីតម្លៃរដ្ឋបាល
 										</td>
 										<td>
 											<?php echo "$ ".number_format($total_admin_fee,2);?>
@@ -246,7 +253,7 @@
 									</tr>
 									<tr class="hover">
 										<td>
-											I. ​ចំណូលទទួលបានពីតម្លៃកញ្ចប់សម្ភារៈសិក្សា
+											&nbsp;III. ​ចំណូលទទួលបានពីតម្លៃកញ្ចប់សម្ភារៈសិក្សា
 										</td>
 										<td>
 											<?php echo "$ ".number_format($total_study_material_fee,2);?>
@@ -254,7 +261,7 @@
 									</tr>
 									<tr class="hover">
 										<td>
-											I. ចំណូលទទួលបានផ្សេងៗ
+											&nbsp;IV. ចំណូលទទួលបានផ្សេងៗ
 										</td>
 										<td>
 											<?php echo "$ ".number_format($total_other_fee,2);?>
@@ -262,7 +269,7 @@
 									</tr>
 									<tr class="hover">
 										<td>
-											I. សរុបទឹកប្រាក់ជំពាក់ពីអតិថិជន
+											&nbsp;V. សរុបទឹកប្រាក់ជំពាក់ពីអតិថិជន
 										</td>
 										<td>
 											<?php echo "$ ".number_format($total_balance,2);?>
@@ -271,7 +278,7 @@
 									
 									<tr class="hover">
 										<td style="border-top:2px solid #000;">
-											ចំនួនសិស្សថ្មីសរុប
+											&nbsp;ចំនួនសិស្សថ្មីសរុប
 										</td>
 										<td style="border-top:2px solid #000;">
 											<?php echo $amont_new_student;?> នាក់
@@ -279,7 +286,7 @@
 									</tr>
 									<tr class="hover">
 										<td>
-											ចំនួនសិស្សចាស់សរុប
+											&nbsp;ចំនួនសិស្សចាស់សរុប
 										</td>
 										<td>
 											<?php echo $amont_old_student;?> នាក់
@@ -287,7 +294,7 @@
 									</tr>
 									<tr class="hover">
 										<td>
-											ទឹកប្រាក់សរុបរួម
+											&nbsp;ទឹកប្រាក់សរុបរួម
 										</td>
 										<td>
 											<?php echo "$ ".number_format($grand_total,2);?>
@@ -296,7 +303,7 @@
 								</table>
 							</td>
 							<td width="30%" valign="top">
-								<table width="100%"style="font-size:13px;white-space: nowrap; ">
+								<table width="100%"style="font-size:14px;white-space: nowrap; ">
 									<tr>
 										<td width="60%">
 											&nbsp;
@@ -337,6 +344,23 @@
 										</td>
 										<td style="border: 1px solid #000;">
 											<label id="lb_amount_reil"></label>
+										</td>
+									</tr>
+									
+									<tr class="row_control" style="display: none;">
+										<td>
+											សម្រាប់ថ្ងៃ
+										</td>
+										<td>
+											<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+										</td>
+									</tr>
+									<tr class="row_control" style="display: none;">
+										<td>
+										</td>
+										<td>
+											<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+											iconClass="dijitEditorIcon dijitEditorIconSave" />	
 										</td>
 									</tr>
 								</table>							
@@ -412,11 +436,7 @@
 	<table width="100%">
 		<tr>
 			<td align="center">
-				<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
-					iconClass="dijitEditorIcon dijitEditorIconSave" />	
-					
-				<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
-					
+				
 			</td>
 		</tr>
 	</table>	

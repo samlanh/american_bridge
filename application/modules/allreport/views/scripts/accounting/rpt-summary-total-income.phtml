@@ -69,9 +69,9 @@
 			</tr>
 			<tr>
 				<td colspan="3" id="exportExcel">
-					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang'; border: 1px solid #000;"  border="1" >
+					<table cellpadding="8"​ style="font-size:14px; margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang'; border: 1px solid #000;"  border="1" >
 						<thead>
-							<tr style=" font-size:16px; height: 20px;  line-height: 30px; font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
+							<tr style=" font-size:14px; height: 20px;  line-height: 30px; font-weight: bold;background: #c1d0f3;" align="center" >
 								<td><?php echo $tr->translate("Title"); ?></td>
 								<td><?php echo $tr->translate("Total Amount"); ?></td>
 								<td><?php echo $tr->translate("Receipt Number"); ?></td>
@@ -248,14 +248,14 @@
 	 						$grand_total = $total_englishft_payment + $total_englishpt_payment + $total_khmerft_payment + $total_foodandstay_payment + $total_rent_payment + $total_study_material_payment + $total_transportation_payment;
 	 					?>
 	 					
-	 					<tr style="font-size: 20px;font-weight: bold;background: #dadada;">
+	 					<tr style="font-size: 18px; font-weight: bold;background: #c1d0f3;">
 	 						<td align="center">Grand Total</td>
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total,2);?></td>
 	 						<td></td>
 	 					</tr>
 					</table>	
 					
-					<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
+					<table width="60%" border="1" style="font-size:14px; white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
 						<tr>
 							<td width="25%">
 								Grand Total 
