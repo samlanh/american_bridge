@@ -54,7 +54,7 @@ tr.row_control {
 				font-size:13px;
 			}
 			.padd{
-				padding: 3px;	
+				padding: 0 3px;	
 			}
 			#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
 			
@@ -87,7 +87,7 @@ tr.row_control {
 			<td colspan="3" id="exportExcel">
 				<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
  					<thead>
-	 					 <tr id="row" align="center" style="background: #c1d0f3;">
+	 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 16px;">
 							<td rowspan="2" class="padd">N<sup>o</sup></td>
 							<td rowspan="2" class="padd">Receipt No.</td>
 							<td rowspan="2" class="padd">Student ID</td>
@@ -100,7 +100,7 @@ tr.row_control {
 							<td rowspan="2" class="padd">Total in<br />USD</td>
 							<td rowspan="2" class="padd">Remark</td>
 	 					 </tr>
-						 <tr id="row" align="center" style="background: #c1d0f3;">
+						 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 							<td colspan="1" class="padd">New</td>
 							<td rowspan="1" class="padd">Old</td>
 							<td rowspan="1" class="padd">Food & Stay Fee</td>
@@ -152,14 +152,14 @@ tr.row_control {
 						<td class="padd"><?php if($rs['is_new']==1 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
 						<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
 						
-						<td><?php if($rs['service_id']==93){echo "$ ".$rs['tuition_fee_after_discount']; $foodandstay = $foodandstay + $rs['tuition_fee_after_discount'];}?></td>
-						<td><?php if($rs['service_id']==91){echo "$ ".$rs['tuition_fee_after_discount']; $food = $food + $rs['tuition_fee_after_discount'];}?></td>
-						<td><?php if($rs['service_id']==92){echo "$ ".$rs['tuition_fee_after_discount']; $stay = $stay + $rs['tuition_fee_after_discount'];}?></td>
+						<td align="right"><?php if($rs['service_id']==93){echo "$ ".$rs['tuition_fee_after_discount']; $foodandstay = $foodandstay + $rs['tuition_fee_after_discount'];}?>&nbsp;</td>
+						<td><?php if($rs['service_id']==91){echo "$ ".$rs['tuition_fee_after_discount']; $food = $food + $rs['tuition_fee_after_discount'];}?>&nbsp;</td>
+						<td><?php if($rs['service_id']==92){echo "$ ".$rs['tuition_fee_after_discount']; $stay = $stay + $rs['tuition_fee_after_discount'];}?>&nbsp;</td>
 						
-						<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
+						<td align="right" class="padd"><?php echo "$ ".$rs['material_fee'];?>&nbsp;</td>
 						
-						<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
-						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
+						<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_balance'];?>&nbsp;</td>
+						<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?>&nbsp;</td>
 						
 						<td class="padd"><?php echo $rs['note'];?></td>
  					</tr>

@@ -55,7 +55,7 @@
 		font-size:13px;
 	}
 	.padd{
-		padding: 3px;	
+		padding: 0 3px;	
 	}
 	#row{ font-size:12px; height: 30px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
 </style>
@@ -104,34 +104,43 @@
 						<?php }?>
 						
 						
-					  <tr style=" font-size:12px; height: 20px;  line-height: 30px; font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
-						<td class="bor"><?php echo $tr->translate("N_O"); ?></td>
-						<td class="bor" colspan="2"><?php echo $tr->translate("STUDENT_ID"); ?></td>
-						<td class="bor" colspan="6"><?php echo $tr->translate("NAME_KH"); ?></td>
-						<td class="bor" colspan="6"><?php echo $tr->translate("NAME_EN"); ?></td>
-						<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
-						<td class="bor" colspan="9"><?php echo $tr->translate("PHONE"); ?></td>
-				      </tr>
+					 <!-- <tr style=" font-size:12px;   line-height: 24px; font-weight: bold;background: #c1d0f3;" align="center" >
+						<td class="bor"><?php //echo $tr->translate("N_O"); ?></td>
+						<td class="bor" colspan="2"><?php //echo $tr->translate("STUDENT_ID"); ?></td>
+						<td class="bor" colspan="6"><?php //echo $tr->translate("NAME_KH"); ?></td>
+						<td class="bor" colspan="6"><?php //echo $tr->translate("NAME_EN"); ?></td>
+						<td class="bor"><?php //echo $tr->translate("SEX"); ?></td>
+						<td class="bor" colspan="9"><?php //echo $tr->translate("PHONE"); ?></td>
+				      </tr> --> 
 			<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
 				      
-				      <tr style="font-size:12px; height: 30px;font-family:'Khmer OS Battambang';background: rgba(101, 177, 70, 0.82);" align="center">
+				      <!-- <tr style="font-size:12px; line-height: 24px; font-family:'Khmer OS Battambang';background: #c1d0f3;" align="center">
 						<td class="bor_r"><?php echo $i;?></td>
 						<td class="bor_r" colspan="2"><?php echo $rs['stu_code'];?> </td>
 						<td class="bor_r" colspan="6"><?php echo $rs['stu_khname'];?> </td>
 						<td class="bor_r" colspan="6"><?php echo $rs['stu_enname'];?> </td>
 						<td class="bor_r"><?php echo $rs['sex'];?> </td>
 						<td class="bor_r" colspan="9"><?php echo $rs['tel'];?> </td>
+ 					 </tr> -->
+ 					 <tr style="    font-size: 14px;  border: solid 1px #fff;    border-bottom: solid 1px #000;">
+ 					 	<td colspan="23">
+ 					 	<?php echo $i;?>. <?php echo $tr->translate("STUDENT_ID"); ?> : <strong><?php echo $rs['stu_code'];?></strong>
+ 					 	<?php echo $tr->translate("NAME_KH"); ?> : <strong><?php echo $rs['stu_khname'];?></strong>
+ 					 	<?php echo $tr->translate("NAME_EN"); ?> : <strong><?php echo $rs['stu_enname'];?></strong>
+ 					 	<?php echo $tr->translate("SEX"); ?> : <strong><?php echo $rs['sex'];?></strong>
+ 					 	<?php echo $tr->translate("PHONE"); ?> : <strong><?php echo $rs['tel'];?></strong>
+ 					 	</td>
  					 </tr>
  					 
  			<?php //////////////////////////////////////////////// //////////////////////////////////////////////////////////////////?>		 
  					 
- 					 <tr id="row" align="center" style="background: #ccc;">
+ 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 16px;">
 						<td rowspan="2" class="padd">លេខរថយន្ត</td>
 						<td rowspan="2" class="padd">អាស័យដ្ឋាន</td>
 						<td rowspan="2" class="padd">សិស្សថ្មី</td>
 						<td colspan="4" class="padd">វេន</td>
 						<td colspan="8" class="padd">ការទូទាត់សេវាកម្មជិះរថយន្ត</td>
-						<td rowspan="2" class="padd">ថ្លៃសម្ភារៈ<br />សិក្សា</td>
+						<!-- <td rowspan="2" class="padd">ថ្លៃសម្ភារៈ<br />សិក្សា</td> -->
 						<td rowspan="2" class="padd">ជំពាក់</td>
 						<td rowspan="2" class="padd">ទឹកប្រាក់<br />សរុបរួម</td>
 						<td rowspan="2" class="padd">បង់រួច&<br />ផុតកំណត់ក្នុងខែ</td>
@@ -139,7 +148,7 @@
 						<td rowspan="2" class="padd">សិស្សឈប់</td>
 						<td rowspan="2" class="padd">ថ្ងៃឈប់</td>
  					 </tr>
-					 <tr id="row" align="center" style="background: #ccc;">
+					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 					 	<td class="padd">7:30am</td>
 						<td class="padd">10:45am</td>
 						<td class="padd">1:30pm</td>
@@ -214,7 +223,7 @@
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 						<td class="padd"><?php echo $amount_month;?></td>
 						
-						<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
+						<!-- <td class="padd"><?php //echo "$ ".$rs['material_fee'];?></td> -->
 						
 						<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
 						<td class="padd"><?php echo "$ ".$rs['grand_total_payment'];?></td>
@@ -228,7 +237,7 @@
  				<?php }?>
 				</table>	
 				
-				<table border="1" width="20%" style="border-collapse: collapse;margin-top: 25px;margin-left: 25px;text-align: center;border: 1px solid #000;">
+				<table border="1" width="20%" style="border-collapse: collapse;margin-top: 25px; text-align: center;border: 1px solid #000;">
 					<tr>
 						<td width="70%">Total Student All</td>
 						<td width="30%"><?php echo count($this->total_student);?></td>
@@ -238,8 +247,8 @@
 						<td><?php echo count($this->student_drop);?></td>
 					</tr>
 					<tr>
-						<td style="background: #e0dfdf;"><strong>Net Total Student</strong></td>
-						<td style="background: #fff200;"><strong><?php echo count($this->total_student) - count($this->student_drop);?></strong></td>
+						<td style="background: #c1d0f3;"><strong>Net Total Student</strong></td>
+						<td style="background: #eaeaea;"><strong><?php echo count($this->total_student) - count($this->student_drop);?></strong></td>
 					</tr>
 				</table>
 				
@@ -254,11 +263,11 @@
 					?>
 				
 					<table border="1" width="40%" style="white-space:nowrap;border-collapse: collapse;margin: 0 auto;text-align: center;">
-						<tr style="background: #84f2d6;">
+						<tr style="background: #c1d0f3;">
 							<td colspan="2">Summary report for <?php echo $this->search['for_month'].'-'.date("Y")?></td>
 						</tr>
 						
-						<tr style="background: #ffd2d2;">
+						<tr style="background: #c1d0f3;">
 							<td width="50%">ឈ្មោះសេវាកម្ម</td>
 							<td width="50%">ចំនួនសិស្ស</td>
 						</tr>
@@ -285,7 +294,7 @@
 						</tr>
 						<tr>
 							<td>ចំនួនសិស្សសរុប</td>
-							<td style="background: yellow;"> <?php echo $total_student;?></td>
+							<td style="background: #eaeaea;"> <?php echo $total_student;?></td>
 						</tr>
 					</table>
 				
@@ -327,28 +336,28 @@
 						?>
 					
 						<tr style="background: #c2c2fa;">
-							<td width="50%">ចំនួនសិស្សចាស់សរុប</td>
+							<td align="left" width="50%">&nbsp;ចំនួនសិស្សចាស់សរុប</td>
 							<td width="50%"><?php echo $old_student_amount;?></td>
 						</tr>
 						
 						<tr style="background: #e2f6f5;">
-							<td>ចំនួនសិស្សចាស់ ឈប់សរុប</td>
+							<td align="left">&nbsp;ចំនួនសិស្សចាស់ ឈប់សរុប</td>
 							<td><?php echo $old_student_drop_amount;?></td>
 						</tr>
 						
 						<tr style="background: #fac9c9;">
-							<td>ចំនួនសិស្សថ្មីក្នុងខែ <?php echo $this->search['for_month']?> សរុប</td>
+							<td align="left">&nbsp;ចំនួនសិស្សថ្មីក្នុងខែ <?php echo $this->search['for_month']?> សរុប</td>
 							<td><?php echo $amount_student_new_this_month;?></td>
 						</tr>
 						
 						<tr style="background: #e4e4e4;">
-							<td>ចំនួនសិស្សឈប់ក្នុងខែ <?php echo $this->search['for_month']?> សរុប</td>
+							<td align="left">&nbsp;ចំនួនសិស្សឈប់ក្នុងខែ <?php echo $this->search['for_month']?> សរុប</td>
 							<td><?php echo $amount_student_drop_this_month;?></td>
 						</tr>
 						
 						<tr>
-							<td>ចំនួនសិស្សសរុបក្នុងខែ <?php echo $this->search['for_month']."-".date("Y")?> </td>
-							<td style="background: yellow;"><?php echo $current_student;?></td>
+							<td align="left">&nbsp;ចំនួនសិស្សសរុបក្នុងខែ <?php echo $this->search['for_month']."-".date("Y")?> </td>
+							<td style="background: #eaeaea;"><?php echo $current_student;?></td>
 						</tr>
 					</table>
 				<?php }?>	

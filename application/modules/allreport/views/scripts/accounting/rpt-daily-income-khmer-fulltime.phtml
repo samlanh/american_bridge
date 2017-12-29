@@ -56,7 +56,7 @@ tr.row_control {
 				font-size:13px;
 			}
 			.padd{
-				padding: 3px;	
+				padding: 0 3px;	
 			}
 			#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
 			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
@@ -91,10 +91,10 @@ tr.row_control {
 				<td colspan="3" id="exportExcel">
 					<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
 	 					<thead>
-		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+		 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 16px;">
 								<td rowspan="3" class="padd">ល.រ</td>
-								<td rowspan="3" class="padd">វិក័យបត្រ<br />លេខ</td>
-								<td rowspan="3" class="padd">អត្តលេខ<br />សិស្ស</td>
+								<td rowspan="3" class="padd">វិក័យបត្រលេខ</td>
+								<td rowspan="3" class="padd">អត្តលេខសិស្ស</td>
 								<td rowspan="3" class="padd">ឈ្មោះសិស្ស</td>
 								<td rowspan="3" class="padd">ភេទ</td>
 								<td rowspan="3" class="padd">កម្រិត/<br />ថ្នាក់</td>
@@ -103,17 +103,17 @@ tr.row_control {
 								<td rowspan="3" class="padd">តម្លៃ<br />រដ្ឋបាល</td>
 								<td rowspan="3" class="padd">តម្លៃសម្ភារៈ<br />សិក្សា</td>
 								<td rowspan="3" class="padd">តម្លៃ<br />ផ្សេងៗ</td>
-								<td rowspan="3" class="padd">ជំពាក់<br />ប្រាក់</td>
-								<td rowspan="3" class="padd">ទឹកប្រាក់<br />សរុប</td>
+								<td rowspan="3" class="padd">ជំពាក់ប្រាក់</td>
+								<td rowspan="3" class="padd">ទឹកប្រាក់សរុប</td>
 								<td rowspan="3" class="padd">ផ្សេងៗ</td>
 		 					 </tr>
-							 <tr id="row" align="center" style="background: #c1d0f3;">
+							 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 								<td colspan="2" class="padd">សិស្ស</td>
 								<td rowspan="2" class="padd">តម្លៃ<br />សិក្សា</td>
 								<td rowspan="2" class="padd">បញ្ចុះតម្លៃ</td>
 								<td rowspan="2" class="padd">ទឹកប្រាក់</td>
 		 					 </tr>
-		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+		 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 								<td class="padd">ថ្មី</td>
 								<td class="padd">ចាស់</td>
 		 					 </tr>
@@ -155,7 +155,7 @@ tr.row_control {
 							<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
 							
 							
-							<td class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
+							<td align="right" class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
 							<td class="padd">
 								<?php if($rs['discount_percent']>0 && $rs['discount_fix']>0){
 											echo $rs['discount_percent']." %"." + $".$rs['discount_fix'];
@@ -166,12 +166,12 @@ tr.row_control {
 										}
 								?>
 							</td>
-							<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
-							<td class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
-							<td class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
-							<td class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
-							<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
-							<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
+							<td align="right" class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
+							<td align="right" class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
+							<td align="right" class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
+							<td align="right" class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
+							<td align="right" class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
+							<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 							<td class="padd"><?php echo $rs['note'];?></td>
 	 					</tr>
 	 					

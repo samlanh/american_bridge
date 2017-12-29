@@ -106,7 +106,7 @@
 						<?php }?>
 						
 						
-					  <tr style=" font-size:12px; height: 20px;  line-height: 30px; font-weight: bold;background: rgba(101, 177, 70, 0.82);" align="center" >
+					  <tr style=" font-size:12px;  line-height: 24px; font-weight: bold;background: #c1d0f3;" align="center" >
 						<td class="bor"><?php echo $tr->translate("N_O"); ?></td>
 						<td class="bor" colspan="2"><?php echo $tr->translate("STUDENT_ID"); ?></td>
 						<td class="bor" colspan="4"><?php echo $tr->translate("NAME_KH"); ?></td>
@@ -118,7 +118,7 @@
 				      </tr>
 			<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
 				      
-				      <tr style="font-size:12px; height: 30px;font-family:'Khmer OS Battambang';background: rgba(101, 177, 70, 0.82);" align="center">
+				      <tr style="font-size:12px;line-height: 24px;font-family:'Khmer OS Battambang';background: #c1d0f3;" align="center">
 						<td class="bor_r"><?php echo $i;?></td>
 						<td class="bor_r" colspan="2"><?php echo $rs['stu_code'];?> </td>
 						<td class="bor_r" colspan="4"><?php echo $rs['stu_khname'];?> </td>
@@ -131,7 +131,7 @@
  					 
  			<?php //////////////////////////////////////////////// //////////////////////////////////////////////////////////////////?>		 
  					 
- 					 <tr id="row" align="center" style="background: #ccc;">
+ 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 16px;">
 						<td rowspan="2" class="padd">កម្រិត</td>
 						<td rowspan="2" class="padd">បន្ទប់</td>
 						<td rowspan="2" class="padd">វេន</td>
@@ -147,7 +147,7 @@
 						<td rowspan="2" class="padd">សិស្ស<br />ឈប់</td>
 						<td rowspan="2" class="padd">ថ្ងៃឈប់</td>
  					 </tr>
-					 <tr id="row" align="center" style="background: #ccc;">
+					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 						<td class="padd">ថ្ងៃបង់ប្រាក់</td>
 						<td class="padd">លេខបង្កាន់ដៃ</td>
 						<td class="padd">ទឹកប្រាក់</td>
@@ -239,7 +239,7 @@
  				
 				</table>	
 				
-				<table border="1" width="20%" style="border-collapse: collapse;margin-top: 25px;margin-left: 25px;text-align: center;border: 1px solid #000;">
+				<table border="1" width="20%" style="border-collapse: collapse;margin-top: 25px;text-align: center;border: 1px solid #000;">
 					<tr>
 						<td width="70%">Total Student All</td>
 						<td width="30%"><?php echo count($this->total_student);?></td>
@@ -249,8 +249,8 @@
 						<td><?php echo count($this->student_drop);?></td>
 					</tr>
 					<tr>
-						<td style="background: #e0dfdf;"><strong>Net Total Student</strong></td>
-						<td style="background: #fff200;"><strong><?php echo count($this->total_student) - count($this->student_drop);?></strong></td>
+						<td style="background: #c1d0f3;"><strong>Net Total Student</strong></td>
+						<td style="background: #eaeaea;"><strong><?php echo count($this->total_student) - count($this->student_drop);?></strong></td>
 					</tr>
 				</table>
 				
@@ -264,7 +264,7 @@
 					?>
 				
 					<table border="1" width="40%" style="white-space:nowrap;border-collapse: collapse;margin: 0 auto;text-align: center;">
-						<tr style="background: #84f2d6;">
+						<tr style="background: #c1d0f3;">
 							<td colspan="2">របាយការណ៍សង្ខេបប្រចាំខែ <?php echo $this->search1['for_month'].'-'.date("Y")?></td>
 						</tr>
 						
@@ -279,7 +279,7 @@
 								<td colspan="2"><?php echo $array_degree[$this->search1['degree']];?></td>
 							</tr>
 						<?php }?>
-						<tr style="background: #ffd2d2;">
+						<tr style="background: #c1d0f3;">
 							<td width="50%">កម្រិត</td>
 							<td width="50%">ចំនួនសិស្ស</td>
 						</tr>
@@ -306,7 +306,7 @@
 						</tr>
 						<tr>
 							<td>ចំនួនសិស្សសរុប</td>
-							<td style="background: yellow;"> <?php echo $total_student;?></td>
+							<td style="background: #eaeaea;"> <?php echo $total_student;?></td>
 						</tr>
 					</table>
 				
@@ -369,7 +369,7 @@
 						
 						<tr>
 							<td>ចំនួនសិស្សសរុបក្នុងខែ <?php echo $this->search1['for_month']."-".date("Y")?> </td>
-							<td style="background: yellow;"><?php echo $current_student;?></td>
+							<td style="background: #eaeaea;"><?php echo $current_student;?></td>
 						</tr>
 					</table>
 				<?php }?>

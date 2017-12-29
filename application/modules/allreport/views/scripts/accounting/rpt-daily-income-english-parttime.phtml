@@ -56,7 +56,7 @@ tr.row_control {
 					font-size:13px;
 				}
 				.padd{
-					padding: 3px;	
+					padding: 0 3px;	
 				}
 				#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
 				
@@ -90,7 +90,7 @@ tr.row_control {
 					<td colspan="3" id="exportExcel">
 						<table cellpadding="8"​ style="margin:0 auto;width:100%; border-collapse: collapse;white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
 		 					<thead>
-		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+		 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 16px;">
 								<td rowspan="3" class="padd">N<sup>o</sup></td>
 								<td rowspan="3" class="padd">Receipt No.</td>
 								<td rowspan="3" class="padd">Student ID</td>
@@ -99,21 +99,23 @@ tr.row_control {
 								<td rowspan="3" class="padd">Level/Grade</td>
 								<td rowspan="3" class="padd">Time</td>
 								<td colspan="5" class="padd">Study Fee Income</td>
-								<td rowspan="3" class="padd">Admin <br>Fee</td>
-								<td rowspan="3" class="padd">Study <br>Material <br>fee</td>
-								<td rowspan="3" class="padd">Other <br>Fee</td>
+								<!-- 
+								<td rowspan="3" class="padd">Admin Fee</td>
+								<td rowspan="3" class="padd">Study Material fee</td>
+								 -->
+								<td rowspan="3" class="padd">Other Fee</td>
 								<td rowspan="3" class="padd">Credit</td>
-								<td rowspan="3" class="padd">Total in <br>USD</td>
+								<td rowspan="3" class="padd">Total in USD</td>
 								<td rowspan="3" class="padd">Remark</td>
 		 					 </tr>
-							 <tr id="row" align="center" style="background:#c1d0f3;">
+							 <tr id="row" align="center" style="background:#c1d0f3; line-height: 14px;">
 								<td colspan="2" class="padd">Type</td>
 								<td rowspan="2" class="padd">Full Price</td>
 								<td rowspan="2" class="padd">Discount</td>
 								<td rowspan="2" class="padd">Amount</td>
 		 					 </tr>
 		 					 
-		 					 <tr id="row" align="center" style="background: #c1d0f3;">
+		 					 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 								<td class="padd">New</td>
 								<td class="padd">Old</td>
 		 					 </tr>
@@ -156,7 +158,7 @@ tr.row_control {
 								<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
 								
 								
-								<td class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
+								<td align="right" class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
 								<td class="padd">
 									<?php if($rs['discount_percent']>0 && $rs['discount_fix']>0){
 												echo $rs['discount_percent']." %"." + $".$rs['discount_fix'];
@@ -167,12 +169,14 @@ tr.row_control {
 											}
 									?>
 								</td>
-								<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
-								<td class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
-								<td class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
-								<td class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
-								<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
-								<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
+								<td align="right" class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
+								<!-- 
+								<td align="right" class="padd"><?php //if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
+								<td align="right" class="padd"><?php //if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
+								 -->
+								<td align="right" class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
+								<td align="right" class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
+								<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 								<td class="padd"><?php echo $rs['note'];?></td>
 		 					</tr>
 		 					
@@ -182,9 +186,11 @@ tr.row_control {
 							
 								$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
 								
-								$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
+// 								$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
+								$total_admin_fee=0;
 								
-								$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
+// 								$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
+								$total_study_material_fee=0;
 								
 								$total_other_fee = $total_other_fee + $rs['other_fee'];
 								
@@ -242,12 +248,13 @@ tr.row_control {
 													<?php echo "$ ".number_format($total_study_fee,2);?>
 												</td>
 											</tr>
+											<!-- 
 											<tr class="hover">
 												<td>
 													&nbsp;II. Total amount of admin fee
 												</td>
 												<td>
-													<?php echo "$ ".number_format($total_admin_fee,2);?>
+													<?php //echo "$ ".number_format($total_admin_fee,2);?>
 												</td>
 											</tr>
 											<tr class="hover">
@@ -255,12 +262,13 @@ tr.row_control {
 													&nbsp;III. Total amount of study material fee
 												</td>
 												<td>
-													<?php echo "$ ".number_format($total_study_material_fee,2);?>
+													<?php //echo "$ ".number_format($total_study_material_fee,2);?>
 												</td>
 											</tr>
+											 -->
 											<tr class="hover">
 												<td>
-													&nbsp;IV. Total amount of other fee
+													&nbsp;II. Total amount of other fee
 												</td>
 												<td>
 													<?php echo "$ ".number_format($total_other_fee,2);?>
@@ -268,7 +276,7 @@ tr.row_control {
 											</tr>
 											<tr class="hover">
 												<td>
-													&nbsp;V. Total amount of student credit
+													&nbsp;III. Total amount of student credit
 												</td>
 												<td>
 													<?php echo "$ ".number_format($total_balance,2);?>
