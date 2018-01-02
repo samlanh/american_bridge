@@ -127,7 +127,7 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 		$new_acc_no = (int)$result+1;
 		$length = strlen($new_acc_no);
 		
-		$pre="T";
+		$pre="TEST";
 		
 		for($i = $length;$i<6;$i++){
 			$pre.='0';

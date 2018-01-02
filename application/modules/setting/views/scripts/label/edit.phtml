@@ -1,19 +1,33 @@
-<title>Edit Label</title>
-<fieldset>
-		<legend><strong>Edit Label</strong></legend>
-<form action="<?php echo $this->url(array('module'=>'setting','controller'=>'Label','action'=>'edit')); ?>" method="post" enctype="application/x-www-form-urlencoded" >
-<table width="100%">
-	<tr>
-		<td>Label Name</td>
-		<td>
-			<input type="text" required="true" name="label_name"​  
-												dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->rs['keyValue'];?>"
-												missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពិស្ដាជាខ្មែរ!" class="fullside" />
-		   <input type="hidden" name="id" value="<?php echo $this->rs['code'];?>"  />
-		   <input type="submit" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
-										
-		</td>
-	</tr>
+ <?php 
+ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+ ?>
+ <script>
+		require(["dijit/form/DateTextBox","dijit/form/Textarea"]);
+ </script>
+
+<title><?php echo $tr->translate('Edit')?> || <?php echo $tr->translate($this->rs['keyName']);?></title>
+<table cellspacing="10" width="70%" style="margin: 0 auto;">
+		<tr>
+			<td>
+				<fieldset style=" background: #fff;   border: solid 1px #008;">
+				<legend style="font-size: 14px; color: #008;"><strong><?php echo $tr->translate('Edit')?> <?php echo $tr->translate($this->rs['keyName']);?></strong></legend>
+					<form action="<?php echo $this->url(array('module'=>'setting','controller'=>'Label','action'=>'edit')); ?>" method="post" enctype="application/x-www-form-urlencoded" >
+						<table width="100%" cellspacing="10">
+							<tr>
+								<td style=" font-weight: 600; color: #008;">Label Name</td>
+							</tr>
+							<tr>
+								<td>
+									<input style="min-height:60px; font-size:inherit; font-family:inherit" type="text" required="true" name="label_name"​  
+																		dojoType="dijit.form.Textarea" value="<?php echo $this->rs['keyValue'];?>"
+																		missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពិស្ដាជាខ្មែរ!" class="fullside" />
+								   <input type="hidden" name="id" value="<?php echo $this->rs['code'];?>"  />
+								   <input type="submit" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+								</td>
+							</tr>
+						</table>
+					</form>
+				</fieldset>
+			</td>
+		</tr>
 </table>
-</form>
-</fieldset>

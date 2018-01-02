@@ -11,7 +11,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('auth');
 		return $session_user->user_id;
 	}
-	
+	function getBranchInfo(){
+		$session_user=new Zend_Session_Namespace('auth');
+		$branch_id = $session_user->branch_id;
+		if (empty($branch_id)){
+			$branch_id=1;
+		}
+		$db =$this->getAdapter();
+		$sql="SELECT b.* FROM `rms_branch` AS b WHERE b.`br_id`=$branch_id LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();

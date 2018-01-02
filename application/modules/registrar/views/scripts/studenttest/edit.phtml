@@ -186,9 +186,10 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 		</tr>		
 		<tr>
 			<td align="center">
-			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
+				<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
 					 iconClass="dijitIconClear"/>
 				<input label="<?php echo $tr->translate("GO_EDIT")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button"  type="submit" iconClass="dijitIconNewTask"/>
+				<input label="<?php echo $tr->translate("PRINT")?>" name='print' id='print' value='print' dojoType="dijit.form.Button" onclick="printReceipt('');" type="button" iconClass="dijitIconNewTask"/>
 			</td>
 		</tr>	
 	</table>
@@ -196,27 +197,38 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 <style>
 .headerreceipt{height: 0px !important;}
 </style>
+<style>
+.headerreceipt{height: 0px !important;}
+</style>
 <div class="dijitHidden" style="padding: 0px; margin: 0px;">
 <?php $keycode = $this->keycode;?>
-	<div data-dojo-type="dijit.Dialog" style="width:24cm;height: 16cm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("OFFICIAL_RECEIPT");?>'" id="terms" >
-		<table width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap;">
-				<tr>
-					<td colspan="10" valign="top">
-						<table border="0" cellspacing="0" style=" width:20cm;margin:0 auto;font-family: Khmer OS Battambang;font-size:16px;white-space:nowrap;">
-							<tr>
-							<td width="33%"><img src="<?php echo $this->baseUrl()."/images/logo.png"?>" style="margin-bottom: -90px;max-height:70px;"/></td>
-							<td width="33%" style="text-align:center;font-weight:bold;font-size: 16px;font-family:'Khmer MEF2';"><br /></td>	
-							<td width="33%">&nbsp;</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+	<div data-dojo-type="dijit.Dialog" style="width:24cm; height: 16cm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("OFFICIAL_RECEIPT");?>'" id="terms" >
 		<div id="PrintReceipt" style="width: 20cm !important; height: 10cm ; padding: 0px; ">
 			<style>
-			.headerreceipt{height: 60px;}
+				.headerreceipt{height: 50px;}
 			</style>
 			<table width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap;">
+				<tr>
+				    <td colspan="10"  align="center" style="">
+						<table width="100%" style="white-space:nowrap; font-family:Khmer OS Battambang; font-weight:bold;">
+							<tr>
+								<td width="25%" align="left" style="font-size:11px;">
+									<div style="font-size:15px;"><?php echo $this->branch_info['branch_namekh'];?></div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+								</td>
+								<td width="50%" align="center">
+									<img style="width: 20%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+								</td>
+								<td width="25%" align="center" style="font-size:17px;color:red;"><label id="lb_receipt_type" style="color:#000;font-size:14px;"> </label><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" >0121</label></td>
+							</tr>
+						</table>
+				    </td>
+				</tr>
+				<tr >
+					<td colspan="10">
+						<img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>">
+					</td>
+					
+				</tr>
 				<tr>
 					<td colspan="10" valign="top">
 						<table width="100%" border="0" cellspacing="5" style="font-family: Khmer OS Battambang;font-size:16px;white-space:nowrap;line-height: 18px;">
@@ -226,11 +238,11 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 								<td width="15%"></td>
 								<td width="35%"></td>
 							</tr>
-							<tr>
-								<td colspan="4" class="headerreceipt"></td>
-							</tr>
-							<tr>
-								<td colspan="4" style="text-align:center;font-weight:bold;font-size: 16px;font-family:'Khmer MEF2';">បង្កាន់ដៃបង់ប្រាក់ចូលធ្វើតេស<br />OFFICIAL RECEIPT</td>	
+							<tr style="line-height:24px;">
+								<td colspan="4" style="text-align:center;font-weight:bold;font-family:'Khmer MEF2';">
+									<div style="font-size:18px;">បង្កាន់ដៃបង់ប្រាក់</div>
+									<div style="font-size:15px;">OFFICIAL RECEIPT</div>
+								</td>	
 							</tr>
 							<style>
 								.h{ margin-top: -3px;margin-bottom: 3px;}
@@ -242,37 +254,39 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 								.one{white-space:nowrap;font-size:16px;}
 								.border{border:1px solid #000;}
 							</style>
-							<tr style="height: 30px;">
-								<td class="one " colspan="2">&nbsp;&nbsp;</td>
-								<td class="one ">&nbsp;លេខបង្កាន់ដៃបង់&nbsp;</td>
-								<td class="border"><label id="lb_receipt" class=" values one"></label> </td>
-							</tr>
-							<tr style="height: 30px;">
+							<!-- <tr style="height: 30px;">
+								<td colspan="4" align="center">
+									<div style="margin-top:-15px;font-size:17px;">
+										N<sup>o</sup> : <label id="lb_receipt" style="color:red;" ></label>
+									</div>
+								</td>
+							</tr> -->
+							<tr style="height: 25px;">
 								<td class="one ">&nbsp;ឈ្មោះជាខ្មែរ&nbsp;</td>
 								<td class="border"><label id="lb_studentkh" class=" values one "></label> </td>
 								<td class="one ">&nbsp;SERIAL&nbsp;</td>
 								<td class="border"><label id="lb_serial" class=" values one"></label> </td>
 							</tr>
-							<tr  style="height: 30px;">
+							<tr  style="height: 25px;">
 								<td class="one ">&nbsp;ឈ្មោះជាអង់គ្លេស&nbsp;</td>
 								<td class="border"><label id="lb_studenten" class="values one"></label> </td>
 								<td class="one ">&nbsp;កម្រិតសិក្សា&nbsp;</td>
 								<td class="border"><label id="lb_degree" class="values one"></label> </td>
 							</tr>
-							<tr  style="height: 30px;">
+							<tr  style="height: 25px;">
 								<td class="one " align="left">&nbsp;ភេទ&nbsp;</td>
 								<td class="border"><label id="lb_gender" class="values one"> </label></td>
 								<td class="one " align="left">&nbsp;តម្លៃ&nbsp;</td>
 								<td class="border"><label id="lb_price" class="values one"> </label></td>
 							
 								</tr>
-							<tr  style="height: 30px;">
+							<tr  style="height: 25px;">
 								<td class="one " align="left">&nbsp;ថ្ងៃ ខែ ឆ្នំាកំណើត&nbsp;</td>
 								<td class="border"><label id="lb_dob" class="values one"> </label></td>
 								<td class="one " align="left">&nbsp;ឤសយដ្ឋាន&nbsp;</td>
 								<td class="border"><label id="lb_address" class="values one"> </label></td>
 							</tr>
-							<tr  style="height: 30px;">
+							<tr  style="height: 25px;">
 								<td class="one " align="left">&nbsp;លេខទូរសព្ទ&nbsp;</td>
 								<td class="border"><label id="lb_phone" class="values one"> </label></td>
 								<td class="one " align="left">&nbsp;សម្គាល់&nbsp;</td>
@@ -288,21 +302,49 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 							<tr style="font-size: 15px;">
 								<td colspan="2" align="center"></td>
 								<td colspan="2" align="center" valign="">
-									<h4 style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer OS Battambang';margin-top: 26px;"> 
+									<h4 style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer OS Battambang';margin-top: -7px;"> 
 								        <?php 
 										   $session_user=new Zend_Session_Namespace('authstu');
 								           $last_name=$session_user->last_name;
 								           $username = $session_user->first_name;
 										   echo "".$last_name." ".$username;
 										?>
-										<p style="margin-top:-5px;"><?php $today = date("F j, Y, g:i a");echo $today; ?></p>
+										<p style="margin-top:-2px;font-size:11px;"><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?><?php //$today = date("F j, Y, g:i a");echo $today; ?></p>
 					        		</h4>
 					        	</td>
+							</tr>
+							<tr>
+								<td colspan="4" align="center" style="border-top: 1px solid #000;">&nbsp;</td>
 							</tr>
 						</table>
 					</td>
 				</tr>
-				
+				<tr>
+					<td colspan="10" >
+						<table width="100%" style="margin-top:-20px; font-family:Khmer OS Battambang, Times New Roman; font-size:10px;white-space:nowrap;line-height: 15px;">
+							<tr>
+								<td colspan="2" valign="top" style="font-family:Khmer OS Muol;"><u>បញ្ជាក់ៈ Note</u></td>
+							</tr>
+							
+							<tr>
+								<td width="70%">
+									<table width="100%" style="white-space:nowrap; font-size:10px;font-family:Khmer OS Battambang,Times New Roman;line-height: 15px;">
+										<tr>
+											<td colspan="2" style="white-space: pre;"><?php if (!empty($this->data['note_receipt_studenttest'])){echo $this->data['note_receipt_studenttest'];}?></td>
+										</tr>
+									</table>
+								</td>
+								<td width="30%" valign="top" align="center"> 
+									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
+									- 092 36 36 42 <br />
+									- 087 53 99 99 <br />
+									- 023 99 99 98 <br />
+								</td>
+								
+							</tr>
+						</table>
+					</td>
+				</tr>
 			</table>
 		</div>
 		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
@@ -312,6 +354,7 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
 				 type="button" onclick="printSubmit();"><?php echo $tr->translate("SAVE_PRINT");?></button>
 		
+		</div>
 	</div>
 </div>
 <script>
@@ -323,7 +366,8 @@ function submitData(){
 }
 function printReceipt(new_receipt){
 	if(dijit.byId('frm_teststudent').validate()) {
-	dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
+	//dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
+		dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt").get('value');
 	dojo.byId("lb_studentkh").innerHTML = dijit.byId("kh_name").get('value');
 	dojo.byId("lb_studenten").innerHTML = dijit.byId("en_name").get('value');
     dojo.byId("lb_serial").innerHTML = dijit.byId("serial").get('value');
@@ -360,6 +404,7 @@ function printSubmit(){
 }
 function hideDialog(){
 	dijit.byId('terms').hide();
+	submitData();
 }
 
 var url_get_grade = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-grade')); ?>';

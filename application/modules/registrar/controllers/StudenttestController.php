@@ -57,6 +57,11 @@ class Registrar_StudenttestController extends Zend_Controller_Action
 		$db = new Registrar_Model_DbTable_DbStudentTest();
 		$this->view->degree = $db->getAllDegreeName();
 		
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$this->view->branch_info = $dbg->getBranchInfo();
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
     public function editAction()
     {
@@ -82,6 +87,12 @@ class Registrar_StudenttestController extends Zend_Controller_Action
 		$db = new Registrar_Model_DbTable_DbStudentTest();
 		$this->view->degree = $db->getAllDegreeName();
 		$this->view->session = $db->getAllSession();
+		
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$this->view->branch_info = $dbg->getBranchInfo();
+		
+		$key = new Application_Model_DbTable_DbKeycode();
+		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
     
     
