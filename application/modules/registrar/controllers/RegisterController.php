@@ -82,7 +82,11 @@ class Registrar_RegisterController extends Zend_Controller_Action {
        $this->view->exchange_rate = $db->getExchangeRate();
        $this->view->room = $db->getAllRoom();
        
+       $dbg = new Application_Model_DbTable_DbGlobal();
+       $this->view->branch_info = $dbg->getBranchInfo();
        
+       $key = new Application_Model_DbTable_DbKeycode();
+       $this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
     public function addoldreceiptAction(){
     	if($this->getRequest()->isPost()){
@@ -112,8 +116,7 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     	$this->view->all_product = $db->getAllProduct();
     	$this->view->exchange_rate = $db->getExchangeRate();
     	$this->view->room = $db->getAllRoom();
-    	 
-    	 
+    	
     }
     public function editAction(){
     	$id=$this->getRequest()->getParam('id');
@@ -159,6 +162,11 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     		$this->view->row_product = $db->getStudentBuyProductById($id);
     	}
     	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$this->view->branch_info = $dbg->getBranchInfo();
+    	 
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
     public function oldaddAction()
     {

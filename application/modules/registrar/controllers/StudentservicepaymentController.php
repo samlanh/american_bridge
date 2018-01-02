@@ -103,6 +103,10 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
        $db = new Registrar_Model_DbTable_DbRegister();
        $this->view->all_product = $db->getAllProduct();
        $this->view->exchange_rate = $db->getExchangeRate();
+       
+       $dbg = new Application_Model_DbTable_DbGlobal();
+       $this->view->branch_info = $dbg->getBranchInfo();
+       
     }
     public function editAction()
     {
@@ -167,6 +171,8 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     	$this->view->all_product = $db->getAllProduct();
     	$this->view->exchange_rate = $db->getExchangeRate();
     	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$this->view->branch_info = $dbg->getBranchInfo();
     }
     function getGradeAction(){
     	if($this->getRequest()->isPost()){

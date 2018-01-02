@@ -84,7 +84,11 @@ class Registrar_CoursestudyController extends Zend_Controller_Action {
        $this->view->exchange_rate = $db->getExchangeRate();
        $this->view->room = $db->getAllRoom();
        
+       $dbg = new Application_Model_DbTable_DbGlobal();
+       $this->view->branch_info = $dbg->getBranchInfo();
        
+       $key = new Application_Model_DbTable_DbKeycode();
+       $this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
     public function editAction()
     {
@@ -136,6 +140,11 @@ class Registrar_CoursestudyController extends Zend_Controller_Action {
     		$this->view->row_product = $db->getStudentBuyProductById($id);
     	}
     	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$this->view->branch_info = $dbg->getBranchInfo();
+    	
+    	$key = new Application_Model_DbTable_DbKeycode();
+    	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }
     
     public function addoldreceiptAction()
