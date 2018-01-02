@@ -394,8 +394,8 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		    	sp.grand_total_paid_amount,
 		    	sp.grand_total_balance,
 		    	create_date,
-		    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user,
-		    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status 
+		    	(select first_name from rms_users where rms_users.id=sp.user_id limit 1) AS user,
+		    	(select name_en from rms_view where type=12 and key_code = sp.is_void limit 1) as void_status 
 	    	from rms_student_payment as sp 
 	    		where 1 
 	    		and (select type from rms_student_paymentdetail where rms_student_paymentdetail.payment_id=sp.id limit 1)=3 and reg_from=0 $branch_id ";

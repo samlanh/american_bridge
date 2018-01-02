@@ -402,8 +402,8 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 		    	sp.grand_total_paid_amount,
 		    	sp.grand_total_balance,
 		    	create_date,
-		    	(select CONCAT(last_name,' ',first_name) from rms_users where rms_users.id=sp.user_id) AS user,
-		    	(select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status 
+		    	(select (first_name) from rms_users where rms_users.id=sp.user_id LIMIT 1) AS user,
+		    	(select name_en from rms_view where type=12 and key_code = sp.is_void LIMIT 1) as void_status 
 	    	from 
 	    		rms_student_payment as sp 
 	    	where 

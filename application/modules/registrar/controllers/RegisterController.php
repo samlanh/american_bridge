@@ -12,7 +12,6 @@ class Registrar_RegisterController extends Zend_Controller_Action {
 	}
     public function indexAction(){
     	try{
-    		
     		$db = new Registrar_Model_DbTable_DbRegister();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
@@ -33,13 +32,8 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     		
     		$this->view->adv_search=$search;
     		$rs_rows= $db->getAllStudentRegister($search);
-    		//exit();
-    		//print_r($rs_rows); 
-    		
-    		
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getGernder($rs_rows, BASE_URL );
-    		//$rs_rows = $glClass->getGetPayTerm($rs_rows, BASE_URL );
     		$list = new Application_Form_Frmtable();
     		$collumns = array("STUDENT_ID","NAME_KH","NAME_EN","SEX","DEGREE","CLASS","RECEIPT_NO",
     				          "SUBTOTAL","PAID_AMOUNT","BALANCE","DATE_PAY","USER","STATUS");

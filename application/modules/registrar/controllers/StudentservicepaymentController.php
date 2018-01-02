@@ -34,18 +34,13 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     		);
     		$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array('year'=>$link,'receipt_number'=>$link,'name'=>$link,'service_name'=>$link,'code'=>$link));
     	}catch (Exception $e){
-    		//Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		echo $e->getMessage();
     	}
     	$forms=new Registrar_Form_FrmSearchInfor();
     	$form=$forms->FrmSearchRegister();
     	Application_Model_Decorator::removeAllDecorator($form);
     	$this->view->form_search=$form;
-    	
     	$_db = new Registrar_Model_DbTable_DbStudentServicePayment();
-    	//$this->view->year = $year = $_db->getYearService();
-    	
     }
     public function addAction()
     {

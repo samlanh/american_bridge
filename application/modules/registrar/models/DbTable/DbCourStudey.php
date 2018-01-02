@@ -682,9 +682,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 	}
 	
     function getAllStudentGep($search=null){
-    	
     	$db=$this->getAdapter();
-    	
     	$from_date =(empty($search['start_date']))? '1': " sp.create_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " sp.create_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
@@ -698,15 +696,15 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				  s.stu_khname,
 				  s.stu_enname,
 				  s.sex,
-				  (SELECT en_name FROM rms_dept WHERE dept_id=sp.degree)AS degree,
-				  (SELECT CONCAT(major_enname) FROM rms_major WHERE major_id=sp.grade ) AS grade,
+				  (SELECT en_name FROM rms_dept WHERE dept_id=sp.degree LIMIT 1)AS degree,
+				  (SELECT CONCAT(major_enname) FROM rms_major WHERE major_id=sp.grade LIMIT 1) AS grade,
 				  sp.receipt_number,
 				  sp.grand_total_payment,
 			      sp.grand_total_paid_amount,
 			      sp.grand_total_balance,
 				  sp.create_date,
-				  (select CONCAT(first_name,' ',last_name) from rms_users as u where u.id=sp.user_id ) as user,
-				  (select name_en from rms_view where type=12 and key_code = sp.is_void) as void_status 
+				  (select (first_name) from rms_users as u where u.id=sp.user_id LIMIT 1) as user,
+				  (select name_en from rms_view where type=12 and key_code = sp.is_void LIMIT 1) as void_status 
 				FROM
 				  rms_student AS s,
 				  rms_student_payment AS sp 
@@ -714,8 +712,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 				  AND s.stu_type = 3 
 				  AND sp.payfor_type = 2 
 				  and s.reg_from=0 
-				  $branch_id
-    	    ";
+				  $branch_id ";
     	
     	if(!empty($search['adv_search'])){
     		$s_where=array();
@@ -742,7 +739,6 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     	if(!empty($search['user'])){
     		$where.=" AND sp.user_id=".$search['user'];
     	}
-    	//print_r($sql.$where);
     	$order=" ORDER By id DESC ";
         //echo $sql.$where.$order;
     	return $db->fetchAll($sql.$where.$order);
