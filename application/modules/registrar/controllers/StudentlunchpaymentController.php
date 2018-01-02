@@ -39,11 +39,8 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
     	$form=$forms->FrmSearchRegister();
     	Application_Model_Decorator::removeAllDecorator($form);
     	$this->view->form_search=$form;
-    	
-    	$_db = new Registrar_Model_DbTable_DbStudentLunchPayment();
-    	$this->view->year = $year = $_db->getYearService();
-    	
     }
+    
     public function addAction()
     {
     if($this->getRequest()->isPost()){
@@ -149,7 +146,7 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
 //     	print_r($payment);exit();
     	
     	$frm = new Registrar_Form_FrmStudentServicePayment();
-       $frm_register=$frm->FrmRegistarWU();
+       $frm_register=$frm->FrmRegistarWU($payment);
        Application_Model_Decorator::removeAllDecorator($frm_register);
        $this->view->frm_register = $frm_register;
        $key = new Application_Model_DbTable_DbKeycode();
@@ -201,7 +198,7 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
     		$db = new Registrar_Model_DbTable_DbStudentLunchPayment();
-    		$price = $db->getAllpriceByServiceTerm($data['studentid'],$data['service'],$data['term']);
+    		$price = $db->getAllpriceByServiceTerm($data['studentid'],$data['service'],$data['term'],$data['year']);
     		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
     		print_r(Zend_Json::encode($price));
     		exit();

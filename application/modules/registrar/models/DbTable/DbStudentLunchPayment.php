@@ -141,7 +141,8 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 					
 					'buy_product'		=>$buy_product,
 					
-					//'year'				=>$data['study_year'],
+					'year'				=>$data['study_year'],
+					
 					'exchange_rate'		=>$data['ex_rate'],
 					'tuition_fee'		=>$tuitionfee,
 					'other_fee'			=>$data['other_fee'],
@@ -554,7 +555,7 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
     	return $db->fetchAll($sql);
     	 
     }
-    public function getAllpriceByServiceTerm($studentid,$serviceid,$termid){
+    public function getAllpriceByServiceTerm($studentid,$serviceid,$termid,$year){
     	$db=$this->getAdapter();
     	$sql="select spd.id,spd.validate,spd.start_date,balance from rms_student_paymentdetail as spd,rms_student_payment as sp where sp.id=spd.payment_id and spd.service_id=$serviceid and sp.student_id=$studentid and is_complete=0 limit 1";                               
     	$row=$db->fetchRow($sql);
@@ -563,7 +564,18 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
     		return $row;
     	}
     	else{
-    		$sql="select price_fee from rms_servicefee_detail where  rms_servicefee_detail.service_id=$serviceid and rms_servicefee_detail.payment_term=$termid limit 1";
+    		$sql="SELECT 
+					  price_fee 
+					FROM
+					  rms_servicefee_detail AS sfd,
+					  rms_servicefee AS sf 
+					WHERE 
+					  sf.id = sfd.service_feeid 
+					  AND sfd.service_id = $serviceid 
+					  AND sfd.payment_term = $termid 
+					  AND sf.id = $year
+					LIMIT 1 
+    			";
     		return $db->fetchRow($sql);
     	}
     }
@@ -624,8 +636,16 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
     	$branch_id = $_db->getAccessPermission();
     	
     	$db=$this->getAdapter();
-    	$sql="SELECT sf.id,CONCAT(from_academic,'-',to_academic,'(',generation,')',(SELECT name_en FROM rms_view WHERE type=7 AND key_code=time)) AS years 
-    		  FROM rms_servicefee as sf,rms_tuitionfee as tf WHERE tf.id=sf.academic_year and tf.`status`= 1 $branch_id ORDER BY sf.id DESC";
+    	$sql="SELECT 
+    				sf.id,
+    				CONCAT(from_academic,'-',to_academic,'(',(select branch_namekh from rms_branch where br_id = branch_id),')') AS years 
+    		  	FROM 
+    				rms_servicefee as sf 
+    			WHERE 
+    				sf.`status`= 1 
+    				$branch_id 
+    				ORDER BY sf.id DESC
+    		";
     	return $db->fetchAll($sql);
     }
     function addService($data){

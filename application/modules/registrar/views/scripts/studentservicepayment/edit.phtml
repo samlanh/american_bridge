@@ -203,6 +203,10 @@ fieldset{  background:none;}
 				<fieldset>
 					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("SERVICE_INFO");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
+						<tr>	
+							<td><?php echo $tr->translate("ACADEMIC_YEAR");?></td>
+							<td ><?php echo $register->getElement('study_year');?></td>
+						</tr>
 						<tr>
 							<td width="20%"><?php echo $tr->translate('SERVICE');?></td>
 							<td width="80%"> 
@@ -490,6 +494,7 @@ fieldset{  background:none;}
 		dijit.byId("student_name_old").set('readOnly',true);
 		dijit.byId("old_car_id").set('readOnly',true);
 		dijit.byId("student_name_new").set('readOnly',true);
+		dijit.byId("study_year").set('readOnly',true);
 		dijit.byId("service").set('readOnly',true);
 		dijit.byId("term").set('readOnly',true);		
 		dijit.byId("other_fee").set('readOnly',true);
@@ -503,6 +508,8 @@ fieldset{  background:none;}
 		dijit.byId("readmoney").set('readOnly',true);
 		dijit.byId("reciept_no").set('readOnly',true);
 		dijit.byId("discount_fix").set('readOnly',true);
+		
+		
 	}
 
 	function setID(){

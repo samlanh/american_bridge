@@ -184,7 +184,7 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
     		$db = new Registrar_Model_DbTable_DbStudentServicePayment();
-    		$price = $db->getAllpriceByServiceTerm($data['studentid'],$data['service'],$data['term']);
+    		$price = $db->getAllpriceByServiceTerm($data['studentid'],$data['service'],$data['term'],$data['year']);
     		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
     		print_r(Zend_Json::encode($price));
     		exit();

@@ -198,6 +198,10 @@ fieldset{  background:none;}
 				<fieldset>
 					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("SERVICE_INFO");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
+						<tr>	
+							<td><?php echo $tr->translate("ACADEMIC_YEAR");?></td>
+							<td ><?php echo $register->getElement('study_year');?></td>
+						</tr>
 						<tr>
 							<td width="20%"><?php echo $tr->translate('SERVICE');?></td>
 							<td width="80%"> 
@@ -1353,15 +1357,16 @@ function getservicefee(){
 	
 	service = dijit.byId('service').get('value');
 	term = dijit.byId('term').get('value');
-	//year = dijit.byId('study_year').get('value');
-	if(studentid>0 && service>0 && term>0){
+	year = dijit.byId('study_year').get('value');
+	
+	if(studentid>0 && service>0 && term>0 && year>0){
 		dojo.xhrPost({
 			url:url_service_fee,
 			content:{
 				'term':term,
 				'service':service,
 				'studentid':studentid,
-			//	'year':year,
+				'year':year,
 				},
 			handleAs:"json",
 			load: function(data) {

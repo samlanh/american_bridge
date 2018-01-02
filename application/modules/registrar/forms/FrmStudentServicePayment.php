@@ -137,6 +137,7 @@ Class Registrar_Form_FrmStudentServicePayment extends Zend_Dojo_Form {
 				//'onkeyup'=>'CheckReceipt()'
 				'required'=>'false',
 				'class'=>'fullside',
+				'onchange'=>'getservicefee();'
 		));
 		$db_years=new Registrar_Model_DbTable_DbStudentServicePayment();
 		$years=$db_years->getYearService();
@@ -311,7 +312,7 @@ Class Registrar_Form_FrmStudentServicePayment extends Zend_Dojo_Form {
 // 			$this->_enname->setValue($data['stu_enname']);
 // 			$_sex->setValue($data['sex']);
 // 			$session->setValue($data['session']);
-// 			$generation->setValue($data['academic_year']);
+			$generation->setValue($data['year']);
 // 			$_term->setValue($data['payment_term']);
 // 			$_fee->setValue($data['tuition_fee']);
 // 			$_disc->setValue($data['discount_percent']);
