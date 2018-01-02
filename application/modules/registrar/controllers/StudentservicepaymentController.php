@@ -278,7 +278,7 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
     		$db = new Registrar_Model_DbTable_DbStudentServicePayment();
-    		$new_car_id = $db->getNewCarId();
+    		$new_car_id = $db->getNewCarId(0);
     		print_r(Zend_Json::encode($new_car_id));
     		exit();
     	}

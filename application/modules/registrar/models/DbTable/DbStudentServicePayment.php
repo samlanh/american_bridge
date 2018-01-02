@@ -670,8 +670,15 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     	return $db->fetchOne($sql);
     }
 	
-    function getNewCarId(){
+    function getNewCarId($branch){
     	$db=$this->getAdapter();
+    	
+    	if($branch>0){
+    		$branch_id = $branch;
+    	}else{
+    		$branch_id = $this->getBranchId();
+    	}
+    	
     	$sql="SELECT
     				count(stu_id)
     			FROM
@@ -679,6 +686,7 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     			where 
     				status=1 
     				and type=4
+    				and branch_id = $branch_id
     	";
     	$acc_no =  $db->fetchOne($sql);
     	

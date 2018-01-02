@@ -687,8 +687,15 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
     	return $db->fetchOne($sql);
     }
 	
-    function getNewLunchId(){
+    function getNewLunchId($branch){
     	$db=$this->getAdapter();
+    	
+    	if($branch>0){
+    		$branch_id = $branch;
+    	}else{
+    		$branch_id = $this->getBranchId();
+    	}
+    	
     	$sql="SELECT
     				count(stu_id)
     			FROM
@@ -696,6 +703,7 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
     			where 
     				status=1 
     				and type=5
+    				and branch_id = $branch_id
     	";
     	$acc_no =  $db->fetchOne($sql);
     	

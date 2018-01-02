@@ -286,7 +286,7 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
     		$db = new Registrar_Model_DbTable_DbStudentLunchPayment();
-    		$new_car_id = $db->getNewLunchId();
+    		$new_car_id = $db->getNewLunchId(0);
     		print_r(Zend_Json::encode($new_car_id));
     		exit();
     	}

@@ -45,8 +45,8 @@ class Registrar_uniformandbookController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($form);
     	$this->view->form_search=$form;
     	
-    	$_db = new Registrar_Model_DbTable_DbUniformAndBook();
-    	$this->view->year = $year = $_db->getYearService();
+//     	$_db = new Registrar_Model_DbTable_DbUniformAndBook();
+//     	$this->view->year = $year = $_db->getYearService();
     	
     }
     public function addAction()
