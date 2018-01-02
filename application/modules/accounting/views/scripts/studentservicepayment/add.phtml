@@ -54,6 +54,20 @@
 
 		getValidate(1);
 		
+
+		new dijit.form.FilteringSelect({
+		    autoComplete: false,
+			queryExpr: "*${0}*",                        
+		    id: "year",
+		    name: "year",           
+		    class: 'fullside',  
+		    required: false,
+		    placeHolder:"----- select year -----",          
+		    onChange: function() {  
+		    	getservicefee();
+		    }
+		}, "year");
+		
 ////////////////////////////////////////////// get student by branch ///////////////////////////////////////////////////////////////////////////
 
 		
@@ -129,6 +143,31 @@
 	});	
 	
 	
+	var year_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+	var url_year = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-service-year-by-branch')); ?>';
+	function getAllServiceYearByBranch(){
+		branch_id = dijit.byId('branch').get('value');
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_year,
+				content:{
+					'branch_id':branch_id
+					},
+				handleAs:"json",
+				load: function(data) {
+					//alert(data);
+					year_store  = getDataStorefromJSON('id','name', data);
+					dijit.byId('year').set('store',year_store);   
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+	
+////////////////////////////////////////////// get student ////////////////////////////////////////////////////////////////////////////////		
+		
 	var new_student_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 	var url_new_student = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-new-student-by-branch')); ?>';
 	function getAllNewStudentByBranch(){
@@ -268,7 +307,7 @@ fieldset{  background:none;}
 						<tr>
 							<td><?php echo $tr->translate("BRANCH");?></td>
 							<td>
-								<select name="branch" id="branch" class="fullside" autoComplete="false" queryExpr="*${0}*" onchange="getAllNewStudentByBranch();getAllOldStudentByBranch();getAllDropStudentByBranch();getNewReceiptNo('','');" dojoType="dijit.form.FilteringSelect" type="text" >
+								<select name="branch" id="branch" class="fullside" autoComplete="false" queryExpr="*${0}*" onchange="getAllNewStudentByBranch();getAllOldStudentByBranch();getAllDropStudentByBranch();getAllServiceYearByBranch();getNewReceiptNo('','');getNewCarId('');" dojoType="dijit.form.FilteringSelect" type="text" >
 									<option value="-1">----- select branch -----</option>
 									<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
 									<option value="<?php echo $branch['id'];?>"><?php echo $branch['name'];?></option>
@@ -340,6 +379,13 @@ fieldset{  background:none;}
 				<fieldset>
 					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("SERVICE_INFO");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
+						
+						<tr>
+							<td><?php echo $tr->translate('ACADEMIC_YEAR');?></td>
+							<td> 
+								<input id="year" />
+							</td>
+						</tr>
 						<tr>
 							<td><?php echo $tr->translate('SERVICE');?></td>
 							<td> 
@@ -725,10 +771,11 @@ function changeControl(){
 	
 var url_get_new_car_id = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-new-car-id')); ?>';
 function getNewCarId(condition){
+	branch_id = dijit.byId('branch').get('value');
 	dojo.xhrPost({
 		url:url_get_new_car_id,
 		content:{
-			
+			'branch_id':branch_id,
 			},
 		handleAs:"json",
 		load: function(data) {
@@ -836,7 +883,6 @@ function getServiceCate(service_id){
 }
 
 
-
 var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','controller'=>'coursestudy','action'=>'get-receipt-no')); ?>';
 	function getNewReceiptNo(new_stu_id,condition){
 		type = 3 ;// transport payment 
@@ -861,7 +907,7 @@ var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','contr
 				}
 			});
 			
-	}
+	}	
 
 function showPopupDept() {
 	if(dijit.byId('faculty').value==-1){
@@ -965,15 +1011,16 @@ function getservicefee(){
 	
 	service = dijit.byId('service').get('value');
 	term = dijit.byId('term').get('value');
-	//year = dijit.byId('study_year').get('value');
-	if(studentid>0 && service>0 && term>0){
+	year = dijit.byId('year').get('value');
+	
+	if(studentid>0 && service>0 && term>0 && year>0){
 		dojo.xhrPost({
 			url:url_service_fee,
 			content:{
 				'term':term,
 				'service':service,
 				'studentid':studentid,
-			//	'year':year,
+				'year':year,
 				},
 			handleAs:"json",
 			load: function(data) {
@@ -1542,3 +1589,4 @@ function hideDialog(){
 		</form>
 	</div>
 </div>
+

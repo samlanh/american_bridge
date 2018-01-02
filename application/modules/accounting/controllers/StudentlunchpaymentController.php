@@ -44,8 +44,8 @@ class Accounting_StudentlunchpaymentController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($form);
     	$this->view->form_search=$form;
     	
-    	$_db = new Accounting_Model_DbTable_DbStudentLunchPayment();
-    	$this->view->year = $year = $_db->getYearService();
+//     	$_db = new Accounting_Model_DbTable_DbStudentLunchPayment();
+//     	$this->view->year = $year = $_db->getYearService();
     	
     }
     public function addAction()
@@ -157,6 +157,8 @@ class Accounting_StudentlunchpaymentController extends Zend_Controller_Action {
     	$this->view->old_stu_name = $db->getAllOldStudentName();
     	$this->view->old_car_id = $db->getAllOldLunchId();
     	
+    	$this->view->year = $db->getYearService();
+    	
     	$db = new Application_Model_DbTable_DbGlobal();
     	$abc=$this->view->payment_term = $db->getAllPaymentTerm();
     	$this->view->branch_id = $db->getAllBranch();
@@ -172,7 +174,7 @@ class Accounting_StudentlunchpaymentController extends Zend_Controller_Action {
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
     		$db = new Accounting_Model_DbTable_DbStudentLunchPayment();
-    		$price = $db->getAllpriceByServiceTerm($data['studentid'],$data['service'],$data['term']);
+    		$price = $db->getAllpriceByServiceTerm($data['studentid'],$data['service'],$data['term'],$data['year']);
     		//array_unshift($makes, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
     		print_r(Zend_Json::encode($price));
     		exit();
@@ -259,8 +261,8 @@ class Accounting_StudentlunchpaymentController extends Zend_Controller_Action {
     function getNewLunchIdAction(){
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
-    		$db = new Accounting_Model_DbTable_DbStudentLunchPayment();
-    		$new_car_id = $db->getNewLunchId();
+    		$db = new Registrar_Model_DbTable_DbStudentLunchPayment();
+    		$new_car_id = $db->getNewLunchId($data['branch_id']);
     		print_r(Zend_Json::encode($new_car_id));
     		exit();
     	}

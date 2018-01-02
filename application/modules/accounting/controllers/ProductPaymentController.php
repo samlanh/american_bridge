@@ -45,8 +45,8 @@ class Accounting_ProductPaymentController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($form);
     	$this->view->form_search=$form;
     	
-    	$_db = new Accounting_Model_DbTable_DbProductPayment();
-    	$this->view->year = $year = $_db->getYearService();
+//     	$_db = new Accounting_Model_DbTable_DbProductPayment();
+//     	$this->view->year = $year = $_db->getYearService();
     	
     }
     

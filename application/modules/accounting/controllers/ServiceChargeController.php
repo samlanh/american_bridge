@@ -29,12 +29,12 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
     		//print_r($service);exit();
     		
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("ACADEMIC_YEAR","NOTE","CREATED_DATE","STATUS","USER");
+    		$collumns = array("ACADEMIC_YEAR","BRANCH","NOTE","CREATED_DATE","STATUS","USER");
     		$link=array(
     				'module'=>'accounting','controller'=>'servicecharge','action'=>'edit',
     		);
     		$urlEdit = BASE_URL ."/product/index/update";
-    		$this->view->list=$list->getCheckList(2, $collumns, $rs_rows, array('academic'=>$link,'service_id'=>$link,'generation'=>$link));
+    		$this->view->list=$list->getCheckList(2, $collumns, $rs_rows, array('academic_year'=>$link,'branch_name'=>$link,'generation'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("APPLICATION_ERROR");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -97,9 +97,12 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 		$row=$db_g->getAllSerives(2);
 		array_unshift($row, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
 		$this->view->all_service=$row;
+		
+		$model = new Application_Model_DbTable_DbGlobal();
+		$this->view->branch = $model->getAllBranch();
 	}
 	public function editAction(){
-	if($this->getRequest()->isPost()){
+		if($this->getRequest()->isPost()){
 			try {
 				$_data = $this->getRequest()->getPost();
 				$_model = new Accounting_Model_DbTable_DbServiceCharge();
@@ -117,8 +120,7 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 // 		$this->view->all_faculty = $_model ->getAllFacultyOption();
 		$model = new Application_Model_DbTable_DbGlobal();
 		$this->view->payment_term = $model->getAllPaymentTerm(null,null,null);
-		$this->view->academic_year  = $model->getAllAcademicYear();
-	
+		$this->view->branch = $model->getAllBranch();
 		
 		$db=new Accounting_Model_DbTable_DbServiceCharge();
 		$id=$this->getRequest()->getParam("id");
@@ -192,7 +194,7 @@ class Accounting_ServiceChargeController extends Zend_Controller_Action {
 		// 		$this->view->all_faculty = $_model ->getAllFacultyOption();
 		$model = new Application_Model_DbTable_DbGlobal();
 		$this->view->payment_term = $model->getAllPaymentTerm(null,null,null);
-		$this->view->academic_year  = $model->getAllAcademicYear();
+		$this->view->branch = $model->getAllBranch();
 	
 	
 		$db=new Accounting_Model_DbTable_DbServiceCharge();

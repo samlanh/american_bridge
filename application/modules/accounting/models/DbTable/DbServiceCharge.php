@@ -13,8 +13,12 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
     function getAceYear(){
     	$db=$this->getAdapter();
     	$sql="SELECT id,
-    			(SELECT CONCAT(from_academic,'-',to_academic,'(',generation,')',(SELECT name_en FROM rms_view WHERE TYPE=7 AND key_code=TIME)) FROM rms_tuitionfee where rms_servicefee.academic_year = rms_tuitionfee.id) as name
-    		  FROM rms_servicefee WHERE `status`=1 ";
+    				CONCAT(from_academic,'-',to_academic,'(',(select branch_namekh from rms_branch where br_id = branch_id),')') as name
+    		  	FROM 
+    				rms_servicefee 
+    			WHERE 
+    				`status`=1 
+    		";
     	$oder=" ORDER BY id DESC ";
     	return $db->fetchAll($sql.$oder);
     }
@@ -44,14 +48,21 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
 	
     try{		
     	$db=$this->getAdapter();
-    	$sql = "SELECT rms_servicefee.id,
-    			(SELECT CONCAT(from_academic,'-',to_academic,'(',generation,')',(SELECT name_en FROM rms_view WHERE TYPE=7 AND key_code=TIME)) FROM rms_tuitionfee where rms_servicefee.academic_year = rms_tuitionfee.id) as academic,
-    		 	note,create_date,
-    		 	(select name_kh from rms_view where type=1 and key_code =status) as status, 
-    			(select first_name from rms_users where rms_users.id = user_id) as user
-    			FROM rms_servicefee ";
+    	$sql = "SELECT 
+    				sf.id,
+    				CONCAT(from_academic,'-',to_academic) as academic_year,
+    				(select branch_namekh from rms_branch where br_id = branch_id) as branch_name,
+    		 		note,
+    		 		create_date,
+    		 		(select name_kh from rms_view where type=1 and key_code =status) as status, 
+    				(select first_name from rms_users where rms_users.id = user_id) as user
+    			 FROM 
+    				rms_servicefee as sf 
+    			where 
+    				status = 1
+    			";
     	$order=" ORDER BY id DESC ";
-    	$where = ' where 1 ';
+    	$where = " ";
     	
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);
@@ -60,8 +71,6 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
     	if(!empty($search['year'])){
     		$where .=" AND id=".$search['year'];
     	}
-    	
-    	$limit=" limit 1";
     	
     	if(!empty($search['txtsearch'])){
     		$s_where = array();
@@ -82,7 +91,15 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
 //     	$find="select id from rms_servicefee where from_academic=".$_data['from_year']." and to_academic=".$_data['to_year']."
 //     	and generation='".$_data['generation']."'";
     	 
-    	$sql = "select sf.id from rms_servicefee as sf , rms_tuitionfee as tf where sf.academic_year=tf.id and sf.academic_year = ".$_data['academic_year'];
+    	$sql = "select 
+    					sf.id 
+    				from 
+    					rms_servicefee as sf
+    				where 
+    					sf.from_academic = ".$_data['from_academic']." 
+    					and sf.to_academic = ".$_data['to_academic']."
+    					and sf.branch_id = ".$_data['branch_id']
+    			;
     	
     	return $db->fetchOne($sql);
     }
@@ -100,29 +117,32 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
     			 
     		}else{
 	    		$_arr = array(
-	    				'academic_year'=>$_data['academic_year'],
-	    				'note'=>$_data['note'],
-	    				'status'=>$_data['status'],
-	    				'create_date'=>date("Y-m-d"),
-	    				'user_id'=>$this->getUserId()
+	    				'from_academic'	=>$_data['from_academic'],
+	    				'to_academic'	=>$_data['to_academic'],
+	    				'branch_id'		=>$_data['branch_id'],
+	    				'note'			=>$_data['note'],
+	    				'status'		=>$_data['status'],
+	    				'create_date'	=>date("Y-m-d"),
+	    				'user_id'		=>$this->getUserId()
 	    				);
 	    		$service_id = $this->insert($_arr);
     		}
-	    		$this->_name='rms_servicefee_detail';
-	    		$ids = explode(',', $_data['identity']);
-	    		$id_term =explode(',', $_data['iden_term']);
-	    		foreach ($ids as $i){
-	    			foreach ($id_term as $j){
-	    				$_arr = array(
-	    						'service_feeid'=>$service_id,
-	    						'service_id'=>$_data['class_'.$i],
-	    						'payment_term'=>$j,
-	    						'price_fee'=>$_data['fee'.$i.'_'.$j],
-	    						'remark'=>$_data['remark'.$i]
-	    				);
-	    				$this->insert($_arr);
-	    			}
-	    		}
+    		
+    		$this->_name='rms_servicefee_detail';
+    		$ids = explode(',', $_data['identity']);
+    		$id_term =explode(',', $_data['iden_term']);
+    		foreach ($ids as $i){
+    			foreach ($id_term as $j){
+    				$_arr = array(
+    						'service_feeid'=>$service_id,
+    						'service_id'=>$_data['class_'.$i],
+    						'payment_term'=>$j,
+    						'price_fee'=>$_data['fee'.$i.'_'.$j],
+    						'remark'=>$_data['remark'.$i]
+    				);
+    				$this->insert($_arr);
+    			}
+    		}
     		
     	    $db->commit();
     	    return true;
@@ -135,43 +155,41 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
     public function updateServiceCharge($_data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
-    	$service_id = $this->getCondition($_data);
     	try{    
-    		if(!empty($service_id)){
-    		
-    		}else{
-    			
-    			$service_id = $_data['id'];
-    			
-    			$_arr = array(
-    				'academic_year'=>$_data['academic_year'],
-    				'note'=>$_data['note'],
-    				'status'=>$_data['status'],
-    				//'create_date'=>$_data['create_date'],
-    				'user_id'=>$this->getUserId()
-	    		);
-	    		$where=$this->getAdapter()->quoteInto("id=?", $_data['id']);
-	    		$this->update($_arr, $where);
-    		}
-    		
+    		$_arr = array(
+    			'from_academic'	=>$_data['from_academic'],
+	    		'to_academic'	=>$_data['to_academic'],
+    			'branch_id'		=>$_data['branch_id'],
+    			'note'			=>$_data['note'],
+    			'status'		=>$_data['status'],
+    			'is_finished'	=>$_data['finished'],
+    			'user_id'		=>$this->getUserId()
+	    	);
+	    	$where=$this->getAdapter()->quoteInto("id=?", $_data['id']);
+	    	$this->update($_arr, $where);
     
-    		$this->_name='rms_servicefee_detail';
-    		$where = "service_feeid = ".$_data['id'];
-    		$this->delete($where);
-    		$ids = explode(',', $_data['identity']);
-    		$id_term =explode(',', $_data['iden_term']);
-    		foreach ($ids as $i){
-    			foreach ($id_term as $j){
-    				$_arr = array(
-    						'service_feeid'=>$service_id,
-    						'service_id'=>$_data['class_'.$i],
-    						'payment_term'=>$j,
-    						'price_fee'=>$_data['fee'.$i.'_'.$j],
-    						'remark'=>$_data['remark'.$i]
-    				);
-     				$this->insert($_arr);
-    			}
-    		}
+	    	if($_data['finished']==0 && $_data['status']==1 ){	
+	    		
+	    		$this->_name='rms_servicefee_detail';
+	    		$where = "service_feeid = ".$_data['id'];
+	    		$this->delete($where);
+	    		
+	    		
+	    		$ids = explode(',', $_data['identity']);
+	    		$id_term =explode(',', $_data['iden_term']);
+	    		foreach ($ids as $i){
+	    			foreach ($id_term as $j){
+	    				$_arr = array(
+	    						'service_feeid'	=>$_data['id'],
+	    						'service_id'	=>$_data['class_'.$i],
+	    						'payment_term'	=>$j,
+	    						'price_fee'		=>$_data['fee'.$i.'_'.$j],
+	    						'remark'		=>$_data['remark'.$i]
+	    				);
+	     				$this->insert($_arr);
+	    			}
+	    		}
+	    	}
     		$db->commit();
     		return true;
     	}catch (Exception $e){
@@ -183,7 +201,7 @@ class Accounting_Model_DbTable_DbServiceCharge extends Zend_Db_Table_Abstract
     function getServiceFeebyId($service_id){
     	
     	$db = $this->getAdapter();
-    	$sql = "SELECT id,service_id,price_fee,payment_term,remark,(select title from rms_program_name where rms_program_name.service_id=rms_servicefee_detail.service_id limit 1)AS service_name FROM `rms_servicefee_detail` WHERE service_feeid=".$service_id." ORDER BY service_id ";
+    	$sql = "SELECT id,service_id,price_fee,payment_term,remark,(select title from rms_program_name where rms_program_name.service_id=rms_servicefee_detail.service_id limit 1)AS service_name FROM `rms_servicefee_detail` WHERE service_feeid=".$service_id." ORDER BY id ";
     		 
     	return $db->fetchAll($sql);
     	 

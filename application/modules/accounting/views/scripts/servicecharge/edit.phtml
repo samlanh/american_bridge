@@ -70,19 +70,36 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 						</tr>
 						<input type="hidden"  name="id" value="<?php echo $this->rs['id'];?>" />
 						<tr>
-							<td style="white-space: nowrap;"><?php echo $tr->translate("ACADEMIC_YEAR");?></td>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("YEARS");?></td>
 							<td>
-								<select dojoType="dijit.form.FilteringSelect" required="true" autoComplete="false" queryExpr="*${0}*" class="fullside" id="academic_year" name="academic_year" type="text">
-									
-									<?php if(!empty($this->academic_year)){foreach ($this->academic_year as $year){?>
-										<option value="<?php echo $year['id'];?>" <?php if($year['id']==$this->rs['academic_year']){echo 'selected="selected"';}?>> <?php echo $year['name'];?></option>
+								<select dojoType="dijit.form.FilteringSelect" required="true" readonly class="fullside" id="from_academic" name="from_academic" type="text">
+									<?php for($i=2016;$i<=date('Y')+1;$i++){?>
+										<option value="<?php echo $i;?>" <?php if($i == $this->rs['from_academic']){echo "selected='selected'";}?>><?php echo $i; ?></option>
+									<?php }?>
+								</select>
+							</td>
+							<td ><?php echo $tr->translate("TO");?></td>
+							<td>
+								<select dojoType="dijit.form.FilteringSelect" required="true" readonly class="fullside"  id="to_academic" name="to_academic" type="text">
+									<?php for($i=2017;$i<=date('Y')+2;$i++){?>
+										<option value="<?php echo $i;?>" <?php if($i == $this->rs['to_academic']){echo "selected='selected'";}?> ><?php echo $i; ?></option>
+									<?php }?>
+								</select>
+							</td>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("BRANCH");?></td>
+							<td>
+								<select dojoType="dijit.form.FilteringSelect" required="true" readonly class="fullside" autoComplete="false" queryExpr="*${0}*" id="branch_id" name="branch_id" type="text">								
+									<option value="">Select Branch</option>
+									<?php if(!empty($this->branch)){ foreach ($this->branch as $branch){?>	
+										<option value="<?php echo $branch['id'];?>" <?php if($branch['id'] == $this->rs['branch_id']){echo "selected='selected'";}?> ><?php echo $branch['name'];?></option>
 									<?php }}?>
 								</select>
 							</td>
-						
+						</tr>
+						<tr>
 							
 							<td  style="white-space: nowrap;"><?php echo $tr->translate("NOTE");?></td>
-							<td ><input dojoType="dijit.form.TextBox" required="true" readonly="readonly" class="fullside" id="note" value="<?php echo $this->rs['note'];?>" name="note"  type="text"></td>
+							<td ><input dojoType="dijit.form.TextBox" readonly="readonly" class="fullside" id="note" value="<?php echo $this->rs['note'];?>" name="note"  type="text"></td>
 							
 							<td style="white-space: nowrap;text-align: left;"><?php echo $tr->translate("STATUS");?></td>
 							<td>
@@ -90,7 +107,14 @@ table .set-style tr.st1{ background: none repeat scroll 0% 0% rgba(218, 250, 255
 										<option value="1" <?php if($this->rs['status']==1) echo 'selected="selected"';?>>Active</option>
 										<option value="0" <?php if($this->rs['status']==0) echo 'selected="selected"';?>>Deactive</option>
 								</select>
-							</td>		
+							</td>
+							<td><?php echo $tr->translate("FINISHED");?></td>
+							<td>
+								<select dojoType="dijit.form.FilteringSelect"  id="finished" class="fullside" name="finished" type="text">								
+									<option value="0" <?php if($this->rs['is_finished']==0){ echo "selected='selected'";}?>>Using</option>
+									<option value="1" <?php if($this->rs['is_finished']==1){ echo "selected='selected'";}?>>Finished</option>
+								</select>
+							</td>							
 						</tr>
 					</table>
 					<table class="set-style" border="2px" style="border:1px solid #ccc; border-collapse: collapse;margin: 0 auto; width: 100%; background:#DFF7FD;" >

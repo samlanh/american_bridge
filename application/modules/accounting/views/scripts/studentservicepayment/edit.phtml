@@ -196,7 +196,17 @@ fieldset{  background:none;}
 				<fieldset>
 					<legend align="center"><strong​ style="font-size: 18px;"><?php echo $tr->translate("SERVICE_INFO");?></strong></legend>
 					<table style="margin: 0 auto; width: 100%;padding:10px;" cellspacing="7" cellpadding="10px" >
-						
+						<tr>
+							<td><?php echo $tr->translate('ACADEMIC_YEAR');?></td>
+							<td> 
+								<select name="year" id="year" onChange="getservicefee();" class="fullside" dojoType="dijit.form.FilteringSelect" >
+									<option value="-1">----- select year -----</option>
+									<?php if(!empty($this->year)){foreach($this->year as $year){?>
+										<option value="<?php echo $year['id']?>" <?php if($year['id']==$this->row['year']){echo 'selected="selected"';}?>><?php echo $year['years']?></option>
+									<?php }}?>
+								</select>
+							</td>
+						</tr>
 						<tr>
 							<td width="20%"><?php echo $tr->translate('SERVICE');?></td>
 							<td width="80%"> 
@@ -489,6 +499,7 @@ fieldset{  background:none;}
 		dijit.byId("student_type").set('readOnly',true);
 		dijit.byId("student_name_old").set('readOnly',true);
 		dijit.byId("old_car_id").set('readOnly',true);
+		dijit.byId("year").set('readOnly',true);
 		dijit.byId("service").set('readOnly',true);
 		dijit.byId("term").set('readOnly',true);
 		dijit.byId("service_fee").set('readOnly',true);
