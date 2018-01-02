@@ -30,6 +30,17 @@
 				<?php echo $frm->getElement("branch");?>
 			</td>
 			<td>
+				<?php echo $frm->getElement("user");?>
+			</td>
+			<td>
+			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
+			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
+			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
+			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
+			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+			 	</select>
+			</td>
+			<td>
 				<?php echo $frm->getElement("start_date");?>
 			</td>
 			<td>
@@ -40,9 +51,11 @@
 			</td>
 		</tr>
 	</table>
+	
 </form>	
 </div>
 <div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+	<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'parking')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	<div id="divPrint">
 		<style>
 			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
@@ -107,15 +120,56 @@
 								$grand_total = $grand_total + $row['total_fee'];
 								}}
 							?>	 
+						</table>
+						
+					<?php if(!empty($grand_total)){?>
+						<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
 							<tr style="background: #c1d0f3;">
-								<td colspan="11" align="center">
+								<td align="center">
 									<?php echo $tr->translate("GRAND_TOTAL");?>&nbsp;&nbsp;&nbsp;
 								</td>
-								<td colspan="11" align="center">
-									<?php echo "$ ".number_format($grand_total,2);?>
+								<td width="25%">
+									Rate
+								</td>
+								<td width="25%">
+									Amount in USD
+								</td>
+								<td width="25%">
+									Amount in Riel
+									
+									<input type="hidden" name="total_amount" id="total_amount" value="<?php echo number_format($grand_total,2);?>" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="amount_riel" id="amount_riel" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="shift_id" id="shift_id" value="<?php echo $this->search['shift'];?>" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="branch_id" id="branch_id" value="<?php echo $this->search['branch'];?>" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="user_id" id="user_id" value="<?php echo $this->search['user'];?>" dojoType="dijit.form.TextBox" />
+								</td>
+								
+							</tr>
+							<tr>
+								<td style="border: 1px solid #000;">
+									<?php echo "&nbsp;$ ".number_format($grand_total,2)?>
+								</td>
+								
+								<td>
+									<?php echo $this->rate." ៛";?>
+								</td>
+								
+								<td style="border: 1px solid #000;">
+									<div id="input_usd">
+										<input type="text" name="amount_usd" id="amount_usd" value="0" class="fullside" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
+									</div>
+									<div id="hide_amount_usd">
+										<label id="lb_amount_usd"></label>
+									</div>
+								</td>
+								
+								<td style="border: 1px solid #000;">
+									<label id="lb_amount_reil"></label>
 								</td>
 							</tr>
-						</table>	
+						</table>
+					<?php }?>
+							
 					</td>
 				</tr>
 				
@@ -147,10 +201,89 @@
 				</tr>
 			</table>
 		</div>			
-	</div>		
+	</div>	
+		<table width="100%">
+			<tr>
+				<td align="center">
+					<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+						iconClass="dijitEditorIcon dijitEditorIconSave" />	
+						
+					<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+						
+				</td>
+			</tr>
+		</table>	
+	</form>
 </div>
 
+<script type="text/javascript">
 
+	dojo.ready(function(){
+		document.getElementById('hide_amount_usd').style.display="none";
+		calculateRemainReil();
+	});
+							
+	function calculateRemainReil(){
+		total_amount = <?php echo $grand_total;?>;
+		
+		amount_usd = dijit.byId("amount_usd").get('value');
+	
+		exchange_rate = <?php echo $this->rate?>;
+		
+		dollar_to_convert = (total_amount - amount_usd).toFixed(2);
+		//alert(dollar_to_convert);
+		
+		total_reil = dollar_to_convert*exchange_rate;
+		
+		//alert("total="+total_amount+",usd="+amount_usd+",exchange_rate="+exchange_rate+",riel="+total_reil);
+	
+		var result = 100 * Math.ceil(total_reil / 100);
+		
+		//alert(rounded);
+		var total_reil = result.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+	
+		dijit.byId('amount_riel').attr('value',result);
+		
+		dojo.byId("lb_amount_usd").innerHTML = " $ " + amount_usd;
+		dojo.byId("lb_amount_reil").innerHTML = " ៛ " + total_reil;
+		
+	}
+
+	function doPrint() {
+		//alert(1);
+		
+		document.getElementById('hide_amount_usd').style.display="block";
+		document.getElementById('amount_usd').style.display="none";
+		
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+	    window.frames["print_frame"].window.focus();
+	    window.frames["print_frame"].window.print();
+	    //hideDialog();
+	    //alert(1);
+	    document.getElementById('amount_usd').style.display="block";
+	    document.getElementById('hide_amount_usd').style.display="none";
+	}
+
+	function preview()
+	{ 
+	  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+	      disp_setting+="scrollbars=no,width=1200, height=700, left=100, top=25"; 
+	  var content_vlue = document.getElementById("divPrint").innerHTML; 
+	  
+	  var docprint=window.open("","",disp_setting); 
+	   docprint.document.open(); 
+	   docprint.document.write('<html><head>'); 
+	   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+	   docprint.document.write(content_vlue);          
+	   docprint.document.write('</center></div></html>'); 
+	   docprint.document.close(); 
+	   docprint.focus(); 
+	}
+	function exportExcel(){
+		$('#exportExcel').tableExport({type:'excel',escape:'false'});
+	}
+	
+</script>
 
 
 

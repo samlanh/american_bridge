@@ -10,6 +10,7 @@
 		    	<td> <?php echo $frm->getElement("start_date");?></td>
 	   	  	    <td> <?php echo $frm->getElement("end_date");?></td>
 		    	<td><?php echo $frm->getElement('branch');?></td>
+		    	<td><?php echo $frm->getElement('user');?></td>
 		    	<td>
 				 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 				 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
@@ -74,6 +75,8 @@
 							<tr style=" font-size:14px; height: 20px;  line-height: 30px; font-weight: bold;background: #c1d0f3;" align="center" >
 								<td><?php echo $tr->translate("Title"); ?></td>
 								<td><?php echo $tr->translate("Total Amount"); ?></td>
+								<td><?php echo $tr->translate("Amount USD"); ?></td>
+								<td><?php echo $tr->translate("Amount Riel"); ?></td>
 								<td><?php echo $tr->translate("Receipt Number"); ?></td>
 						    </tr>
 						</thead>
@@ -81,7 +84,10 @@
 	 					<tr>
 							<td>&nbsp;&nbsp;<?php echo "Total Amount Study Khmer Fee ";?></td>
 							<?php 
-								$total_khmerft_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0; $grand_total=0;
+								$total_khmerft_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0; 
+								$grand_total=0;
+								$grand_total_in_riel=0;
+								$grand_total_in_dollar=0;
 								if(!empty($this->khmerft)){$last_length = count($this->khmerft);	foreach ($this->khmerft as $khmerft){
 									
 									$i++;
@@ -96,8 +102,21 @@
 										$last_receipt = $khmerft['receipt_number'];
 									}
 								}}
+								
+								
+								$total_khmerft_in_riel=0;
+								$total_khmerft_in_dolar=0;
+								if(!empty($this->kft_amount_money)){
+									foreach ($this->kft_amount_money as $kft_money){
+										$total_khmerft_in_riel = $total_khmerft_in_riel + $kft_money['amount_riel'];
+										$total_khmerft_in_dolar = $total_khmerft_in_dolar + $kft_money['amount_usd'];
+									}
+								}
+								
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_khmerft_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_khmerft_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_khmerft_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->khmerft)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 						
@@ -119,8 +138,20 @@
 										$last_receipt = $englishft['receipt_number'];
 									}
 								}}
+								
+								$total_eft_in_riel=0;
+								$total_eft_in_dolar=0;
+								if(!empty($this->eft_amount_money)){
+									foreach ($this->eft_amount_money as $eft_money){
+										$total_eft_in_riel = $total_eft_in_riel + $eft_money['amount_riel'];
+										$total_eft_in_dolar = $total_eft_in_dolar + $eft_money['amount_usd'];
+									}
+								}
+								
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_englishft_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_eft_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_eft_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->englishft)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 						
@@ -143,8 +174,19 @@
 										$last_receipt = $englishpt['receipt_number'];
 									}
 								}}
+								
+								$total_ept_in_riel=0;
+								$total_ept_in_dolar=0;
+								if(!empty($this->ept_amount_money)){
+									foreach ($this->ept_amount_money as $ept_money){
+										$total_ept_in_riel = $total_ept_in_riel + $ept_money['amount_riel'];
+										$total_ept_in_dolar = $total_ept_in_dolar + $ept_money['amount_usd'];
+									}
+								}
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_englishpt_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_ept_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_ept_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->englishpt)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 						
@@ -167,8 +209,19 @@
 										$last_receipt = $study_material['receipt_number'];
 									}
 								}}
+								
+								$total_product_in_riel=0;
+								$total_product_in_dolar=0;
+								if(!empty($this->product_amount_money)){
+									foreach ($this->product_amount_money as $product_money){
+										$total_product_in_riel = $total_product_in_riel + $product_money['amount_riel'];
+										$total_product_in_dolar = $total_product_in_dolar + $product_money['amount_usd'];
+									}
+								}
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_study_material_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_product_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_product_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->study_material)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 						
@@ -191,8 +244,20 @@
 										$last_receipt = $transportation['receipt_number'];
 									}
 								}}
+								
+								$total_car_in_riel=0;
+								$total_car_in_dolar=0;
+								if(!empty($this->transport_amount_money)){
+									foreach ($this->transport_amount_money as $transport_money){
+										$total_car_in_riel = $total_car_in_riel + $transport_money['amount_riel'];
+										$total_car_in_dolar = $total_car_in_dolar + $transport_money['amount_usd'];
+									}
+								}
+								
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_transportation_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_car_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_car_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->transportation)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 						
@@ -215,14 +280,26 @@
 										$last_receipt = $foodandstay['receipt_number'];
 									}
 								}}
+								
+								$total_food_in_riel=0;
+								$total_food_in_dolar=0;
+								if(!empty($this->food_amount_money)){
+									foreach ($this->food_amount_money as $food_money){
+										$total_food_in_riel = $total_food_in_riel + $food_money['amount_riel'];
+										$total_food_in_dolar = $total_food_in_dolar + $food_money['amount_usd'];
+									}
+								}
+								
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_foodandstay_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_food_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_food_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->foodandstay)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 	 					
 	 					
 	 					<tr>
-							<td>&nbsp;&nbsp;<?php echo "Total Amount Parking & Canteen Fee ";?></td>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Rental Fee ";?></td>
 							<?php 
 								$total_rent_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
 								if(!empty($this->rent_payment)){$last_length = count($this->rent_payment); foreach ($this->rent_payment as $rent_payment){
@@ -239,61 +316,108 @@
 										$last_receipt = $rent_payment['rent_receipt_no'];
 									}
 								}}
+								
+								$total_rent_in_riel=0;
+								$total_rent_in_dolar=0;
+								if(!empty($this->rent_amount_money)){
+									foreach ($this->rent_amount_money as $rent_money){
+										$total_rent_in_riel = $total_rent_in_riel + $rent_money['amount_riel'];
+										$total_rent_in_dolar = $total_rent_in_dolar + $rent_money['amount_usd'];
+									}
+								}
+								
 							?>
 							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_rent_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_rent_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_rent_in_riel,2)." ៛";?></td>
 							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->rent_payment)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Total Amount Parking Fee ";?></td>
+							<?php 
+								$total_parking_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->parking_payment)){$last_length = count($this->parking_payment); foreach ($this->parking_payment as $parking_payment){
+									
+									$i++;
+									
+									$total_parking_payment = $total_parking_payment + $parking_payment['total_fee'];
+									if($first_length==0){
+										$first_receipt = $parking_payment['receipt_no'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $parking_payment['receipt_no'];
+									}
+								}}
+								
+								$total_parking_in_riel=0;
+								$total_parking_in_dolar=0;
+								if(!empty($this->parking_amount_money)){
+									foreach ($this->parking_amount_money as $parking_money){
+										$total_parking_in_riel = $total_parking_in_riel + $parking_money['amount_riel'];
+										$total_parking_in_dolar = $total_parking_in_dolar + $parking_money['amount_usd'];
+									}
+								}
+								
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_parking_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_parking_in_dolar,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format($total_parking_in_riel,2)." ៛";?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->parking_payment)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
+						</tr>
+						
+						<tr>
+							<td>&nbsp;&nbsp;<?php echo "Other Income";?></td>
+							<?php 
+								$total_other_income_payment = 0;$first_length = 0;$first_receipt=0;$last_receipt=0;$i=0;
+								if(!empty($this->other_income)){$last_length = count($this->other_income); foreach ($this->other_income as $other_income){
+									
+									$i++;
+									
+									$total_other_income_payment = $total_other_income_payment + $other_income['total_amount'];
+									if($first_length==0){
+										$first_receipt = $other_income['invoice'];
+										$first_length = 1;
+									}
+									
+									if($i == $last_length){
+										$last_receipt = $other_income['invoice'];
+									}
+								}}
+								
+// 								$total_parking_in_riel=0;
+// 								$total_parking_in_dolar=0;
+// 								if(!empty($this->parking_amount_money)){
+// 									foreach ($this->parking_amount_money as $parking_money){
+// 										$total_parking_in_riel = $total_parking_in_riel + $parking_money['amount_riel'];
+// 										$total_parking_in_dolar = $total_parking_in_dolar + $parking_money['amount_usd'];
+// 									}
+// 								}
+								
+							?>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_other_income_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo "$ ".number_format($total_other_income_payment,2);?></td>
+							<td>&nbsp;&nbsp;<?php echo number_format(0)." ៛";?></td>
+							<td align="center">&nbsp;&nbsp;<?php if(!empty($this->parking_payment)){echo "Swift : ".$first_receipt." to ".$last_receipt;}?></td>
 						</tr>
 	 					
 	 					<?php 
-	 						$grand_total = $total_englishft_payment + $total_englishpt_payment + $total_khmerft_payment + $total_foodandstay_payment + $total_rent_payment + $total_study_material_payment + $total_transportation_payment;
+	 						$grand_total = $total_englishft_payment + $total_englishpt_payment + $total_khmerft_payment + $total_foodandstay_payment + $total_rent_payment + $total_study_material_payment + $total_transportation_payment+$total_parking_payment+$total_other_income_payment;
+	 						$grand_total_in_dollar = $total_khmerft_in_dolar + $total_eft_in_dolar + $total_ept_in_dolar + $total_car_in_dolar + $total_food_in_dolar + $total_product_in_dolar + $total_rent_in_dolar+$total_parking_in_dolar+$total_other_income_payment;
+	 						$grand_total_in_riel = $total_khmerft_in_riel + $total_eft_in_riel + $total_ept_in_riel + $total_car_in_riel + $total_food_in_riel + $total_product_in_riel + $total_rent_in_riel+$total_parking_in_riel;
 	 					?>
 	 					
 	 					<tr style="font-size: 18px; font-weight: bold;background: #c1d0f3;">
 	 						<td align="center">Grand Total</td>
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total,2);?></td>
+	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total_in_dollar,2);?></td>
+	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total_in_riel,2);?></td>
 	 						<td></td>
 	 					</tr>
 					</table>	
 					
-					<table width="60%" border="1" style="font-size:14px; white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
-						<tr>
-							<td width="25%">
-								Grand Total 
-							</td>
-							<td width="25%">
-								Rate
-							</td>
-							<td width="25%">
-								Amount in USD
-							</td>
-							<td width="25%">
-								Amount in Riel
-							</td>
-							
-						</tr>
-						<tr>
-							<td style="border: 1px solid #000;">
-								<?php echo "&nbsp;$ ".number_format($grand_total,2)?>
-							</td>
-							
-							<td>
-								<?php echo number_format($this->rate)." ៛";?>
-							</td>
-							
-							<td style="border: 1px solid #000;">
-								<div id="input_usd">
-									<input type="text" name="amount_usd" id="amount_usd" class="fullside" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
-								</div>
-								<div id="hide_amount_usd">
-									<label id="lb_amount_usd"></label>
-								</div>
-							</td>
-							
-							<td style="border: 1px solid #000;">
-								<label id="lb_amount_reil"></label>
-							</td>
-						</tr>
-					</table>
 					
 					<table width="100%">
 						<tr>
