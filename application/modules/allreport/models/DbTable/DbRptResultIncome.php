@@ -10,7 +10,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     }
     
-    public function getAllResultIncome($search){
+    public function getAllResultIncome($search,$payfor_type){
     	$db = $this->getAdapter();
     	
     	$_db = new Application_Model_DbTable_DbGlobal();
@@ -31,14 +31,28 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 				WHERE
 					sp.id=spd.`payment_id`
 					and sp.is_void=0
+					and sp.payfor_type=$payfor_type
 				    $branch_id 
     		  ";
     	
     	$where = " ";
     	
-    	$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	if($search['shift']==0){
+    		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
+    	}else if($search['shift']==1){
+    		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 10:00:00'";
+    	}
+    	else if($search['shift']==2){
+    		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 10:00:01'";
+    		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 16:00:00'";
+    	}
+    	else if($search['shift']==3){
+    		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 16:00:01'";
+    		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
+    	}
+    	$where .= " AND ".$from_date." AND ".$to_date;
     	
     	$order=" ORDER BY (SELECT ser_cate_id FROM `rms_program_name` WHERE spd.`service_id`=rms_program_name.`service_id`) ASC ";
     	
@@ -57,13 +71,16 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND sp.`user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     	 
     }
     
     function getAllRentPayment($search){
     	$db = $this->getAdapter();
-    	 
+//     	print_r($search);exit();
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$branch_id = $_db->getAccessPermission("cp.`branch_id`");
     	 
@@ -83,8 +100,22 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	 
     	$where = " ";
     	 
-    	$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 23:59:59'";
+   		if($search['shift']==0){
+    		$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 23:59:59'";
+    	}else if($search['shift']==1){
+    		$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 10:00:00'";
+    	}
+    	else if($search['shift']==2){
+    		$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 10:00:01'";
+    		$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 16:00:00'";
+    	}
+    	else if($search['shift']==3){
+    		$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 16:00:01'";
+    		$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 23:59:59'";
+    	}
+    	
     	$where = " AND ".$from_date." AND ".$to_date;
     	
     	$order=" ORDER BY cp.id ASC ";
@@ -100,44 +131,54 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
 	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	 
+    	
     	if($search['branch'] > 0){
     		$where.= " AND cp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     	
     }
     
-    function getAllCurrencyFromDailyIncome($search,$payfor_type){
+    function getAllParkingPayment($search){
     	$db = $this->getAdapter();
     
     	$_db = new Application_Model_DbTable_DbGlobal();
-    	$branch_id = $_db->getAccessPermission("branch_id");
+    	$branch_id = $_db->getAccessPermission("pd.`branch_id`");
     
     	$sql = "SELECT
-			    	sdi.*
+			    	id,
+			    	receipt_no,
+			    	total_fee
 			    FROM
-			    	`rms_submit_daily_income` AS sdi
+			    	`rms_parking_detail` AS pd
 			    WHERE
-			    	sdi.status=1
-			    	and shift != 0
+			    	pd.status=1
 			    	$branch_id
     		";
     
     	$where = " ";
-    	
-    	if($payfor_type>0){
-    		$where .= " and payfor_type = $payfor_type ";
-    	}else{
-    		$where .= " and payfor_type IN (1,2,6) ";
-    	}
-    	
     
-    	$from_date =(empty($search['start_date']))? '1': "sdi.for_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': "sdi.for_date <= '".$search['end_date']." 23:59:59'";
-    	$where .= " AND ".$from_date." AND ".$to_date;
+    	if($search['shift']==0){
+    		$from_date =(empty($search['start_date']))? '1': "pd.create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "pd.create_date <= '".$search['end_date']." 23:59:59'";
+    	}else if($search['shift']==1){
+    		$from_date =(empty($search['start_date']))? '1': "pd.create_date >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "pd.create_date <= '".$search['end_date']." 10:00:00'";
+    	}
+    	else if($search['shift']==2){
+    		$from_date =(empty($search['start_date']))? '1': "pd.create_date >= '".$search['start_date']." 10:00:01'";
+    		$to_date = (empty($search['end_date']))? '1': "pd.create_date <= '".$search['end_date']." 16:00:00'";
+    	}
+    	else if($search['shift']==3){
+    		$from_date =(empty($search['start_date']))? '1': "pd.create_date >= '".$search['start_date']." 16:00:01'";
+    		$to_date = (empty($search['end_date']))? '1': "pd.create_date <= '".$search['end_date']." 23:59:59'";
+    	}
+    	$where = " AND ".$from_date." AND ".$to_date;
     	 
-    	$order=" ORDER BY sdi.id ASC ";
+    	$order=" ORDER BY pd.id ASC ";
     
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);
@@ -145,60 +186,24 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
 	    	$s_where = array();
 	    	$s_search = addslashes(trim($search['txtsearch']));
-	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
+// 	    	$s_where[] = " st.stu_code LIKE '%{$s_search}%'";
+// 	    	$s_where[] = " st.stu_enname LIKE '%{$s_search}%'";
+// 	    	$s_where[] = " st.stu_khname LIKE '%{$s_search}%'";
+// 	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    
-	    if($search['branch'] > 0){
-	    	$where.= " AND sdi.`branch_id` = ".$search['branch'];
+    			 
+    	if($search['branch'] > 0){
+    		$where.= " AND pd.`branch_id` = ".$search['branch'];
+	    }
+	    if($search['user'] > 0){
+	    	$where.= " AND `user_id` = ".$search['user'];
 	    }
 	    
-	    //echo $sql.$where.$order;
+	    //echo $sql.$where;
 	    
 	    return $db->fetchAll($sql.$where.$order);
-     
-    }
-    
-    
-    function getAllRentPaymentCurrency($search,$payfor_type){
-    	$db = $this->getAdapter();
-    
-    	$_db = new Application_Model_DbTable_DbGlobal();
-    	$branch_id = $_db->getAccessPermission("branch_id");
-    
-    	$sql = "SELECT
-			    	sdi.*
-			    FROM
-			    	`rms_submit_daily_income` AS sdi
-			    WHERE
-			    	sdi.status=1
-			    	and payfor_type = $payfor_type
-			    	and shift != 0
-			    	$branch_id
-    		";
-    	
-    	$where = " ";
-    
-    	$from_date =(empty($search['start_date']))? '1': "sdi.for_date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': "sdi.for_date <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
-    
-    	$order=" ORDER BY sdi.id ASC ";
-    
-    	if(empty($search)){
-    		return $db->fetchAll($sql.$order);
-    	}
-    	if(!empty($search['txtsearch'])){
-	    	$s_where = array();
-	    	$s_search = addslashes(trim($search['txtsearch']));
-	    	$where .=' AND ( '.implode(' OR ',$s_where).')';
-    	}
-    
-    	if($search['branch'] > 0){
-	    	$where.= " AND sdi.`branch_id` = ".$search['branch'];
-	    }
-    	return $db->fetchAll($sql.$where.$order);
-     
-    }
+	     
+	}
     
     
     function getAllOtherIncome($search){
@@ -209,6 +214,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	
     	$sql = "SELECT
 			    	id,
+			    	invoice,
 			    	curr_type,
 			    	total_amount
 			    FROM
@@ -294,6 +300,9 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
+    	}
 //     	echo $sql.$where;
     	return $db->fetchAll($sql.$where.$order);
     }
@@ -347,6 +356,9 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
+    	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
     	}
     		 
     	return $db->fetchAll($sql.$where.$order);
@@ -402,6 +414,9 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 	    if($search['branch'] > 0){
 	    	$where.= " AND sp.`branch_id` = ".$search['branch'];
 	    }
+	    if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
+    	}
     		 
     	return $db->fetchAll($sql.$where.$order);
     }
@@ -454,6 +469,9 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
+    	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
     	}
     				 
     	return $db->fetchAll($sql.$where.$order);
@@ -508,6 +526,10 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
+    	}
+    	
     	return $db->fetchAll($sql.$where.$order);
     }
     
@@ -560,8 +582,50 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
     	if($search['branch'] > 0){
     		$where.= " AND sp.`branch_id` = ".$search['branch'];
     	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
+    	}
     	return $db->fetchAll($sql.$where.$order);
     }
+    
+    function getRielAndDollarAmount($search,$payfor_type){
+    	$db=$this->getAdapter();
+    	$sql="select 
+    				total_amount,
+					amount_usd,
+					amount_riel,
+					shift,
+					branch_id,
+					user_id
+    			from
+    				rms_submit_daily_income as sdi
+    			where 
+    				status=1
+    				and payfor_type = $payfor_type
+    				and shift!=0
+    		";
+    	$where = " ";
+    	
+    	$from_date =(empty($search['start_date']))? '1': "for_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "for_date <= '".$search['end_date']." 23:59:59'";
+    	$where.= " and ".$from_date." and ".$to_date;
+    	
+    	if($search['shift'] > 0){
+    		$where.=" and shift = ".$search['shift'];
+    	}
+    	if($search['branch'] > 0){
+    		$where.= " AND `branch_id` = ".$search['branch'];
+    	}
+    	if($search['user'] > 0){
+    		$where.= " AND `user_id` = ".$search['user'];
+    	}
+    	
+    	//echo $sql.$where;
+    	
+    	return $db->fetchAll($sql.$where);
+    }
+    
+    
 }
 
 

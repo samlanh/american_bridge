@@ -144,5 +144,24 @@ public function init()
 		}
 	}
 	
+	function parkingAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+	
+				//print_r($data);exit();
+	
+				$db = new Allreport_Model_DbTable_DbSubmitDailyIncome();
+				$db->SubmitDailyIncome($data,8,0);// 8=payfor_type(parking) , 0=degree_type(no need)
+				if(isset($data['save_close'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/allreport/accounting/rpt-parking-payment");
+				}
+			}
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
+	
 }
 

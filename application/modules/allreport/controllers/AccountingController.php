@@ -1371,16 +1371,35 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'start_date'=> date('Y-m-d'),
 						'end_date'	=>date('Y-m-d'),
 						'branch'	=>'',
+						'user'		=>'',
 						'shift'		=>0,
 				);
 			}
 		
 			$db = new Allreport_Model_DbTable_DbRptResultIncome();
-			$this->view->rs = $db->getAllResultIncome($search);
+			$this->view->kft = $db->getAllResultIncome($search,1);
+			$this->view->kft_amount_money = $db->getRielAndDollarAmount($search,1);
+			
+			$this->view->eft = $db->getAllResultIncome($search,6);
+			$this->view->eft_amount_money = $db->getRielAndDollarAmount($search,6);
+			
+			$this->view->ept = $db->getAllResultIncome($search,2);
+			$this->view->ept_amount_money = $db->getRielAndDollarAmount($search,2);
+			
+			$this->view->car = $db->getAllResultIncome($search,3);
+			$this->view->transport_amount_money = $db->getRielAndDollarAmount($search,3);
+			
+			$this->view->food = $db->getAllResultIncome($search,4);
+			$this->view->food_amount_money = $db->getRielAndDollarAmount($search,4);
+			
+			$this->view->product = $db->getAllResultIncome($search,5);
+			$this->view->product_amount_money = $db->getRielAndDollarAmount($search,5);
 			
 			$this->view->rent_payment = $db->getAllRentPayment($search);
+			$this->view->rent_amount_money = $db->getRielAndDollarAmount($search,7);
 			
-			$this->view->rent_payment_currency = $db->getAllRentPaymentCurrency($search,7);//7=payfor_type(canteen)
+			$this->view->parking_payment = $db->getAllParkingPayment($search);
+			$this->view->parking_amount_money = $db->getRielAndDollarAmount($search,8);
 			
 			$this->view->other_income = $db->getAllOtherIncome($search);
 			
@@ -1410,6 +1429,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'start_date'=> date('Y-m-d'),
 						'end_date'	=>date('Y-m-d'),
 						'branch'	=>'',
+						'user'		=>'',
 						'shift'		=>0,
 				);
 			}
@@ -1417,12 +1437,30 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$db = new Allreport_Model_DbTable_DbRptResultIncome();
 			
 			$this->view->khmerft = $db->getKhmerFullTimePayment($search);
+			$this->view->kft_amount_money = $db->getRielAndDollarAmount($search,1);
+			
 			$this->view->englishft = $db->getEnglishFullTimePayment($search);
+			$this->view->eft_amount_money = $db->getRielAndDollarAmount($search,6);
+			
 			$this->view->englishpt = $db->getEnglishPartTimePayment($search);
+			$this->view->ept_amount_money = $db->getRielAndDollarAmount($search,2);
+			
 			$this->view->study_material = $db->getStudyMaterialPayment($search);
+			$this->view->product_amount_money = $db->getRielAndDollarAmount($search,5);
+			
 			$this->view->transportation = $db->getTransportationPayment($search);
+			$this->view->transport_amount_money = $db->getRielAndDollarAmount($search,3);
+			
 			$this->view->foodandstay = $db->getFoodAndStayPayment($search);
+			$this->view->food_amount_money = $db->getRielAndDollarAmount($search,4);
+			
 			$this->view->rent_payment = $db->getAllRentPayment($search);
+			$this->view->rent_amount_money = $db->getRielAndDollarAmount($search,7);
+			
+			$this->view->parking_payment = $db->getAllParkingPayment($search);
+			$this->view->parking_amount_money = $db->getRielAndDollarAmount($search,8);
+			
+			$this->view->other_income = $db->getAllOtherIncome($search);
 			
 			$this->view->search = $search;
 		}catch(Exception $e){
@@ -1898,14 +1936,18 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' =>'',
 						'branch'	=>'',
-						'transport_service'=>'',
+						'shift'		=>'',
+						'user'	=>'',
 						'start_date'=>date('Y-m-d'),
 						'end_date'	=>date('Y-m-d'),
 				);
 			}
 			$db = new Allreport_Model_DbTable_DbRptParkingPayment();
-			$abc = $this->view->row = $db->getAllInvoiceTransport($search); // 4=payfor_type(lunch)
-	
+			$abc = $this->view->row = $db->getAllParkingPayment($search); // 4=payfor_type(lunch)
+			
+			$_db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rate = $_db->getRate();
+			
 			$form=new Registrar_Form_FrmSearchInfor();
 			$form->FrmSearchRegister();
 			Application_Model_Decorator::removeAllDecorator($form);
