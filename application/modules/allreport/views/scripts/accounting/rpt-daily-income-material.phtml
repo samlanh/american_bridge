@@ -99,6 +99,7 @@ tr.row_control {
 							<td class="padd">Material</td>
 							<td class="padd">Description</td>
 							<td class="padd">Total in USD</td>
+							<td class="padd">Create Date</td>
 	 					 </tr>
 	 				</thead>
  					 
@@ -125,6 +126,7 @@ tr.row_control {
 						<td class="padd"><?php echo $rs['service_name'];?></td>
 						<td class="padd" align="left"><?php echo $rs['note'];?></td>
 						<td class="padd"><?php echo "$ ".$rs['paidamount'];?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($rs['create_date']));?></td>
  					</tr>
  					
 					<?php 
@@ -347,10 +349,10 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo number_format($grand_total,2);?>';
+	total_amount = '<?php echo $grand_total;?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
-	total_reil = (total_amount - amount_usd)*exchange_rate;
+	total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
 	//alert(total_reil);
 
 	var result = 100 * Math.ceil(total_reil / 100);

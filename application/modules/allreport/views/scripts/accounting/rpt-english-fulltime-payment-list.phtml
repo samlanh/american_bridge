@@ -113,8 +113,8 @@
 							<td class="bor" colspan="4"><?php echo $tr->translate("NAME_KH"); ?></td>
 							<td class="bor" colspan="4"><?php echo $tr->translate("NAME_EN"); ?></td>
 							<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
-							<td class="bor" colspan="6"><?php echo $tr->translate("PHONE"); ?></td>
-							<td  style="border-bottom: 1px solid #000;" colspan="4"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+							<td class="bor" colspan="4"><?php echo $tr->translate("PHONE"); ?></td>
+							<td  style="border-bottom: 1px solid #000;" colspan="4"><?php echo $tr->translate("DEGREE"); ?></td>
 							<td  style="border-bottom: 1px solid #000;" colspan="1"><?php echo $tr->translate("CURRENT_GRADE"); ?></td>
 					      </tr>
 				<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
@@ -125,7 +125,7 @@
 							<td class="bor_r" colspan="4"><?php echo $rs['stu_khname'];?> </td>
 							<td class="bor_r" colspan="4"><?php echo $rs['stu_enname'];?> </td>
 							<td class="bor_r"><?php echo $rs['sex'];?> </td>
-							<td class="bor_r" colspan="6"><?php echo $rs['tel'];?> </td>
+							<td class="bor_r" colspan="4"><?php echo $rs['tel'];?> </td>
 							<td colspan="4"><?php echo $rs['degree'];?> </td>
 							<td colspan="1"><?php echo $rs['current_grade'];?> </td>
 	 					 </tr>
@@ -136,15 +136,14 @@
 							<td rowspan="2" class="padd">Levels</td>
 							<td rowspan="2" class="padd">Room</td>
 							<td rowspan="2" class="padd">Time</td>
-							<td rowspan="2" class="padd">Is New Student</td>
+							<td rowspan="2" class="padd">Is New<br/>Student</td>
 							<td colspan="8" class="padd">Study Fee Payment</td>
-							<td colspan="3" class="padd">Admin Fee Payment</td>
-							<td rowspan="2" class="padd">Study Material <br />Payment</td>
-							<td rowspan="2" class="padd">Other Fee</td>
+							<td rowspan="2" class="padd">Admin<br/>Fee</td>
+							<td rowspan="2" class="padd">Material<br />Fee</td>
+							<td rowspan="2" class="padd">Other<br />Fee</td>
 							<td rowspan="2" class="padd">Credit</td>
 							<td rowspan="2" class="padd">Total <br />Amount</td>
-							<td rowspan="2" class="padd">Paid & <br />Payable</td>
-							<td rowspan="2" class="padd">Remark</td>
+							<td rowspan="2" class="padd">Note</td>
 							<td rowspan="2"  class="padd">Stop <br />Student</td>
 							<td colspan="2" rowspan="2" class="padd">Date Stop</td>
 	 					 </tr>
@@ -157,9 +156,6 @@
 							<td class="padd">Start Date</td>
 							<td class="padd">End Date</td>
 							<td class="padd">Duration</td>
-							<td class="padd">Amount</td>
-							<td class="padd">Start Date</td>
-							<td class="padd"> End Date</td>
 	 					 </tr>
 	 					
 					<?php 
@@ -213,17 +209,14 @@
 							<td class="padd"><?php echo $amount_month;?></td>
 							
 							
-							<td class="padd"><?php echo "$ ".$rs['admin_fee'];?></td>
-							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
-							<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
+							<td class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
 							
 							
-							<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
+							<td class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
 							
-							<td class="padd"><?php echo "$ ".$rs['other_fee'];?></td>
+							<td class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
 							
-							<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
-							<td class="padd"><?php echo "$ ".$rs['grand_total_payment'];?></td>
+							<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
 							<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 							
 							<td class="padd"><?php echo $rs['note'];?></td>

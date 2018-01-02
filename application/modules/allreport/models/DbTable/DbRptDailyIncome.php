@@ -712,7 +712,8 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	other_price,
 			    	
 			    	all_total_amount,
-			    	cp.note
+			    	cp.note,
+			    	cp.create_date
 			    FROM
 			    	rms_customer as c,
 			    	rms_customer_paymentdetail as cp

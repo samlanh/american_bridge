@@ -53,7 +53,7 @@
 		.padd{
 			padding: 0 3px;	
 		}
-		#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		#row{ font-size:12px; line-height: 20px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
 		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
 		th{padding: 5px;}
 		  
@@ -93,6 +93,7 @@
 								<td colspan="5" class="padd">Description</td>
 								<td rowspan="2" class="padd">Total in<br />USD</td>
 								<td rowspan="2" class="padd">Remark</td>
+								<td rowspan="2" class="padd">Create Date</td>
 		 					 </tr>
 							 <tr id="row" align="center" style="background: #c1d0f3;font-weight: bold;font-size: 12px; line-height: 16px;">
 								<td colspan="1" class="padd">Canteen Rental</td>
@@ -127,6 +128,7 @@
 							
 							<td class="padd"><?php echo "$ ".$rs['all_total_amount'];?></td>
 							<td class="padd"><?php echo $rs['note'];?></td>
+							<td class="padd"><?php echo date("d-M-Y",strtotime($rs['create_date']));?></td>
 	 					</tr>
 	 						
 	 					<?php 
@@ -267,10 +269,10 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo number_format($grand_total,2);?>';
+	total_amount = '<?php echo $grand_total;?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
-	total_reil = (total_amount - amount_usd)*exchange_rate;
+	total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
 	//alert(total_reil);
 
 	var result = 100 * Math.ceil(total_reil / 100);

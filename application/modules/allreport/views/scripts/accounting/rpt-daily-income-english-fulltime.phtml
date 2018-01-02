@@ -98,30 +98,26 @@ tr.row_control {
 				<table cellpadding="8"​ style=" border: solid 1px #000; margin:0 auto; width:100%; border-collapse: collapse; white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
  					 <thead>
 	 					 <tr align="center" style="background: #c1d0f3;font-size: 13px; line-height: 16px;">
-							<td rowspan="3" class="padd">N<sup>o</sup></td>
-							<td rowspan="3" class="padd">Receipt No.</td>
-							<td rowspan="3" class="padd">Student ID</td>
-							<td rowspan="3" class="padd">Student Name</td>
-							<td rowspan="3" class="padd">Sex</td>
-							<td rowspan="3" class="padd">Level/Grade</td>
-							<td rowspan="3" class="padd">Time</td>
-							<td colspan="5" class="padd">Study Fee Income</td>
-							<td rowspan="3" class="padd">Admin Fee</td>
-							<td rowspan="3" class="padd">Study Material fee</td>
-							<td rowspan="3" class="padd">Other Fee</td>
-							<td rowspan="3" class="padd">Credit</td>
-							<td rowspan="3" class="padd">Total in USD</td>
-							<td rowspan="3" class="padd">Remark</td>
+							<td rowspan="2" class="padd">N<sup>o</sup></td>
+							<td rowspan="2" class="padd">Receipt No.</td>
+							<td rowspan="2" class="padd">Student ID</td>
+							<td rowspan="2" class="padd">Student Name</td>
+							<td rowspan="2" class="padd">Sex</td>
+							<td rowspan="2" class="padd">Level/Grade</td>
+							<td rowspan="2" class="padd">Time</td>
+							<td colspan="3" class="padd">Study Fee Income</td>
+							<td rowspan="2" class="padd">Admin<br/>Fee</td>
+							<td rowspan="2" class="padd">Material<br/>fee</td>
+							<td rowspan="2" class="padd">Other<br/>Fee</td>
+							<td rowspan="2" class="padd">Credit</td>
+							<td rowspan="2" class="padd">Total in<br/>USD</td>
+							<td rowspan="2" class="padd">Remark</td>
+							<td rowspan="2" class="padd">Create Date</td>
 	 					 </tr>
 						 <tr align="center" style="background: #c1d0f3;font-size: 12px; line-height: 14px;">
-							<td colspan="2" class="padd">Type</td>
 							<td rowspan="2" class="padd">Full Price</td>
 							<td rowspan="2" class="padd">Discount</td>
 							<td rowspan="2" class="padd">Amount</td>
-	 					 </tr>
-	 					 <tr align="center" style="background: #c1d0f3;font-size: 12px; line-height: 14px;">
-							<td class="padd">New</td>
-							<td class="padd">Old</td>
 	 					 </tr>
  					 </thead>
 			
@@ -138,10 +134,14 @@ tr.row_control {
 					$total_balance=0;
 					$grand_total=0;
 					$stu_id=0;
+					$stu_name="";
 				?>		
 						
 				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
-					
+						$stu_name = $rs['stu_enname'];
+						if($stu_name == ""){
+							$stu_name = $rs['stu_khname'];
+						}
 						//$study_material = $rs['grand_total_payment'] - ($rs['total_payment'] + $rs['admin_fee'] + $rs['other_fee']);
 				?>
 						
@@ -150,16 +150,16 @@ tr.row_control {
 						<td class="padd"><?php echo $i;?></td>
 						<td class="padd"><?php echo $rs['receipt_number'];?></td>
 						<td class="padd"><?php echo $rs['stu_code'];?></td>
-						<td class="padd"><?php echo $rs['stu_enname']."-".$rs['stu_khname'];?></td>
+						<td class="padd"><?php echo $stu_name;?></td>
 						<td class="padd"><?php echo $rs['sex'];?></td>
 						<td class="padd"><?php echo $rs['grade'];?></td>
 						<td class="padd"><?php echo $rs['time'];?></td>						
 						
-						
+					<?php /*?>	
 						
 						<td class="padd"><?php if($rs['is_new']==1 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
 						<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
-						
+					<?php */?>	
 						
 						<td align="right" class="padd"><?php echo "$ ".$rs['tuition_fee'];?></td>
 						<td class="padd">
@@ -173,7 +173,7 @@ tr.row_control {
 							?>
 							
 						</td>
-						<td class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
+						<td align="right" class="padd"><?php echo "$ ".$rs['tuition_fee_after_discount'];?></td>
 						
 						
 						<td align="right" class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
@@ -187,6 +187,7 @@ tr.row_control {
 						<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 						
 						<td class="padd"><?php echo $rs['note'];?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($rs['create_date']));?></td>
  					</tr>
  					
 					<?php 
@@ -230,6 +231,7 @@ tr.row_control {
 											
 										</td>
 									</tr>
+								<?php /*?>	
 									<tr class="hover">
 										<td>
 											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Total of new student
@@ -246,9 +248,10 @@ tr.row_control {
 											<?php echo $amont_old_student;?> student(s)
 										</td>
 									</tr>
+								<?php */?>		
 									<tr class="hover">
 										<td>
-											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Total Amount of study fee
+											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Total Amount of study fee
 										</td>
 										<td>
 											<?php echo "$ ".number_format($total_study_fee,2);?>
@@ -289,25 +292,10 @@ tr.row_control {
 									
 									<tr class="hover">
 										<td style="border-top:2px solid #000;">
-											&nbsp;Total number of new student
-										</td>
-										<td style="border-top:2px solid #000;">
-											<?php echo $amont_new_student;?> student(s)
-										</td>
-									</tr>
-									<tr class="hover">
-										<td>
-											&nbsp;Total number of old student
-										</td>
-										<td>
-											<?php echo $amont_old_student;?> student(s)
-										</td>
-									</tr>
-									<tr class="hover">
-										<td>
 											&nbsp;Grand Total
 										</td>
-										<td>
+										
+										<td style="border-top:2px solid #000;">
 											<?php echo "$ ".number_format($grand_total,2);?>
 										</td>
 									</tr>
@@ -463,10 +451,10 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo number_format($grand_total,2);?>';
+	total_amount = '<?php echo $grand_total;?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
-	total_reil = (total_amount - amount_usd)*exchange_rate;
+	total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
 	//alert(total_reil);
 
 	var result = 100 * Math.ceil(total_reil / 100);

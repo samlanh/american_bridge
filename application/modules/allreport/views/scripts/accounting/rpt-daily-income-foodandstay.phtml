@@ -93,16 +93,14 @@ tr.row_control {
 							<td rowspan="2" class="padd">Student ID</td>
 							<td rowspan="2" class="padd">Student Name</td>
 							<td rowspan="2" class="padd">Sex</td>
-							<td colspan="2" class="padd">Type</td>
 							<td colspan="3" class="padd">Food and Stay Fee income</td>
-							<td rowspan="2" class="padd">Study<br />Material Fee</td>
+							<td rowspan="2" class="padd">Other<br />Fee</td>
 							<td rowspan="2" class="padd">Credit</td>
 							<td rowspan="2" class="padd">Total in<br />USD</td>
 							<td rowspan="2" class="padd">Remark</td>
+							<td rowspan="2" class="padd">Create Date</td>
 	 					 </tr>
 						 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
-							<td colspan="1" class="padd">New</td>
-							<td rowspan="1" class="padd">Old</td>
 							<td rowspan="1" class="padd">Food & Stay Fee</td>
 							<td rowspan="1" class="padd">Food Fee</td>
 							<td rowspan="1" class="padd">Stay Fee</td>
@@ -127,6 +125,7 @@ tr.row_control {
 					$foodandstay=0;
 					$food=0;
 					$stay=0;
+					$stu_name="";
 				?>		
 						
 						
@@ -139,6 +138,10 @@ tr.row_control {
 						$time_for_car = $rs['time_for_car'];
 						$time_id = explode(',', $time_for_car);
 						
+						$stu_name = $rs['stu_enname'];
+						if($stu_name == ""){
+							$stu_name = $rs['stu_khname'];
+						}
 				?>
 						
  					<tr id="row" align="center" class="hover" >
@@ -146,22 +149,20 @@ tr.row_control {
 						<td class="padd"><?php echo $i;?></td>
 						<td class="padd"><?php echo $rs['receipt_number'];?></td>
 						<td class="padd"><?php echo $rs['stu_code'];?></td>
-						<td class="padd"><?php echo $rs['stu_enname']."-".$rs['stu_khname'];?></td>
+						<td class="padd"><?php echo $stu_name;?></td>
 						<td class="padd"><?php echo $rs['sex'];?></td>
-						
-						<td class="padd"><?php if($rs['is_new']==1 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_new_student = $amont_new_student + 1;}?></td>
-						<td class="padd"><?php if($rs['is_new']==0 AND $stu_id!=$rs['student_id']){echo "Yes";$amont_old_student = $amont_old_student + 1;}?></td>
 						
 						<td align="right"><?php if($rs['service_id']==93){echo "$ ".$rs['tuition_fee_after_discount']; $foodandstay = $foodandstay + $rs['tuition_fee_after_discount'];}?>&nbsp;</td>
 						<td><?php if($rs['service_id']==91){echo "$ ".$rs['tuition_fee_after_discount']; $food = $food + $rs['tuition_fee_after_discount'];}?>&nbsp;</td>
 						<td><?php if($rs['service_id']==92){echo "$ ".$rs['tuition_fee_after_discount']; $stay = $stay + $rs['tuition_fee_after_discount'];}?>&nbsp;</td>
 						
-						<td align="right" class="padd"><?php echo "$ ".$rs['material_fee'];?>&nbsp;</td>
+						<td align="right" class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?>&nbsp;</td>
 						
-						<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_balance'];?>&nbsp;</td>
+						<td align="right" class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?>&nbsp;</td>
 						<td align="right" class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?>&nbsp;</td>
 						
 						<td class="padd"><?php echo $rs['note'];?></td>
+						<td class="padd"><?php echo date("d-M-Y",strtotime($rs['create_date']));?></td>
  					</tr>
  					
 					<?php 
@@ -201,26 +202,10 @@ tr.row_control {
 											&nbsp;I. Income from Food and Stay fee
 										</td>
 									</tr>
-									<tr class="hover">
-										<td>
-											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. New student 
-										</td>
-										<td>
-											<?php echo $amont_new_student;?> student(s)
-										</td>
-									</tr>
-									<tr class="hover">
-										<td>
-											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Old student
-										</td>
-										<td>
-											<?php echo $amont_old_student;?> student(s)
-										</td>
-									</tr>
 									
 									<tr class="hover">
 										<td>
-											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Total amount of Food & Stay fee
+											 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Total amount of Food & Stay fee
 										</td>
 										<td>
 											<?php echo "$ ".number_format($foodandstay,2);?>
@@ -247,10 +232,10 @@ tr.row_control {
 									
 									<tr class="hover">
 										<td>
-											&nbsp;II. Total amount of study material fee
+											&nbsp;II. Total amount of other fee
 										</td>
 										<td>
-											<?php echo "$ ".number_format($total_study_material_fee,2);?>
+											<?php echo "$ ".number_format($total_other_fee,2);?>
 										</td>
 									</tr>
 									<tr class="hover">
@@ -264,25 +249,9 @@ tr.row_control {
 									
 									<tr class="hover">
 										<td style="border-top:2px solid #000;">
-											&nbsp;Total number of new student
+											&nbsp;Grand Total
 										</td>
 										<td style="border-top:2px solid #000;">
-											<?php echo $amont_new_student;?> student(s)
-										</td>
-									</tr>
-									<tr class="hover">
-										<td>
-											&nbsp;Total number of old student
-										</td>
-										<td>
-											<?php echo $amont_old_student;?> student(s)
-										</td>
-									</tr>
-									<tr class="hover">
-										<td>
-											&nbsp;Total Amount
-										</td>
-										<td>
 											<?php echo "$ ".number_format($grand_total,2);?>
 										</td>
 									</tr>
@@ -429,10 +398,10 @@ dojo.ready(function(){
 });
 					
 function calculateRemainReil(){
-	total_amount = '<?php echo number_format($grand_total,2);?>';
+	total_amount = '<?php echo $grand_total;?>';
 	amount_usd = dijit.byId("amount_usd").get('value');
 	exchange_rate = '<?php echo $this->rate?>';
-	total_reil = (total_amount - amount_usd)*exchange_rate;
+	total_reil = ((total_amount - amount_usd)*exchange_rate).toFixed(2);
 	//alert(total_reil);
 
 	var result = 100 * Math.ceil(total_reil / 100);

@@ -112,8 +112,8 @@
 						<td class="bor" colspan="4"><?php echo $tr->translate("NAME_KH"); ?></td>
 						<td class="bor" colspan="4"><?php echo $tr->translate("NAME_EN"); ?></td>
 						<td class="bor"><?php echo $tr->translate("SEX"); ?></td>
-						<td class="bor" colspan="6"><?php echo $tr->translate("PHONE"); ?></td>
-						<td  style="border-bottom: 1px solid #000;" colspan="6"><?php echo $tr->translate("LEVEL"); ?>(Shortcut)</td>
+						<td class="bor" colspan="5"><?php echo $tr->translate("PHONE"); ?></td>
+						<td  style="border-bottom: 1px solid #000;" colspan="2"><?php echo $tr->translate("DEGREE"); ?></td>
 						<td  style="border-bottom: 1px solid #000;" colspan="1"><?php echo $tr->translate("CURRENT_GRADE"); ?></td>
 				      </tr>
 			<?php //////////////////////////////////////////////// student info //////////////////////////////////////////////////////?>	      
@@ -124,8 +124,8 @@
 						<td class="bor_r" colspan="4"><?php echo $rs['stu_khname'];?> </td>
 						<td class="bor_r" colspan="4"><?php echo $rs['stu_enname'];?> </td>
 						<td class="bor_r"><?php echo $rs['sex'];?> </td>
-						<td class="bor_r" colspan="6"><?php echo $rs['tel'];?> </td>
-						<td colspan="6"><?php echo $rs['degree'];?> </td>
+						<td class="bor_r" colspan="5"><?php echo $rs['tel'];?> </td>
+						<td colspan="2"><?php echo $rs['degree'];?> </td>
 						<td colspan="1"><?php echo $rs['current_grade'];?> </td>
  					 </tr>
  					 
@@ -137,13 +137,12 @@
 						<td rowspan="2" class="padd">វេន</td>
 						<td rowspan="2" class="padd">សិស្សថ្មី</td>
 						<td colspan="8" class="padd">ការទូទាត់ថ្លៃសិក្សា</td>
-						<td colspan="3" class="padd">ការទូទាត់ថ្លៃរដ្ឋបាល</td>
-						<td colspan="3" class="padd">ការទូទាត់ថ្លៃសម្ភារៈសិក្សា</td>
+						<td rowspan="2" class="padd">ថ្លៃ<br />រដ្ឋបាល</td>
+						<td rowspan="2" class="padd">ថ្លៃសម្ភារៈ<br />សិក្សា</td>
 						<td rowspan="2" class="padd">ថ្លៃផ្សេងៗ</td>
 						<td rowspan="2" class="padd">ជំពាក់</td>
 						<td rowspan="2" class="padd">ទឹកប្រាក់<br />សរុបរួម</td>
-						<td rowspan="2" class="padd">បង់រួច&<br />ផុតកំណត់ក្នុងខែ</td>
-						<td rowspan="2" class="padd">ផ្សេងៗ</td>
+						<td rowspan="2" class="padd">សម្គាល់</td>
 						<td rowspan="2" class="padd">សិស្ស<br />ឈប់</td>
 						<td rowspan="2" class="padd">ថ្ងៃឈប់</td>
  					 </tr>
@@ -156,12 +155,6 @@
 						<td class="padd">ថ្ងៃចាប់ផ្តើម</td>
 						<td class="padd">ថ្ងៃផុតកំណត់</td>
 						<td class="padd">រយះពេល</td>
-						<td class="padd">ទឹកប្រាក់សរុប</td>
-						<td class="padd">ថ្ងៃចាប់ផ្តើម</td>
-						<td class="padd">ថ្ងៃផុតកំណត់</td>
-						<td class="padd">ទឹកប្រាក់សរុប</td>
-						<td class="padd">ថ្ងៃចាប់ផ្តើម</td>
-						<td class="padd">ថ្ងៃផុតកំណត់</td>
  					 </tr>
  					
 				<?php 
@@ -214,21 +207,14 @@
 						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
 						<td class="padd"><?php echo $amount_month;?></td>
 						
+						<td class="padd"><?php if($rs['admin_fee']>0){echo "$ ".$rs['admin_fee'];}?></td>
+							
+						<td class="padd"><?php if($rs['material_fee']>0){echo "$ ".$rs['material_fee'];}?></td>
 						
-						<td class="padd"><?php echo "$ ".$rs['admin_fee'];?></td>
-						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
-						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
+						<td class="padd"><?php if($rs['other_fee']>0){echo "$ ".$rs['other_fee'];}?></td>
 						
-						
-						<td class="padd"><?php echo "$ ".$rs['material_fee'];?></td>
-						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['start_date']));?></td>
-						<td class="padd"><?php echo date('d-m-Y',strtotime($rs['validate']));?></td>
-						
-						<td class="padd"><?php echo "$ ".$rs['other_fee'];?></td>
-						
-						<td class="padd"><?php echo "$ ".$rs['grand_total_balance'];?></td>
+						<td class="padd"><?php if($rs['grand_total_balance']>0){echo "$ ".$rs['grand_total_balance'];}?></td>
 						<td class="padd"><?php echo "$ ".$rs['grand_total_payment'];?></td>
-						<td class="padd"><?php echo "$ ".$rs['grand_total_paid_amount'];?></td>
 						
 						<td class="padd"><?php echo $rs['note'];?></td>
 						<td class="padd" style="color: red;"><?php if($rs['is_subspend']>0){ echo $rs['suspend_type'];}?></td>

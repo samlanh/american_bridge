@@ -54,6 +54,14 @@
 	
 </form>	
 </div>
+
+<style>
+	.hover:hover{background: #ddd;}
+	.row_control {
+	    display: table-row !important;
+	}
+</style>
+
 <div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 	<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'parking')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	<div id="divPrint">
@@ -167,6 +175,13 @@
 									<label id="lb_amount_reil"></label>
 								</td>
 							</tr>
+							<tr class="row_control" style="display: none;" >
+								<td colspan="4" align="center">
+									<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+									<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+										iconClass="dijitEditorIcon dijitEditorIconSave" />	
+								</td>
+							</tr>
 						</table>
 					<?php }?>
 							
@@ -202,17 +217,6 @@
 			</table>
 		</div>			
 	</div>	
-		<table width="100%">
-			<tr>
-				<td align="center">
-					<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />	
-						
-					<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
-						
-				</td>
-			</tr>
-		</table>	
 	</form>
 </div>
 

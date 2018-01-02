@@ -1487,6 +1487,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			}else{
 				$search = array(
 						'title'	        =>	'',
+						'branch'	    =>	'',
 						'cus_name'		=>	0,
 						'start_date'	=>	date('Y-m-01'),
 						'end_date'		=>	date('Y-m-d'),

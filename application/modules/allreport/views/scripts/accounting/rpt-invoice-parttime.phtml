@@ -111,7 +111,7 @@
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo $row['payment_term'];?></td>
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo " $ ".$row['tuition_fee'];?></td>
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo $discount;?></td>
-								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo " $ ".$row['other_fee'];?></td>
+								<td align="center" style="border: 1px solid #000;">&nbsp;<?php if($row['other_fee']>0){echo " $ ".$row['other_fee'];}?></td>
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo " $ ".$row['total_payment'];?></td>
 								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['note'];?></td>
 								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['user'];?></td>
