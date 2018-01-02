@@ -52,20 +52,19 @@ class Application_Form_FrmOther extends Zend_Dojo_Form
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside height-text',));
     	
-    	$_arr_type = array(
-    					''=>$this->tr->translate("SELECT_TYPE"),
-    					-1=>$this->tr->translate("ADD_NEW"),
-    					1=>$this->tr->translate("Khmer Fulltime"),
-    					2=>$this->tr->translate("English Fulltime"),
-    					3=>$this->tr->translate("English Parttime & Others")
-    				);
+    	$db_degree= new Global_Model_DbTable_DbDept();
+    	$rows=$db_degree->getAllDegreeName();
+    	$opt = "";
+    	$opt = array(''=>'Select Degree Type','-1'=>$this->tr->translate("ADD_NEW"));
+    	if(!empty($rows))foreach($rows AS $row) $opt[$row['id']]=$row['name'];
+    	
     	$_type = new Zend_Dojo_Form_Element_FilteringSelect("type");
     	$_type->setAttribs(array(
     			'dojoType'=>'dijit.form.FilteringSelect',
     			'required'=>'true',
     			'onchange'=>'getPopupCat()',
     			'class'=>'fullside',));
-    	$_type->setMultiOptions($_arr_type);
+    	$_type->setMultiOptions($opt);
     	
     	$mul_status = new Zend_Dojo_Form_Element_FilteringSelect("mul_status");
     	$mul_status->setMultiOptions($_arr);

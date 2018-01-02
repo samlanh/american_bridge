@@ -21,18 +21,17 @@ Class Global_Form_FrmSearchMajor extends Zend_Dojo_Form{
 				'placeholder'=>$this->tr->translate("SEARCH_FACULTY_NAME")));
 		$_title->setValue($request->getParam("title"));
 	
-		$_arr_type = array(
-				0=>$this->tr->translate("select type"),
-				1=>$this->tr->translate("Khmer Fulltime"),
-				2=>$this->tr->translate("English Fulltime"),
-				3=>$this->tr->translate("English Parttime")
-		);
+		$db_degree= new Global_Model_DbTable_DbDept();
+		$rows=$db_degree->getAllDegreeName();
+		$opt = "";
+		$opt = array(''=>$this->tr->translate("SELECT_DEGREE_TYPE"));
+		if(!empty($rows))foreach($rows AS $row) $opt[$row['id']]=$row['name'];
 		$_type = new Zend_Dojo_Form_Element_FilteringSelect("type");
 		$_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required'=>'true',
 				'class'=>'fullside',));
-		$_type->setMultiOptions($_arr_type);
+		$_type->setMultiOptions($opt);
 		$_type->setValue($request->getParam("type"));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status_search');

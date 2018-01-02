@@ -3,7 +3,21 @@
 	echo $this->headTitle($tr->translate("SRMS_EDET_FACULTY"));
 ?>	
 <?php  $frm_dept= $this->frm_dept;?>
-<form  id='edit-dept' action="<?php echo $this->url(array('module'=>'global','controller'=>'faculty','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<form  id='frm_add_degree' name='frm_add_degree'  action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">   
+   				if(this.validate()) {
+                   if(dijit.byId('type').get("value")==''){
+						alert("Please Select Degree Type");
+                      dijit.byId("type").focus();
+					  return false;
+					}
+                    dijit.byId("save_close").attr("disabled",true);
+					dijit.byId("save_new").attr("disabled",true);
+					return true;
+   				}else {
+					return false;
+   				}
+			</script>
 <table cellspacing="10" width="40%" style="margin: 0 auto;">
 	<tr>
 		<td>
@@ -40,3 +54,96 @@
 	</tr>
 </table>	
 </form>
+
+<script>
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.CheckBox");
+
+function getPopupCat(){
+	dijit.byId("submitButton").set("disabled",false);
+	type = dijit.byId('type').get('value');
+	if(type==-1){
+		dijit.byId("popup_add_").show();
+    }
+}
+
+function hideDialog(){
+	dijit.byId('frm_degree').reset();
+	dijit.byId("popup_add_").hide();
+}
+var dregree_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->rs_degree));?> );
+var url_degree = '<?php echo $this->url(array("module"=>"global","controller"=>"faculty","action"=>"add-dergree")); ?>';
+function addDegree(){
+	if(dijit.byId('frm_degree').validate()) {
+		dojo.xhrPost({
+				url:url_degree,
+				form: dojo.byId("frm_degree"),
+				handleAs:"json",
+				load: function(data){
+					var Itemmake = { 
+					    	 id: data,
+						     name: dijit.byId('name_en').get('value')
+						   };
+			   addDataToSelectbox(dijit.byId('type'), dregree_store, Itemmake, data);
+			   dijit.byId('frm_degree').reset();
+			   dijit.byId("popup_add_").hide();
+			   
+				},
+				error: function(err) {
+					alert(err);
+				}
+		});
+		dijit.byId("submitButton").set("disabled",true);
+	}
+}
+
+</script>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_add_" >
+		<form style="background-color: buttonface; width:100%;" id='frm_degree' name='frm_degree' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">   
+   				if(this.validate()) {
+					return true;
+   				}else {
+					return false;
+   				}
+			</script>
+			<table cellspacing="10" width="100%" style="margin: 0 auto;">
+				<tr>
+					<td><?php echo $tr->translate("NAME_KH");?></td>
+					<td>
+						<input type="text" class="fullsize" name='name_kh' id="name_kh"  required="true" dojoType="dijit.form.ValidationTextBox" />
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("NAME_EN");?></td>
+					<td>
+						<input type="text" class="fullsize" name='name_en' required="true" id='name_en' dojoType="dijit.form.ValidationTextBox" />
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo $tr->translate("STATUS");?></td>
+					<td>
+						<select dojoType="dijit.form.FilteringSelect" id="status_fac" name="status_degree"  class="fullsize" type="text">
+							<option value='1'>Active</option>
+							<option value='2'>Deactive</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" id="btn_close" 
+						dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
+						
+						<input type="button"  label="<?php echo $tr->translate("SAVE_CLOSE");?>" id="save_new" 
+						dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addDegree();"/>
+					</td>	
+				</tr>
+			</table>
+
+		</form>
+	</div>
+</div>

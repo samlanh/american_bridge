@@ -57,9 +57,10 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		if(!empty($search['title'])){
 			$s_where = array();
     		$s_search = addslashes(trim($search['title']));
-	 		$s_where[] = " en_name LIKE '%{$s_search}%'";
-    		$s_where[] = " kh_name LIKE '%{$s_search}%'";
-    		$s_where[] = " shortcut LIKE '%{$s_search}%'";
+    		$s_search = str_replace(' ', '', $s_search);
+	 		$s_where[] = "REPLACE(en_name,' ','')  LIKE '%{$s_search}%'";
+    		$s_where[] = "REPLACE(kh_name,' ','')  LIKE '%{$s_search}%'";
+    		$s_where[] = "REPLACE(shortcut,' ','') LIKE '%{$s_search}%'";
     		$sql .=' AND ( '.implode(' OR ',$s_where).')';	
 		}
 	    		
@@ -189,6 +190,7 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 	}
 		
 	public function AddNewDepartment($_data){
+		
 		$this->_name='rms_dept';
 		$_arr=array(
 				'en_name'	  => $_data['en_name'],
@@ -202,6 +204,7 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 	}
 	
 	public function UpdateDepartment($_data){
+		
 		$this->_name='rms_dept';
 		$_arr=array(
 				'en_name'	  => $_data['en_name'],
@@ -214,25 +217,43 @@ class Global_Model_DbTable_DbDept extends Zend_Db_Table_Abstract
 		$this->update($_arr, $where);
 	}
 	
-	public function addCatDree($data){
-		$this->_name='rms_view';
-		try{
-			$db= $this->getAdapter();
-			$arr = array(
-					'name_en'=>$data['fac_enname'],
-					// 					'kh_name'=> $data['fac_khname'],
-					'name_kh'=> $data['shortcut_fac'],
-					'user_id'=>$this->getUserId(),
-					'is_active'=>$data['status_fac'],
-					'modify_date'=>Zend_Date::now(),
-			);
-			return $this->insert($arr);
-		}catch(Exception $e){
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	public function AddNewDegree($_data){
+		$value='';
+		$key_code=$this->getKeyCode();
+		
+		if(empty($key_code)){
+			$value=1;
+		}else{
+			$value=$key_code+1;
 		}
+		$this->_name='rms_view';
+		$_arr=array(
+				'name_en'	  => $_data['name_en'],
+				'name_kh'	  => $_data['name_kh'],
+				'key_code'	  => $value,
+				'type'		  => 13,
+				'status'      => $_data['status_degree'],
+		);
+		$this->insert($_arr);
+		return $value;
+	}
+	
+	public function getAllDegreeNameEn(){
+		$db=$this->getAdapter();
+		$sql="	SELECT key_code AS id,name_en AS `name` FROM rms_view WHERE TYPE=13 AND STATUS=1";
+		return $db->fetchAll($sql);
+	}
+	
+	function getKeyCode(){
+		$db=$this->getAdapter();
+		$sql=" SELECT key_code AS id FROM rms_view WHERE TYPE=13 AND STATUS=1  ORDER BY key_code DESC ";
+		return $db->fetchOne($sql);
+	}
+	
+	function getAllDegreeName(){
+		$db=$this->getAdapter();
+		$sql=" SELECT key_code AS id,name_en As name FROM rms_view WHERE TYPE=13 AND STATUS=1  ORDER BY key_code DESC ";
+		return $db->fetchAll($sql);
 	}
 	
 }
-
-
-

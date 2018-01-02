@@ -29,9 +29,21 @@ dojo.ready(function(){
 	}, "dept");
 });
 </script>
-
-
 <form  id='edit-major' action="<?php echo $this->url(array('module'=>'global','controller'=>'major','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<script type="dojo/method" event="onSubmit">   
+   				if(this.validate()) {
+					if(dijit.byId('dept').get('value')==''){
+						alert('Please Select Degree Type');
+						dijit.byId("dept").focus();
+						return false;
+   					 }
+                    dijit.byId("save_close").attr("disabled",true);
+					dijit.byId("save_new").attr("disabled",true);
+					return true;
+   				}else {
+					return false;
+   				}
+			</script>
 <table cellspacing="10" width="40%" style="margin: 0 auto;">
 	<tr>
 		<td>
@@ -62,9 +74,9 @@ dojo.ready(function(){
 					<tr>
 						<td colspan="2" align="center">
 							<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
-							<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+							<input type="button" onclick="submitDataClose();" value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
 								iconClass="dijitEditorIcon dijitEditorIconSave" />
-							<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+							<input type="submit" value="save_new" name="save_new"  id="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
 								iconClass="dijitEditorIcon dijitEditorIconSave" />
 						</td>
 					</tr>
@@ -78,13 +90,7 @@ dojo.ready(function(){
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_add_dept" >
 		<form style="background-color: buttonface; width:100%;" id='frm_add_dept' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-			<script type="dojo/method" event="onSubmit">   
-   				if(this.validate()) {
-					return true;
-   				}else {
-					return false;
-   				}
-			</script>
+			
 			<table cellspacing="10" width="100%" style="margin: 0 auto;">
 				<tr>
 					<td><?php echo $tr->translate("DEGREE");?></td>
@@ -109,7 +115,7 @@ dojo.ready(function(){
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="button"  label="<?php echo $tr->translate("CANCEL");?>" id="cancelButton" 
+						<input type="button"  label="<?php echo $tr->translate("GO_BACK");?>" id="cancelButton" 
 						dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
 						
 						<input type="button"  label="<?php echo $tr->translate("SAVE");?>" id="submitButton" 
@@ -160,6 +166,28 @@ function hideDialog(){
 	dijit.byId("popup_add_dept").hide();
 }
 
+function submitDataClose(){
+	if(dijit.byId('dept').get('value')==''){
+		alert('Please Select Degree Type');
+		dijit.byId("dept").focus();
+		return false;
+    }
+	if(dijit.byId('edit-major').validate()) {
+		dijit.byId('save_close').set('disabled',true);
+		dijit.byId('save_new').set('disabled',true);
+		var url_submit = '<?php echo $this->url(array('module'=>'global','controller'=>'major','action'=>'add')); ?>';
+		dojo.xhrPost({
+		    url: url_submit,	
+			form: dojo.byId("edit-major"),		    
+			load: function(data) {
+				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
+				window.location.href ="<?php echo $this->baseUrl();?>/global/major";
+			},
+			error: function(e) {
+			}
+		});
+	}
+}
 
 </script>
 

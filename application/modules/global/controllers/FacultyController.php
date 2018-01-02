@@ -56,7 +56,7 @@ class Global_FacultyController extends Zend_Controller_Action {
     			}else{
     				Application_Form_FrmMessage::Sucessfull("ការបន្ថែមដោយជោគជ័យ !", "/global/faculty/add");
     			}
-    			
+    			Application_Form_FrmMessage::Sucessfull("ការបន្ថែមដោយជោគជ័យ !", "/global/faculty/add");
     		} catch (Exception $e) {
     			echo $e->getMessage();
     		}
@@ -65,6 +65,10 @@ class Global_FacultyController extends Zend_Controller_Action {
     	$frm->FrmAddDept();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_dept = $frm;
+    	$db_glopbal=new Global_Model_DbTable_DbDept();
+    	$rs_eng=$db_glopbal->getAllDegreeNameEn();
+    	array_unshift($rs_eng, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	$this->view->rs_degree=$rs_eng;
     }
     
     public function editAction(){
@@ -73,6 +77,13 @@ class Global_FacultyController extends Zend_Controller_Action {
     			$_data = $this->getRequest()->getPost();
     			$_dbmodel = new Global_Model_DbTable_DbDept();
     			$_dbmodel->UpdateDepartment($_data);
+    			
+    			if(isset($_data['save_close'])){
+    				Application_Form_FrmMessage::Sucessfull("ការបន្ថែមដោយជោគជ័យ !", "/global/faculty/index");
+    			}else{
+    				Application_Form_FrmMessage::Sucessfull("ការបន្ថែមដោយជោគជ័យ !", "/global/faculty/index");
+    			}
+    			
     			Application_Form_FrmMessage::Sucessfull("ការកៃប្រែដោយជោគជ័យ !", "/global/faculty/index");
     			//$this->_redirect("");
     		} catch (Exception $e) {
@@ -89,6 +100,11 @@ class Global_FacultyController extends Zend_Controller_Action {
     	$frm->FrmAddDept($_row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_dept = $frm;
+    	
+    	$db_glopbal=new Global_Model_DbTable_DbDept();
+    	$rs_eng=$db_glopbal->getAllDegreeNameEn();
+    	array_unshift($rs_eng, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
+    	$this->view->rs_degree=$rs_eng;
     }
     function addfacultyAction(){
     	if($this->getRequest()->isPost()){
@@ -98,6 +114,17 @@ class Global_FacultyController extends Zend_Controller_Action {
     		print_r(Zend_Json::encode($faculty_id));
     		exit();
     		
+    	}
+    }
+    
+    function addDergreeAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Global_Model_DbTable_DbDept();
+    		$faculty_id = $db->AddNewDegree($data);
+    		print_r(Zend_Json::encode($faculty_id));
+    		exit();
+    
     	}
     }
   
