@@ -19,11 +19,11 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					'sex'		=>$data['sex'],
 					'dob'		=>$data['dob'],
 					'phone'		=>$data['phone'],
-					'old_school'=>$data['old_school'],
-					'old_grade'	=>$data['old_grade'],
+// 					'old_school'=>$data['old_school'],
+// 					'old_grade'	=>$data['old_grade'],
 					'degree'	=>$data['degree'],
 					'note'		=>$data['note'],
-					'serial'	=>$data['serial'],
+// 					'serial'	=>$data['serial'],
 					'address'	=>$data['address'],
 					'user_id'	=>$this->getUserId(),
 					'total_price'=>$data['test_cost'],
@@ -45,11 +45,11 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					'sex'		=>$data['sex'],
 					'dob'		=>$data['dob'],
 					'phone'		=>$data['phone'],
-					'old_school'=>$data['old_school'],
-					'old_grade'	=>$data['old_grade'],
+// 					'old_school'=>$data['old_school'],
+// 					'old_grade'	=>$data['old_grade'],
 					'degree'	=>$data['degree'],
 					'note'		=>$data['note'],
-					'serial'	=>$data['serial'],
+// 					'serial'	=>$data['serial'],
 					'address'	=>$data['address'],
 					'user_id'	=>$this->getUserId(),
 					'total_price'=>$data['test_cost'],
@@ -89,10 +89,8 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					en_name,
 					(select name_kh from rms_view where type=2 and key_code=sex LIMIT 1) as sex,
 					dob,
-					phone,serial,
+					phone,
 					(select en_name from rms_dept where dept_id=degree LIMIT 1) as degree,
-					old_school,
-					old_grade,
 					note,
 					total_price,
 					(SELECT first_name FROM `rms_users` WHERE id=rms_student_test.user_id LIMIT 1),
@@ -155,6 +153,11 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql);
 	}
 	
+	function getDegreeTypeByid($degree_id){
+		$db = $this->getAdapter();
+		$sql="SELECT dep.`type` FROM `rms_dept` AS dep WHERE dep.`dept_id`=$degree_id";
+		return $db->fetchOne($sql);
+	}
 	
 	
 	

@@ -28,7 +28,7 @@ class Registrar_StudenttestController extends Zend_Controller_Action
     		
 			$rs_rows= $db->getAllStudentTest($search);//call frome model
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("RECEIPT_NO","NAME_KH","NAME_EN","SEX","DOB","PHONE","SERIAL","DEGREE","OLD_SCHOOL","OLD_GRADE","NOTE","PRICE","BY_USER","STATUS");
+    		$collumns = array("RECEIPT_NO","NAME_KH","NAME_EN","SEX","DOB","PHONE","DEGREE","NOTE","PRICE","BY_USER","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'studenttest','action'=>'edit',
     		);
@@ -102,6 +102,15 @@ class Registrar_StudenttestController extends Zend_Controller_Action
     		$data=$this->getRequest()->getPost();
     		$db = new Registrar_Model_DbTable_DbStudentTest();
     		$receipt_no = $db->getNewReceiptNumber(0);
+    		print_r(Zend_Json::encode($receipt_no));
+    		exit();
+    	}
+    }
+    function getdegreetypeAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Registrar_Model_DbTable_DbStudentTest();
+    		$receipt_no = $db->getDegreeTypeByid($data['degree']);
     		print_r(Zend_Json::encode($receipt_no));
     		exit();
     	}
