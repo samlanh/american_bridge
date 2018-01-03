@@ -163,5 +163,43 @@ public function init()
 		}
 	}
 	
+	function otherIncomeAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+	
+// 				print_r($data);exit();
+	
+				$db = new Allreport_Model_DbTable_DbSubmitDailyIncome();
+				$db->SubmitDailyIncome($data,9,0);// 9=payfor_type(other income) , 0=degree_type(no need)
+				if(isset($data['save_close'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/allreport/accounting/rpt-other-income");
+				}
+			}
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			echo $e->getMessage();
+		}
+	}
+	
+	function studentTestAction(){
+		try{
+			if($this->getRequest()->isPost()){
+				$data=$this->getRequest()->getPost();
+	
+// 				print_r($data);exit();
+	
+				$db = new Allreport_Model_DbTable_DbSubmitDailyIncome();
+				$db->SubmitDailyIncome($data,10,0);// 10=payfor_type(student test) , 0=degree_type(no need)
+				if(isset($data['save_close'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/allreport/accounting/rpt-daily-income-studenttest");
+				}
+			}
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+		}
+	}
+	
 }
 

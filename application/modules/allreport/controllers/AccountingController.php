@@ -1402,6 +1402,10 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$this->view->parking_amount_money = $db->getRielAndDollarAmount($search,8);
 			
 			$this->view->other_income = $db->getAllOtherIncome($search);
+			$this->view->other_income_amount_money = $db->getRielAndDollarAmount($search,9);
+			
+			$this->view->student_test = $db->getAllStudentTest($search);
+			$this->view->student_test_amount_money = $db->getRielAndDollarAmount($search,10);
 			
 			$this->view->search = $search;
 		}catch(Exception $e){
@@ -1461,6 +1465,10 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$this->view->parking_amount_money = $db->getRielAndDollarAmount($search,8);
 			
 			$this->view->other_income = $db->getAllOtherIncome($search);
+			$this->view->other_income_amount_money = $db->getRielAndDollarAmount($search,9);
+			
+			$this->view->student_test = $db->getAllStudentTest($search);
+			$this->view->student_test_amount_money = $db->getRielAndDollarAmount($search,10);
 			
 			$this->view->search = $search;
 		}catch(Exception $e){
@@ -1636,10 +1644,11 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' =>'',
 						'branch'	=>'',
-						'cate_income'	=>"",
+						'shift'		=>0,
+						'cate_income'=>"",
 						'user'		=>'',
 						'start_date'=>date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
+						'end_date'	=>date('Y-m-d'),
 				);
 			}
 			$db = new Allreport_Model_DbTable_DbRptOtherIncome();
@@ -1654,6 +1663,9 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$this->view->form_search=$form;
 				
 			$this->view->search = $search;
+			
+			$_db = new Allreport_Model_DbTable_DbRptDailyIncome();
+			$this->view->rate = $_db->getRate();
 				
 		}catch(Exception $e){
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -1944,7 +1956,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				);
 			}
 			$db = new Allreport_Model_DbTable_DbRptParkingPayment();
-			$abc = $this->view->row = $db->getAllParkingPayment($search); // 4=payfor_type(lunch)
+			$abc = $this->view->row = $db->getAllParkingPayment($search);
 			
 			$_db = new Allreport_Model_DbTable_DbRptDailyIncome();
 			$this->view->rate = $_db->getRate();
@@ -1977,6 +1989,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
     					'end_date'=>date('Y-m-d'),
     					'user'=>'',
     					'branch'=>'',
+    					'shift'=>0,
     			);
     		}
     		$rs_rows= $db->getAllStudentTest($search);//call frome model

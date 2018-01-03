@@ -72,8 +72,8 @@
 								<td class="bor" ><?php echo $tr->translate("ឈ្មោះគណនីជាខ្មែរ"); ?>/Account in Khmer</td>
 								<td class="bor"  ><?php echo $tr->translate("ឈ្មោះគណនីជាអង់គ្គេស"); ?>/Account in English</td>
 								<td class="bor"><?php echo $tr->translate("សរុប"); ?>/Amount</td>
-								<td class="bor"><?php echo $tr->translate("Amount Riel"); ?></td>
-								<td class="bor"><?php echo $tr->translate("Receipt Number"); ?></td>
+								<td class="bor"><?php echo $tr->translate("Amount Dollars"); ?></td>
+								<td class="bor"><?php echo $tr->translate("Amount Riels"); ?></td>
 						    </tr>
 						</thead>
 	 					<tr id="row" align="center" >
@@ -332,6 +332,7 @@
 								<td align="center">&nbsp;&nbsp;<?php if(!empty($total_parking_in_riel)){echo number_format($total_parking_in_riel,2)." ៛";}?></td>
 							</tr>
 						<?php }?>
+						
 			<?php ////////////////////////////////// other income //////////////////////////////////////////////////////////////////// ?>	
 						
 						<?php 
@@ -348,28 +349,68 @@
 	 								}
 	 						  }}
 	 						  
-	 						  if($total_other_income_riel>0){
-	 						  	$other_income_riel = $total_other_income_riel;
-	 						  	$total_other_income_riel = " + ".number_format($total_other_income_riel)." ៛ ";
-	 						  }else{
-	 						  	$total_other_income_riel = "";
+	 						  $total_other_income_in_riel=0;
+	 						  $total_other_income_in_dolar=0;
+	 						  if(!empty($this->other_income_amount_money)){
+	 						  	foreach ($this->other_income_amount_money as $other_income){
+	 						  		$total_other_income_in_riel = $total_other_income_in_riel + $other_income['amount_riel'];
+	 						  		$total_other_income_in_dolar = $total_other_income_in_dolar + $other_income['amount_usd'];
+	 						  	}
 	 						  }
+	 						  
 	 					?>
 	 					<?php if($total_other_income_riel>0 || $total_other_income_dollar>0){?>
 		 					<tr>
 								<td align="center">&nbsp;&nbsp;<?php echo "008";?></td>
 								<td>&nbsp;&nbsp;ចំណូលផ្សេងៗ</td>
 								<td>&nbsp;&nbsp;Other Income</td>
-								<td align="center">&nbsp;&nbsp;<?php echo " $ ".number_format($total_other_income_dollar,2).$total_other_income_riel;?></td>
-								<td align="center">&nbsp;&nbsp;<?php echo " $ ".number_format($total_other_income_dollar,2).$total_other_income_riel;?></td>
-								<td align="center">&nbsp;&nbsp;<?php echo "0 ៛";?></td>
+								<td align="center">&nbsp;&nbsp;<?php echo " $ ".number_format($total_other_income_dollar,2);?></td>
+								<td align="center">&nbsp;&nbsp;<?php if(!empty($total_other_income_in_dolar)){echo "$ ".number_format($total_other_income_in_dolar,2);}?></td>
+								<td align="center">&nbsp;&nbsp;<?php if(!empty($total_other_income_in_riel)){echo number_format($total_other_income_in_riel,2)." ៛";}?></td>
 							</tr>
 						<?php }?>
 						
+						
+						
+				<?php ////////////////////////////////// student test //////////////////////////////////////////////////////////////////// ?>	
+						
 						<?php 
-							$grand_total = $total_kft + $total_eft + $total_ept + $total_car + $total_food + $total_product + $total_rent_payment + $total_parking_payment + $total_other_income_dollar;
-							$grand_total_in_dollar = $total_khmerft_in_dolar + $total_englishft_in_dolar + $total_englishpt_in_dolar + $total_car_in_dolar + $total_food_in_dolar + $total_product_in_dolar + $total_rent_in_dolar + $total_parking_in_dolar + $total_other_income_dollar;
-							$grand_total_in_riel = $total_khmerft_in_riel + $total_englishft_in_riel + $total_englishpt_in_riel + $total_car_in_riel + $total_food_in_riel + $total_product_in_riel + $total_rent_in_riel + $total_parking_in_riel ;
+	 						$total_student_test_payment = 0;
+	 					?>
+	 					<?php if(!empty($this->student_test)){foreach ($this->student_test as $student_test){
+	 								$total_student_test_payment = $total_student_test_payment + $student_test['total_price'];
+	 						  }}
+	 					?>
+	 					
+	 					<?php 
+		 					$total_student_test_in_riel=0;
+		 					$total_student_test_in_dolar=0;
+		 					if(!empty($this->student_test_amount_money)){
+		 						foreach ($this->student_test_amount_money as $student_test){
+		 							$total_student_test_in_riel = $total_student_test_in_riel + $student_test['amount_riel'];
+		 							$total_student_test_in_dolar = $total_student_test_in_dolar + $student_test['amount_usd'];
+		 						}
+		 					}
+	 					?>
+	 					
+	 					<?php if($total_student_test_payment>0){?>
+		 					<tr>
+								<td align="center">&nbsp;&nbsp;<?php echo "009";?></td>
+								<td>&nbsp;&nbsp;ចំណូលពីសិស្សធ្វើតេស្ត</td>
+								<td>&nbsp;&nbsp;Student Test Fee</td>
+								<td align="center">&nbsp;&nbsp;<?php echo "$ ".number_format($total_student_test_payment,2);?></td>
+								<td align="center">&nbsp;&nbsp;<?php if(!empty($total_student_test_in_dolar)){echo "$ ".number_format($total_student_test_in_dolar,2);}?></td>
+								<td align="center">&nbsp;&nbsp;<?php if(!empty($total_student_test_in_riel)){echo number_format($total_student_test_in_riel,2)." ៛";}?></td>
+							</tr>
+						<?php }?>		
+						
+						
+		<?php ////////////////////////////////////////////// grand total ////////////////////////////////////////////////////////////////////////////////////////?>				
+						
+						<?php 
+							$grand_total = $total_kft + $total_eft + $total_ept + $total_car + $total_food + $total_product + $total_rent_payment + $total_parking_payment + $total_other_income_dollar + $total_student_test_payment;
+							$grand_total_in_dollar = $total_khmerft_in_dolar + $total_englishft_in_dolar + $total_englishpt_in_dolar + $total_car_in_dolar + $total_food_in_dolar + $total_product_in_dolar + $total_rent_in_dolar + $total_parking_in_dolar + $total_other_income_in_dolar + $total_student_test_in_dolar;
+							$grand_total_in_riel = $total_khmerft_in_riel + $total_englishft_in_riel + $total_englishpt_in_riel + $total_car_in_riel + $total_food_in_riel + $total_product_in_riel + $total_rent_in_riel + $total_parking_in_riel + $total_other_income_in_riel + $total_student_test_in_riel;
 						?>
 						
 						<tr style="font-size: 20px;font-weight: bold;background: #dadada;">
@@ -377,7 +418,6 @@
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total,2);?></td>
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total_in_dollar,2);?></td>
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total_in_riel,2);?></td>
-	 						<td></td>
 	 					</tr>
 					</table>	
 					

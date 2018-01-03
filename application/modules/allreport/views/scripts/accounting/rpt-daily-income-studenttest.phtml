@@ -13,6 +13,17 @@
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
 	    	<td><?php echo $frm->getElement('branch');?></td>
 	    	<td>
+			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
+			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
+			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
+			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
+			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+			 	</select>
+			</td>
+			<td><?php echo $frm->getElement('user');?></td>
+		</tr>
+		<tr>	
+	    	<td>
 				<select name="degree" id="degree" class="fullside" dojoType="dijit.form.FilteringSelect"  >
 					<option value="0"><?php echo $tr->translate("DEGREE")?></option>
 					<?php if(!empty($this->degree)){foreach($this->degree as $rs){?>
@@ -22,7 +33,7 @@
 			</td>
 			<td><input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="start_date" name="start_date" value="<?php echo $this->search['start_date']; ?>"  type="text"></td>
 			<td><input dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="end_date" name="end_date" value="<?php if (!empty($this->search['end_date'])){ echo $this->search['end_date'];}else{ echo date("Y-m-d");}?>" type="text"></td>
-			<td><?php echo $frm->getElement('user');?></td>
+			
 			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -36,244 +47,172 @@ tr.row_control {
 </style>
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
-<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'english-fulltime')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<div id="divPrint">
-<style>
-/* 	table{ page-break-inside:auto } */
-/*     tr{ page-break-inside:avoid; page-break-after:auto } */
-/* 	#header { */
-/* 		display: table-header-group; */
-/* 		page-break-inside:avoid; page-break-after:auto; */
-/* 	} */
-	.bor{
-		border-right: 1px solid #000;	
-		border-bottom: 1px solid #000;
-		font-size:13px;
-	}
-	.bor_r{
-		border-right: 1px solid #000;	
-		font-size:13px;
-	}
-	.padd{
-		padding: 0 3px;	
-	}
-	#row{ font-size:12px; line-height: 17px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
-	
-	table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
-  th{padding: 5px;}
-  
-  table { page-break-inside:auto }
-    tr{ page-break-inside:avoid; page-break-after:auto; }
-</style>
+	<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'student-test')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<div id="divPrint">
+	<style>
+		.bor{
+			border-right: 1px solid #000;	
+			border-bottom: 1px solid #000;
+			font-size:13px;
+		}
+		.bor_r{
+			border-right: 1px solid #000;	
+			font-size:13px;
+		}
+		.padd{
+			padding: 0 3px;	
+		}
+		#row{ font-size:12px; line-height: 20px;border: 1px solid #000;font-family:'Khmer OS Battambang';  }
+		
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
+	  th{padding: 5px;}
+	  
+	  table { page-break-inside:auto }
+	    tr{ page-break-inside:avoid; page-break-after:auto; }
+	</style>
 
 	<?php 
 		$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
 	?>
 
-	<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
-		<tr>
-			
-			<td width="15%" align="center">
-				<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
-			</td>
-			<td align="center" width="70%" style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 14px;">
-				<strong  style="font-weight:bold;color:#000; font-size: 17px;font-family: Khmer OS Battambang,Times New Roman;​"><?php echo $tr->translate("Daily Income Report(Study English Fulltime Fee)");?></strong><br />
-				<strong style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 13px;">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong> <br />   
-				<?php //if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
-			</td>
-			<td width="15%" >
-				<?php //if($this->search['branch']>0 && !empty($this->rs)){echo "Branch : ".$this->rs[0]['branch_name']."</br>";}?>
-				<?php //if($this->search['user']>0 && !empty($this->rs)){echo "User : ".$this->rs[0]['user_name'];}?>
-			</td>
-			
-		</tr>
-		<tr>
-			<td colspan="3" id="exportExcel">
-				<table cellpadding="8"​ style=" border: solid 1px #000; margin:0 auto; width:100%; border-collapse: collapse; white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
- 					 <thead>
-	 					 <tr align="center" style="background: #c1d0f3;font-size: 13px; line-height: 16px;">
-							<td class="padd">N<sup>o</sup></td>
-							<td class="padd">Receipt No.</td>
-							<td class="padd">Serial</td>
-							<td class="padd">Student Name</td>
-							<td class="padd">Sex</td>
-							<td class="padd">Degree</td>
-							<td class="padd">Grade</td>
-							<td class="padd">Phone</td>
-							<td class="padd">Price</td>
-							<td class="padd">Remark</td>
-							<td class="padd">Create Date</td>
+		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
+			<tr>
+				
+				<td width="15%" align="center">
+					<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
+				</td>
+				<td align="center" width="70%" style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 14px;">
+					<strong  style="font-weight:bold;color:#000; font-size: 17px;font-family: Khmer OS Battambang,Times New Roman;​"><?php echo $tr->translate("Daily Income Report(Study English Fulltime Fee)");?></strong><br />
+					<strong style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 13px;">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong> <br />   
+					<?php //if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
+				</td>
+				<td width="15%" >
+					<?php if($this->search['branch']>0 && !empty($this->row)){echo "Branch : ".$this->row[0]['branch_name']."</br>";}?>
+					<?php if($this->search['user']>0 && !empty($this->row)){echo "User : ".$this->row[0]['user'];}?>
+				</td>
+				
+			</tr>
+			<tr>
+				<td colspan="3" id="exportExcel">
+					<table cellpadding="8"​ style=" border: solid 1px #000; margin:0 auto; width:100%; border-collapse: collapse; white-space: nowrap;font-family:'Khmer OS Battambang';"  border="1" >
+	 					 <thead>
+		 					 <tr align="center" style="background: #c1d0f3;font-size: 13px; line-height: 20px;font-weight: bold;">
+								<td class="padd">N<sup>o</sup></td>
+								<td class="padd">Receipt No.</td>
+								<td class="padd">Serial</td>
+								<td class="padd">Student Name</td>
+								<td class="padd">Sex</td>
+								<td class="padd">Degree</td>
+								<td class="padd">Grade</td>
+								<td class="padd">Phone</td>
+								<td class="padd">Price</td>
+								<td class="padd">Remark</td>
+								<td class="padd">Create Date</td>
+		 					 </tr>
+	 					 </thead>
+	 					 <?php $i=0; $grand_total = 0; if (!empty($this->row)) foreach ($this->row as $rs){ $i++;?>
+	 					 <tr id="row" align="center" class="hover">
+	 					 	<td class="padd">&nbsp;<?php echo $i;?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['receipt'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['serial'];?>&nbsp;</td>
+							<td align="left" class="padd">&nbsp;<?php echo $rs['en_name'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['sex'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['degree'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['grade_result_title'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['phone'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo " $ ".number_format($rs['total_price'],2);?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo $rs['note'];?>&nbsp;</td>
+							<td class="padd">&nbsp;<?php echo date("d-M-Y",strtotime($rs['create_date']));?>&nbsp;</td>	
 	 					 </tr>
- 					 </thead>
- 					 <?php $i=0; $grand_total = 0; if (!empty($this->row)) foreach ($this->row as $rs){ $i++;?>
- 					 <tr id="row" align="center" class="hover">
- 					 	<td class="padd">&nbsp;<?php echo $i;?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['receipt'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['serial'];?>&nbsp;</td>
-						<td align="left" class="padd">&nbsp;<?php echo $rs['en_name'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['sex'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['degree'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['grade_result_title'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['phone'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo number_format($rs['total_price'],2);?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo $rs['note'];?>&nbsp;</td>
-						<td class="padd">&nbsp;<?php echo date("d-M-Y",strtotime($rs['create_date']));?>&nbsp;</td>	
- 					 </tr>
- 					 <?php 
- 					 $grand_total = $grand_total + $rs['total_price'];
-				}
- 					 
- 					 ?>
- 				</table>
- 				
- 					<?php if(!empty($grand_total)){?>
-					<table border="0" width="100%" >
-						<tr>
-							<td colspan="2">&nbsp;</td>
+	 					 <?php 
+	 					 $grand_total = $grand_total + $rs['total_price'];
+					}
+	 					 
+	 					 ?>
+	 				</table>
+	 				
+				<?php if(!empty($grand_total)){?>
+					<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
+						<tr style="background: #c1d0f3;">
+							<td align="center">
+								<?php echo $tr->translate("GRAND_TOTAL");?>&nbsp;&nbsp;&nbsp;
+							</td>
+							<td width="25%">
+								Rate
+							</td>
+							<td width="25%">
+								Amount in USD
+							</td>
+							<td width="25%">
+								Amount in Riel
+								
+								<input type="hidden" name="total_amount" id="total_amount" value="<?php echo number_format($grand_total,2);?>" dojoType="dijit.form.TextBox" />
+								<input type="hidden" name="amount_riel" id="amount_riel" dojoType="dijit.form.TextBox" />
+								<input type="hidden" name="shift_id" id="shift_id" value="<?php echo $this->search['shift'];?>" dojoType="dijit.form.TextBox" />
+								<input type="hidden" name="branch_id" id="branch_id" value="<?php echo $this->search['branch'];?>" dojoType="dijit.form.TextBox" />
+								<input type="hidden" name="user_id" id="user_id" value="<?php echo $this->search['user'];?>" dojoType="dijit.form.TextBox" />
+							</td>
+							
 						</tr>
 						<tr>
-							<td width="70%" style="border: 1px solid #000; vertical-align: top;">
-								<table width="100%" style="font-size: 14px;line-height: 24px;" cellspacing="1">
-									<tr class="hover">
-										<td style="border-top:2px solid #000;">
-											&nbsp;Grand Total
-										</td>
-										<td style="border-top:2px solid #000;">
-											<?php echo "$ ".number_format($grand_total,2);?>
-										</td>
-									</tr>
-								</table>
+							<td style="border: 1px solid #000;">
+								<?php echo "&nbsp;$ ".number_format($grand_total,2)?>
 							</td>
-							<td width="30%" valign="top">
-								<table width="100%" style="white-space: nowrap; font-size: 14px;">
-									<tr>
-										<td width="40%">
-											&nbsp;
-										</td>
-										<td width="60%">
-											&nbsp;Rate = <?php echo number_format($this->rate);?>
-										</td>
-									</tr>
-									<tr>
-										<td >
-											&nbsp;Grand Total 
-										</td>
-										<td style="border: 1px solid #000;">
-											<?php echo "$ ".number_format($grand_total,2)?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											&nbsp;Amount in USD
-										</td>
-										<td style="border: 1px solid #000;">
-											<div id="input_usd">
-												<input type="text" name="amount_usd" id="amount_usd" value="0" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
-											</div>
-											<div id="hide_amount_usd">
-												<label id="lb_amount_usd"></label>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											&nbsp;Amount in Riel
-											<input type="hidden" name="total_amount" id="total_amount" value="<?php echo number_format($grand_total,2);?>" dojoType="dijit.form.TextBox" />
-											<input type="hidden" name="amount_riel" id="amount_riel" dojoType="dijit.form.TextBox" />
-											<input type="hidden" name="shift_id" id="shift_id" value="<?php //echo $this->search['shift'];?>" dojoType="dijit.form.TextBox" />
-											<input type="hidden" name="branch_id" id="branch_id" value="<?php echo $this->search['branch'];?>" dojoType="dijit.form.TextBox" />
-											<input type="hidden" name="user_id" id="user_id" value="<?php echo $this->search['user'];?>" dojoType="dijit.form.TextBox" />
-										</td>
-										<td style="border: 1px solid #000;">
-											<label id="lb_amount_reil"></label>
-										</td>
-									</tr>
-									<tr class="row_control" style="display: none;">
-										<td>
-											For Date
-										</td>
-										<td>
-											<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>
-										</td>
-									</tr>
-									<tr class="row_control" style="display: none;">
-										<td>
-										</td>
-										<td>
-											<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave" />
-										</td>
-									</tr>
-								</table>							
+							
+							<td>
+								<?php echo $this->rate." ៛";?>
+							</td>
+							
+							<td style="border: 1px solid #000;">
+								<div id="input_usd">
+									<input type="text" name="amount_usd" id="amount_usd" value="0" class="fullside" onkeyup="calculateRemainReil();" dojoType="dijit.form.TextBox" />
+								</div>
+								<div id="hide_amount_usd">
+									<label id="lb_amount_usd"></label>
+								</div>
+							</td>
+							
+							<td style="border: 1px solid #000;">
+								<label id="lb_amount_reil"></label>
 							</td>
 						</tr>
-						
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						
-						<tr>
-							<td colspan="2">
-								<table width="100%" border="0" style="white-space: nowrap;font-size: 13px;">
-									<tr align="center">
-										<td width="15%">Auditor</td>
-										<td width="18%">Senior Accountant</td>
-										<td width="18%">Accountant Income</td>
-										<td width="16%">Madam</td>
-										<td width="18%">School Principle</td>
-										<td width="15%">Cashier</td>
-									</tr>
-									<tr>
-										<td colspan="6">&nbsp;</td>
-									</tr>
-									<tr align="center">
-										<td>
-											<div style="font-size: 13px;line-height: 20px;">
-												Name:..............................<br />
-												Date:........../........../..........
-											</div>
-										</td>
-										<td>
-											<div style="font-size: 13px;line-height: 20px;">
-												Name:..............................<br />
-												Date:........../........../..........
-											</div>
-										</td>
-										<td>
-											<div style="font-size: 13px;line-height: 20px;">
-												Name:..............................<br />
-												Date:........../........../..........
-											</div>
-										</td>
-										<td>
-											<div style="font-size: 13px;line-height: 20px;">
-												Name:..............................<br />
-												Date:........../........../..........
-											</div>
-										</td>
-										<td>
-											<div style="font-size: 13px;line-height: 20px;">
-												Name:..............................<br />
-												Date:........../........../..........
-											</div>
-										</td>
-										<td>
-											<div style="font-size: 13px;line-height: 20px;">
-												Name:..............................<br />
-												Date:........../........../..........
-											</div>
-										</td>
-									</tr>
-								</table>							
+						<tr class="row_control" style="display: none;" >
+							<td colspan="4" align="center">
+								<input type="text" name="for_date" id="for_date" dojoType="dijit.form.DateTextBox" value="now" constraints="{datePattern:'dd/MM/yyyy'}"/>	
+								<input type="submit" name="save_close" id="save_close"  value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+									iconClass="dijitEditorIcon dijitEditorIconSave" />	
 							</td>
 						</tr>
-						
 					</table>
 				<?php }?>
- 			</td>
- 		</tr>
-		
+				</td>
+			</tr>	
+			
+			<tr>
+				<td colspan="3">&nbsp;</td>
+			</tr>
+			
+			<tr>
+				<td colspan="3">
+					<table width="100%" border="0" style="white-space: nowrap;font-size: 13px;">
+						<tr>
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+							</td>
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+							</td>
+							<td align="center" width="25%">
+								<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
+							</td>
+							<td align="center"  width="25%">
+								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+							</td>
+						</tr>
+					</table>							
+				</td>
+			</tr>
 		</table>
-	
 	</div>
 	</form>	
 </div>
