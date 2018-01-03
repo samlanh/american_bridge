@@ -27,7 +27,7 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					'address'	=>$data['address'],
 					'user_id'	=>$this->getUserId(),
 					'total_price'=>$data['test_cost'],
-					'create_date'=>date('Y-m-d'),
+					'create_date'=>date('Y-m-d H:i:s'),
 				);
 		$this->insert($array);
  	}
