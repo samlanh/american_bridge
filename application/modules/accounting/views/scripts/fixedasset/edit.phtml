@@ -27,63 +27,102 @@ $frm = $this->frm_fixedasset;
 					<legend><strong><?php echo $tr->translate("NEW ABOUT CALLECTERALL")?></strong></legend>
 					<table cellspacing="10"  width="100%">
 						<tr>
-						    
-							<td><?php echo $tr->translate("BRANCH")?></td>
-							<td><?php echo $frm->getElement('branch')?></td>
-							<td><?php echo $tr->translate("ASSET_CODE")?></td>
-							<td><?php echo $frm->getElement('asset_code')?></td>
-							<td><?php echo $tr->translate("ASSET_NAME")?></td>
-							<td><?php echo $frm->getElement('asset_name');?></td>	
-							
+							<td width="33%;" valign="top">
+								 <fieldset>
+									<legend align="center" ><strong><?php echo $tr->translate("BRANCH_NAME")?></strong></legend>
+									 <table style="margin: 0 auto; width: 100%;text-align: left;" cellspacing="2"  >
+											<tr>
+												<td><?php echo $tr->translate("BRANCH")?></td>
+												<td><?php echo $frm->getElement('branch')?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("ASSET_CODE")?></td>
+												<td><?php echo $frm->getElement('asset_code')?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("ASSET_NAME")?></td>
+												<td><?php echo $frm->getElement('asset_name');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("ASSET_TYPE")?></td>
+												<td><?php echo $frm->getElement('asset_type');?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("PAID_TYPE")?></td>
+												<td><?php echo $frm->getElement('paid_type')?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("SOME_PAYAMOUNT")?></td>
+												<td><?php echo $frm->getElement('some_payamount')?></td>
+											</tr>
+									</table>
+								</fieldset>	
+							</td>
+							<td width="33%;" valign="top">
+								 <fieldset>
+									<legend align="center" ><strong><?php echo $tr->translate("ASSET_COST")?></strong></legend>
+									 <table style="margin: 0 auto; width: 100%;text-align: left;" cellspacing="2"  >
+											<tr>
+											    <td><?php echo $tr->translate("CURRENCY_TYPE")?></td>
+												<td><?php echo $frm->getElement('current_type')?></td>
+											</tr>
+											<tr>
+												<td nowrap="nowrap"><?php echo $tr->translate("ASSET_COST")?></td>
+												<td><?php echo $frm->getElement('asset_cost')?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("USEFULL_lIFE")?></td>
+												<td><?php echo $frm->getElement('usefull_life');?></td>
+											</tr>
+											<tr>
+											    <td><?php echo $tr->translate("TEM_TYPE")?></td>
+												<td><?php echo $frm->getElement('tem_type')?></td>
+												<!-- 
+												<td><?php echo $tr->translate("AUTO_POST_ACC")?></td>
+												<td><?php echo $frm->getElement('journal');?></td>	
+												 -->
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("SALVAGE_VALUE")?></td>
+												<td><?php echo $frm->getElement('salvage_value')?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("TOTAL_DEPRECIATION")?></td>
+												<td><?php echo $frm->getElement('amount')?></td>						
+											</tr>
+									</table>
+								</fieldset>	
+							</td>
+							<td width="33%;" valign="top">
+								<fieldset>
+									<legend align="center" ><strong><?php echo $tr->translate("VALIDATE")?></strong></legend>
+									 <table style="margin: 0 auto; width: 100%;text-align: left;" cellspacing="2"  >
+											<tr>
+												<td><?php echo $tr->translate("PAYMENT_METHOD")?></td>
+												<td><?php echo $frm->getElement('payment_method')?></td>
+											</tr>
+											
+											<tr>
+												<td nowrap="nowrap"><?php echo $tr->translate("DEPRECIATION_START_DATE")?></td>
+												<td><?php echo $frm->getElement('start_date')?></td>
+											</tr>
+											<tr>
+											    <td nowrap="nowrap"><?php echo $tr->translate("DEPRECIATION_END_DATE")?></td>
+												<td><?php echo $frm->getElement('date')?></td>	
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("NOTE")?></td>
+												<td><?php echo $frm->getElement('note')?></td>
+											</tr>
+											<tr>
+												<td><?php echo $tr->translate("STATUS")?></td>
+												<td><?php echo $frm->getElement('status')?></td>
+											</tr>
+									</table>
+								</fieldset>	
+							</td>
 						</tr>
-						   
-						<tr>
-							<td><?php echo $tr->translate("ASSET_TYPE")?></td>
-							<td><?php echo $frm->getElement('asset_type');?></td>
-							<td><?php echo $tr->translate("PAID_TYPE")?></td>
-							<td><?php echo $frm->getElement('paid_type')?></td>
-							<td><?php echo $tr->translate("SOME_PAYAMOUNT")?></td>
-							<td><?php echo $frm->getElement('some_payamount')?></td>	
-							
-						</tr>
-						<tr>
-						    <td><?php echo $tr->translate("CURRENCY_TYPE")?></td>
-							<td><?php echo $frm->getElement('current_type')?></td>
-						    <td nowrap="nowrap"><?php echo $tr->translate("ASSET_COST")?></td>
-							<td><?php echo $frm->getElement('asset_cost')?></td>
-							<td><?php echo $tr->translate("USEFULL_lIFE")?></td>
-							<td><?php echo $frm->getElement('usefull_life');?></td>
 						
-						</tr>
-						
-						<tr>
-						    <td><?php echo $tr->translate("TEM_TYPE")?></td>
-							<td><?php echo $frm->getElement('tem_type')?></td>
-							<td><?php echo $tr->translate("SALVAGE_VALUE")?></td>
-							<td><?php echo $frm->getElement('salvage_value')?></td>
-							<!-- 
-							<td><?php echo $tr->translate("AUTO_POST_ACC")?></td>
-							<td><?php echo $frm->getElement('journal');?></td>	
-							 -->
-						</tr>
-						<tr>
-							
-							<td><?php echo $tr->translate("PAYMENT_METHOD")?></td>
-							<td><?php echo $frm->getElement('payment_method')?></td>
-							<td  ><?php echo $tr->translate("TOTAL_DEPRECIATION")?></td>
-							<td><?php echo $frm->getElement('amount')?></td>						
-						    <td><?php echo $tr->translate("DEPRECIATION_START_DATE")?></td>
-							<td><?php echo $frm->getElement('start_date')?></td>		
-						</tr>	
-						
-						<tr>
-						    <td nowrap="nowrap"><?php echo $tr->translate("DEPRECIATION_END_DATE")?></td>
-							<td><?php echo $frm->getElement('date')?></td>	
-						   	<td><?php echo $tr->translate("NOTE")?></td>
-							<td><?php echo $frm->getElement('note')?></td>
-							<td><?php echo $tr->translate("STATUS")?></td>
-							<td><?php echo $frm->getElement('status')?></td>	
-						</tr>
 					</table>
 			</fieldset>
 		</td>
@@ -93,11 +132,10 @@ $frm = $this->frm_fixedasset;
 			<div style="text-align: center; margin: 10px 0px;"> 
 						<input type="hidden" name="exchangefrom" value="2" />
 						<input type="hidden" name="inv_no" value="<?php echo $this->inv_no;?>">
-						<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
-						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+						<input iconClass="dijitEditorIcon dijitEditorIconSave"  type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
+						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
-						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVEEDIT');?>" dojoType="dijit.form.Button" 
-							iconClass="dijitEditorIcon dijitEditorIconSave" />
+						 
 			</div>	`
 		</td>
 	</tr>	

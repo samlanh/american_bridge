@@ -19,6 +19,7 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 				'salvagevalue'		=>$data['salvage_value'],
 				'total_amount'		=>$data['amount'],
 				'payment_method'	=>$data['payment_method'],
+				'some_payamount'	=>$data['some_payamount'],
 				'date'				=>$data['date'],
 				'depreciation_start'=>$data['start_date'],
 				//'auto_post'=>$data['journal'],
@@ -65,6 +66,9 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 		}
 }
 function updatasset($data){
+	$db = $this->getAdapter();
+		$db->beginTransaction();
+		try{	
 		$arr = array(
 				'branch_id'			=>$data['branch'],
 				'fixed_assetname'	=>$data['asset_name'],
@@ -78,14 +82,53 @@ function updatasset($data){
 				'salvagevalue'		=>$data['salvage_value'],
 				'total_amount'		=>$data['amount'],
 				'payment_method'	=>$data['payment_method'],
+				'some_payamount'	=>$data['some_payamount'],
 				'date'				=>$data['date'],
 				'depreciation_start'=>$data['start_date'],
-				'some_payamount'	=>$data['some_payamount'],
-				//'auto_post'			=>$data['journal'],
-				'note'				=>$data['note']
+				//'auto_post'=>$data['journal'],
+				'note'=>$data['note']
 		);
 	$where=" id = ".$data['id'];
 	$this->update($arr, $where);
+	$sql = " DELETE FROM ln_fixed_assetdetail WHERE asset_id=".$data["id"];
+	$db->query($sql);
+	$time = $data['usefull_life'];
+	$next_payment = $data['date'];
+	if($data['tem_type']==1){
+		$a_time = ($data['tem_type']=2)?1:12;
+		for($t=0;$t<$time*$a_time;$t++){
+			$db->getProfiler()->setEnabled(true);
+			$sub_arr= array(
+					'asset_id'		=>$data['id'],
+					'total_depre'	=>$data['amount'],
+					'times_depre'	=>$t+1,
+					'for_month'		=>$next_payment,
+			);
+			$this->_name="ln_fixed_assetdetail";
+			$this->insert($sub_arr);
+			$next_payment = date("Y-m-d", strtotime("$next_payment +1 month"));
+		}
+	}else {
+		$a_time = ($data['tem_type']=2)?12:1;
+		for($t=0;$t<$time*$a_time;$t++){
+			$db->getProfiler()->setEnabled(true);
+			$sub_arr= array(
+					'asset_id'		=>$data['id'],
+					'total_depre'	=>$data['amount'],
+					'times_depre'	=>$t+1,
+					'for_month'		=>$next_payment,
+			);
+			$this->_name="ln_fixed_assetdetail";
+			$this->insert($sub_arr);
+			$next_payment = date("Y-m-d", strtotime("$next_payment +1 month"));
+		}
+	}
+	
+	$db->commit();
+	}catch (Exception $e) {
+		$db->rollBack();
+		echo $e->getMessage();
+	}
 }
 
 function getassetbyid($id){

@@ -15,6 +15,8 @@ $frm = $this->frm_fixedasset;
 				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
+                dijit.byId("save_close").attr("disabled",true);
+				dijit.byId("save_new").attr("disabled",true);
 				return true;
 			}else {
 				return false;
@@ -86,23 +88,24 @@ $frm = $this->frm_fixedasset;
 												<td><?php echo $tr->translate("SALVAGE_VALUE")?></td>
 												<td><?php echo $frm->getElement('salvage_value')?></td>
 											</tr>
+											<tr>
+												<td><?php echo $tr->translate("TOTAL_DEPRECIATION")?></td>
+												<td><?php echo $frm->getElement('amount')?></td>						
+											</tr>
 									</table>
 								</fieldset>	
 							</td>
 							<td width="33%;" valign="top">
 								<fieldset>
-									<legend align="center" ><strong><?php echo $tr->translate("ASSET_NAME")?></strong></legend>
+									<legend align="center" ><strong><?php echo $tr->translate("VALIDATE")?></strong></legend>
 									 <table style="margin: 0 auto; width: 100%;text-align: left;" cellspacing="2"  >
 											<tr>
 												<td><?php echo $tr->translate("PAYMENT_METHOD")?></td>
 												<td><?php echo $frm->getElement('payment_method')?></td>
 											</tr>
+											
 											<tr>
-												<td><?php echo $tr->translate("TOTAL_DEPRECIATION")?></td>
-												<td><?php echo $frm->getElement('amount')?></td>						
-											</tr>
-											<tr>
-												<td><?php echo $tr->translate("DEPRECIATION_START_DATE")?></td>
+												<td nowrap="nowrap"><?php echo $tr->translate("DEPRECIATION_START_DATE")?></td>
 												<td><?php echo $frm->getElement('start_date')?></td>
 											</tr>
 											<tr>
@@ -131,10 +134,10 @@ $frm = $this->frm_fixedasset;
 			<div style="text-align: center; margin: 10px 0px;"> 
 						<input type="hidden" name="exchangefrom" value="2" />
 						<input type="hidden" name="inv_no" value="<?php echo $this->inv_no;?>">
-						<input type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
-						<input type="submit" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVECLOSE');?>" dojoType="dijit.form.Button" 
+						<input iconClass="dijitEditorIcon dijitEditorIconSave"  type="reset" value="សំអាត" label="<?php echo $tr->translate('CLEAR');?>"dojoType="dijit.form.Button"/>
+						<input type="button" onclick="submitDataClose();" value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
-						<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('SAVEEDIT');?>" dojoType="dijit.form.Button" 
+						<input type="submit" value="save_new" name="save_new" id="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
 							iconClass="dijitEditorIcon dijitEditorIconSave" />
 			</div>	`
 		</td>
@@ -179,7 +182,22 @@ function calculateDepreciation(){
 	dijit.byId("amount").attr('value',total_depreciation);
 }
 
+function submitDataClose(){
+	if(dijit.byId('frm_add').validate()) {
+		dijit.byId('save_close').set('disabled',true);
+		dijit.byId('save_new').set('disabled',true);
+		var url_submit = '<?php echo $this->url(array('module'=>'accounting','controller'=>'fixedasset','action'=>'add')); ?>';
+		dojo.xhrPost({
+		    url: url_submit,	
+			form: dojo.byId("frm_add"),		    
+			load: function(data) {
+				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
+				window.location.href ="<?php echo $this->baseUrl();?>/accounting/fixedasset/index";
+			},
+			error: function(e) {
+			}
+		});
+	}
+}
 </script>
-
-
-
+ 

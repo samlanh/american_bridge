@@ -68,7 +68,7 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$note->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-				'required'=>true
+				 
 		));
 		
 		$_stutas = new Zend_Dojo_Form_Element_FilteringSelect('status');
@@ -82,9 +82,9 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		
 
 		
-		$some_payamount = new Zend_Dojo_Form_Element_TextBox('some_payamount');
+		$some_payamount = new Zend_Dojo_Form_Element_ValidationTextBox('some_payamount');
 		$some_payamount->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
 				'required'=>true
 		));
@@ -193,7 +193,7 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		
 		$amount = new Zend_Dojo_Form_Element_TextBox('amount');
 		$amount->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
 				'required'=>true
 		));
