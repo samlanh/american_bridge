@@ -13,7 +13,7 @@ echo $this->headTitle($tr->translate('STUDENT_TEST'));
         	<input type="text" name="txtsearch" id="txtsearch" dojoType="dijit.form.TextBox" value="<?php echo $this->adv_search['txtsearch']; ?>" placeholder="search here" class="fullside" />
         </td>
    		<td><input dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="start_date" name="start_date" value="<?php echo $this->adv_search['start_date']; ?>"  type="text"></td>
-		<td><input dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="end_date" name="end_date" value="<?php echo $this->adv_search['end_date'];?>" type="text"></td>
+		<td><input dojoType="dijit.form.DateTextBox"  constraints="{datePattern:'dd/MM/yyyy'}"  class="fullside" id="end_date" name="end_date" value="<?php if (!empty($this->adv_search['end_date'])){ echo $this->adv_search['end_date'];}else{ echo date("Y-m-d");}?>" type="text"></td>
    		
    		<td>
    			<select name="result_status" id="result_status" class="fullside" dojoType="dijit.form.FilteringSelect" >

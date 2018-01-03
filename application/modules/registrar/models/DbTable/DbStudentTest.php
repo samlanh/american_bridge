@@ -73,6 +73,10 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 	}	
 	function getAllStudentTest($search=null){
 		$db = $this->getAdapter();
+		
+		$_db = new Application_Model_DbTable_DbGlobal;
+		$branch_id = $_db->getAccessPermission('branch_id');
+		
 		$session_user=new Zend_Session_Namespace('authstu');
 		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
@@ -97,7 +101,9 @@ class Registrar_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					rms_student_test
 				where
 					status=1
-					and register=0 ";
+					and register=0 
+				$branch_id
+				";
 		
 		if (!empty($search['txtsearch'])){
 				$s_where = array();

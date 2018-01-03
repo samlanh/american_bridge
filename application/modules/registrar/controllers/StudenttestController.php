@@ -15,6 +15,7 @@ class Registrar_StudenttestController extends Zend_Controller_Action
     		$db = new Registrar_Model_DbTable_DbStudentTest();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
+    			$this->view->adv_search = $search;
     		}
     		else{
     			$search = array(
@@ -23,7 +24,7 @@ class Registrar_StudenttestController extends Zend_Controller_Action
     					'end_date'=>date('Y-m-d'),
     			);
     		}
-    		$this->view->adv_search = $search;
+    		
     		
 			$rs_rows= $db->getAllStudentTest($search);//call frome model
     		$list = new Application_Form_Frmtable();
