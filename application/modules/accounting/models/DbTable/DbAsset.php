@@ -2,6 +2,10 @@
 class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'ln_fixed_asset';
+	public function getUserId(){
+		$session_user=new Zend_Session_Namespace('auth');
+		return $session_user->user_id;
+	}
 	function addasset($data){
 		$db = $this->getAdapter();
 		$db->beginTransaction();
@@ -23,6 +27,7 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 				'date'				=>$data['date'],
 				'depreciation_start'=>$data['start_date'],
 				//'auto_post'=>$data['journal'],
+				'user_id'			=>$this->getUserId(),
 				'note'=>$data['note']
 		);
 		 $ass_id = $this->insert($arr);
@@ -84,6 +89,7 @@ function updatasset($data){
 				'payment_method'	=>$data['payment_method'],
 				'some_payamount'	=>$data['some_payamount'],
 				'date'				=>$data['date'],
+				'user_id'			=>$this->getUserId(),
 				'depreciation_start'=>$data['start_date'],
 				//'auto_post'=>$data['journal'],
 				'note'=>$data['note']

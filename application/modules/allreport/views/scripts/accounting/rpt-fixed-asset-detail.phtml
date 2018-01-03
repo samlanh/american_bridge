@@ -1,0 +1,111 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle('Report Student Balance'); 
+	echo $this->headTitle(''); 
+ 
+   print_r($this->row);
+?>	
+<div style="width: 28cm;margin: 0 auto;">
+ 
+</div>
+<div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm;padding: 0.5cm;">
+	<div id="divPrint">
+		<div id="exportExcel" >
+			<table  style="background:#fff; margin: 0 auto;width: 100%;">
+				<tr>
+					<td width="28%" align="left">
+						<img style="width:50%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br />
+					</td>
+					<td align="center" width="44%">
+						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate("REPORT_FIXED_ASSET_DETAIL")?></strong><br />
+						<span style="font-weight: bold;font-size: 14px;">From &nbsp;<?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;To&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));?></span><br />
+						<?php if(!empty($this->search['payfor_type'])){?>
+						<span style="font-weight: bold;font-size: 14px;"><?php echo $payfor_type[$this->search['payfor_type']];?></span>
+						<?php }?>
+					</td>
+					<td width="28%" align="right">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<table cellpadding="5"​ style="margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;font-family: Khmer OS Battambang,Times New Roman;"  border="1" >
+							<tr style="font-size:13px; height: 20px;border: 1px solid #000;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center" >
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("N_O");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("FIXED_ASSETNAME");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("ASSET_COST");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("USEFULL_LIFE");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("SALVAGEVALUE");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("TOTA_AMOUNT");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("USER");?></td>
+							</tr>
+						 <?php $i=0;if(!empty($this->row)) foreach ($this->row As $key=>$rs){?>
+							<tr style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
+								<td style="border: 1px solid #000;"><?php echo $key+$i;?></td>
+								<td style="border: 1px solid #000;"><a style=" color: #000;" href="<?php //echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['branch_name'];?></a></td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['fixed_assetname'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['asset_cost'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['usefull_life'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['salvagevalue'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['total_amount'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['note'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['USER'];?>  </td>
+							</tr>
+						 <?php }?>
+						</table>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+			<!-- 
+				<tr>
+					<td colspan="2"></td>
+					<td>
+						<table border="1" align="right" style="width:50%; margin-right:0.5%; white-space:nowrap;border-collapse: collapse;border: 1px #000 solid;">
+							<tr style="font-size:13px; background:#ccc; height: 20px;width: 400px;" align="center">
+								<th>&nbsp;Total Balance Remain&nbsp;</th>
+							</tr>
+							<tr align="center" style=" height:18px; font-size:13px; padding: 1px;font-weight: bold;" >
+								<td style="color: red;">$ <?php //echo number_format($totalbalance,2);?></td>
+							</tr>
+						  </table>
+					</td>
+				</tr>
+				 -->
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr >
+					<td colspan="3" align="center" >
+						<table width="100%" style="font-family: Khmer OS Battambang,Times New Roman;">
+							<tr>
+								<td align="center" width="25%">
+									<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+								</td>
+								<td align="center" width="25%">
+									<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+								</td>
+								<td align="center" width="25%">
+									<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
+								</td>
+								<td align="center"  width="25%">
+									<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div> 				
+	</div>		
+</div>
+
+
+
+
+
