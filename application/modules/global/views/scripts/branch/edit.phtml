@@ -3,6 +3,10 @@
 	echo $this->headTitle($tr->translate('UPDATE_BRANCH​​_INFO')); 
 ?>
 <?php  $frm = $this->frm_branch;?>
+<script type="text/javascript">	
+	dojo.require("dojo.parser");
+	dojo.require("dojo.NodeList-manipulate");
+</script>
 <form action="<?php echo $this->url(array('module'=>'global','controller'=>'branch','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	 <script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
@@ -14,45 +18,59 @@
 	<table cellspacing="10" style="margin: 0 auto; width:100%">
 		<tr>
 			<td>
-				<fieldset>
-					<legend align="center"><strong><?php echo $tr->translate("UPDATE_BRANCH​​_INFO");?></strong></legend>
-					<table cellspacing="20" width="100%" >
+				<fieldset style="background: #fff; border: solid 1px #008;">
+					<legend  style="font-size: 14px; color: #008;" align="center"><strong><?php echo $tr->translate("UPDATE_BRANCH​​_INFO");?></strong></legend>
+					<table cellspacing="5" width="100%" >
 						<tr>
-							<td align="center" valign="top">
-								<table width="100%" cellspacing="10">
+							<td width="70%" align="center" valign="top">
+								<table width="100%" cellspacing="5">
 									<tr>
 										<td><?php echo $tr->translate("CODE")?></td>
 										<td><?php echo $frm->getElement("branch_code");?></td>
 										<td><?php echo $tr->translate("BRANCH_NAME")?></td>
 										<td><?php echo $frm->getElement("branch_nameen");?></td>
+										
+									</tr>
+									<tr>
 										<td><?php echo $tr->translate("PREFIX_CODE");?></td>
 									    <td><?php echo $frm->getElement("prefix_code");?></td>
+									    <td><?php echo $tr->translate("ADDRESS")?></td>
+										<td><?php echo $frm->getElement("br_address");?></td>
 									</tr>
 									<tr>
-										<td><?php echo $tr->translate("ADDRESS")?></td>
-										<td><?php echo $frm->getElement("br_address");?></td>
-										<td><?php echo $tr->translate("PHONE")?></td>
-										<td><?php echo $frm->getElement("branch_tel");?></td>
-											
+										<!-- 
+										<td><?php //echo $tr->translate("PHONE")?></td>
+										<td><?php //echo $frm->getElement("branch_tel");?></td>
+										 -->
 										<td><?php echo $tr->translate("FAX")?></td>
 										<td><?php echo $frm->getElement("fax");?></td>	
-									</tr>
-									<tr>
 										<td><?php echo $tr->translate("NOTE")?></td>
 										<td><?php echo $frm->getElement("branch_note");?></td>
+									</tr>
+									<tr>
 										<td><?php echo $tr->translate("STATUS")?></td>
 										<td><?php echo $frm->getElement("branch_status");?></td>
 									</tr>
-									<tr>
-										<td colspan="6" align="center">
-										  <input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
-				                              iconClass="dijitIconClear" />
-										  <input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE');?>" id="submitButton" dojoType="dijit.form.Button" 
-									          iconClass="dijitEditorIcon dijitEditorIconSave"/>
-										</td>
-									</tr>					
 								</table>
+							</td>	
+							<td align="center" valign="top" width="30%">
+							 	<table  style="margin: 0 auto; width: 100%; border-collapse: collapse; border: 1px #ccc solid;">
+									<tr id="head-title" class="head-td" align="right" style="background: #f8f8f8;"></tr>
+								</table>
+								<table id="table_row" style="margin: 0 auto; width: 100%; border-collapse: collapse; border: 1px #ccc solid;">
+								</table>
+								<input type="button" label="<?php echo $tr->translate('ADD_MORE');?>" dojoType="dijit.form.Button" 
+									 	iconClass="dijitIconEditProperty" onclick="addRow();" />
+								<input type="hidden" name="identity" id="identity"  value="" >
 							</td>							
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+							  <input type="reset" label="<?php echo $tr->translate('CLEAR');?>" id="" dojoType="dijit.form.Button"
+	                              iconClass="dijitIconClear" />
+							  <input type="submit" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE');?>" id="submitButton" dojoType="dijit.form.Button" 
+						          iconClass="dijitEditorIcon dijitEditorIconSave"/>
+							</td>
 						</tr>
 					</table>	
 				</fieldset>
@@ -61,3 +79,90 @@
 		
 	</table>	
 </form>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("DO_YOU_WANT_TO_DEL")?>'"  id="deleteForm" style="width:350px;" >
+		<div style=" text-align: center;">
+			<h4><?php echo $tr->translate("DO_YOU_WANT_TO_DEL")?></h4>
+			<input type="hidden" name="recorddelete" id="recorddelete" dojoType="dijit.form.TextBox" />
+			<button onclick="closeForm();" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("CANCEL");?></button>
+			<button onclick="deleteRecord('',1);" iconclass="dijitIconDelete" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("DELETE");?></button>
+		</div>
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		initailize();
+	});
+});
+var col = 0;
+var no = 0;
+var title = 0;
+func='';
+tmp = '';
+var temp='';
+function addRow() {
+		col++;no++;
+		template='';
+		if(title!=1){
+			temp+='<th><?php echo $tr->translate("PHONE");?></th>';
+			temp+='<th><?php echo $tr->translate("DEL");?></th>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+			template+='<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" required="required"  name="phone'+col+'" id="phone'+col+'" value="" placeholder="Phone Number" style="text-align: center;" ></td>';
+			template+='<td width="10%" align="center" style="padding: 0px 25px;"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+		tmp='<tr id="row'+col+'" style="background: #fff; border: solid 1px #bac;">';
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!='') {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+ }
+ <?php $phone = explode(",", $this->row['branch_tel']);?>
+function initailize() {
+	<?php if (!empty($phone)) foreach ($phone as $rs){?>
+	col++;no++;
+	template='';
+	if(title!=1){
+		temp+='<th><?php echo $tr->translate("PHONE");?></th>';
+		temp+='<th><?php echo $tr->translate("DEL");?></th>';
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}
+		template+='<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" required="required"  name="phone'+col+'" id="phone'+col+'" value="<?php echo $rs;?>" placeholder="Phone Number" style="text-align: center;" ></td>';
+		template+='<td width="10%" align="center" style="padding: 0px 25px;"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
+	tmp='<tr id="row'+col+'" style="background: #fff; border: solid 1px #bac;">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+	if($("#identity").val()!='') {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+	<?php }?>
+}
+function deleteRecord(index,type=''){
+	 if(type==''){
+		 dijit.byId("recorddelete").attr('value',index);
+		 dijit.byId('deleteForm').show();
+	 }else{
+		index = dijit.byId("recorddelete").get('value');
+		var identity = $('#identity').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#identity').val(strings);
+		dojo.query("#row"+index).remove();
+		dijit.byId('deleteForm').hide();
+	 }
+}
+</script>

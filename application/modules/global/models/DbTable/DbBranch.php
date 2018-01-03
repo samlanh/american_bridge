@@ -5,13 +5,27 @@ class Global_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 
     protected $_name = 'rms_branch';
     function addbranch($_data){
+    	$identity = $_data['identity'];
+    	$ids = explode(',', $identity);
+    	$phone_list="";
+    	foreach ($ids as $i){
+    		if (!empty($_data['phone'.$i])){
+    			if (empty($phone_list)){
+    				$phone_list=$_data['phone'.$i];
+    			}else{
+    				if (!empty($_data['phone'.$i])){
+    					$phone_list=$phone_list.",".$_data['phone'.$i];
+    				}
+    			}
+    		}
+    	}
     	$_arr = array(
     			//'parent'=>$_data['main_branch_id'],
     			'branch_namekh'=>$_data['branch_nameen'],
     			'prefix'=>$_data['prefix_code'],
     			'br_address'=>$_data['br_address'],
     			'branch_code'=>$_data['branch_code'],
-    			'branch_tel'=>$_data['branch_tel'],
+    			'branch_tel'=>$phone_list,
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],
@@ -20,13 +34,27 @@ class Global_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
     	$this->insert($_arr);//insert data
     }
     public function updateBranch($_data,$id){
+    	$identity = $_data['identity'];
+    	$ids = explode(',', $identity);
+    	$phone_list="";
+    	foreach ($ids as $i){
+    		if (!empty($_data['phone'.$i])){
+    			if (empty($phone_list)){
+    				$phone_list=$_data['phone'.$i];
+    			}else{
+    				if (!empty($_data['phone'.$i])){
+    					$phone_list=$phone_list.",".$_data['phone'.$i];
+    				}
+    			}
+    		}
+    	}
     	$_arr = array(
     			//'parent'=>$_data['main_branch_id'],
     			'branch_namekh'=>$_data['branch_nameen'],
     			'prefix'      => $_data['prefix_code'],
     			'br_address'=>$_data['br_address'],
     			'branch_code'=>$_data['branch_code'],
-    			'branch_tel'=>$_data['branch_tel'],
+    			'branch_tel'=>$phone_list,
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
     			'status'=>$_data['branch_status'],

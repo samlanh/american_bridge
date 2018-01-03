@@ -1078,7 +1078,7 @@ function getMonthByNumber(m){
 							</tr>
 							
 							<tr>
-								<td width="70%">
+								<td width="70%" valign="top" >
 									<table width="100%" style="white-space:nowrap; font-size:10px;font-family:Khmer OS Battambang,Times New Roman;line-height: 14px;">
 										<tr>
 											<td colspan="2" style="white-space: pre;"><?php if (!empty($this->keycode['note_student_lunch_service'])){echo $this->keycode['note_student_lunch_service'];}?></td>
@@ -1086,10 +1086,18 @@ function getMonthByNumber(m){
 									</table>
 								</td>
 								<td width="30%" valign="top" align="center"> 
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
-									- 092 36 36 42 <br />
-									- 087 53 99 99 <br />
-									- 023 99 99 98 <br />
+								<?php 
+									$phone ="";
+									if (!empty($this->branch_info['branch_tel'])){
+										$phone = explode(",", $this->branch_info['branch_tel']);
+									}
+								?>
+									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office
+									<div style=" width: 50%; text-align: left;">
+									<?php if (!empty($phone)) foreach ($phone as $ss){?>
+										- <?php echo $ss;?> <br />
+									<?php }?>
+									</div>
 								</td>
 								
 							</tr>
