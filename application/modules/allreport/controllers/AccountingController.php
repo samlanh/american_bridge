@@ -1962,5 +1962,40 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			echo $e->getMessage();
 		}
 	}
+	function rptDailyIncomeStudenttestAction(){
+		try{
+			$db = new Allreport_Model_DbTable_DbStudenttest();
+			if($this->getRequest()->isPost()){
+    			$search=$this->getRequest()->getPost();
+    			$this->view->search = $search;
+    		}
+    		else{
+    			$search = array(
+    					'txtsearch'=>'',
+    					'degree'=>0,
+    					'start_date'=> date('Y-m-d'),
+    					'end_date'=>date('Y-m-d'),
+    					'user'=>'',
+    					'branch'=>'',
+    			);
+    		}
+    		$rs_rows= $db->getAllStudentTest($search);//call frome model
+    		$this->view->row = $rs_rows;
+		}catch(Exception $e){
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
+		}
+		$form=new Registrar_Form_FrmSearchInfor();
+		$form->FrmSearchRegister();
+		Application_Model_Decorator::removeAllDecorator($form);
+		$this->view->form_search=$form;
+		
+		$db = new Registrar_Model_DbTable_DbStudentTest();
+		$this->view->degree = $db->getAllDegreeName();
+		
+		$_db = new Allreport_Model_DbTable_DbRptDailyIncome();
+		$this->view->rate = $_db->getRate();
+	}
 	
 }
