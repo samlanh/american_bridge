@@ -103,6 +103,9 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
 //        $_model = new Application_Model_GlobalClass();
 //        $this->view->all_service = $_model->getAllServiceItemOption(2); /// for use in add row
        //$session_user=new Zend_Session_Namespace('auth'); $username = $session_user->first_name;
+       
+       $dbg = new Application_Model_DbTable_DbGlobal();
+       $this->view->branch_info = $dbg->getBranchInfo();
     }
     
     public function editAction()
@@ -180,6 +183,8 @@ class Registrar_StudentlunchpaymentController extends Zend_Controller_Action {
        $this->view->all_product = $db->getAllProduct();
        $this->view->exchange_rate = $db->getExchangeRate();
     	
+       $dbg = new Application_Model_DbTable_DbGlobal();
+       $this->view->branch_info = $dbg->getBranchInfo();
     	
     }
     function getGradeAction(){

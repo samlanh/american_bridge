@@ -84,6 +84,9 @@ class Registrar_uniformandbookController extends Zend_Controller_Action {
        $db = new Registrar_Model_DbTable_DbUniformAndBook();
        $this->view->all_service = $db->getAllServiceItemOption();
        
+       $dbg = new Application_Model_DbTable_DbGlobal();
+       $this->view->branch_info = $dbg->getBranchInfo();
+       
     }
     public function editAction()
     {
@@ -129,6 +132,9 @@ class Registrar_uniformandbookController extends Zend_Controller_Action {
         
         $_db = new Registrar_Model_DbTable_DbRegister();
         $this->view->exchange_rate = $_db->getExchangeRate();
+        
+        $dbg = new Application_Model_DbTable_DbGlobal();
+        $this->view->branch_info = $dbg->getBranchInfo();
     }
     function getGradeAction(){
     	if($this->getRequest()->isPost()){
