@@ -14,21 +14,22 @@
  <script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
  </script>
-<form id='frm_add_tran' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'income','action'=>'add')); ?>" 
+<form id='frm_other_income' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'income','action'=>'add')); ?>" 
 				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-<script type="dojo/method" event="onSubmit">			
-			if(this.validate()) {
-				return true;
-			}else {
-				return false;
-			}
-</script>
-<table cellspacing="10" class='fullside' >
-	<tr>
-		<td>
+	<script type="dojo/method" event="onSubmit">			
+		if(this.validate()) {
+			return true;
+		}else {
+			return false;
+		}
+	</script>
+	<table cellspacing="10" class='fullside' >
+		<tr>
+			<td>
 				<fieldset>
 					<legend><strong><?php echo $tr->translate("ADD_OTHER_INCOME")?></strong></legend>
 					<table cellspacing="10"  width="100%" style="white-space: nowrap;">
+						
 						<tr>
 							<td><?php echo $tr->translate("BRANCH_ID")?></td>
 							<td><?php echo $frm->getElement('branch_id');?></td>
@@ -40,20 +41,31 @@
 							<td><?php echo $frm->getElement('invoice');?></td>
 						</tr>
 						<tr>
+							<td><?php echo $tr->translate("NAME")?></td>
+							<td><?php echo $frm->getElement('name');?></td>
+							
+							<td><?php echo $tr->translate("SEX")?></td>
+							<td><?php echo $frm->getElement('sex');?></td>
+							
+							<td><?php echo $tr->translate("PHONE")?></td>
+							<td><?php echo $frm->getElement('phone');?></td>
+						</tr>
+						<tr>
 							<td><?php echo $tr->translate("CATEGORY_INCOME")?></td>
 							<td><input id="cate_income" /></td>
 							
-						    <td><?php echo $tr->translate("CURRENCY_TYPE")?></td>
-							<td><?php echo $frm->getElement('currency_type');?></td>
-							
-							<td><?php echo $tr->translate("TOTAL_INCOME")?></td>
+							<td><?php echo $tr->translate("TOTAL_INCOME")?>($)</td>
 							<td><?php echo $frm->getElement('total_amount');?></td>
+							
+							<td colspan="2">
+								<input type="text" class="fullside" name="readmoney" readonly id="readmoney" dojoType="dijit.form.TextBox" />
+							</td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate("NOTE")?></td>
 							<td><?php echo $frm->getElement('Description');?></td>
 							
-						    <td><?php echo $tr->translate("DATE")?></td>
+						    <td><?php echo $tr->translate("FOR_DATE")?></td>
 							<td><?php echo $frm->getElement('Date');?></td>
 							
 							<td><?php echo $tr->translate("STATUS")?></td>
@@ -61,19 +73,22 @@
 						</tr>
 					</table>
 				</fieldset>
-		</td>
-	</tr>		
-	<tr>
-		<td align="center">
-		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
-				 iconClass="dijitIconClear"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVE_CLOSE");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
-				 iconClass="dijitIconDelete"/>
-			<input type="submit" label="<?php echo $tr->translate("SAVE_NEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button"
-				 iconClass="dijitIconNewTask"/>
-		</td>
-	</tr>	
-</table>
+			</td>
+		</tr>		
+		<tr>
+			<td align="center">
+			<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
+					 iconClass="dijitIconClear"/>
+				<input type="submit" label="<?php echo $tr->translate("SAVE_CLOSE");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
+					 iconClass="dijitIconDelete"/>
+				<input type="submit" label="<?php echo $tr->translate("SAVE_NEW")?>" name='savenew' value='savenew' dojoType="dijit.form.Button"
+					 iconClass="dijitIconNewTask"/>
+					 
+				<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
+					iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave();"/>  
+			</td>
+		</tr>	
+	</table>
 </form>
 
 <script type="text/javascript">
@@ -87,32 +102,87 @@ dojo.require("dijit.form.SimpleTextarea");
 
 var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->cate_income));?> );
 
-dojo.ready(function(){
-	new dijit.form.FilteringSelect({
-		store: cate_income_store,
-		autoComplete: true,                        
-		required: true,                      
-	    id: "cate_income",
-	    name: "cate_income",  
-	    tabindex: "1",  
-	    value:0,       
-	    class: 'fullside',  
-	    placeHolder:"Selecte Category", 
-	    onChange: function() {          
-		   	service_id = dijit.byId('cate_income').get('value');
-		    if(service_id==-1){
-		   		dijit.byId("popup_cate").show();
-		    }
-	   }
-	}, "cate_income");
-});
+	dojo.ready(function(){
+		new dijit.form.FilteringSelect({
+			store: cate_income_store,
+			autoComplete: true,                        
+			required: true,                      
+		    id: "cate_income",
+		    name: "cate_income",  
+		    tabindex: "1",  
+		    value:0,       
+		    class: 'fullside',  
+		    placeHolder:"Selecte Category", 
+		    onChange: function() {          
+			   	service_id = dijit.byId('cate_income').get('value');
+			    if(service_id==-1){
+			   		dijit.byId("popup_cate").show();
+			    }
+		   }
+		}, "cate_income");
 
+		getNewReceiptNo();
+		
+	});
+
+	var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','controller'=>'income','action'=>'get-receipt-no')); ?>';
+	function getNewReceiptNo(){
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id>0){
+			dojo.xhrPost({
+				url:url_getreceiptno,
+				content:{
+					'branch_id':branch_id,
+					},
+				handleAs:"json",
+				load: function(data) {
+					dijit.byId('invoice').attr('value',data);   
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+	
 	function getValue(){
 		cate_id = dijit.byId('cat_income').get('value');
 		if(cate_id==-1){
 			dijit.byId("popup_cate").show();
 		}
 	}
+	
+	function readMoneyInKhmer(){
+		
+		netTotal = (dijit.byId('total_amount').get('value')).toFixed(2);
+		//netTotal = (isNaN(netTotal)?netTotal:0).toFixed(2);
+		
+		//alert(netTotal);
+		
+		var str = netTotal.toString();
+		str_cent = 'សេន';
+		first_decimal = str.substr(-2);
+		last_decimal = str.substr(-1);
+		
+		if(first_decimal>0){string='ដុល្លា និង ';last_string="សេន"}else{string="";str_cent="";last_string="ដុល្លា";}
+		if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
+		first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
+		last_money_decimal = read_in_khmer_from_0_to_9(last_decimal);
+		money_khmer=read_money_in_khmer(netTotal);
+
+		if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
+		if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
+		first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
+		last_money_decimal_en = read_in_english_from_0_to_9(last_decimal);
+		money_english=read_money_in_english(netTotal);
+		
+		//read_eng = money_english.trim()+string+ first_money_decimal+str_zero+last_money_decimal+last_string;
+		//read_eng = '( '+money_english.trim()+string_en+ first_money_decimal_en+str_zero_en+last_money_decimal_en+' Dollar Only )';
+		
+		dijit.byId('readmoney').attr('value',money_khmer.trim()+string+ first_money_decimal+str_zero+last_money_decimal+last_string);
+	}
+	
+	
 
 	var url_add_cate_income = '<?php echo $this->url(array("module"=>"registrar","controller"=>"income","action"=>"add-cate-income")); ?>';
 	function addCateIncome(){
@@ -143,7 +213,567 @@ dojo.ready(function(){
 		dijit.byId("popup_cate").hide();
 	}
  
+ 
+ 
+	function printSave(new_stu_id,new_receipt_no){		
+		if(dijit.byId('frm_other_income').validate()) {
+			 
+			 
+			 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("invoice").get('value');
+			 dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
+			 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+			 dojo.byId("lb_cus_name").innerHTML = dijit.byId("name").get('value');
+			 dojo.byId("lb_sex").innerHTML = dijit.byId("sex").attr('displayedValue');
+			 dojo.byId("lb_phone").innerHTML = dijit.byId("phone").get('value');
+			 
+			 
+			 dojo.byId("lb_readmoney").innerHTML = dijit.byId("readmoney").attr('displayedValue');
+			 
+			 dojo.byId("lb_total_payment").innerHTML = " $ "+dijit.byId("total_amount").get('value');
+			 
+			 other_income = dijit.byId('total_amount').get('value');
+			 if(other_income>0){
+				dojo.byId("lb_other_income").innerHTML = " $ "+other_income;
+				dojo.byId("checkbox_other").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+			 }else{
+				dojo.byId("lb_other_income").innerHTML = "";
+				dojo.byId("checkbox_other").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 }
+			 
+ 			 dojo.byId("checkbox_bike_payment").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 dojo.byId("checkbox_broken").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 
+			 dojo.byId("checkbox_book_rental").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 dojo.byId("checkbox_rent").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 dojo.byId("checkbox_water").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 dojo.byId("checkbox_fire").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 
+			 dojo.byId("checkbox_cleaner").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 dojo.byId("checkbox_moto_payment").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			 
+			 
+			dijit.byId("terms").show();	
+		}
+		
+	}
+
+	function hideDialog() {		
+		dijit.byId("terms").hide();
+	}
+ 
+ 
+	function printSubmit(){
+		
+		//$('#frm_other_income').submit();
+		 
+		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+		window.frames["print_frame"].window.focus();
+		window.frames["print_frame"].window.print();
+		//dijit.byId("terms").hide();	//hideDialog();
+	}
+ 
+ 
+ 
 </script>
+
+<div class="dijitHidden" style="width: 25cm !important; height: 15cm ; padding: 0px; margin: 0px;">
+	
+	<div data-dojo-type="dijit.Dialog" style="width:30cm !important;height: 17cm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("");?>'" id="terms" >
+		<style>
+			.data2{font-size:10px !important;}
+		</style>
+		
+		<div id="divPrint" style="width: 25cm !important; height: 13cm ; padding: 0px; margin: 0px;">
+			<style>
+				.fontbig{
+					font-size: 15px;	
+				}
+				.fonttel{
+					font-size: 18px;	
+				}
+				.pleft{
+					width: 110px;	
+				}
+				.label{ font-weight: bold;font-size: 22px;}
+				.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 25px; padding: 0 2px;width: 98%; display: block;
+						margin-top: -25px; line-height: 25px;
+					    text-align: center;
+						}
+				.values{ border: 1px solid rgba(14, 0, 107, 1); height: 25px; padding: 0 10px;display: block;
+						line-height: 25px;}
+				.h{ margin-top: -8px;/*margin-left:4px;*/}
+​​               .print td{ font:bold 12px 'Khmer OS Battambang';}
+			   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
+			   .khmer{font:12px 'Khmer OS Battambang';}
+			   .one{white-space:nowrap;}
+			   
+				.underline{margin-top: -18px;text-align:center;}
+				.data{font-size:14px;font-weight:bold;}
+				.data1{font-size:14px;font-weight:bold;}
+				
+				.receiptno{font-size:17px;font-weight:bold;}
+				.tab_row{ margin-top: -8px;}
+				.fonteng{font-size:12px;}
+				.table_print{
+					white-space:nowrap;
+					font-size:14px;
+					font-family:'Khmer OS Battambang';
+					line-height:20px;
+				}
+			</style>	
+			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:14px;font-family:'Khmer OS Battambang';line-height: 21px;">
+				<tr>
+				    <td colspan="6"  align="center" style="">
+						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-10px;font-weight:bold;">
+							<tr>
+								<td width="35%" align="left" style="font-size:12px;">
+									<div style="font-size:13px;"><label id="lb_branch" class="data"></label></div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+								</td>
+								<td width="30%" align="center">
+									<img style="width: 35%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
+								</td>
+								<td width="35%" align="center" style="font-size:19px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
+							</tr>
+						</table>
+				    </td>
+				</tr>
+				
+				<tr >
+					<td colspan="6">
+						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;margin-top: -25px;">
+							<tr>
+								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
+								<td width="20%" align="center" style="font-size:16px;">បង្កាន់ដៃទទួលប្រាក់ RECEIPT</td>
+								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="6">
+						&nbsp;
+					</td>
+				</tr>
+				
+				<tr>
+					<td width="10%">ឈ្មោះអ្នកបង់ប្រាក់</td>
+					<td width="38%">
+						&nbsp;:&nbsp;<label id="lb_cus_name"  class="data" ></label>
+						<div class="underline">&nbsp;...............................................................................................</div>
+					</td>
+					<td width="4%" align="center"> ភេទ</td>
+					<td width="5%">
+						:&nbsp;<label id="lb_sex" class="data" ></label>
+						<div class="underline">..........</div>
+					</td>
+					<td width="8%" align="center"> លេខទូរសព្ទ</td>
+					<td width="35%">
+						:&nbsp;<label id="lb_phone" class="data" ></label>
+						<div class="underline">&nbsp;.........................................................................................</div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="6">
+						&nbsp;
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td colspan="6" style="border:2px solid #000;">
+						<table width="100%" style="white-space:nowrap;font-size:14px;font-family:'Khmer OS Battambang';line-height:22px;margin:5px;">
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_book_rental"></label>
+												 ថ្លៃកក់ជួលតូប
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<table border="0" width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_rent"></label>
+												 ថ្លៃជួលតូប
+											</td>
+											<td width="22%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">...................................................</div>
+											</td>
+											
+											<td width="13%">
+												 មានសុពលភាព ចំនួន
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................</div>
+											</td>
+											
+											<td width="8%">
+												 ខែ ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="15%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..................................</div>
+											</td>
+											
+											<td width="7%">
+												 ដល់ថ្ងៃទី
+											</td>
+											<td width="15%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" border="0" class="table_print">
+										<tr>
+											<td width="5%">
+												<label id="checkbox_water"></label>
+												 ថ្លៃទឹក
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="5%">
+												កុងទ័រថ្មី
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="6%">
+												កុងទ័រចាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="9%">
+												កុងទ័រប្រើប្រាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="3%">
+												Kw X
+											</td>
+											<td width="6%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="8%">
+												/1Kw ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="5%">
+												<label id="checkbox_fire"></label>
+												 ថ្លៃភ្លើង
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="5%">
+												កុងទ័រថ្មី
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="6%">
+												កុងទ័រចាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="9%">
+												កុងទ័រប្រើប្រាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="3%">
+												Kw X
+											</td>
+											<td width="6%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="8%">
+												/1Kw ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_cleaner"></label>
+												 ថ្លៃសម្រាម
+											</td>
+											<td width="56%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">............................................................................................................................................</div>
+											</td>
+											
+											<td width="6%">
+												ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="11%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_bike_payment"></label>
+												 ថ្លៃកិបសំបុត្រកង់
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_moto_payment"></label>
+												 ថ្លៃកិបសំបុត្រម៉ូតូ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+								
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_broken"></label>
+												 ថ្លៃលក់អេតចាយ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print" >
+										<tr>
+											<td width="12%">
+												<label id="checkbox_other"></label>
+												 ផ្សេងៗ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="lb_other_income" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>			
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print" >
+										<tr>
+											<td width="15%">ទឹកប្រាក់ទទួលបានសរុប</td>
+											<td width="25%">
+												:&nbsp;<label id="lb_total_payment" class="data" ></label>
+												<div class="underline">............................................................</div>
+											</td>
+											<td width="5%">ជាអក្សរ</td>
+											<td width="55%">
+												:&nbsp;<label id="lb_readmoney" class="data" ></label>
+												<div class="underline">.........................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+						</table>
+					</td>
+				</tr>
+				
+				
+				
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="white-space:nowrap; font-size:13px;font-family:Khmer OS Battambang, Times New Roman;">
+							<tr>
+								<td width="55%">&nbsp;</td>
+								<td width="45%"align="right" >រាជធានីភ្នំពេញ.ថ្ងៃទី <?php echo date('d');?> / <?php echo date('m');?> / <?php echo date('Y');?></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="6">
+						<table width="100%" style="white-space:nowrap; font-size:14px;font-family:Khmer OS Battambang, Times New Roman;margin-bottom:8px;">
+							<tr align="center">
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">ប្រធានគណនេយ្យ</span></td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកបង់ប្រាក់</span></td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">បេឡា</span></td>
+							</tr>
+							<tr align="center">
+								<td colspan="3">&nbsp;</td>
+							</tr>
+							<tr align="center">
+								<td colspan="3">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="left">
+									&nbsp;
+								</td>
+								<td align="left">
+									&nbsp;
+								</td>
+								<td align="center">
+									<?php 
+									   $session_user=new Zend_Session_Namespace('auth');
+									   $last_name=$session_user->last_name;
+									   $username = $session_user->first_name;
+									   echo $last_name." ".$username;
+									?>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr >
+					<td colspan="6" style="border:2px solid #000;">
+						
+					</td>
+				</tr>
+				<tr >
+					<td colspan="6" >
+						&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" >
+						<strong>បញ្ចាក់:&nbsp;&nbsp;</strong>-&nbsp;ប្រាក់ដែលបានបង់ហើយមិនអាចដកវីញបានឡើយ ៕ <strong>Notice:</strong> Your Payment is non-returnable.
+					</td>
+				</tr>
+							
+			</table>
+		</div>
+		
+		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
+		<button dojoType="dijit.form.Button" label="Cancel" iconClass="dijitEditorIcon dijitEditorIconCancel"
+			showLabel="true" type="button" onclick="hideDialog();">Cancel</button>
+		<button dojoType="dijit.form.Button" label="Print" showLabel="true" iconClass="dijitEditorIcon dijitEditorIconPrint"
+			 type="button" onclick="printSubmit();">Print</button>
+	</div>
+</div>
+
+
+
+
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_cate" >
 		<form style="background-color: buttonface;" id='frm_add_cate_income' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">

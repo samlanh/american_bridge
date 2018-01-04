@@ -1979,7 +1979,6 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$db = new Allreport_Model_DbTable_DbStudenttest();
 			if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
-    			$this->view->search = $search;
     		}
     		else{
     			$search = array(
@@ -1992,6 +1991,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
     					'shift'=>0,
     			);
     		}
+    		$this->view->search = $search;
     		$rs_rows= $db->getAllStudentTest($search);//call frome model
     		$this->view->row = $rs_rows;
 		}catch(Exception $e){

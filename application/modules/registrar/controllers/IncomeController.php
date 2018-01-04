@@ -31,7 +31,7 @@ class Registrar_IncomeController extends Zend_Controller_Action
     		$glClass = new Application_Model_GlobalClass();
     		$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH_ID","RECEIPT_NO","INCOME_TITLE","CATEGORY_INCOME","CURRENCY_TYPE","TOTAL_INCOME","NOTE","DATE","STATUS");
+    		$collumns = array("BRANCH_ID","RECEIPT_NO","INCOME_TITLE","CATEGORY_INCOME","CURRENCY_TYPE","TOTAL_INCOME","NOTE","FOR_DATE","STATUS");
     		$link=array(
     				'module'=>'registrar','controller'=>'income','action'=>'edit',
     		);
@@ -127,6 +127,17 @@ class Registrar_IncomeController extends Zend_Controller_Action
     		exit();
     	}
     }
+    
+    function getReceiptNoAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Registrar_Model_DbTable_DbIncome();
+    		$receipt = $db->getReceiptNo($data['branch_id']);
+    		print_r(Zend_Json::encode($receipt));
+    		exit();
+    	}
+    }
+    
     
 
 }

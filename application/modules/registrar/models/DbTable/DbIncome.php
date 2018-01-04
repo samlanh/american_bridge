@@ -9,29 +9,39 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	}
 	function addIncome($data){
 		$array = array(
+				'name'			=>$data['name'],
+				'sex'			=>$data['sex'],
+				'phone'			=>$data['phone'],
+				
 				'title'			=>$data['title'],
 				'invoice'		=>$data['invoice'],
 				'cat_id'		=>$data['cate_income'],
-				'curr_type'		=>$data['currency_type'],
+				
 				'total_amount'	=>$data['total_amount'],
 				'desc'			=>$data['Description'],
 				'for_date'		=>$data['Date'],
+				
 				'status'		=>$data['Stutas'],
 				'branch_id'		=>$data['branch_id'],
 				'user_id'		=>$this->getUserId(),
-				'create_date'	=>date('Y-m-d'),
+				'create_date'	=>date('Y-m-d H:i:s'),
 		);
 		$this->insert($array);
  	}
 	function updateIncome($data,$id){
 		$arr = array(
+					'name'			=>$data['name'],
+					'sex'			=>$data['sex'],
+					'phone'			=>$data['phone'],
+				
 					'title'			=>$data['title'],
 					'invoice'		=>$data['invoice'],
 					'cat_id'		=>$data['cate_income'],
-					'curr_type'		=>$data['currency_type'],
+				
 					'total_amount'	=>$data['total_amount'],
 					'desc'			=>$data['Description'],
 					'for_date'		=>$data['Date'],
+				
 					'status'		=>$data['Stutas'],
 					'branch_id'		=>$data['branch_id'],
 					'user_id'		=>$this->getUserId(),
@@ -52,8 +62,7 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;
 		
-		$sql=" 
-				SELECT 
+		$sql="SELECT 
 					id, 
 					(select branch_namekh from rms_branch where br_id = branch_id) as branch,
 					invoice,
@@ -62,30 +71,32 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					(SELECT curr_nameen FROM `ln_currency` WHERE ln_currency.id =curr_type) AS currency_type,
 					total_amount,`desc`,for_date,status 
 				FROM 
-					ln_income ";
+					ln_income 
+			";
+		
+		$order = " order by id DESC";
 		
 		if (!empty($search['adv_search'])){
-				$s_where = array();
-				$s_search = trim(addslashes($search['adv_search']));
-				// $s_where[] = " account_id LIKE '%{$s_search}%'";
-				$s_where[] = " title LIKE '%{$s_search}%'";
-				$s_where[] = " total_amount LIKE '%{$s_search}%'";
-				$s_where[] = " invoice LIKE '%{$s_search}%'";
-				$where .=' AND ('.implode(' OR ',$s_where).')';
-			}
-			if($search['status']>-1){
-				$where.= " AND status = ".$search['status'];
-			}
-			if($search['currency_type']>-1){
-				$where.= " AND curr_type = ".$search['currency_type'];
-			}
-			if(!empty($search['category'])){
-				$where.= " AND cat_id= ".$search['category'];
-			}
-			if(!empty($search['branch'])){
-				$where.= " AND branch_id= ".$search['branch'];
-			}
-			return $db->fetchAll($sql.$where);
+			$s_where = array();
+			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " title LIKE '%{$s_search}%'";
+			$s_where[] = " total_amount LIKE '%{$s_search}%'";
+			$s_where[] = " invoice LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['status']>0){
+			$where.= " AND status = ".$search['status'];
+		}
+		if($search['currency_type']>0){
+			$where.= " AND curr_type = ".$search['currency_type'];
+		}
+		if(!empty($search['category'])){
+			$where.= " AND cat_id= ".$search['category'];
+		}
+		if(!empty($search['branch'])){
+			$where.= " AND branch_id= ".$search['branch'];
+		}
+		return $db->fetchAll($sql.$where.$order);
 	}
 	function getAllExpenseReport($search=null){
 		$db = $this->getAdapter();
@@ -136,4 +147,27 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		return $this->insert($array);
 	}
 
+	function getReceiptNo($branch_id){
+		$db = $this->getAdapter();
+		$sql= "select count(id) from ln_income where branch_id = $branch_id limit 1 ";
+		
+		$acc_no =  $db->fetchOne($sql);
+		
+		$new_acc_no= (int)$acc_no+1;
+		$acc_no= strlen($new_acc_no);
+		
+		$pre="";
+		
+		for($i = $acc_no;$i<6;$i++){
+			$pre.='0';
+		}
+		
+		return $pre.$new_acc_no;
+		
+	}
+	
+	
+	
+	
+	
 }

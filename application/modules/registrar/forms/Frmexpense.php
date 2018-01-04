@@ -37,7 +37,8 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		$_branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'onchange'=>''
+				
+				'onchange'=>'getNewReceiptNo();',
 		));
 		$_db = new Application_Model_DbTable_DbGlobal();
 		$rows = $_db->getAllBranch();
@@ -66,7 +67,7 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		$total_amount->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				//'onkeyup'=>'convertToDollar();',
+				'onkeyup'=>'readMoneyInKhmer();',
 		));
 		
 		$convert_to_dollar=new Zend_Dojo_Form_Element_NumberTextBox('convert_to_dollar');
@@ -80,6 +81,8 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		$invoice->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
+				'style'=>'color:red',
+				'readonly'=>'readonly',
 		));
 		
 		$_category = new Zend_Dojo_Form_Element_FilteringSelect('cat_income');
@@ -119,7 +122,26 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		));
 		$opt = $db->getViewById(8,1);
 		$_currency_type->setMultiOptions($opt);
-         		
+
+		$_sex =  new Zend_Dojo_Form_Element_FilteringSelect('sex');
+		$_sex->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
+		$sex_opt = array(
+				1=>$this->tr->translate("MALE"),
+				2=>$this->tr->translate("FEMALE"));
+		$_sex->setMultiOptions($sex_opt);
+		
+		$name = new Zend_Dojo_Form_Element_TextBox('name');
+		$name->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
+		$phone = new Zend_Dojo_Form_Element_TextBox('phone');
+		$phone->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		
 		if($data!=null){
 			//print_r($data);exit();
 			$_currency_type->setValue($data['curr_type']);
@@ -130,14 +152,17 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 			//$convert_to_dollar->setValue($data['amount_in_dollar']);
 			$for_date->setValue($data['for_date']);
 			$_Description->setValue($data['desc']);
-			$_Date->setValue($data['create_date']);
+			$_Date->setValue($data['for_date']);
 			$_stutas->setValue($data['status']);
 			$invoice->setValue($data['invoice']);
 			$id->setValue($data['id']);
 			$_branch_id->setValue($data['branch_id']);
+			$_sex->setValue($data['sex']);
+			$name->setValue($data['name']);
+			$phone->setValue($data['phone']);
 		}
 		
-		$this->addElements(array($_branch_id,$_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($name,$phone,$_sex,$_branch_id,$_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$total_amount,$convert_to_dollar,$for_date,$id,));
 		return $this;
 		
