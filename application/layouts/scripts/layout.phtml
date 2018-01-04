@@ -118,16 +118,16 @@ dojo.require("dojo.parser");
 				<?php }?>
 				
 				<?php 
-// 					$db = new Application_Model_DbTable_DbUsers();
-//             		$rs = $db->getAccessUrl($module,$controller,$action);
+ 					$db = new Application_Model_DbTable_DbUsers();
+             		$rs = $db->getAccessUrl($module,$controller,$action);
+          		
+             		if(!empty($rs) OR $action=='changepassword'){
+             			echo $this->layout()->content;
+             		}else{
+             			echo $this->render('pagenotfund.phtml');
+             		}
             		
-//             		if(!empty($rs) OR $action=='changepassword'){
-//             			echo $this->layout()->content;
-//             		}else{
-//             			echo $this->render('pagenotfund.phtml');
-//             		}
-            		
-            		echo $this->layout()->content;
+            		//echo $this->layout()->content;
             	?>
 				
             	<?php //echo $this->layout()->content;  ?></td>
@@ -147,7 +147,21 @@ dojo.require("dojo.parser");
     <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 <?php if($module=='allreport' AND $action!='index' OR $action=='allreports' OR $action=='studentnearlyendservice' OR $action=='studentpaymentlate' ){ ?>
 
-<?php if($action!='rpt-daily-income-english-fulltime' AND $action!='rpt-daily-income-khmer-fulltime' AND $action!='rpt-daily-income-transport' AND $action!='rpt-daily-income-english-parttime' AND $action!='rpt-daily-income-foodandstay' AND $action!='rpt-daily-income-material' AND $action!='rpt-daily-income-parking-canteen' AND $action!='rpt-summary-total-income' AND $action!='rpt-result-income'){?>
+<?php if(
+			$action!='rpt-daily-income-english-fulltime' 
+		AND $action!='rpt-daily-income-khmer-fulltime' 
+		AND $action!='rpt-daily-income-transport' 
+		AND $action!='rpt-daily-income-english-parttime' 
+		AND $action!='rpt-daily-income-foodandstay' 
+		AND $action!='rpt-daily-income-material' 
+		AND $action!='rpt-daily-income-parking-canteen'
+		AND $action!='rpt-other-income' 
+		AND $action!='rpt-parking-payment'  
+		AND $action!='rpt-daily-income-studenttest'  
+// 		AND $action!='rpt-summary-total-income' 
+// 		AND $action!='rpt-result-income'
+		
+		){?>
 
 <script type="text/javascript">
 function doPrint() {
