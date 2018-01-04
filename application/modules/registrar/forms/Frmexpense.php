@@ -68,6 +68,7 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
 				'onkeyup'=>'readMoneyInKhmer();',
+				'required'=>true,
 		));
 		
 		$convert_to_dollar=new Zend_Dojo_Form_Element_NumberTextBox('convert_to_dollar');
@@ -82,7 +83,7 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 				'style'=>'color:red',
-				'readonly'=>'readonly',
+				//'readonly'=>'readonly',
 		));
 		
 		$_category = new Zend_Dojo_Form_Element_FilteringSelect('cat_income');
@@ -142,6 +143,17 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
+		$_fixed_id = new Zend_Dojo_Form_Element_FilteringSelect('fixed_id');
+		$_fixed_id->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'onchange'=>'getFixedAssetTotalPaid();',
+		));
+		$rows = $_dbs->getAllFixedAsset();
+		$opt =array(''=>$this->tr->translate("SELECT_FIXED_ASSET"));
+		if(!empty($rows))foreach($rows AS $row) $opt[$row['id']]=$row['name'];
+		$_fixed_id->setMultiOptions($opt);
+		
 		if($data!=null){
 			//print_r($data);exit();
 			$_currency_type->setValue($data['curr_type']);
@@ -157,12 +169,13 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 			$invoice->setValue($data['invoice']);
 			$id->setValue($data['id']);
 			$_branch_id->setValue($data['branch_id']);
-			$_sex->setValue($data['sex']);
-			$name->setValue($data['name']);
-			$phone->setValue($data['phone']);
+			//$_sex->setValue($data['sex']);
+			//$name->setValue($data['name']);
+			//$phone->setValue($data['phone']);
+			$_fixed_id->setValue($data['fixedasset_id']);
 		}
 		
-		$this->addElements(array($name,$phone,$_sex,$_branch_id,$_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($_fixed_id,$name,$phone,$_sex,$_branch_id,$_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$total_amount,$convert_to_dollar,$for_date,$id,));
 		return $this;
 		

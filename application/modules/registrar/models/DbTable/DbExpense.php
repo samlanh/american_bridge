@@ -9,6 +9,7 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	function addexpense($data){
 		$data = array(
 				'title'			=>$data['title'],
+				'fixedasset_id'	=>$data['fixed_id'],
 				'invoice'		=>$data['invoice'],
 				'cat_id'		=>$data['cate_expense'],
 				'curr_type'		=>$data['currency_type'],
@@ -28,6 +29,7 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'title'			=>$data['title'],
 				'invoice'		=>$data['invoice'],
 			    'cat_id'		=>$data['cate_expense'],
+				'fixedasset_id'	=>$data['fixed_id'],
 				'curr_type'		=>$data['currency_type'],
 				'total_amount'	=>$data['total_amount'],
 				'desc'			=>$data['Description'],
@@ -125,6 +127,10 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql.$where.$order);
 	}
 
-
+	function getTotalFixedAsset($id){
+		$db=$this->getAdapter();
+		$sql="SELECT asset_cost,salvagevalue,(usefull_life * total_amount) AS total_paid  FROM ln_fixed_asset WHERE id=$id";
+		return $db->fetchRow($sql);
+	}
 
 }

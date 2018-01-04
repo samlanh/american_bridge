@@ -58,8 +58,9 @@ class Registrar_ExpenseController extends Zend_Controller_Action
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/expense");
 				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-				}				
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/expense/add");
+				}
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/expense/add");
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -75,7 +76,6 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     	array_unshift($cate_income, array('id'=>'-1','name'=>'បន្ថែមថ្មី'));
     	array_unshift($cate_income, array('id'=>'0','name'=>'Select Category'));
     	$this->view->cate_expense = $cate_income;
-    	
     }
  
     public function editAction()
@@ -87,7 +87,7 @@ class Registrar_ExpenseController extends Zend_Controller_Action
 			$db = new Registrar_Model_DbTable_DbExpense();				
 			try {
 				$db->updateExpense($data);				
-				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);		
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/expense");
 			} catch (Exception $e) {
 				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}
@@ -107,6 +107,16 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     	array_unshift($cate_income, array('id'=>'-1','name'=>'បន្ថែមថ្មី'));
     	array_unshift($cate_income, array('id'=>'0','name'=>'Select Category'));
     	$this->view->cate_expense = $cate_income;
+    }
+    
+    function getTotalassetAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Registrar_Model_DbTable_DbExpense();
+    		$cate_income = $db->getTotalFixedAsset($data['fixed_id']);
+    		print_r(Zend_Json::encode($cate_income));
+    		exit();
+    	}
     }
 
 }

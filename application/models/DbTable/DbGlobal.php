@@ -605,6 +605,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	return $db->fetchAll($sql);
    }
     
+   function getAllFixedAsset(){ //type =1 income , type =0 expend
+	   	$db=$this->getAdapter();
+	   	$sql=" SELECT id,fixed_assetname AS `name` FROM ln_fixed_asset WHERE `status`=1 ";
+	   	return $db->fetchAll($sql);
+   }
    
 }
 ?>
