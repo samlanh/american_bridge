@@ -42,13 +42,12 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'academic_year'	=>$data['study_year'],
 							'stu_khname'	=>$data['kh_name'],
 							'stu_enname'	=>$data['en_name'],
-								
+							'sex'			=>$data['sex'],
 							'dob'			=>$data['dob'],
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],
 								
 							'session'		=>$data['session'],
-							'sex'			=>$data['sex'],
 							'degree'		=>$data['dept'],
 							'grade'			=>$data['grade'],
 							'room'			=>$data['room'],
@@ -89,6 +88,9 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'grade'		=>$data['grade'],
 							'room'		=>$data['room'],
 							
+							'stu_khname'	=>$data['kh_name'],
+							'stu_enname'	=>$data['en_name'],
+							'sex'			=>$data['sex'],
 							'dob'			=>$data['dob'],
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],

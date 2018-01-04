@@ -111,6 +111,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'session'	=>$data['session'],
 							'degree'	=>$data['dept'],
 							'grade'		=>$data['grade'],
+							
+							'stu_khname'=>$data['kh_name'],
+							'stu_enname'=>$data['en_name'],
+							'sex'		=>$data['sex'],
 							'tel'		=>$data['phone'],
 							'address'	=>$data['address'],
 							'dob'		=>$data['dob'],

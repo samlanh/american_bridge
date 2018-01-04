@@ -35,7 +35,7 @@ class Allreport_Model_DbTable_DbRptStudentDrop extends Zend_Db_Table_Abstract
 			    	(select major_enname from rms_major where rms_major.major_id=st.grade limit 1)AS grade,
 					(SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=2 and `rms_view`.`key_code`=st.sex )AS sex,
 					(SELECT name_kh FROM `rms_view` WHERE `rms_view`.`type`=5 and `rms_view`.`key_code`=stdp.`type`) as type,
-					stdp.note,
+					stdp.note,stdp.reason,
 					stdp.date,
 					(select name_kh from `rms_view` where `rms_view`.`type`=6 and `rms_view`.`key_code`=`stdp`.`status`)AS status
 		 		from 
