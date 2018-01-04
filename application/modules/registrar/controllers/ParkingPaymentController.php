@@ -72,6 +72,9 @@ class Registrar_ParkingPaymentController extends Zend_Controller_Action {
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$this->view->branch_info = $dbg->getBranchInfo();
     }
     
 	public function editAction(){
@@ -99,6 +102,9 @@ class Registrar_ParkingPaymentController extends Zend_Controller_Action {
     	$this->view->receipt_no=$db->getReceiptNo();
     	$this->view->cus=$db->getOldCustomer();
     	$this->view->reil=$db->getReilMoney();
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$this->view->branch_info = $dbg->getBranchInfo();
     }
     
     public function viewAction(){

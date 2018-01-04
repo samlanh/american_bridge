@@ -107,9 +107,19 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 					"parking_id"     	=> 	$parking_id,
 					"receipt_no"  		=> 	$data["receipt_no"],
 					
+					"moto_ticket_start" => 	$data["moto_ticket_start"],
+					"moto_ticket_end"  	=> 	$data["moto_ticket_end"],
+					"moto_amount_ticket"=> 	$data["moto_amount_ticket"],
+					"moto_price_per_ticket"  => $data["moto_price_per_ticket"],
+					
 					"parking_moto_fee_in_riel"  => 	$data["moto_total_in_riel"],
 					"parking_moto_fee"  => 	$data["moto_total_in_dollar"],
 					"moto_for_date"     => 	$data["moto_for_date"],
+					
+					"bike_ticket_start" => 	$data["bike_ticket_start"],
+					"bike_ticket_end"  	=> 	$data["bike_ticket_end"],
+					"bike_amount_ticket"=> 	$data["bike_amount_ticket"],
+					"bike_price_per_ticket"  => $data["bike_price_per_ticket"],
 					
 					"parking_bike_fee_in_riel"  => 	$data["bike_total_in_riel"],
 					"parking_bike_fee"  => 	$data["bike_total_in_dollar"],

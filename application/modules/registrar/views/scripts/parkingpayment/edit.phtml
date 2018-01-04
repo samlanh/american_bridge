@@ -92,9 +92,30 @@ dojo.require("dojo.data.ItemFileWriteStore");
 						<fieldset>
 							<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ")?></strong></legend>
 								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-								    <tr>
+								    
+									<tr>
+										<td><?php echo $tr->translate("TICKET_START");?></td>
+										<td><input type="text" name="moto_ticket_start" class="fullside" id="moto_ticket_start" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("TICKET_END");?></td>
+										<td><input type="text" name="moto_ticket_end" class="fullside" id="moto_ticket_end" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+										<td><input type="text" name="moto_amount_ticket" class="fullside" id="moto_amount_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+										<td><input type="text" name="moto_price_per_ticket" class="fullside" id="moto_price_per_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
 										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="calculateMotoFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
 								    </tr>
 								    <tr>
 										<td><?php echo $tr->translate("FOR_DATE");?></td>
@@ -111,9 +132,30 @@ dojo.require("dojo.data.ItemFileWriteStore");
 						<fieldset>
 							<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់")?></strong></legend>
 								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+									
+									<tr>
+										<td><?php echo $tr->translate("TICKET_START");?></td>
+										<td><input type="text" name="bike_ticket_start" class="fullside" id="bike_ticket_start" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("TICKET_END");?></td>
+										<td><input type="text" name="bike_ticket_end" class="fullside" id="bike_ticket_end" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+										<td><input type="text" name="bike_amount_ticket" class="fullside" id="bike_amount_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+										<td><input type="text" name="bike_price_per_ticket" class="fullside" id="bike_price_per_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
 									<tr>
 										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="calculateBikeFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
 								    </tr>
 								    <tr>
 										<td><?php echo $tr->translate("FOR_DATE");?></td>
@@ -202,9 +244,20 @@ $(document).ready(function() {
 });
 
 function setValue(){
+	dijit.byId('moto_ticket_start').attr('value','<?php echo $this->row['moto_ticket_start']?>');
+	dijit.byId('moto_ticket_end').attr('value','<?php echo $this->row['moto_ticket_end']?>');
+	dijit.byId('moto_amount_ticket').attr('value','<?php echo $this->row['moto_amount_ticket']?>');
+	dijit.byId('moto_price_per_ticket').attr('value','<?php echo $this->row['moto_price_per_ticket']?>');
+	
 	dijit.byId('moto_total_in_riel').attr('value','<?php echo $this->row['parking_moto_fee_in_riel']?>');
 	dijit.byId('moto_for_date').attr('value','<?php echo $this->row['moto_for_date']?>');
 	dijit.byId('moto_total_in_dollar').attr('value','<?php echo $this->row['parking_moto_fee']?>');
+	
+	
+	dijit.byId('bike_ticket_start').attr('value','<?php echo $this->row['bike_ticket_start']?>');
+	dijit.byId('bike_ticket_end').attr('value','<?php echo $this->row['bike_ticket_end']?>');
+	dijit.byId('bike_amount_ticket').attr('value','<?php echo $this->row['bike_amount_ticket']?>');
+	dijit.byId('bike_price_per_ticket').attr('value','<?php echo $this->row['bike_price_per_ticket']?>');
 	
 	dijit.byId('bike_total_in_riel').attr('value','<?php echo $this->row['parking_bike_fee_in_riel']?>');
 	dijit.byId('bike_for_date').attr('value','<?php echo $this->row['bike_for_date']?>');
@@ -223,8 +276,19 @@ function setReadonlyPageEdit(){
 	dijit.byId("cus_id").set('readOnly',true);
 	dijit.byId("old_cus").set('readOnly',true);
 	
+	dijit.byId("moto_ticket_start").set('readOnly',true);
+	dijit.byId("moto_ticket_end").set('readOnly',true);
+	dijit.byId("moto_amount_ticket").set('readOnly',true);
+	dijit.byId("moto_price_per_ticket").set('readOnly',true);
+	
 	dijit.byId("moto_total_in_riel").set('readOnly',true);
 	dijit.byId("moto_for_date").set('readOnly',true);
+	
+	
+	dijit.byId("bike_ticket_start").set('readOnly',true);
+	dijit.byId("bike_ticket_end").set('readOnly',true);
+	dijit.byId("bike_amount_ticket").set('readOnly',true);
+	dijit.byId("bike_price_per_ticket").set('readOnly',true);
 	
 	dijit.byId("bike_total_in_riel").set('readOnly',true);
 	dijit.byId("bike_for_date").set('readOnly',true);
@@ -262,7 +326,58 @@ function setCusName(){
 	 dijit.byId("cus_name").attr('value',dijit.byId("old_cus").attr('displayedValue'));
 }
 
-function calculateMotoFee(){
+
+function motoCalculateTotalTicket(){
+	start_ticket = parseInt(dijit.byId("moto_ticket_start").get("value"));
+	end_ticket = parseInt(dijit.byId("moto_ticket_end").get("value"));
+	
+	if(start_ticket>=0 && end_ticket>0 && end_ticket>start_ticket){
+		total_ticket = end_ticket - start_ticket;
+		dijit.byId("moto_amount_ticket").attr('value',total_ticket);
+		
+		motoCalculateTotalFee();
+	}
+}
+
+function bikeCalculateTotalTicket(){
+	start_ticket = parseInt(dijit.byId("bike_ticket_start").get("value"));
+	end_ticket = parseInt(dijit.byId("bike_ticket_end").get("value"));
+	// if(end_ticket>start_ticket){
+		// alert("start="+start_ticket+",end="+end_ticket);
+	// }
+	if(start_ticket>=0 && end_ticket>0 && end_ticket>start_ticket){
+		total_ticket = end_ticket - start_ticket;
+		dijit.byId("bike_amount_ticket").attr('value',total_ticket);
+		
+		bikeCalculateTotalFee();
+	}
+}
+
+function motoCalculateTotalFee(){
+	moto_amount_ticket = dijit.byId("moto_amount_ticket").get("value");
+	moto_price_per_ticket = dijit.byId("moto_price_per_ticket").get("value");
+	
+	if(moto_amount_ticket>0 && moto_price_per_ticket>0){
+		total_in_riel = moto_amount_ticket * moto_price_per_ticket;
+		dijit.byId("moto_total_in_riel").attr('value',total_in_riel);
+		
+		MotoConvertToDollar();
+	}
+}
+
+function bikeCalculateTotalFee(){
+	bike_amount_ticket = dijit.byId("bike_amount_ticket").get("value");
+	bike_price_per_ticket = dijit.byId("bike_price_per_ticket").get("value");
+	
+	if(bike_amount_ticket>0 && bike_price_per_ticket>0){
+		total_in_riel = bike_amount_ticket * bike_price_per_ticket;
+		dijit.byId("bike_total_in_riel").attr('value',total_in_riel);
+		
+		BikeConvertToDollar();
+	}
+}
+
+function MotoConvertToDollar(){
 
 	  moto_in_riel = dijit.byId("moto_total_in_riel").get("value");
 	  if(isNaN(moto_in_riel)){
@@ -273,7 +388,8 @@ function calculateMotoFee(){
 	  
 	 getTotal();
 }
-function calculateBikeFee(){
+
+function BikeConvertToDollar(){
 
 	  bike_in_riel = dijit.byId("bike_total_in_riel").get("value");
 	  if(isNaN(bike_in_riel)){
@@ -282,8 +398,9 @@ function calculateBikeFee(){
 	  total_in_dollar = bike_in_riel / reil_exc;
 	  dijit.byId("bike_total_in_dollar").attr("value",total_in_dollar.toFixed(2));
 	  
-	 getTotal();
+	  getTotal();
 }
+
 function calculateBrokenFee(){
 
 	  broken_in_riel = dijit.byId("broken_in_riel").get("value");
@@ -396,7 +513,7 @@ function printSubmit(){
     window.frames["print_frame"].window.print();
 }
 
-function printSave(new_stu_id,new_receipt_no){		
+function printSave(){		
 	if(dijit.byId('frm_parking').validate()) {
 		 
 		 
@@ -422,18 +539,131 @@ function printSave(new_stu_id,new_receipt_no){
 		 if(moto_payment>0){
 			dojo.byId("lb_moto_payment").innerHTML = " $ "+moto_payment;
 			dojo.byId("checkbox_moto_payment").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+			
+			moto_ticket_start = dijit.byId('moto_ticket_start').get('value');
+			if(moto_ticket_start>0){
+				
+			}else{
+				moto_ticket_start = "";
+			}
+			dojo.byId("lb_moto_ticket_start").innerHTML = moto_ticket_start;
+			
+			moto_ticket_end = dijit.byId('moto_ticket_end').get('value');
+			if(moto_ticket_end>0){
+				
+			}else{
+				moto_ticket_end = "";
+			}
+			dojo.byId("lb_moto_ticket_end").innerHTML = moto_ticket_end;
+			
+			moto_amount_ticket = dijit.byId('moto_amount_ticket').get('value');
+			if(moto_amount_ticket>0){
+				
+			}else{
+				moto_amount_ticket = "";
+			}
+			dojo.byId("lb_moto_amount_ticket").innerHTML = moto_amount_ticket;
+			
+			
+			moto_price_per_ticket = dijit.byId('moto_price_per_ticket').get('value');
+			if(moto_price_per_ticket>0){
+				moto_price_per_ticket = dijit.byId('moto_price_per_ticket').get('value')+" ៛";
+			}else{
+				moto_price_per_ticket = "";
+			}
+			dojo.byId("lb_moto_price_per_ticket").innerHTML = moto_price_per_ticket;
+			
+			
+			var date = new Date(dijit.byId("moto_for_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var for_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_moto_for_date").innerHTML = for_date;
+			
 		 }else{
 			dojo.byId("lb_moto_payment").innerHTML = "";
 			dojo.byId("checkbox_moto_payment").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		 
+			dojo.byId("lb_moto_ticket_start").innerHTML = "";
+			dojo.byId("lb_moto_ticket_end").innerHTML = "";
+			
+			dojo.byId("lb_moto_amount_ticket").innerHTML = "";
+			dojo.byId("lb_moto_price_per_ticket").innerHTML = "";
+			
+			dojo.byId("lb_moto_for_date").innerHTML = "";
 		 }
 		 
 		 bike_payment = dijit.byId('bike_total_in_dollar').get('value');
 		 if(bike_payment>0){
 			dojo.byId("lb_bike_payment").innerHTML = " $ "+bike_payment; 
 			dojo.byId("checkbox_bike_payment").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		 
+			bike_ticket_start = dijit.byId('bike_ticket_start').get('value');
+			if(bike_ticket_start>0){
+				
+			}else{
+				bike_ticket_start = "";
+			}
+			dojo.byId("lb_bike_ticket_start").innerHTML = bike_ticket_start;
+			
+			bike_ticket_end = dijit.byId('bike_ticket_end').get('value');
+			if(bike_ticket_end>0){
+				
+			}else{
+				bike_ticket_end = "";
+			}
+			dojo.byId("lb_bike_ticket_end").innerHTML = bike_ticket_end;
+			
+			bike_amount_ticket = dijit.byId('bike_amount_ticket').get('value');
+			if(bike_amount_ticket>0){
+				
+			}else{
+				bike_amount_ticket = "";
+			}
+			dojo.byId("lb_bike_amount_ticket").innerHTML = bike_amount_ticket;
+			
+			bike_price_per_ticket = dijit.byId('bike_price_per_ticket').get('value');
+			if(bike_price_per_ticket>0){
+				bike_price_per_ticket = dijit.byId('bike_price_per_ticket').get('value')+" ៛";
+			}else{
+				bike_price_per_ticket = "";
+			}
+			dojo.byId("lb_bike_price_per_ticket").innerHTML = bike_price_per_ticket;
+			
+			var date = new Date(dijit.byId("bike_for_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var for_date = dd + '/' + mon + '/' + y ;
+			dojo.byId("lb_bike_for_date").innerHTML = for_date;
+			
 		 }else{
 			dojo.byId("lb_bike_payment").innerHTML = " ";
 			dojo.byId("checkbox_bike_payment").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		 
+			dojo.byId("lb_bike_ticket_start").innerHTML = "";
+			dojo.byId("lb_bike_ticket_end").innerHTML = "";
+			
+			dojo.byId("lb_bike_amount_ticket").innerHTML = "";
+			dojo.byId("lb_bike_price_per_ticket").innerHTML = "";
+			
+			dojo.byId("lb_bike_for_date").innerHTML = "";
 		 }
 		 
 		 broken = dijit.byId('broken_total_in_dollar').get('value');
@@ -464,15 +694,14 @@ function hideDialog() {
 }
 </script>
 
-<div class="dijitHidden" style="width: 148mm !important; height: 175mm ; padding: 0px; margin: 0px;">
-<?php $keycode = $this->keycode;?>
-	<div data-dojo-type="dijit.Dialog" style="width:148mm !important;height: 175mm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("");?>'" id="terms" >
-		
+<div class="dijitHidden" style="width: 25cm !important; height: 15cm ; padding: 0px; margin: 0px;">
+	
+	<div data-dojo-type="dijit.Dialog" style="width:30cm !important;height: 17cm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("");?>'" id="terms" >
 		<style>
 			.data2{font-size:10px !important;}
 		</style>
 		
-		<div id="divPrint" style="width: 148mm !important; height: 175mm ; padding: 0px; margin: 0px;">
+		<div id="divPrint" style="width: 25cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
 				.fontbig{
 					font-size: 15px;	
@@ -497,26 +726,32 @@ function hideDialog() {
 			   .one{white-space:nowrap;}
 			   
 				.underline{margin-top: -18px;text-align:center;}
-				.data{font-size:12px;font-weight:bold;}
-				.data1{font-size:12px;font-weight:bold;}
+				.underline_top{margin-top: -15px;text-align:center;}
+				.data{font-size:14px;font-weight:bold;}
+				.data1{font-size:14px;font-weight:bold;}
 				
-				.receiptno{font-size:17px;font-weight:bold;}
+				.receiptno{font-size:22px;font-weight:bold;}
 				.tab_row{ margin-top: -8px;}
 				.fonteng{font-size:12px;}
-				
+				.table_print{
+					white-space:nowrap;
+					font-size:14px;
+					font-family:'Khmer OS Battambang';
+					line-height:20px;
+				}
 			</style>	
-			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:14px;font-family:'Khmer OS Battambang';line-height: 17px;margin-top:-5px;">
 				<tr>
 				    <td colspan="6"  align="center" style="">
 						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-10px;font-weight:bold;">
 							<tr>
-								<td width="35%" align="left" style="font-size:10px;">
-									<div style="font-size:13px;">Branch 6 (ចំការដូង​) </div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+								<td width="35%" align="left" style="font-size:14px;">
+									<div style="font-size:17px;"><?php if (!empty($this->branch_info['branch_namekh'])){ echo $this->branch_info['branch_namekh'];}?></div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
 								</td>
 								<td width="30%" align="center">
-									<img style="width: 50%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
+									<img style="width: 35%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
 								</td>
-								<td width="35%" align="center" style="font-size:17px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
+								<td width="35%" align="center" style="font-size:22px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
 							</tr>
 						</table>
 				    </td>
@@ -527,7 +762,7 @@ function hideDialog() {
 						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;margin-top: -25px;">
 							<tr>
 								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
-								<td width="20%" align="center" style="font-size:16px;">បណ្ណបង់ប្រាក់</td>
+								<td width="20%" align="center" style="font-size:16px;">បង្កាន់ដៃទទួលប្រាក់ RECEIPT</td>
 								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
 							</tr>
 						</table>
@@ -535,178 +770,26 @@ function hideDialog() {
 				</tr>
 
 				<tr>
-					<td width="15%">&nbsp;</td>
-					<td width="30%"></td>
-					<td width="7%"></td>
-					<td width="10%"></td>
-					<td width="10%"></td>
-					<td width="28%"></td>
+					<td colspan="6">
+						&nbsp;
+					</td>
 				</tr>
 				
 				<tr>
-					<td>ឈ្មោះអ្នកបង់ប្រាក់</td>
-					<td>
+					<td width="10%">ឈ្មោះអ្នកបង់ប្រាក់</td>
+					<td width="38%">
 						&nbsp;:&nbsp;<label id="lb_cus_name"  class="data" ></label>
-						<div class="underline">&nbsp;.........................................</div>
+						<div class="underline_top">&nbsp;...............................................................................................</div>
 					</td>
-					<td align="center"> ភេទ</td>
-					<td>
+					<td width="4%" align="center"> ភេទ</td>
+					<td width="5%">
 						:&nbsp;<label id="lb_sex" class="data" ></label>
-						<div class="underline">............</div>
+						<div class="underline_top">..........</div>
 					</td>
-					<td align="center"> លេខទូរសព្ទ</td>
-					<td>
+					<td width="8%" align="center"> លេខទូរសព្ទ</td>
+					<td width="35%">
 						:&nbsp;<label id="lb_phone" class="data" ></label>
-						<div class="underline">......................................</div>
-					</td>
-				</tr>
-				
-				<tr>
-					<td colspan="6">
-						<table width="100%" style="white-space:nowrap;font-size:12px;font-family:'Khmer OS Battambang';">
-							<tr>
-								<td width="10%">ទឹកប្រាក់</td>
-								<td width="25%">
-									:&nbsp;<label id="lb_total_payment" class="data" ></label>
-									<div class="underline">....................................</div>
-								</td>
-								<td width="10%">ជាអក្សរ</td>
-								<td width="55%">
-									:&nbsp;<label id="lb_readmoney" class="data" ></label>
-									<div class="underline">.................................................................................</div>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				
-				<tr>
-					<td colspan="6">
-						<table width="100%" style="white-space:nowrap;font-size:12px;font-family:'Khmer OS Battambang';">
-							<tr>
-								<td width="20%">មានសុពលភាព ពីថ្ងៃទី</td>
-								<td width="35%" >
-									:&nbsp;<label id="lb_start_date" class="data" ></label>
-									<div class="underline">.................................................</div>
-								</td>
-								<td width="12%" align="center">ដល់ថ្ងៃទី</td>
-								<td width="33%" align="left">
-									:&nbsp;<label id="lb_epx_date" class="data" ></label>
-									<div class="underline">.................................................</div>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				
-				<tr>
-					<td valign="top" align="center">សម្រាប់ៈ</td>
-					<td colspan="5">
-						<table width="100%" style="white-space:nowrap;font-size:12px;font-family:'Khmer OS Battambang';">
-							<tr>
-								<td width="7%">
-									<label id="checkbox_rent"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃជួលតូបៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_water"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃទឹកៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_fire"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃភ្លើងៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_cleaner"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃសម្រាមៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_bike_payment"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃកិបសំបុត្រកង់ៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_bike_payment" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_moto_payment"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃកិបសំបុត្រម៉ូតូៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_moto_payment" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_broken"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃលក់អេតចាយៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_broken" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_other"></label>
-								</td>
-								<td width="15%">
-									 ផ្សេងៗ
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-						</table>
+						<div class="underline_top">&nbsp;.........................................................................................</div>
 					</td>
 				</tr>
 				
@@ -716,9 +799,423 @@ function hideDialog() {
 					</td>
 				</tr>
 				
+				
+				<tr>
+					<td colspan="6" style="border:2px solid #000;">
+						<table width="100%" style="white-space:nowrap;font-size:14px;font-family:'Khmer OS Battambang';line-height:22px;margin:5px;">
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_book_rental"></label>
+												 ថ្លៃកក់ជួលតូប
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<table border="0" width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_rent"></label>
+												 ថ្លៃជួលតូប
+											</td>
+											<td width="22%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">...................................................</div>
+											</td>
+											
+											<td width="13%">
+												 មានសុពលភាព ចំនួន
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................</div>
+											</td>
+											
+											<td width="8%">
+												 ខែ ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="15%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..................................</div>
+											</td>
+											
+											<td width="7%">
+												 ដល់ថ្ងៃទី
+											</td>
+											<td width="15%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" border="0" class="table_print">
+										<tr>
+											<td width="5%">
+												<label id="checkbox_water"></label>
+												 ថ្លៃទឹក
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="5%">
+												កុងទ័រថ្មី
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="6%">
+												កុងទ័រចាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="9%">
+												កុងទ័រប្រើប្រាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="3%">
+												Kw X
+											</td>
+											<td width="6%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="8%">
+												/1Kw ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="5%">
+												<label id="checkbox_fire"></label>
+												 ថ្លៃភ្លើង
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="5%">
+												កុងទ័រថ្មី
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="6%">
+												កុងទ័រចាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="9%">
+												កុងទ័រប្រើប្រាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="3%">
+												Kw X
+											</td>
+											<td width="6%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="8%">
+												/1Kw ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_cleaner"></label>
+												 ថ្លៃសម្រាម
+											</td>
+											<td width="56%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">............................................................................................................................................</div>
+											</td>
+											
+											<td width="6%">
+												ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="11%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_moto_payment"></label>
+												 ថ្លៃកិបសំបុត្រម៉ូតូ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="lb_moto_payment" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												លេខសំបុត្រពី
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="lb_moto_ticket_start" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="6%">
+												ដល់លេខ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="lb_moto_ticket_end" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												សរុបប្រើប្រាស់
+											</td>
+											<td width="5%">
+												:&nbsp;<label id="lb_moto_amount_ticket" class="data" ></label>
+												<div class="underline">..........</div>
+											</td>
+											
+											<td width="1%">
+												X
+											</td>
+											<td width="5%">
+												&nbsp;<label id="lb_moto_price_per_ticket" class="data" ></label>
+												<div class="underline">............</div>
+											</td>
+											
+											<td width="9%">
+												/1សំបុត្រ បិទវេនទី
+											</td>
+											<td width="4%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">........</div>
+											</td>
+											
+											<td width="6%">
+												សំរាប់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="lb_moto_for_date" class="data" ></label>
+												<div class="underline">....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+								
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" border="0" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_bike_payment"></label>
+												 ថ្លៃកិបសំបុត្រកង់
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="lb_bike_payment" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												លេខសំបុត្រពី
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="lb_bike_ticket_start" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="6%">
+												ដល់លេខ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="lb_bike_ticket_end" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												សរុបប្រើប្រាស់
+											</td>
+											<td width="5%">
+												:&nbsp;<label id="lb_bike_amount_ticket" class="data" ></label>
+												<div class="underline">..........</div>
+											</td>
+											
+											<td width="1%">
+												X
+											</td>
+											<td width="5%">
+												&nbsp;<label id="lb_bike_price_per_ticket" class="data" ></label>
+												<div class="underline">............</div>
+											</td>
+											
+											<td width="9%">
+												/1សំបុត្រ បិទវេនទី
+											</td>
+											<td width="4%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">........</div>
+											</td>
+											
+											<td width="6%">
+												សំរាប់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="lb_bike_for_date" class="data" ></label>
+												<div class="underline">....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_broken"></label>
+												 ថ្លៃលក់អេតចាយ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="lb_broken" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print" >
+										<tr>
+											<td width="12%">
+												<label id="checkbox_other"></label>
+												 ផ្សេងៗ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="lb_other_income" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>			
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print" >
+										<tr>
+											<td width="15%">ទឹកប្រាក់ទទួលបានសរុប</td>
+											<td width="25%">
+												:&nbsp;<label id="lb_total_payment" class="data" ></label>
+												<div class="underline">............................................................</div>
+											</td>
+											<td width="5%">ជាអក្សរ</td>
+											<td width="55%">
+												:&nbsp;<label id="lb_readmoney" class="data" ></label>
+												<div class="underline">.........................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+						</table>
+					</td>
+				</tr>
+				
+				
+				
 				<tr>
 					<td colspan="6">
-						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
+						<table width="100%" style="white-space:nowrap; font-size:13px;font-family:Khmer OS Battambang, Times New Roman;">
 							<tr>
 								<td width="55%">&nbsp;</td>
 								<td width="45%"align="right" >រាជធានីភ្នំពេញ.ថ្ងៃទី <?php echo date('d');?> / <?php echo date('m');?> / <?php echo date('Y');?></td>
@@ -729,86 +1226,38 @@ function hideDialog() {
 				
 				<tr>
 					<td colspan="6">
-						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
+						<table width="100%" style="white-space:nowrap; font-size:14px;font-family:Khmer OS Battambang, Times New Roman;margin-bottom:8px;">
 							<tr align="center">
-								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">ប្រធានសាខា</span><br/>ហត្ថលេខា</td>
-								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកបង់ប្រាក់</span><br/>ហត្ថលេខា</td>
-								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកទទួលប្រាក់</span><br/>ហត្ថលេខា</td>
-							</tr>
-							<tr align="center">
-								<td colspan="3">&nbsp;</td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">ប្រធានគណនេយ្យ</span></td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកបង់ប្រាក់</span></td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">បេឡា</span></td>
 							</tr>
 							<tr align="center">
 								<td colspan="3">&nbsp;</td>
 							</tr>
-							<tr>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ឈ្មោះ</td>
-											<td width="80%"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
-								</td>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ឈ្មោះ</td>
-											<td width="80%"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
-								</td>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ឈ្មោះ</td>
-											<td width="80%" align="center">
-												<div style=" font-size: 12px;"> 
-													
-													<?php 
-													   $session_user=new Zend_Session_Namespace('auth');
-													   $last_name=$session_user->last_name;
-													   $username = $session_user->first_name;
-													   echo $last_name." ".$username;
-													?>
-												</div>
-												<div class="underline">&nbsp;................................</div>
-											</td>
-										</tr>
-									</table>
-								</td>
+							<tr align="center">
+								<td colspan="3">&nbsp;</td>
 							</tr>
-							
 							<tr>
 								<td align="left">
 									&nbsp;
 								</td>
 								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ទូរសព្ទ</td>
-											<td width="80%"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
+									&nbsp;
 								</td>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ទូរសព្ទ</td>
-											<td width="80%" align="center"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
+								<td align="center">
+									<?php 
+									   $session_user=new Zend_Session_Namespace('auth');
+									   $last_name=$session_user->last_name;
+									   $username = $session_user->first_name;
+									   echo $last_name." ".$username;
+									?>
 								</td>
 							</tr>
-							
 						</table>
 					</td>
 				</tr>
-				<tr >
-					<td colspan="6" >
-						&nbsp;
-					</td>
-				</tr>
+				
 				<tr >
 					<td colspan="6" style="border:2px solid #000;">
 						

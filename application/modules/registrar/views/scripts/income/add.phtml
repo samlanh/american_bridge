@@ -218,7 +218,6 @@ var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Jso
 	function printSave(new_stu_id,new_receipt_no){		
 		if(dijit.byId('frm_other_income').validate()) {
 			 
-			 
 			 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("invoice").get('value');
 			 dojo.byId("lb_branch").innerHTML = dijit.byId("branch_id").attr('displayedValue');
 			 
@@ -230,7 +229,12 @@ var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Jso
 			 
 			 dojo.byId("lb_readmoney").innerHTML = dijit.byId("readmoney").attr('displayedValue');
 			 
-			 dojo.byId("lb_total_payment").innerHTML = " $ "+dijit.byId("total_amount").get('value');
+			 total_amount = dijit.byId("total_amount").get('value');
+			 if(total_amount>0){
+				 dojo.byId("lb_total_payment").innerHTML = " $ "+dijit.byId("total_amount").get('value');
+			 }else{
+				 dojo.byId("lb_total_payment").innerHTML = "";
+			 }
 			 
 			 other_income = dijit.byId('total_amount').get('value');
 			 if(other_income>0){
@@ -309,10 +313,11 @@ var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Jso
 			   .one{white-space:nowrap;}
 			   
 				.underline{margin-top: -18px;text-align:center;}
+				.underline_top{margin-top: -15px;text-align:center;}
 				.data{font-size:14px;font-weight:bold;}
 				.data1{font-size:14px;font-weight:bold;}
 				
-				.receiptno{font-size:17px;font-weight:bold;}
+				.receiptno{font-size:22px;font-weight:bold;}
 				.tab_row{ margin-top: -8px;}
 				.fonteng{font-size:12px;}
 				.table_print{
@@ -322,18 +327,18 @@ var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Jso
 					line-height:20px;
 				}
 			</style>	
-			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:14px;font-family:'Khmer OS Battambang';line-height: 21px;">
+			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:14px;font-family:'Khmer OS Battambang';line-height: 17px;margin-top:-5px;">
 				<tr>
 				    <td colspan="6"  align="center" style="">
 						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-10px;font-weight:bold;">
 							<tr>
-								<td width="35%" align="left" style="font-size:12px;">
-									<div style="font-size:13px;"><label id="lb_branch" class="data"></label></div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+								<td width="35%" align="left" style="font-size:14px;">
+									<div style="font-size:17px;"><label id="lb_branch" ></label></div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
 								</td>
 								<td width="30%" align="center">
 									<img style="width: 35%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
 								</td>
-								<td width="35%" align="center" style="font-size:19px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
+								<td width="35%" align="center" style="font-size:22px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
 							</tr>
 						</table>
 				    </td>
@@ -361,17 +366,17 @@ var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Jso
 					<td width="10%">ឈ្មោះអ្នកបង់ប្រាក់</td>
 					<td width="38%">
 						&nbsp;:&nbsp;<label id="lb_cus_name"  class="data" ></label>
-						<div class="underline">&nbsp;...............................................................................................</div>
+						<div class="underline_top">&nbsp;...............................................................................................</div>
 					</td>
 					<td width="4%" align="center"> ភេទ</td>
 					<td width="5%">
 						:&nbsp;<label id="lb_sex" class="data" ></label>
-						<div class="underline">..........</div>
+						<div class="underline_top">..........</div>
 					</td>
 					<td width="8%" align="center"> លេខទូរសព្ទ</td>
 					<td width="35%">
 						:&nbsp;<label id="lb_phone" class="data" ></label>
-						<div class="underline">&nbsp;.........................................................................................</div>
+						<div class="underline_top">&nbsp;.........................................................................................</div>
 					</td>
 				</tr>
 				
@@ -610,34 +615,130 @@ var cate_income_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Jso
 									<table width="100%" class="table_print">
 										<tr>
 											<td width="12%">
-												<label id="checkbox_bike_payment"></label>
-												 ថ្លៃកិបសំបុត្រកង់
-											</td>
-											<td width="88%">
-												:&nbsp;<label id="" class="data" ></label>
-												<div class="underline">................................................................................................................................................................................................................................</div>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							
-							<tr>
-								<td colspan="2">
-									<table width="100%" class="table_print">
-										<tr>
-											<td width="12%">
 												<label id="checkbox_moto_payment"></label>
 												 ថ្លៃកិបសំបុត្រម៉ូតូ
 											</td>
-											<td width="88%">
+											<td width="8%">
 												:&nbsp;<label id="" class="data" ></label>
-												<div class="underline">................................................................................................................................................................................................................................</div>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												លេខសំបុត្រពី
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="6%">
+												ដល់លេខ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												សរុបប្រើប្រាស់
+											</td>
+											<td width="5%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..........</div>
+											</td>
+											
+											<td width="1%">
+												X
+											</td>
+											<td width="5%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">............</div>
+											</td>
+											
+											<td width="9%">
+												/1សំបុត្រ បិទវេនទី
+											</td>
+											<td width="4%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">........</div>
+											</td>
+											
+											<td width="6%">
+												សំរាប់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">....................</div>
 											</td>
 										</tr>
 									</table>
 								</td>
 								
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" border="0" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_bike_payment"></label>
+												 ថ្លៃកិបសំបុត្រកង់
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												លេខសំបុត្រពី
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="6%">
+												ដល់លេខ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												សរុបប្រើប្រាស់
+											</td>
+											<td width="5%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..........</div>
+											</td>
+											
+											<td width="1%">
+												X
+											</td>
+											<td width="5%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">............</div>
+											</td>
+											
+											<td width="9%">
+												/1សំបុត្រ បិទវេនទី
+											</td>
+											<td width="4%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">........</div>
+											</td>
+											
+											<td width="6%">
+												សំរាប់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
 							</tr>
 							
 							<tr>
