@@ -20,220 +20,220 @@ dojo.require("dojo.data.ItemFileWriteStore");
 </script>
 <script src="<?php echo $this->baseUrl();?>/ckeditor/ckeditor.js"></script>
 <form  id='frm_parking' action="" dojoType="dijit.form.Form" method="post"  enctype="multipart/form-data" >
-<script type="dojo/method" event="onSubmit" enctype="multipart/form-data">			
-	if(this.validate()) {
-               dijit.byId('save_new').set('disabled',true);
-			   dijit.byId('save_close').set('disabled',true);
-			   return true;
-			} else {
-				return false;
-			}
-</script>
-<table cellspacing="2" width="100%" style="margin: 0 auto; ">
-	<tr>
-		<td width="33%;" valign="top">
-			<fieldset>
-				<legend align="center" ><strong><?php echo $tr->translate("CUSTOMER_INFO")?></strong></legend>
-				<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-				        <tr>
-							<td><?php echo $tr->translate("OLD_CUS");?></td>
-							<td align="left" style="height: 0px;"> <input type="checkbox" name="is_new_cu" id="is_new_cu" value="1" onClick="hidendOldCus();" ></td> 
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("CUS_ID");?></td>
-							<td><input type="text" name="cus_id" class="fullside" id="cus_id"  style="color:red;" dojoType="dijit.form.ValidationTextBox" required="required" value="<?php echo $this->cus_id;?>"/> </td> 
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("CUS_NAME");?></td>
-							<td>
-							  <div id="cus_name_div">
-								<input type="text" name="cus_name" class="fullside" id="cus_name"   dojoType="dijit.form.ValidationTextBox" required="required"/> 
-							  </div>
-							    <!-- old Customer  -->
-							    <div id="old_cus_div">
-									<select dojoType='dijit.form.FilteringSelect' id="old_cus" name="old_cus"   class="fullside"  ​​ onChange="getOldCustomerInfo();setCusName();" placeholder=" ">
-							   			<option value="0"><?php echo $tr->translate("SELECT_CUSTOMER_NAME");?></option>
-							   			<?php if(!empty($this->cus)) foreach ($this->cus as $c){?>
-							   			<option value="<?php echo $c['id']?>" ><?php echo $c['name']?> </option>
-							   			<?php }?>
-						   			</select>
-						   		</div>
-					   			<!-- /end old Customer  -->
-							</td>
-						</tr>
-						<tr>
-						    <td><?php echo $tr->translate("SEX");?></td>
-							<td>
-								<select dojoType='dijit.form.FilteringSelect' id="sex" name="sex"   class="fullside"  ​​  placeholder=" ">
-						   			<option value="1"><?php echo $tr->translate("MALE");?></option>
-						   			<option value="2"><?php echo $tr->translate("FEMALE");?> </option>
-					   			</select>
-							</td>
-						</tr>
-						<tr>
-							<td><?php echo $tr->translate("PHONE");?></td>
-							<td><input type="text" name="phone" class="fullside" id="phone"   dojoType="dijit.form.TextBox" /> </td>
-					    </tr>
-					    <tr>
-							<td><?php echo $tr->translate("EMAIL");?></td>
-							<td><input type="text" name="email" class="fullside" id="email"   dojoType="dijit.form.TextBox" /> </td>
-					    </tr>
-					    <tr>
-							<td><?php echo $tr->translate("ADDRESS");?></td>
-							 <td><textarea class="fullside"  style=" height: 30px !important;" tabindex="20" dojoType=""  id="address" name="address"  ></textarea> </td>  
-					    </tr>
-				</table>	
-			</fieldset>	
-		</td>
-		<td colspan="2" width="67%" valign="top">
-			<table width="100%" >
-				<tr>
-					<td width="50%;" valign="top">
-						<fieldset>
-							<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ")?></strong></legend>
-								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-								    <tr>
-										<td><?php echo $tr->translate("TICKET_START");?></td>
-										<td><input type="text" name="moto_ticket_start" class="fullside" id="moto_ticket_start" onKeyUp="motoCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("TICKET_END");?></td>
-										<td><input type="text" name="moto_ticket_end" class="fullside" id="moto_ticket_end" onKeyUp="motoCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
-										<td><input type="text" name="moto_amount_ticket" class="fullside" id="moto_amount_ticket" onKeyUp="motoCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
-										<td><input type="text" name="moto_price_per_ticket" class="fullside" id="moto_price_per_ticket" onKeyUp="motoCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="MotoConvertToDollar();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-									
-								    <tr>
-										<td><?php echo $tr->translate("FOR_DATE");?></td>
-										<td><input type="text" name="moto_for_date" class="fullside" id="moto_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
-								    </tr>
-								    <tr>
-								        <td><?php echo $tr->translate("EXC_RATE");?>($)</td>
-								        <td><input type="text" name="moto_total_in_dollar" class="fullside" id="moto_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
-								    </tr>
-								</table>
-						</fieldset>	
-					</td>
-					<td width="50%;" valign="top">
-						<fieldset>
-							<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់")?></strong></legend>
-								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-									
-									<tr>
-										<td><?php echo $tr->translate("TICKET_START");?></td>
-										<td><input type="text" name="bike_ticket_start" class="fullside" id="bike_ticket_start" onKeyUp="bikeCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("TICKET_END");?></td>
-										<td><input type="text" name="bike_ticket_end" class="fullside" id="bike_ticket_end" onKeyUp="bikeCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
-										<td><input type="text" name="bike_amount_ticket" class="fullside" id="bike_amount_ticket" onKeyUp="bikeCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
-										<td><input type="text" name="bike_price_per_ticket" class="fullside" id="bike_price_per_ticket" onKeyUp="bikeCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-									
-									<tr>
-										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="BikeConvertToDollar();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-								    <tr>
-										<td><?php echo $tr->translate("FOR_DATE");?></td>
-										<td><input type="text" name="bike_for_date" class="fullside" id="bike_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
-								    </tr>
-								    <tr>
-								        <td><?php echo $tr->translate("EXC_RATE");?>($)</td>
-								        <td><input type="text" name="bike_total_in_dollar" class="fullside" id="bike_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
-								    </tr>
-								</table>	
-						</fieldset>	
-					</td>
-				</tr>
-				
-				<tr>
-					<td valign="top">
-						<fieldset>
-							<legend align="center" ><strong><?php echo $tr->translate("លក់អេតចាយ")?></strong></legend>
-								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-								    <tr>
-										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="broken_in_riel" class="fullside" id="broken_in_riel" onKeyUp="calculateBrokenFee();" dojoType="dijit.form.NumberTextBox" /> </td>
-								    </tr>
-								    <tr>
-										<td><?php echo $tr->translate("FOR_DATE");?></td>
-										<td><input type="text" name="broken_for_date" class="fullside" id="broken_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
-								    </tr>
-								    <tr>
-								        <td><?php echo $tr->translate("EXC_RATE");?>($)</td>
-								        <td><input type="text" name="broken_total_in_dollar" class="fullside" id="broken_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
-								    </tr>
-								</table>
-						</fieldset>	
-					</td>
-					<td valign="top">
-						<fieldset>
-							<legend align="center" ><strong><?php echo $tr->translate("PAID_AMOUN")?></strong></legend>
-								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
-									<tr>
-									    <td><?php echo $tr->translate("ទឹកប្រាក់សរុប");?>($)​</td>
-										<td><input type="text" name="all_total_amount" class="fullside" id="all_total_amount"  value="0" dojoType="dijit.form.NumberTextBox" readOnly="true"/> </td> 
-									</tr>
-									<tr>
-										<td><?php echo $tr->translate("លេខបង្កាន់ដៃ");?></td>
-										<td><input type="text" name="receipt_no" class="fullside" id="receipt_no" style="color:red;"  dojoType="dijit.form.ValidationTextBox" required="required" value="<?php echo $this->receipt_no;?>"/> </td>
-									</tr>
-								    <tr>
-										<td><?php echo $tr->translate("NOTE");?></td>
-										<td><input type="text" name="note" class="fullside" id="note"   dojoType="dijit.form.TextBox" /> </td> 
-									</tr>
-									<tr>
-										<td colspan="2">
-											<input name="readmoney" id="readmoney" type="text" readOnly class="fullside" dojoType="dijit.form.TextBox" />
-										</td>
-									</tr>
-								</table>	
-						</fieldset>	
-					</td>
-				</tr>
-				
-			</table>
-		</td>
-	</tr>
-	
-	
-	<tr>
-		<td colspan="4" align="center" style="padding-left:40px;">
-			<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
-			<input type="submit" value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
-				iconClass="dijitEditorIcon dijitEditorIconSave" />
-			<input type="submit" value="save_new" name="save_new"  id="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
-				 iconClass="dijitEditorIcon dijitEditorIconSave" />
-				 
-			<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
-				iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave();"/> 
-		</td>
-    </tr>
-</table>	
+	<script type="dojo/method" event="onSubmit" enctype="multipart/form-data">			
+		if(this.validate()) {
+		   dijit.byId('save_new').set('disabled',true);
+		   dijit.byId('save_close').set('disabled',true);
+		   return true;
+		} else {
+			return false;
+		}
+	</script>
+	<table cellspacing="2" width="100%" style="margin: 0 auto; ">
+		<tr>
+			<td width="33%;" valign="top">
+				<fieldset>
+					<legend align="center" ><strong><?php echo $tr->translate("CUSTOMER_INFO")?></strong></legend>
+					<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+							<tr>
+								<td><?php echo $tr->translate("OLD_CUS");?></td>
+								<td align="left" style="height: 0px;"> <input type="checkbox" name="is_new_cu" id="is_new_cu" value="1" onClick="hidendOldCus();" ></td> 
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("CUS_ID");?></td>
+								<td><input type="text" name="cus_id" class="fullside" id="cus_id"  style="color:red;" dojoType="dijit.form.ValidationTextBox" required="required" value="<?php echo $this->cus_id;?>"/> </td> 
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("CUS_NAME");?></td>
+								<td>
+								  <div id="cus_name_div">
+									<input type="text" name="cus_name" class="fullside" id="cus_name"   dojoType="dijit.form.ValidationTextBox" required="required"/> 
+								  </div>
+									<!-- old Customer  -->
+									<div id="old_cus_div">
+										<select dojoType='dijit.form.FilteringSelect' id="old_cus" name="old_cus"   class="fullside"  ​​ onChange="getOldCustomerInfo();setCusName();" placeholder=" ">
+											<option value="0"><?php echo $tr->translate("SELECT_CUSTOMER_NAME");?></option>
+											<?php if(!empty($this->cus)) foreach ($this->cus as $c){?>
+											<option value="<?php echo $c['id']?>" ><?php echo $c['name']?> </option>
+											<?php }?>
+										</select>
+									</div>
+									<!-- /end old Customer  -->
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("SEX");?></td>
+								<td>
+									<select dojoType='dijit.form.FilteringSelect' id="sex" name="sex"   class="fullside"  ​​  placeholder=" ">
+										<option value="1"><?php echo $tr->translate("MALE");?></option>
+										<option value="2"><?php echo $tr->translate("FEMALE");?> </option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("PHONE");?></td>
+								<td><input type="text" name="phone" class="fullside" id="phone"   dojoType="dijit.form.TextBox" /> </td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("EMAIL");?></td>
+								<td><input type="text" name="email" class="fullside" id="email"   dojoType="dijit.form.TextBox" /> </td>
+							</tr>
+							<tr>
+								<td><?php echo $tr->translate("ADDRESS");?></td>
+								 <td><textarea class="fullside"  style=" height: 30px !important;" tabindex="20" dojoType=""  id="address" name="address"  ></textarea> </td>  
+							</tr>
+					</table>	
+				</fieldset>	
+			</td>
+			<td colspan="2" width="67%" valign="top">
+				<table width="100%" >
+					<tr>
+						<td width="50%;" valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("TICKET_START");?></td>
+											<td><input type="text" name="moto_ticket_start" class="fullside" id="moto_ticket_start" onKeyUp="motoCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_END");?></td>
+											<td><input type="text" name="moto_ticket_end" class="fullside" id="moto_ticket_end" onKeyUp="motoCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+											<td><input type="text" name="moto_amount_ticket" class="fullside" id="moto_amount_ticket" onKeyUp="motoCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+											<td><input type="text" name="moto_price_per_ticket" class="fullside" id="moto_price_per_ticket" onKeyUp="motoCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
+											<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="MotoConvertToDollar();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("FOR_DATE");?></td>
+											<td><input type="text" name="moto_for_date" class="fullside" id="moto_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("EXC_RATE");?>($)</td>
+											<td><input type="text" name="moto_total_in_dollar" class="fullside" id="moto_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
+										</tr>
+									</table>
+							</fieldset>	
+						</td>
+						<td width="50%;" valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_START");?></td>
+											<td><input type="text" name="bike_ticket_start" class="fullside" id="bike_ticket_start" onKeyUp="bikeCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_END");?></td>
+											<td><input type="text" name="bike_ticket_end" class="fullside" id="bike_ticket_end" onKeyUp="bikeCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+											<td><input type="text" name="bike_amount_ticket" class="fullside" id="bike_amount_ticket" onKeyUp="bikeCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+											<td><input type="text" name="bike_price_per_ticket" class="fullside" id="bike_price_per_ticket" onKeyUp="bikeCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
+											<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="BikeConvertToDollar();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("FOR_DATE");?></td>
+											<td><input type="text" name="bike_for_date" class="fullside" id="bike_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("EXC_RATE");?>($)</td>
+											<td><input type="text" name="bike_total_in_dollar" class="fullside" id="bike_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
+										</tr>
+									</table>	
+							</fieldset>	
+						</td>
+					</tr>
+					
+					<tr>
+						<td valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("លក់អេតចាយ")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
+											<td><input type="text" name="broken_in_riel" class="fullside" id="broken_in_riel" onKeyUp="calculateBrokenFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("FOR_DATE");?></td>
+											<td><input type="text" name="broken_for_date" class="fullside" id="broken_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("EXC_RATE");?>($)</td>
+											<td><input type="text" name="broken_total_in_dollar" class="fullside" id="broken_total_in_dollar" dojoType="dijit.form.NumberTextBox" readOnly="true"/></td>
+										</tr>
+									</table>
+							</fieldset>	
+						</td>
+						<td valign="top">
+							<fieldset>
+								<legend align="center" ><strong><?php echo $tr->translate("PAID_AMOUN")?></strong></legend>
+									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										<tr>
+											<td><?php echo $tr->translate("ទឹកប្រាក់សរុប");?>($)​</td>
+											<td><input type="text" name="all_total_amount" class="fullside" id="all_total_amount"  value="0" dojoType="dijit.form.NumberTextBox" readOnly="true"/> </td> 
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("លេខបង្កាន់ដៃ");?></td>
+											<td><input type="text" name="receipt_no" class="fullside" id="receipt_no" style="color:red;"  dojoType="dijit.form.ValidationTextBox" required="required" value="<?php echo $this->receipt_no;?>"/> </td>
+										</tr>
+										<tr>
+											<td><?php echo $tr->translate("NOTE");?></td>
+											<td><input type="text" name="note" class="fullside" id="note"   dojoType="dijit.form.TextBox" /> </td> 
+										</tr>
+										<tr>
+											<td colspan="2">
+												<input name="readmoney" id="readmoney" type="text" readOnly class="fullside" dojoType="dijit.form.TextBox" />
+											</td>
+										</tr>
+									</table>	
+							</fieldset>	
+						</td>
+					</tr>
+					
+				</table>
+			</td>
+		</tr>
+		
+		
+		<tr>
+			<td colspan="4" align="center" style="padding-left:40px;">
+				<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+				<input type="submit" value="save_close" name="save_close" id="save_close" label="<?php echo $tr->translate('SAVE_CLOSE');?>" dojoType="dijit.form.Button" 
+					iconClass="dijitEditorIcon dijitEditorIconSave" />
+				<input type="submit" value="save_new" name="save_new"  id="save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
+					 iconClass="dijitEditorIcon dijitEditorIconSave" />
+					 
+				<input type="button" value="បោះពុម្ព" label="<?php echo $tr->translate('PRINT');?>" id="print" dojoType="dijit.form.Button" 
+					iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="printSave();"/> 
+			</td>
+		</tr>
+	</table>	
 </form>
 <script>
 var reil_exc="<?php echo $this->reil['reil']?>";
@@ -447,7 +447,7 @@ function getMonthByNumber(m){
 
 //save daata when sub button print 
 function printSubmit(){
-	//$('#office_receipt').submit();
+	$('#frm_parking').submit();
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
@@ -455,7 +455,6 @@ function printSubmit(){
 
 function printSave(){		
 	if(dijit.byId('frm_parking').validate()) {
-		 
 		 
 		 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt_no").get('value');
 		 

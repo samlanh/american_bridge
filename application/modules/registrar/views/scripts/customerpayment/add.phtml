@@ -526,7 +526,7 @@ function getMonthByNumber(m){
 
 //save daata when sub button print 
 function printSubmit(){
-	//$('#office_receipt').submit();
+	$('#frm_rent_payment').submit();
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
@@ -552,7 +552,7 @@ function printSave(new_stu_id,new_receipt_no){
 		 dojo.byId("lb_readmoney").innerHTML = dijit.byId("readmoney").attr('displayedValue');
 		 
 		 dojo.byId("lb_total_payment").innerHTML = " $ "+dijit.byId("all_total_amount").attr('displayedValue');
-		 
+		 /*
 		 var b = new Date(dijit.byId("rent_start_date").get('value'));
 			mm = b.getMonth()+1;
 			var dd = b.getDate();
@@ -582,16 +582,49 @@ function printSave(new_stu_id,new_receipt_no){
 			var epx_date = dd + '-' +months + '-' + y ;
 			
 		 dojo.byId("lb_epx_date").innerHTML = epx_date;
-		 
+		 */
 		 //dojo.byId("lb_read_money").innerHTML = dijit.byId('readmoney').get('value');
 		 
 		 rent_payment = dijit.byId('rent_paid').get('value');
 		 if(rent_payment>0){
 			dojo.byId("lb_rent_payment").innerHTML = " $ "+rent_payment;
 			dojo.byId("checkbox_rent").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		 
+			var date = new Date(dijit.byId("rent_start_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var start_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_rent_start_date").innerHTML = start_date;
+			
+			var date = new Date(dijit.byId("rent_end_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var end_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_rent_end_date").innerHTML = end_date;
 		 }else{
 			dojo.byId("lb_rent_payment").innerHTML = "";
 			dojo.byId("checkbox_rent").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		 
+			dojo.byId("lb_rent_start_date").innerHTML = "";
+			dojo.byId("lb_rent_end_date").innerHTML = "";
 		 }
 		 
 		 
@@ -599,27 +632,202 @@ function printSave(new_stu_id,new_receipt_no){
 		 if(water_payment>0){
 			dojo.byId("lb_water_payment").innerHTML = " $ "+water_payment;
 			dojo.byId("checkbox_water").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		 
+			water_new_congtor = dijit.byId('water_new_congtor').get('value');
+			if(water_new_congtor>0){
+				
+			}else{
+				water_new_congtor = "";
+			}
+			dojo.byId("lb_water_new_congtor").innerHTML = water_new_congtor;
+			
+			water_old_congtor = dijit.byId('water_old_congtor').get('value');
+			if(water_old_congtor>0){
+				
+			}else{
+				water_old_congtor = "";
+			}
+			dojo.byId("lb_water_old_congtor").innerHTML = water_old_congtor;
+			
+			water_qty = dijit.byId('water_qty').get('value');
+			if(water_qty>0){
+				
+			}else{
+				water_qty = "";
+			}
+			dojo.byId("lb_water_qty").innerHTML = water_qty;
+			
+			water_cost = dijit.byId('water_cost').get('value');
+			if(water_cost>0){
+				water_cost = dijit.byId('water_cost').get('value')+" ៛";
+			}else{
+				water_cost = "";
+			}
+			dojo.byId("lb_water_cost").innerHTML = water_cost;
+			
+			var date = new Date(dijit.byId("water_start_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var start_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_water_start_date").innerHTML = start_date;
+			
+			
+			var date = new Date(dijit.byId("water_end_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var end_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_water_end_date").innerHTML = end_date;
+		 
 		 }else{
 			dojo.byId("lb_water_payment").innerHTML = "";
 			dojo.byId("checkbox_water").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		 
+			dojo.byId("lb_water_new_congtor").innerHTML = "";
+			dojo.byId("lb_water_old_congtor").innerHTML = "";
+			dojo.byId("lb_water_cost").innerHTML = "";
+			dojo.byId("lb_water_start_date").innerHTML = "";
+			dojo.byId("lb_water_end_date").innerHTML = "";
 		 }
 		 
 		 fire_payment = dijit.byId('fire_exc_rate').get('value');
 		 if(fire_payment>0){
 			dojo.byId("lb_fire_payment").innerHTML = " $ "+fire_payment; 
 			dojo.byId("checkbox_fire").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		 
+			
+			fire_new_congtor = dijit.byId('fire_new_congtor').get('value');
+			if(fire_new_congtor>0){
+				
+			}else{
+				fire_new_congtor = "";
+			}
+			dojo.byId("lb_fire_new_congtor").innerHTML = fire_new_congtor;
+			
+			fire_old_congtor = dijit.byId('fire_old_congtor').get('value');
+			if(fire_old_congtor>0){
+				
+			}else{
+				fire_old_congtor = "";
+			}
+			dojo.byId("lb_fire_old_congtor").innerHTML = fire_old_congtor;
+			
+			fire_qty = dijit.byId('fire_qty').get('value');
+			if(fire_qty>0){
+				
+			}else{
+				fire_qty = "";
+			}
+			dojo.byId("lb_fire_qty").innerHTML = fire_qty;
+			
+			fire_cost = dijit.byId('fire_cost').get('value');
+			if(fire_cost>0){
+				fire_cost = dijit.byId('fire_cost').get('value')+" ៛";
+			}else{
+				fire_cost = "";
+			}
+			dojo.byId("lb_fire_cost").innerHTML = fire_cost;
+			
+			var date = new Date(dijit.byId("fire_start_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var start_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_fire_start_date").innerHTML = start_date;
+			
+			
+			var date = new Date(dijit.byId("fire_end_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var end_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_fire_end_date").innerHTML = end_date;
+			
 		 }else{
 			dojo.byId("lb_fire_payment").innerHTML = " ";
 			dojo.byId("checkbox_fire").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+			
+			dojo.byId("lb_fire_new_congtor").innerHTML = "";
+			dojo.byId("lb_fire_old_congtor").innerHTML = "";
+			dojo.byId("lb_fire_cost").innerHTML = "";
+			dojo.byId("lb_fire_start_date").innerHTML = "";
+			dojo.byId("lb_fire_end_date").innerHTML = "";
 		 }
 		 
 		 cleaner = dijit.byId('hygiene_price').get('value');
 		 if(cleaner>0){
 			dojo.byId("lb_cleaner").innerHTML = " $ "+cleaner;  
 			dojo.byId("checkbox_cleaner").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
+		 
+			var date = new Date(dijit.byId("hygiene_start_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var start_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_hygiene_start_date").innerHTML = start_date;
+			
+			
+			var date = new Date(dijit.byId("hygiene_end_date").get('value'));
+			mm = date.getMonth()+1;
+			var dd = date.getDate();
+			if(dd<10){
+				dd = "0"+dd;
+			}
+			var mon = getMonthByNumber(mm);
+			if(mm<10){
+				mm = "0"+mm;
+			}
+			var y = date.getFullYear();
+			var end_date = dd + '/' + mon + '/' + y ;
+			
+			dojo.byId("lb_hygiene_end_date").innerHTML = end_date;
 		 }else{
 			dojo.byId("lb_cleaner").innerHTML = " ";  
 			dojo.byId("checkbox_cleaner").innerHTML = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
+		 
+			dojo.byId("lb_hygiene_start_date").innerHTML = "";
+			dojo.byId("lb_hygiene_end_date").innerHTML = "";
 		 }
 		 
 		 other_price = dijit.byId('other_price').get('value');
@@ -646,15 +854,14 @@ function hideDialog() {
 }
 </script>
 
-<div class="dijitHidden" style="width: 148mm !important; height: 175mm ; padding: 0px; margin: 0px;">
-<?php $keycode = $this->keycode;?>
-	<div data-dojo-type="dijit.Dialog" style="width:148mm !important;height: 175mm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("");?>'" id="terms" >
-		
+<div class="dijitHidden" style="width: 25cm !important; height: 15cm ; padding: 0px; margin: 0px;">
+	
+	<div data-dojo-type="dijit.Dialog" style="width:30cm !important;height: 17cm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("");?>'" id="terms" >
 		<style>
 			.data2{font-size:10px !important;}
 		</style>
 		
-		<div id="divPrint" style="width: 148mm !important; height: 175mm ; padding: 0px; margin: 0px;">
+		<div id="divPrint" style="width: 25cm !important; height: 13cm ; padding: 0px; margin: 0px;">
 			<style>
 				.fontbig{
 					font-size: 15px;	
@@ -679,26 +886,32 @@ function hideDialog() {
 			   .one{white-space:nowrap;}
 			   
 				.underline{margin-top: -18px;text-align:center;}
-				.data{font-size:12px;font-weight:bold;}
-				.data1{font-size:12px;font-weight:bold;}
+				.underline_top{margin-top: -15px;text-align:center;}
+				.data{font-size:14px;font-weight:bold;}
+				.data1{font-size:14px;font-weight:bold;}
 				
-				.receiptno{font-size:17px;font-weight:bold;}
+				.receiptno{font-size:22px;font-weight:bold;}
 				.tab_row{ margin-top: -8px;}
 				.fonteng{font-size:12px;}
-				
+				.table_print{
+					white-space:nowrap;
+					font-size:14px;
+					font-family:'Khmer OS Battambang';
+					line-height:20px;
+				}
 			</style>	
-			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
+			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space:nowrap; font-size:14px;font-family:'Khmer OS Battambang';line-height: 17px;margin-top:-5px;">
 				<tr>
 				    <td colspan="6"  align="center" style="">
 						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-10px;font-weight:bold;">
 							<tr>
-								<td width="35%" align="left" style="font-size:10px;">
-									<div style="font-size:13px;">Branch 6 (ចំការដូង​) </div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
+								<td width="35%" align="left" style="font-size:14px;">
+									<div style="font-size:17px;"><?php if (!empty($this->branch_info['branch_namekh'])){ echo $this->branch_info['branch_namekh'];}?></div><?php echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
 								</td>
 								<td width="30%" align="center">
-									<img style="width: 50%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
+									<img style="width: 35%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>"><br /><br >
 								</td>
-								<td width="35%" align="center" style="font-size:17px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
+								<td width="35%" align="center" style="font-size:22px;color:red;"><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" ></div></label></td>
 							</tr>
 						</table>
 				    </td>
@@ -709,7 +922,7 @@ function hideDialog() {
 						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;margin-top: -25px;">
 							<tr>
 								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
-								<td width="20%" align="center" style="font-size:16px;">បណ្ណបង់ប្រាក់</td>
+								<td width="20%" align="center" style="font-size:16px;">បង្កាន់ដៃទទួលប្រាក់ RECEIPT</td>
 								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
 							</tr>
 						</table>
@@ -717,178 +930,26 @@ function hideDialog() {
 				</tr>
 
 				<tr>
-					<td width="15%">&nbsp;</td>
-					<td width="30%"></td>
-					<td width="7%"></td>
-					<td width="10%"></td>
-					<td width="10%"></td>
-					<td width="28%"></td>
+					<td colspan="6">
+						&nbsp;
+					</td>
 				</tr>
 				
 				<tr>
-					<td>ឈ្មោះអ្នកបង់ប្រាក់</td>
-					<td>
+					<td width="10%">ឈ្មោះអ្នកបង់ប្រាក់</td>
+					<td width="38%">
 						&nbsp;:&nbsp;<label id="lb_cus_name"  class="data" ></label>
-						<div class="underline">&nbsp;.........................................</div>
+						<div class="underline_top">&nbsp;...............................................................................................</div>
 					</td>
-					<td align="center"> ភេទ</td>
-					<td>
+					<td width="4%" align="center"> ភេទ</td>
+					<td width="5%">
 						:&nbsp;<label id="lb_sex" class="data" ></label>
-						<div class="underline">............</div>
+						<div class="underline_top">..........</div>
 					</td>
-					<td align="center"> លេខទូរសព្ទ</td>
-					<td>
+					<td width="8%" align="center"> លេខទូរសព្ទ</td>
+					<td width="35%">
 						:&nbsp;<label id="lb_phone" class="data" ></label>
-						<div class="underline">......................................</div>
-					</td>
-				</tr>
-				
-				<tr>
-					<td colspan="6">
-						<table width="100%" style="white-space:nowrap;font-size:12px;font-family:'Khmer OS Battambang';">
-							<tr>
-								<td width="10%">ទឹកប្រាក់</td>
-								<td width="25%">
-									:&nbsp;<label id="lb_total_payment" class="data" ></label>
-									<div class="underline">....................................</div>
-								</td>
-								<td width="10%">ជាអក្សរ</td>
-								<td width="55%">
-									:&nbsp;<label id="lb_readmoney" class="data" ></label>
-									<div class="underline">.................................................................................</div>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				
-				<tr>
-					<td colspan="6">
-						<table width="100%" style="white-space:nowrap;font-size:12px;font-family:'Khmer OS Battambang';">
-							<tr>
-								<td width="20%">មានសុពលភាព ពីថ្ងៃទី</td>
-								<td width="35%" >
-									:&nbsp;<label id="lb_start_date" class="data" ></label>
-									<div class="underline">.................................................</div>
-								</td>
-								<td width="12%" align="center">ដល់ថ្ងៃទី</td>
-								<td width="33%" align="left">
-									:&nbsp;<label id="lb_epx_date" class="data" ></label>
-									<div class="underline">.................................................</div>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				
-				<tr>
-					<td valign="top" align="center">សម្រាប់ៈ</td>
-					<td colspan="5">
-						<table width="100%" style="white-space:nowrap;font-size:12px;font-family:'Khmer OS Battambang';">
-							<tr>
-								<td width="7%">
-									<label id="checkbox_rent"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃជួលតូបៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_rent_payment" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_water"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃទឹកៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_water_payment" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_fire"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃភ្លើងៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_fire_payment" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_cleaner"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃសម្រាមៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_cleaner" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_bicycle"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃកិបសំបុត្រកង់ៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_moto"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃកិបសំបុត្រម៉ូតូៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_broken_material"></label>
-								</td>
-								<td width="15%">
-									 ថ្លៃលក់អេតចាយៈ 
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td width="7%">
-									<label id="checkbox_other"></label>
-								</td>
-								<td width="15%">
-									 ផ្សេងៗ
-								</td>
-								<td width="78%">
-									:&nbsp;<label id="lb_other_price" class="data" ></label>
-									<div class="underline">.......................................................................................</div>
-								</td>
-							</tr>
-						</table>
+						<div class="underline_top">&nbsp;.........................................................................................</div>
 					</td>
 				</tr>
 				
@@ -898,9 +959,424 @@ function hideDialog() {
 					</td>
 				</tr>
 				
+				
+				<tr>
+					<td colspan="6" style="border:2px solid #000;">
+						<table width="100%" style="white-space:nowrap;font-size:14px;font-family:'Khmer OS Battambang';line-height:22px;margin:5px;">
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_book_rental"></label>
+												 ថ្លៃកក់ជួលតូប
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<table border="0" width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_rent"></label>
+												 ថ្លៃជួលតូប
+											</td>
+											<td width="22%">
+												:&nbsp;<label id="lb_rent_payment" class="data" ></label>
+												<div class="underline">...................................................</div>
+											</td>
+											
+											<td width="13%">
+												 មានសុពលភាព ចំនួន
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................</div>
+											</td>
+											
+											<td width="8%">
+												 ខែ ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="15%">
+												:&nbsp;<label id="lb_rent_start_date" class="data" ></label>
+												<div class="underline">..................................</div>
+											</td>
+											
+											<td width="7%">
+												 ដល់ថ្ងៃទី
+											</td>
+											<td width="15%">
+												:&nbsp;<label id="lb_rent_end_date" class="data" ></label>
+												<div class="underline">................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" border="0" class="table_print">
+										<tr>
+											<td width="5%">
+												<label id="checkbox_fire"></label>
+												 ថ្លៃភ្លើង
+											</td>
+											
+											<td width="6%">
+												:&nbsp;<label id="lb_fire_payment" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="5%">
+												កុងទ័រថ្មី
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_fire_new_congtor" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="6%">
+												កុងទ័រចាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_fire_old_congtor" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="9%">
+												កុងទ័រប្រើប្រាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_fire_qty" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="3%">
+												Kw X
+											</td>
+											<td width="6%">
+												&nbsp;<label id="lb_fire_cost" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="8%">
+												/1Kw ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="lb_fire_start_date" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="lb_fire_end_date" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="5%">
+												<label id="checkbox_water"></label>
+												 ថ្លៃទឹក
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_water_payment" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="5%">
+												កុងទ័រថ្មី
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_water_new_congtor" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="6%">
+												កុងទ័រចាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_water_old_congtor" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="9%">
+												កុងទ័រប្រើប្រាស់
+											</td>
+											<td width="6%">
+												:&nbsp;<label id="lb_water_qty" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="3%">
+												Kw X
+											</td>
+											<td width="6%">
+												&nbsp;<label id="lb_water_cost" class="data" ></label>
+												<div class="underline">..............</div>
+											</td>
+											
+											<td width="8%">
+												/1Kw ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="lb_water_start_date" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="9%">
+												:&nbsp;<label id="lb_water_end_date" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_cleaner"></label>
+												 ថ្លៃសម្រាម
+											</td>
+											<td width="56%">
+												:&nbsp;<label id="lb_cleaner" class="data" ></label>
+												<div class="underline">............................................................................................................................................</div>
+											</td>
+											
+											<td width="6%">
+												ចាប់ពីថ្ងៃទី
+											</td>
+											<td width="11%">
+												:&nbsp;<label id="lb_hygiene_start_date" class="data" ></label>
+												<div class="underline">.......................</div>
+											</td>
+											
+											<td width="5%">
+												ដល់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="lb_hygiene_end_date" class="data" ></label>
+												<div class="underline">.....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_moto"></label>
+												 ថ្លៃកិបសំបុត្រម៉ូតូ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												លេខសំបុត្រពី
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="6%">
+												ដល់លេខ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												សរុបប្រើប្រាស់
+											</td>
+											<td width="5%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..........</div>
+											</td>
+											
+											<td width="1%">
+												X
+											</td>
+											<td width="5%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">............</div>
+											</td>
+											
+											<td width="9%">
+												/1សំបុត្រ បិទវេនទី
+											</td>
+											<td width="4%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">........</div>
+											</td>
+											
+											<td width="6%">
+												សំរាប់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+								
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" border="0" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_bicycle"></label>
+												 ថ្លៃកិបសំបុត្រកង់
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												លេខសំបុត្រពី
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="6%">
+												ដល់លេខ
+											</td>
+											<td width="8%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">.................</div>
+											</td>
+											
+											<td width="9%">
+												សរុបប្រើប្រាស់
+											</td>
+											<td width="5%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">..........</div>
+											</td>
+											
+											<td width="1%">
+												X
+											</td>
+											<td width="5%">
+												&nbsp;<label id="" class="data" ></label>
+												<div class="underline">............</div>
+											</td>
+											
+											<td width="9%">
+												/1សំបុត្រ បិទវេនទី
+											</td>
+											<td width="4%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">........</div>
+											</td>
+											
+											<td width="6%">
+												សំរាប់ថ្ងៃទី
+											</td>
+											<td width="10%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">....................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print">
+										<tr>
+											<td width="12%">
+												<label id="checkbox_broken_material"></label>
+												 ថ្លៃលក់អេតចាយ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print" >
+										<tr>
+											<td width="12%">
+												<label id="checkbox_other"></label>
+												 ផ្សេងៗ
+											</td>
+											<td width="88%">
+												:&nbsp;<label id="lb_other_price" class="data" ></label>
+												<div class="underline">................................................................................................................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>			
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<table width="100%" class="table_print" >
+										<tr>
+											<td width="15%">ទឹកប្រាក់ទទួលបានសរុប</td>
+											<td width="25%">
+												:&nbsp;<label id="lb_total_payment" class="data" ></label>
+												<div class="underline">............................................................</div>
+											</td>
+											<td width="5%">ជាអក្សរ</td>
+											<td width="55%">
+												:&nbsp;<label id="lb_readmoney" class="data" ></label>
+												<div class="underline">.........................................................................................................................................</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							
+						</table>
+					</td>
+				</tr>
+				
+				
+				
 				<tr>
 					<td colspan="6">
-						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
+						<table width="100%" style="white-space:nowrap; font-size:13px;font-family:Khmer OS Battambang, Times New Roman;">
 							<tr>
 								<td width="55%">&nbsp;</td>
 								<td width="45%"align="right" >រាជធានីភ្នំពេញ.ថ្ងៃទី <?php echo date('d');?> / <?php echo date('m');?> / <?php echo date('Y');?></td>
@@ -911,86 +1387,38 @@ function hideDialog() {
 				
 				<tr>
 					<td colspan="6">
-						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
+						<table width="100%" style="white-space:nowrap; font-size:14px;font-family:Khmer OS Battambang, Times New Roman;margin-bottom:8px;">
 							<tr align="center">
-								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">ប្រធានសាខា</span><br/>ហត្ថលេខា</td>
-								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកបង់ប្រាក់</span><br/>ហត្ថលេខា</td>
-								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកទទួលប្រាក់</span><br/>ហត្ថលេខា</td>
-							</tr>
-							<tr align="center">
-								<td colspan="3">&nbsp;</td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">ប្រធានគណនេយ្យ</span></td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">អ្នកបង់ប្រាក់</span></td>
+								<td width="33%"><span style="font-family:'khmer os muol light';font-size:12px;">បេឡា</span></td>
 							</tr>
 							<tr align="center">
 								<td colspan="3">&nbsp;</td>
 							</tr>
-							<tr>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ឈ្មោះ</td>
-											<td width="80%"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
-								</td>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ឈ្មោះ</td>
-											<td width="80%"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
-								</td>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ឈ្មោះ</td>
-											<td width="80%" align="center">
-												<div style=" font-size: 12px;"> 
-													
-													<?php 
-													   $session_user=new Zend_Session_Namespace('auth');
-													   $last_name=$session_user->last_name;
-													   $username = $session_user->first_name;
-													   echo $last_name." ".$username;
-													?>
-												</div>
-												<div class="underline">&nbsp;................................</div>
-											</td>
-										</tr>
-									</table>
-								</td>
+							<tr align="center">
+								<td colspan="3">&nbsp;</td>
 							</tr>
-							
 							<tr>
 								<td align="left">
 									&nbsp;
 								</td>
 								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ទូរសព្ទ</td>
-											<td width="80%"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
+									&nbsp;
 								</td>
-								<td align="left">
-									<table width="100%" border="0" style="white-space:nowrap; font-size:12px;font-family:Khmer OS Battambang, Times New Roman;">
-										<tr>
-											<td width="20%" align="center">ទូរសព្ទ</td>
-											<td width="80%" align="center"><div style="margin-top: 2px;">&nbsp;................................</div></td>
-										</tr>
-									</table>
+								<td align="center">
+									<?php 
+									   $session_user=new Zend_Session_Namespace('auth');
+									   $last_name=$session_user->last_name;
+									   $username = $session_user->first_name;
+									   echo $last_name." ".$username;
+									?>
 								</td>
 							</tr>
-							
 						</table>
 					</td>
 				</tr>
-				<tr >
-					<td colspan="6" >
-						&nbsp;
-					</td>
-				</tr>
+				
 				<tr >
 					<td colspan="6" style="border:2px solid #000;">
 						
