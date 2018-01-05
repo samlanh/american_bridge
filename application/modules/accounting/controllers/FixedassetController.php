@@ -53,7 +53,7 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","FIXED_ASSETNAME","ASSET_COST","USEFULL_LIFE","SALVAGEVALUE","TOTA_AMOUNT","STATUS","NOTE");
+			$collumns = array("BRANCH_NAME","FIXED_ASSETNAME","ASSET_COST","USEFULL_LIFE","SALVAGEVALUE","PAID_MONTH","TOTA_AMOUNT","STATUS","NOTE");
 			$link=array(
 					'module'=>'accounting','controller'=>'fixedasset','action'=>'edit',
 			);
@@ -96,9 +96,9 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 					Application_Model_DbTable_DbUserLog::writeMessageError($err);
 				}
 			}
-		 
 			$db = new Accounting_Model_DbTable_DbAsset();
 			$row  = $db->getassetbyid($id);
+			
 			$pructis=new Accounting_Form_Frmasset();
 			$frm = $pructis->FrmAsset($row);
 			Application_Model_Decorator::removeAllDecorator($frm);

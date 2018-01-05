@@ -74,7 +74,9 @@
 								 <table style="margin: 0 auto; width: 100%;text-align: left;" cellspacing="2"  >
 									   <tr>
 											<td><?php echo $tr->translate("FIXED_ASSET")?></td>
-											<td><?php echo $frm->getElement('fixed_id');?></td>
+											<td><?php echo $frm->getElement('fixed_id');?>
+											    <input type="hidden" name="hid_fixed_id" id="hid_fixed_id"  value="" />
+											</td>
 										</tr>
 										<tr>
 											<td><?php echo $tr->translate("RECEIPT_NO")?></td>
@@ -258,9 +260,11 @@ function getFixedAssetTotalPaid(){
 			handleAs:"json",
 			load: function(data) {
 				if(data){
-					dijit.byId("total_amount").attr("value",data.total_paid);
+					dijit.byId("total_amount").attr("value",data.total_depre);
+					$("#hid_fixed_id").val(data.id);
 				}else{
 					dijit.byId("total_amount").attr("value",'');
+					$("#hid_fixed_id").val('');
 				}
 			},
 			error: function(err) {

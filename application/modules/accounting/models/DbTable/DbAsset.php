@@ -21,11 +21,14 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 				'usefull_life'		=>$data['usefull_life'],
 				'term_type'			=>$data['tem_type'],
 				'salvagevalue'		=>$data['salvage_value'],
-				'total_amount'		=>$data['amount'],
+				'paid_month'		=>$data['amount'],
+				'total_amount'		=>($data['amount'])*($data['usefull_life']),
 				'payment_method'	=>$data['payment_method'],
 				'some_payamount'	=>$data['some_payamount'],
-				'date'				=>$data['date'],
+				'create_date'		=>date("Y-m-d"),
 				'depreciation_start'=>$data['start_date'],
+				'start_date'		=>$data['start_date'],
+				'end_date'			=>$data['date'],
 				//'auto_post'=>$data['journal'],
 				'user_id'			=>$this->getUserId(),
 				'note'=>$data['note']
@@ -33,9 +36,9 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 		 $ass_id = $this->insert($arr);
 		 
 		 $time = $data['usefull_life'];
-		 $next_payment = $data['date'];
+		 $next_payment = $data['start_date'];
 		 if($data['tem_type']==1){
-			 $a_time = ($data['tem_type']=2)?1:12;			 	
+			 $a_time = ($data['tem_type']=2)?1:12;	
 			   for($t=0;$t<$time*$a_time;$t++){
 			   	$db->getProfiler()->setEnabled(true);
 				 $sub_arr= array(
@@ -43,13 +46,15 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 				 		'total_depre'	=>$data['amount'],
 				 		'times_depre'	=>$t+1,
 				 		'for_month'		=>$next_payment,
+				 		'is_closing'	=>1
 				 		);			 
 				 $this->_name="ln_fixed_assetdetail";
 				 $this->insert($sub_arr);
 				 $next_payment = date("Y-m-d", strtotime("$next_payment +1 month"));
 		   	}
 		 }else {
-		 	$a_time = ($data['tem_type']=2)?12:1;		 	
+		 	$a_time = ($data['tem_type']=2)?12:1;
+		 	//echo $time*$a_time;exit();
 		 	for($t=0;$t<$time*$a_time;$t++){
 		 		$db->getProfiler()->setEnabled(true);
 		 		$sub_arr= array(
@@ -57,6 +62,7 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 		 				'total_depre'	=>$data['amount'],
 		 				'times_depre'	=>$t+1,
 		 				'for_month'		=>$next_payment,
+		 				'is_closing'	=>1
 		 		);
 		 		$this->_name="ln_fixed_assetdetail";
 		 		$this->insert($sub_arr);
@@ -70,6 +76,7 @@ class Accounting_Model_DbTable_DbAsset extends Zend_Db_Table_Abstract
 			echo $e->getMessage();
 		}
 }
+
 function updatasset($data){
 	$db = $this->getAdapter();
 		$db->beginTransaction();
@@ -85,21 +92,25 @@ function updatasset($data){
 				'usefull_life'		=>$data['usefull_life'],
 				'term_type'			=>$data['tem_type'],
 				'salvagevalue'		=>$data['salvage_value'],
-				'total_amount'		=>$data['amount'],
+				'paid_month'		=>$data['amount'],
+				'total_amount'		=>($data['amount'])*($data['usefull_life']),
 				'payment_method'	=>$data['payment_method'],
 				'some_payamount'	=>$data['some_payamount'],
-				'date'				=>$data['date'],
-				'user_id'			=>$this->getUserId(),
+				'create_date'		=>date("Y-m-d"),
 				'depreciation_start'=>$data['start_date'],
+				'start_date'		=>$data['start_date'],
+				'end_date'			=>$data['date'],
 				//'auto_post'=>$data['journal'],
+				'user_id'			=>$this->getUserId(),
 				'note'=>$data['note']
 		);
 	$where=" id = ".$data['id'];
 	$this->update($arr, $where);
 	$sql = " DELETE FROM ln_fixed_assetdetail WHERE asset_id=".$data["id"];
 	$db->query($sql);
+	
 	$time = $data['usefull_life'];
-	$next_payment = $data['date'];
+	$next_payment = $data['start_date'];
 	if($data['tem_type']==1){
 		$a_time = ($data['tem_type']=2)?1:12;
 		for($t=0;$t<$time*$a_time;$t++){
@@ -109,6 +120,7 @@ function updatasset($data){
 					'total_depre'	=>$data['amount'],
 					'times_depre'	=>$t+1,
 					'for_month'		=>$next_payment,
+					'is_closing'	=>1
 			);
 			$this->_name="ln_fixed_assetdetail";
 			$this->insert($sub_arr);
@@ -116,6 +128,7 @@ function updatasset($data){
 		}
 	}else {
 		$a_time = ($data['tem_type']=2)?12:1;
+		//echo $time*$a_time;exit();
 		for($t=0;$t<$time*$a_time;$t++){
 			$db->getProfiler()->setEnabled(true);
 			$sub_arr= array(
@@ -123,6 +136,7 @@ function updatasset($data){
 					'total_depre'	=>$data['amount'],
 					'times_depre'	=>$t+1,
 					'for_month'		=>$next_payment,
+					'is_closing'	=>1
 			);
 			$this->_name="ln_fixed_assetdetail";
 			$this->insert($sub_arr);
@@ -140,19 +154,23 @@ function updatasset($data){
 function getassetbyid($id){
 	$db = $this->getAdapter();
 	$sql=" SELECT id,
- 	branch_id,fixed_assetname,fixed_asset_type,asset_cost,asset_code,pay_type,term_type,
-	status,usefull_life,salvagevalue,auto_post,total_amount,payment_method,date,depreciation_start,some_payamount,note FROM $this->_name where id=$id ";
+ 	 branch_id,fixed_assetname,fixed_asset_type,asset_cost,asset_code,pay_type,term_type,start_date,end_date,
+	`status`,usefull_life,salvagevalue,auto_post,total_amount,payment_method,create_date,depreciation_start,some_payamount,note FROM $this->_name where id=$id ";
 	return $db->fetchRow($sql);
 }
 
 function getAllAsset($search=null){
 	
 	$db = $this->getAdapter();
-	$sql="SELECT id,
-		(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=branch_id AND  STATUS=1 LIMIT 1)AS branch_name,
-		fixed_assetname,
-		 asset_cost,usefull_life,salvagevalue,total_amount,note,status FROM  $this->_name ";
-	$where = ' WHERE 1 ';
+	$sql=" SELECT a.id,
+			(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=branch_id AND  rms_branch.status=1 LIMIT 1)AS branch_name,
+			a.fixed_assetname,
+			 a.asset_cost,a.usefull_life,a.salvagevalue,a.paid_month,
+	                 SUM(asetd.total_depre) AS total_amount,	 
+			 a.note,a.status 
+			 FROM ln_fixed_asset AS a,ln_fixed_assetdetail AS asetd
+			 WHERE a.id=asetd.asset_id GROUP  BY asetd.asset_id ";
+	$where = ' ';
 
 	if(!empty($search['branch'])){
 		$where.= " AND branch_id = ".$search['branch'];

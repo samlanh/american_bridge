@@ -7,6 +7,20 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		return $session_user->user_id;
 	}
 	function addexpense($data){
+		
+		if(!empty($data['fixed_id'])){
+			$row=$this->getFixedAssetDetail($data['hid_fixed_id']);
+			if(!empty($row)){
+				$arr = array(
+						'total_depre' =>($row['total_depre'])-($data['total_amount']),
+						'is_closing' =>0,
+				);
+				$this->_name='ln_fixed_assetdetail';
+				$where=" id=".$data['hid_fixed_id'];
+				$this->update($arr, $where);
+			}
+		}
+		
 		$data = array(
 				'title'			=>$data['title'],
 				'fixedasset_id'	=>$data['fixed_id'],
@@ -19,12 +33,40 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'status'		=>$data['Stutas'],
 				'user_id'		=>$this->getUserId(),
 				'branch_id'		=>$data['branch_id'],
+				'fixedetail_id' =>$data['hid_fixed_id'],
 				'create_date'	=>date('Y-m-d'),
 			);
+		$this->_name='ln_income_expense';
 		$this->insert($data);
+		 
  	}
  	
 	function updateExpense($data){
+		
+		if(!empty($data['fixed_id'])){
+			$row_exp=$this->getTotalExpence($data['id']);
+			$row=$this->getFixedAssetDetail($data['hid_fixed_id']);
+			if(!empty($row_exp)){
+				$arr = array(
+						'total_depre' =>($row_exp['total_amount']),
+						'is_closing' =>0,
+				);
+				$this->_name='ln_fixed_assetdetail';
+				$where=" id=".$data['hid_fixed_id'];
+				$this->update($arr, $where);
+			}
+			
+			if(!empty($row)){
+				$arr = array(
+						'total_depre' =>($row['total_depre'])-($data['total_amount']),
+						'is_closing' =>0,
+				);
+				$this->_name='ln_fixed_assetdetail';
+				$where=" id=".$data['hid_fixed_id'];
+				$this->update($arr, $where);
+			}
+		}
+		
 		$arr = array(
 				'title'			=>$data['title'],
 				'invoice'		=>$data['invoice'],
@@ -37,6 +79,7 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'status'		=>$data['Stutas'],
 				'user_id'		=>$this->getUserId(),
 				'branch_id'		=>$data['branch_id'],
+				'fixedetail_id' =>$data['hid_fixed_id'],
 			);
 		$where=" id = ".$data['id'];
 		$this->update($arr, $where);
@@ -129,7 +172,22 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 
 	function getTotalFixedAsset($id){
 		$db=$this->getAdapter();
-		$sql="SELECT asset_cost,salvagevalue,(usefull_life * total_amount) AS total_paid  FROM ln_fixed_asset WHERE id=$id";
+		$sql=" SELECT id,total_depre,times_depre,for_month 
+	            FROM ln_fixed_assetdetail 
+	            WHERE is_closing=1 AND  asset_id=$id";
+		$order=" ORDER BY times_depre ASC";
+		return $db->fetchRow($sql.$order);
+	}
+	
+	function getFixedAssetDetail($id){
+		$db=$this->getAdapter();
+		$sql="  SELECT id,total_depre FROM ln_fixed_assetdetail WHERE id=$id ";
+		return $db->fetchRow($sql);
+	}
+	
+	function getTotalExpence($id){
+		$db=$this->getAdapter();
+		$sql="  SELECT id,total_amount FROM ln_income_expense WHERE id=$id ";
 		return $db->fetchRow($sql);
 	}
 

@@ -27,11 +27,12 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$_title->setValue($request->getParam("adv_search"));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$asset_name = new Zend_Dojo_Form_Element_TextBox('asset_name');
+		$asset_name = new Zend_Dojo_Form_Element_ValidationTextBox('asset_name');
 		$asset_name->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
+				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'onchange'=>"getAssetInfo(1);"
+				//'onchange'=>"getAssetInfo(1);"
+				'required'=>true
 				));
 // 		$rows = $db->getAssetByType();
 // 		$options=array(''=>"------Select------",-1=>"Add New");
@@ -42,8 +43,7 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$asset_code->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'onchange'=>"getAssetInfo(2);",
-				'required'=>true
+				//'onchange'=>"getAssetInfo(2);",
 		));
 		
 		//$rows = $db->getAssetByType();
@@ -86,7 +86,7 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$some_payamount->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required'=>true
+				//'required'=>true
 		));
 		
 		
@@ -111,7 +111,7 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$useful_life = new Zend_Dojo_Form_Element_NumberTextBox('usefull_life');
 		$useful_life->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
-				'onchange'=>'calculateDepreciation();',
+				'onkeyup'=>'calculateDepreciation();setEndDate();',
 				'class'=>'fullside',
 				'required'=>true
 		));
@@ -120,7 +120,7 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$salvage_value->setAttribs(array(
 				'dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
-				'onchange'=>'calculateDepreciation();',
+				'onkeyup'=>'calculateDepreciation();',
 				'required'=>'true'
 				));
 		
@@ -136,7 +136,8 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$Date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
-				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'onChange'	 =>"setEndDate()"
 				));
 		$Date->setValue(date('Y-m-d'));
 		
@@ -144,7 +145,8 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$start_date->setAttribs(array(
 				'dojoType'=>'dijit.form.DateTextBox',
 				'class'=>'fullside',
-				'constraints'=>"{datePattern:'dd/MM/yyyy'}"
+				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'onChange'	 =>'setEndDate()'
 		));
 		$start_date->setValue(date('Y-m-d'));
 		
@@ -194,7 +196,8 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 		$amount = new Zend_Dojo_Form_Element_TextBox('amount');
 		$amount->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
-				'class'=>'fullside',
+				'class'	  =>'fullside',
+				'readonly'=>true,
 				'required'=>true
 		));
 		 
@@ -210,8 +213,9 @@ Class Accounting_Form_Frmasset extends Zend_Dojo_Form {
 			$salvage_value->setValue($data['salvagevalue']);
 			$amount->setValue($data['total_amount']);
 			$payment_method->setValue($data['payment_method']);
-			$Date->setValue($data['depreciation_start']);
-			$start_date->setValue($data['date']);
+			 
+			$start_date->setValue($data['start_date']);
+			$Date->setValue($data['end_date']);
 			$asset_code->setValue($data['asset_code']);
 			$paid_type->setValue($data['pay_type']);
 			$some_payamount->setValue($data['some_payamount']);

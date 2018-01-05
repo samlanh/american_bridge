@@ -2,7 +2,7 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_fixedasset;
 // echo date("Y-m-d","+1 month", strtotime(date("Y-m-d")));
-
+ 
 
 ?>
 <style>	
@@ -174,9 +174,36 @@ function checkasset(){
 function calculateDepreciation(){
 	asset_cost=dijit.byId("asset_cost").get('value');
 	salvage_value=dijit.byId("salvage_value").get('value');
+	if(salvage_value>asset_cost){
+		alert("The sale price can not bigger then cost price!!!");
+		dijit.byId("salvage_value").attr("value",asset_cost);
+		dijit.byId("amount").attr("value",0);
+		return false;
+	}
 	usefull_life=dijit.byId("usefull_life").get('value');
 	total_depreciation=(asset_cost-salvage_value)/usefull_life;
 	dijit.byId("amount").attr('value',total_depreciation);
+}
+
+function setEndDate(){
+	amount_date = dijit.byId('usefull_life').get('value');
+	//dayofweek = parseFloat(amount*7);
+	release_date = dijit.byId("start_date").get('value');//just update follow by first payment
+	if(isNaN(amount_date)){
+	}else{
+		var a = new Date(release_date);
+		dd = a.getDate();
+		var mm = a.getMonth()+(amount_date)+1;
+		 if(dd<10){
+			 dd = "0"+dd;
+		}
+		 if(mm<10){
+			 mm = "0"+mm;
+		}
+		var y = a.getFullYear();
+		var epx_date = y + '-'+ mm + '-'+dd ;
+		dijit.byId('date').attr('value',epx_date);	
+    }
 }
 
 </script>
