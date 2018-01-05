@@ -200,10 +200,32 @@
 							<fieldset>
 								<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ")?></strong></legend>
 									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_START");?></td>
+											<td><input type="text" name="moto_ticket_start" class="fullside" id="moto_ticket_start" onKeyUp="motoCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_END");?></td>
+											<td><input type="text" name="moto_ticket_end" class="fullside" id="moto_ticket_end" onKeyUp="motoCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+											<td><input type="text" name="moto_amount_ticket" class="fullside" id="moto_amount_ticket" onKeyUp="motoCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+											<td><input type="text" name="moto_price_per_ticket" class="fullside" id="moto_price_per_ticket" onKeyUp="motoCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
 										<tr>
 											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-											<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="calculateMotoFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+											<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="MotoConvertToDollar();" dojoType="dijit.form.NumberTextBox" /> </td>
 										</tr>
+										
 										<tr>
 											<td><?php echo $tr->translate("FOR_DATE");?></td>
 											<td><input type="text" name="moto_for_date" class="fullside" id="moto_for_date" dojoType="dijit.form.DateTextBox" constraints="{datePattern:'dd/MM/yyyy'}" value="now"/> </td>
@@ -219,9 +241,30 @@
 							<fieldset>
 								<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់")?></strong></legend>
 									<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_START");?></td>
+											<td><input type="text" name="bike_ticket_start" class="fullside" id="bike_ticket_start" onKeyUp="bikeCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("TICKET_END");?></td>
+											<td><input type="text" name="bike_ticket_end" class="fullside" id="bike_ticket_end" onKeyUp="bikeCalculateTotalTicket();" dojoType="dijit.form.TextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+											<td><input type="text" name="bike_amount_ticket" class="fullside" id="bike_amount_ticket" onKeyUp="bikeCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
+										<tr>
+											<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+											<td><input type="text" name="bike_price_per_ticket" class="fullside" id="bike_price_per_ticket" onKeyUp="bikeCalculateTotalFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										</tr>
+										
 										<tr>
 											<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-											<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="calculateBikeFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+											<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="BikeConvertToDollar();" dojoType="dijit.form.NumberTextBox" /> </td>
 										</tr>
 										<tr>
 											<td><?php echo $tr->translate("FOR_DATE");?></td>
@@ -325,7 +368,57 @@ function setCusName(){
 	 dijit.byId("cus_name").attr('value',dijit.byId("old_cus").attr('displayedValue'));
 }
 
-function calculateMotoFee(){
+function motoCalculateTotalTicket(){
+	start_ticket = parseInt(dijit.byId("moto_ticket_start").get("value"));
+	end_ticket = parseInt(dijit.byId("moto_ticket_end").get("value"));
+	
+	if(start_ticket>=0 && end_ticket>0 && end_ticket>start_ticket){
+		total_ticket = end_ticket - start_ticket;
+		dijit.byId("moto_amount_ticket").attr('value',total_ticket);
+		
+		motoCalculateTotalFee();
+	}
+}
+
+function bikeCalculateTotalTicket(){
+	start_ticket = parseInt(dijit.byId("bike_ticket_start").get("value"));
+	end_ticket = parseInt(dijit.byId("bike_ticket_end").get("value"));
+	// if(end_ticket>start_ticket){
+		// alert("start="+start_ticket+",end="+end_ticket);
+	// }
+	if(start_ticket>=0 && end_ticket>0 && end_ticket>start_ticket){
+		total_ticket = end_ticket - start_ticket;
+		dijit.byId("bike_amount_ticket").attr('value',total_ticket);
+		
+		bikeCalculateTotalFee();
+	}
+}
+
+function motoCalculateTotalFee(){
+	moto_amount_ticket = dijit.byId("moto_amount_ticket").get("value");
+	moto_price_per_ticket = dijit.byId("moto_price_per_ticket").get("value");
+	
+	if(moto_amount_ticket>0 && moto_price_per_ticket>0){
+		total_in_riel = moto_amount_ticket * moto_price_per_ticket;
+		dijit.byId("moto_total_in_riel").attr('value',total_in_riel);
+		
+		MotoConvertToDollar();
+	}
+}
+
+function bikeCalculateTotalFee(){
+	bike_amount_ticket = dijit.byId("bike_amount_ticket").get("value");
+	bike_price_per_ticket = dijit.byId("bike_price_per_ticket").get("value");
+	
+	if(bike_amount_ticket>0 && bike_price_per_ticket>0){
+		total_in_riel = bike_amount_ticket * bike_price_per_ticket;
+		dijit.byId("bike_total_in_riel").attr('value',total_in_riel);
+		
+		BikeConvertToDollar();
+	}
+}
+
+function MotoConvertToDollar(){
 
 	  moto_in_riel = dijit.byId("moto_total_in_riel").get("value");
 	  if(isNaN(moto_in_riel)){
@@ -336,7 +429,8 @@ function calculateMotoFee(){
 	  
 	 getTotal();
 }
-function calculateBikeFee(){
+
+function BikeConvertToDollar(){
 
 	  bike_in_riel = dijit.byId("bike_total_in_riel").get("value");
 	  if(isNaN(bike_in_riel)){
@@ -345,8 +439,10 @@ function calculateBikeFee(){
 	  total_in_dollar = bike_in_riel / reil_exc;
 	  dijit.byId("bike_total_in_dollar").attr("value",total_in_dollar.toFixed(2));
 	  
-	 getTotal();
+	  getTotal();
 }
+
+
 function calculateBrokenFee(){
 
 	  broken_in_riel = dijit.byId("broken_in_riel").get("value");

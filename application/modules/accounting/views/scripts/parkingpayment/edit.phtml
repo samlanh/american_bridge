@@ -104,8 +104,28 @@ dojo.require("dojo.data.ItemFileWriteStore");
 							<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រម៉ូតូ")?></strong></legend>
 								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
 								    <tr>
+										<td><?php echo $tr->translate("TICKET_START");?></td>
+										<td><input type="text" name="moto_ticket_start" class="fullside" id="moto_ticket_start" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("TICKET_END");?></td>
+										<td><input type="text" name="moto_ticket_end" class="fullside" id="moto_ticket_end" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+										<td><input type="text" name="moto_amount_ticket" class="fullside" id="moto_amount_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+										<td><input type="text" name="moto_price_per_ticket" class="fullside" id="moto_price_per_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
 										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="calculateMotoFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										<td><input type="text" name="moto_total_in_riel" class="fullside" id="moto_total_in_riel" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
 								    </tr>
 								    <tr>
 										<td><?php echo $tr->translate("FOR_DATE");?></td>
@@ -123,8 +143,28 @@ dojo.require("dojo.data.ItemFileWriteStore");
 							<legend align="center" ><strong><?php echo $tr->translate("ថ្លៃកិបសំបុត្រកង់")?></strong></legend>
 								<table style="margin: 0 auto; width: 100%;text-align: right;" cellspacing="2"  >
 									<tr>
+										<td><?php echo $tr->translate("TICKET_START");?></td>
+										<td><input type="text" name="bike_ticket_start" class="fullside" id="bike_ticket_start" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("TICKET_END");?></td>
+										<td><input type="text" name="bike_ticket_end" class="fullside" id="bike_ticket_end" onKeyUp="" dojoType="dijit.form.TextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("AMOUNT_TICKET");?></td>
+										<td><input type="text" name="bike_amount_ticket" class="fullside" id="bike_amount_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
+										<td><?php echo $tr->translate("PRICE_PER_TICKET");?>(៛)</td>
+										<td><input type="text" name="bike_price_per_ticket" class="fullside" id="bike_price_per_ticket" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
+								    </tr>
+									
+									<tr>
 										<td><?php echo $tr->translate("TOTAL");?>(៛)</td>
-										<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="calculateBikeFee();" dojoType="dijit.form.NumberTextBox" /> </td>
+										<td><input type="text" name="bike_total_in_riel" class="fullside" id="bike_total_in_riel" onKeyUp="" dojoType="dijit.form.NumberTextBox" /> </td>
 								    </tr>
 								    <tr>
 										<td><?php echo $tr->translate("FOR_DATE");?></td>
@@ -210,9 +250,20 @@ $(document).ready(function() {
 function setValue(){
 	dijit.byId('branch').attr('value','<?php echo $this->row['branch_id']?>');
 	
+	dijit.byId('moto_ticket_start').attr('value','<?php echo $this->row['moto_ticket_start']?>');
+	dijit.byId('moto_ticket_end').attr('value','<?php echo $this->row['moto_ticket_end']?>');
+	dijit.byId('moto_amount_ticket').attr('value','<?php echo $this->row['moto_amount_ticket']?>');
+	dijit.byId('moto_price_per_ticket').attr('value','<?php echo $this->row['moto_price_per_ticket']?>');
+	
 	dijit.byId('moto_total_in_riel').attr('value','<?php echo $this->row['parking_moto_fee_in_riel']?>');
 	dijit.byId('moto_for_date').attr('value','<?php echo $this->row['moto_for_date']?>');
 	dijit.byId('moto_total_in_dollar').attr('value','<?php echo $this->row['parking_moto_fee']?>');
+	
+	
+	dijit.byId('bike_ticket_start').attr('value','<?php echo $this->row['bike_ticket_start']?>');
+	dijit.byId('bike_ticket_end').attr('value','<?php echo $this->row['bike_ticket_end']?>');
+	dijit.byId('bike_amount_ticket').attr('value','<?php echo $this->row['bike_amount_ticket']?>');
+	dijit.byId('bike_price_per_ticket').attr('value','<?php echo $this->row['bike_price_per_ticket']?>');
 	
 	dijit.byId('bike_total_in_riel').attr('value','<?php echo $this->row['parking_bike_fee_in_riel']?>');
 	dijit.byId('bike_for_date').attr('value','<?php echo $this->row['bike_for_date']?>');
@@ -224,18 +275,31 @@ function setValue(){
 	
 	dijit.byId('all_total_amount').attr('value','<?php echo $this->row['total_fee']?>');
 	dijit.byId('receipt_no').attr('value','<?php echo $this->row['receipt_no']?>');
-	dijit.byId('create_date').attr('value','<?php echo date("Y-m-d",strtotime($this->row['create_date']))?>');
 	dijit.byId('note').attr('value','<?php echo $this->row['note']?>');
+	
+	dijit.byId('create_date').attr('value','<?php echo date("Y-m-d",strtotime($this->row['create_date']));?>');
 }
 
 function setReadonlyPageEdit(){
-	dijit.byId('branch').set('readOnly',true);
+	
+	dijit.byId("branch").set('readOnly',true);
 	
 	dijit.byId("cus_id").set('readOnly',true);
 	dijit.byId("old_cus").set('readOnly',true);
 	
+	dijit.byId("moto_ticket_start").set('readOnly',true);
+	dijit.byId("moto_ticket_end").set('readOnly',true);
+	dijit.byId("moto_amount_ticket").set('readOnly',true);
+	dijit.byId("moto_price_per_ticket").set('readOnly',true);
+	
 	dijit.byId("moto_total_in_riel").set('readOnly',true);
 	dijit.byId("moto_for_date").set('readOnly',true);
+	
+	
+	dijit.byId("bike_ticket_start").set('readOnly',true);
+	dijit.byId("bike_ticket_end").set('readOnly',true);
+	dijit.byId("bike_amount_ticket").set('readOnly',true);
+	dijit.byId("bike_price_per_ticket").set('readOnly',true);
 	
 	dijit.byId("bike_total_in_riel").set('readOnly',true);
 	dijit.byId("bike_for_date").set('readOnly',true);
@@ -245,7 +309,9 @@ function setReadonlyPageEdit(){
 	
 	dijit.byId("receipt_no").set('readOnly',true);
 	dijit.byId("note").set('readOnly',true);
-	dijit.byId('create_date').set('readOnly',true);
+	
+	dijit.byId("create_date").set('readOnly',true);
+	
 }
 
 
