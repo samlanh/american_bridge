@@ -886,10 +886,15 @@ fieldset{  background:none;}
 							<td><?php echo $tr->translate("SESSION");?></td>
 							<td><?php echo $register->getElement('session');?></td>
 						</tr>
-						<tr>						
+						<tr>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("TIME");?></td>
 							<td>
-								<input dojoType="dijit.form.TextBox"  class="fullside" id="study_hour" name="study_hour"  type="text">
+							    <select dojoType="dijit.form.FilteringSelect" class="fullside" id="study_hour" name="study_hour">
+									<option value="">select time</option>
+									<?php if(!empty($this->all_time)){foreach($this->all_time as $time){?>
+										<option value="<?php echo $time['name']?>" <?php if($time['name'] == $this->degree_row['time']){echo "selected='selected'";}?>><?php echo $time['name']?></option>
+									<?php }}?>
+								</select>
 							</td>
 						</tr>
 						

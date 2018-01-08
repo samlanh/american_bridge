@@ -80,7 +80,7 @@ class Accounting_RegisterController extends Zend_Controller_Action {
        $_db = new Application_Model_DbTable_DbGlobal();
        $data=$this->view->all_dept = $_db->getAllFecultyNamess(1);
        $this->view->branch_id = $_db->getAllBranch();
-       
+       $this->view->all_time = $_db->getAllTime();
        
        $db = new Accounting_Model_DbTable_DbRegister();
        $this->view->room = $db->getAllRoom();
@@ -129,6 +129,8 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$this->view->all_dept = $_db->getAllFecultyNamess(1);
     	$this->view->branch_id = $_db->getAllBranch();
+    	$this->view->all_time = $_db->getAllTime();
+    	
     	
     	$db = new Accounting_Model_DbTable_DbRegister();
     	$this->view->room = $db->getAllRoom();
@@ -180,6 +182,7 @@ class Accounting_RegisterController extends Zend_Controller_Action {
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$this->view->all_dept = $_db->getAllFecultyNamess(1);
     	$this->view->branch_id = $_db->getAllBranch();
+    	$this->view->all_time = $_db->getAllTime();
     	
     	$db = new Accounting_Model_DbTable_DbRegister();
     	$this->view->room = $db->getAllRoom();

@@ -77,7 +77,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
        $_db = new Application_Model_DbTable_DbGlobal();
        $this->view->all_dept = $_db->getAllFecultyNamess(2);
        $this->view->branch = $_db->getAllBranch();
-
+       $this->view->all_time = $_db->getAllTime();
        
        $db = new Registrar_Model_DbTable_DbRegister();
        $this->view->all_product = $db->getAllProduct();
@@ -125,6 +125,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$this->view->all_dept = $_db->getAllFecultyNamess(2);
     	$this->view->branch = $_db->getAllBranch();
+    	$this->view->all_time = $_db->getAllTime();
     	
     	$db = new Accounting_Model_DbTable_DbCourStudey();
     	$this->view->all_product = $db->getAllProduct();
@@ -166,7 +167,7 @@ class Accounting_CoursestudyController extends Zend_Controller_Action {
     	$_db = new Application_Model_DbTable_DbGlobal();
     	$this->view->all_dept = $_db->getAllFecultyNamess(2);
     	$this->view->branch = $_db->getAllBranch();
-    	
+    	$this->view->all_time = $_db->getAllTime();
     	
     	$db = new Registrar_Model_DbTable_DbRegister();
     	$this->view->all_product = $db->getAllProduct();

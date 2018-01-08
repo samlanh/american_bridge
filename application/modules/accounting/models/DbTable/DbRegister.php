@@ -917,7 +917,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     function getAllGrade($grade_id){
     	$db = $this->getAdapter();
     	$sql = "SELECT major_id As id,major_enname As name FROM rms_major WHERE dept_id=".$grade_id;
-    	$order=' ORDER BY id DESC';
+    	$order=' AND is_active =1 ORDER BY id DESC';
     	return $db->fetchAll($sql.$order);
     }
     function getPaymentTerm($generat,$payment_term,$grade){
