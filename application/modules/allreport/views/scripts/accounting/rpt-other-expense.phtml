@@ -15,7 +15,18 @@
 				<input dojoType="dijit.form.TextBox" class="fullside" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
 			</td>
 			<td> <?php echo $frm->getElement("branch");?></td>
+			<td>
+				<select name="asset_id" id="asset_id" dojoType="dijit.form.FilteringSelect" class="fullside" >
+					<option value=""><?php echo $tr->translate('FIXED_ASSET')?></option>
+					<?php if(!empty($this->fix_asset)){foreach ($this->fix_asset as $category){?>
+						<option value="<?php echo $category['id']?>" <?php if($category['id']==$this->search['cate_expense']){echo "selected='selected'";}?>><?php echo $category['name']?></option>	
+					<?php }}?>
+				</select>
+			</td>
 			<td> <?php echo $frm->getElement("user");?></td>
+			
+		</tr>
+		<tr>
 			<td>
 				<select name="cate_expense" id="cate_expense" dojoType="dijit.form.FilteringSelect" class="fullside" >
 					<option value="">select category</option>
@@ -73,7 +84,11 @@
 							<tr class="hover" style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
 								<td style="border: 1px solid #000;"><?php echo $i;?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['branch'];?></td>
+								<?php if(!empty($row['fixedasset_id'])){?>
+								<td style="border: 1px solid #000;"><?php echo $row['asset_name'];?>(<?php echo $tr->translate('FIXED_ASSET')?>)</td>
+								<?php }else{?>
 								<td style="border: 1px solid #000;"><?php echo $row['title'];?></td>
+								<?php }?>
 								<td style="border: 1px solid #000;"><?php echo $row['invoice'];?></td>
 								<td align="canter" style="border: 1px solid #000;"><?php echo $row['expense_category'];?></td>	
 								<td align="canter" style="border: 1px solid #000;"><?php echo $row['curr_name'];?></td>	

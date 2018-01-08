@@ -19,7 +19,9 @@ class Allreport_Model_DbTable_DbRptOtherExpense extends Zend_Db_Table_Abstract
 	    			(select branch_namekh from rms_branch where br_id = branch_id) as branch,
 	    			(select category_name from rms_cate_income_expense where rms_cate_income_expense.id = cat_id) as expense_category,
 	    			(SELECT name_en FROM `rms_view` WHERE rms_view.type=8 and rms_view.key_code = curr_type) AS curr_name,
-	    			(select CONCAT(last_name) from rms_users as u where u.id = user_id)  as name
+	    			(select CONCAT(last_name) from rms_users as u where u.id = user_id)  as name,
+	    			(SELECT fixed_assetname FROM ln_fixed_asset WHERE ln_fixed_asset.id=ln_income_expense.fixedasset_id LIMIT 1) AS asset_name
+	    			 
     			 from 
     				ln_income_expense 
     			 WHERE 
@@ -41,6 +43,9 @@ class Allreport_Model_DbTable_DbRptOtherExpense extends Zend_Db_Table_Abstract
     	if(!empty($search['branch'])){
     		$where.=" AND branch_id = ".$search['branch'] ;
     	}
+    	if(!empty($search['asset_id'])){
+    		$where.=" AND fixedasset_id = ".$search['asset_id'] ;
+    	}
     	if(!empty($search['user'])){
     		$where.=" AND user_id = ".$search['user'] ;
     	}
@@ -51,8 +56,9 @@ class Allreport_Model_DbTable_DbRptOtherExpense extends Zend_Db_Table_Abstract
     	if(!empty($search['txtsearch'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['txtsearch']));
-    		$s_where[] = " title LIKE '%{$s_search}%'";
-    		$s_where[] = " invoice LIKE '%{$s_search}%'";
+    		$s_search = str_replace(' ', '', $s_search);
+    		$s_where[] = "REPLACE(title,' ','') LIKE'%{$s_search}%'";
+    		$s_where[] = "REPLACE(invoice,' ','')  LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
 
@@ -62,6 +68,12 @@ class Allreport_Model_DbTable_DbRptOtherExpense extends Zend_Db_Table_Abstract
     function getAllCategory($type){
     	$db = $this->getAdapter();
     	$sql=" select id , category_name as name from rms_cate_income_expense where status = 1 and parent = $type";
+    	return $db->fetchAll($sql);
+    }
+    
+    function getAllFixAssetName(){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT id,fixed_assetname AS `name` FROM ln_fixed_asset WHERE STATUS=1";
     	return $db->fetchAll($sql);
     }
     

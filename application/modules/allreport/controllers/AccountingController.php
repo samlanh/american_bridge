@@ -1683,6 +1683,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=array(
 						'txtsearch' =>'',
 						'branch_id'	=>'',
+						'asset_id'	=>'',
 						'cate_expense'	=>"",
 						'user'	=>'',
 						'start_date'=>date('Y-m-d'),
@@ -1692,6 +1693,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$db = new Allreport_Model_DbTable_DbRptOtherExpense();
 			$abc = $this->view->row = $db->getAllOtherExpense($search);
 			$this->view->expense_category = $db->getAllCategory(0);
+			$this->view->fix_asset=$db->getAllFixAssetName();
 	
 			//print_r($abc);exit();
 			$form=new Registrar_Form_FrmSearchInfor();
