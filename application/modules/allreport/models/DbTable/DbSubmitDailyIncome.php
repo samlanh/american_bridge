@@ -67,6 +67,60 @@ class Allreport_Model_DbTable_DbSubmitDailyIncome extends Zend_Db_Table_Abstract
     	}
     	return 0;
     } 
+    
+    
+    function getAllSubmitDailyIncome($search){
+    	$db = $this->getAdapter();
+    	 
+    	//print_r($search);exit();
+    	 
+    	$_db = new Application_Model_DbTable_DbGlobal();
+    	$branch_id = $_db->getAccessPermission();
+    	 
+    	$sql = "SELECT
+    				*,
+    				(select last_name from rms_users as u where user_id = u.id) as user_name,
+    				(select branch_namekh from rms_branch where br_id = branch_id) as branch_name
+				    from
+				    	rms_submit_daily_income 
+				    where
+				    	status=1
+				    	and shift>0
+    					$branch_id
+    			";
+    	
+    	$where=' ';
+    	 
+    	$order=" order by branch_id ASC , for_date DESC , shift ASC , payfor_type ASC ";
+    	 
+    	if(empty($search)){
+    		return $db->fetchAll($sql.$order);
+    	}
+    	
+    	$from_date =(empty($search['start_date']))? '1': "for_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': "for_date <= '".$search['end_date']." 23:59:59'";
+    	$where .= " AND ".$from_date." AND ".$to_date;
+    	 
+    	if(!empty($search['user'])){
+    		$where.=' AND user_id='.$search['user'];
+    	}
+    	if($search['branch'] > 0){
+    		$where.= " AND `branch_id` = ".$search['branch'];
+    	}
+    	if($search['shift'] > 0){
+    		$where.= " AND shift = ".$search['shift'];
+    	}
+    	//echo $sql.$where;
+    	return $db->fetchAll($sql.$where.$order);
+    	
+    }
+    
+    
+    
+    
+    
+    
+    
 }
 
 
