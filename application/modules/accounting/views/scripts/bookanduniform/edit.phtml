@@ -24,6 +24,17 @@ dojo.require("dijit.form.CheckBox");
 							<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="title" id="title" value="<?php echo $this->row['title'];?>" ></td>
 						</tr>
 						<tr>
+							<td style="width:100px"><?php echo $tr->translate("PRODUCT_TYPE")?></td>
+							<td>
+								<select type="text" class="fullside" dojoType="dijit.form.FilteringSelect" name="product_type" id="product_type" >
+									<option value="1" <?php if($this->row['product_type']==1){echo "selected='selected'";}?>>ឯកសណ្ឋាន</option>
+									<option value="2" <?php if($this->row['product_type']==2){echo "selected='selected'";}?>>សៀវភៅពុម្ភ</option>
+									<option value="3" <?php if($this->row['product_type']==3){echo "selected='selected'";}?>>សម្ភារះសិក្សា</option>
+									<option value="4" <?php if($this->row['product_type']==4){echo "selected='selected'";}?>>ផ្សេងៗ</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<td style="width: 5px"><?php echo $tr->translate("DISCRIPTION")?></td>
 							<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="desc" id="desc" value="<?php echo $this->row['description'];?>" ></td>
 						</tr>

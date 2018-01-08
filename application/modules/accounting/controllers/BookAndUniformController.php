@@ -8,10 +8,7 @@ class Accounting_BookAndUniformController extends Zend_Controller_Action {
 	public function indexAction(){
 		try{
 			if($this->getRequest()->isPost()){
-				$_data=$this->getRequest()->getPost();
-				$search = array(
-						'txtsearch' => $_data['txtsearch'],
-						);
+				$search=$this->getRequest()->getPost();
 			}
 			else{
 				$search=array(

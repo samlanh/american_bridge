@@ -9,23 +9,26 @@ class Accounting_Model_DbTable_DbBookAndUniform extends Zend_Db_Table_Abstract
     public function addservice($_data){
     	$db = $this->getAdapter();
     		$_arr = array(
-    				'title'=>$_data['title'],
-    				'type'=>1,
-    				//'ser_cate_id'=>$_data['title'],
+    				'title'		=>$_data['title'],
+    				'type'		=>1, // product
+    				'product_type'=>$_data['product_type'], 
+    				'ser_cate_id'=>5,// product category
     				'description'=>$_data['desc'],
-    				'price'=>$_data['price'],
+    				'price'		=>$_data['price'],
     				'create_date'=>Zend_Date::now(),
-    				'status'=>$_data['status'],
-    				'user_id'=>$this->getUserId(),
+    				'status'	=>$_data['status'],
+    				'user_id'	=>$this->getUserId(),
     		);
     		return ($this->insert($_arr));
     } 
     public function updateservice($_data){
     	$_arr=array(
-	    			'title'=>$_data['title'],
+	    			'title'		=>$_data['title'],
+    				'product_type'=>$_data['product_type'],
     				'description'=>$_data['desc'],
-    				'status'=>$_data['status'],
-    				'price'=>$_data['price'],
+    				'status'	=>$_data['status'],
+    				'price'		=>$_data['price'],
+    				'user_id'	=>$this->getUserId(),
     			);
     	$where=' service_id='.$_data['id'];
     	return $this->update($_arr, $where);
@@ -38,9 +41,21 @@ class Accounting_Model_DbTable_DbBookAndUniform extends Zend_Db_Table_Abstract
     
     public function getAllServiceNames($search=''){
     	$db = $this->getAdapter();
-    	$sql = "SELECT service_id,title,description,price,status,create_date,
-    	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE user_id=id ) AS user_name
-    	FROM rms_program_name Where type=1 AND status=1 ";
+    	$sql = "SELECT 
+    				service_id,
+    				title,
+    				description,
+    				price,
+    				status,
+    				create_date,
+			    	(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE user_id=id ) AS user_name
+			      FROM 
+    				rms_program_name 
+    			  Where 
+    				type=1 
+    				AND status=1 
+    		";
+    	
     	$order=" ORDER BY service_id DESC";
     	 
     	if(empty($search)){

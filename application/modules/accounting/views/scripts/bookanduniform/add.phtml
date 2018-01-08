@@ -20,8 +20,19 @@ dojo.require("dijit.form.CheckBox");
 					<legend align="center" style="font-size: 18px;"><strong><?php echo $tr->translate("ADD_PRODUCT");?></strong></legend><br />
 					<table style="margin: 0 auto; width: 95%;" cellspacing="5">
 						<tr>
-							<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
+							<td style="width:100px"><?php echo $tr->translate("TITLE")?></td>
 							<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="title" id="title" ></td>
+						</tr>
+						<tr>
+							<td style="width:100px"><?php echo $tr->translate("PRODUCT_TYPE")?></td>
+							<td>
+								<select type="text" class="fullside" dojoType="dijit.form.FilteringSelect" name="product_type" id="product_type" >
+									<option value="1">ឯកសណ្ឋាន</option>
+									<option value="2">សៀវភៅពុម្ភ</option>
+									<option value="3">សម្ភារះសិក្សា</option>
+									<option value="4">ផ្សេងៗ</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td style="width: 5px"><?php echo $tr->translate("DISCRIPTION")?></td>
