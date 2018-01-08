@@ -47,7 +47,7 @@
 						 	?>
 							<tr style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
 								<td style="border: 1px solid #000;"><?php echo $key+$i;?></td>
-								<td style="border: 1px solid #000;"><a style=" color: #000;" href="<?php //echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['branch_name'];?></a></td>
+								<td style="border: 1px solid #000;"> <?php echo $rs['branch_name'];?> </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['asset_code'];?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['fixed_assetname'];?>  </td>
 								<td style="border: 1px solid #000;"><?php if($rs['total_after']!=0)echo '$&nbsp;'.number_format($rs['total_after'],2);?>  </td>
