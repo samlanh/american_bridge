@@ -60,7 +60,7 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace('auth');
 		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;
+		$where = " and ".$from_date." AND ".$to_date;
 		
 		$sql="SELECT 
 					id, 
@@ -72,6 +72,8 @@ class registrar_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 					total_amount,`desc`,for_date,status 
 				FROM 
 					ln_income 
+				where 	
+					reg_from = 0
 			";
 		
 		$order = " order by id DESC";

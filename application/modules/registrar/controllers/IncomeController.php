@@ -33,7 +33,7 @@ class Registrar_IncomeController extends Zend_Controller_Action
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH_ID","RECEIPT_NO","INCOME_TITLE","CATEGORY_INCOME","CURRENCY_TYPE","TOTAL_INCOME","NOTE","FOR_DATE","STATUS");
     		$link=array(
-    				'module'=>'registrar','controller'=>'income','action'=>'edit',
+    				'module'=>'accounting','controller'=>'income','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('branch'=>$link,'title'=>$link,'invoice'=>$link,'total_amount'=>$link,'cate_name'=>$link));
     	}catch (Exception $e){
@@ -54,7 +54,7 @@ class Registrar_IncomeController extends Zend_Controller_Action
 			try {
 				$db->addIncome($data);
 				if(!empty($data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/income");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/accounting/income");
 				}else{
 					Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				}				
@@ -84,7 +84,7 @@ class Registrar_IncomeController extends Zend_Controller_Action
 			$db = new Registrar_Model_DbTable_DbIncome();				
 			try {
 				$db->updateIncome($data,$id);				
-				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', "/registrar/income");		
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', "/accounting/income");		
 			} catch (Exception $e) {
 				$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
 			}

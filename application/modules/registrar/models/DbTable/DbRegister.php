@@ -1016,7 +1016,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     		$pre="F";
     	}
     	else if($payfor_type==5){
-    		$pre="";
+    		$pre="M";
     	}
     	
     	for($i = $acc_no;$i<6;$i++){

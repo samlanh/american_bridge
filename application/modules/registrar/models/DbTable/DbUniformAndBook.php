@@ -391,7 +391,7 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
     public function getAllServiceItemOption(){
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$rows = $this->getAllServiceOption();
-    	array_unshift($rows,array('service_id' => '0',"title"=>"Select Service"));
+    	array_unshift($rows,array('service_id' => '0',"title"=>"Select Product"));
     	$options = '';
     	if(!empty($rows))foreach($rows as $value){
     		$options .= '<option value="'.$value['service_id'].'" >'.htmlspecialchars($value['title'], ENT_QUOTES).'</option>';
@@ -413,7 +413,11 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
     
     
     
-    
+    public function getProductType($product_id){
+    	$db = $this->getAdapter();
+    	$sql = " SELECT product_type FROM `rms_program_name` WHERE type=1 AND status = 1 AND service_id = $product_id limit 1 ";
+    	return $db->fetchOne($sql);
+    }
     
     
     
