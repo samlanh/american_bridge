@@ -34,7 +34,7 @@
 		    	getallModel(dept_id,a=''); 
 		    	getStudentNo(dept_id,'');
 				
-		    	setHourDefault();
+		    	//setHourDefault();
 				oldStudentChangeDegree();
 		    }
 		}, "dept");
@@ -603,7 +603,12 @@ fieldset{  background:none;}
 						<tr>
 							<td style="white-space: nowrap;"><?php echo $tr->translate("TIME");?></td>
 							<td>
-							    <input dojoType="dijit.form.TextBox"  class="fullside" id="study_hour" name="study_hour"  type="text">
+							    <select dojoType="dijit.form.FilteringSelect" class="fullside" id="study_hour" name="study_hour">
+									<option value="">select time</option>
+									<?php if(!empty($this->all_time)){foreach($this->all_time as $time){?>
+										<option value="<?php echo $time['name']?>"><?php echo $time['name']?></option>
+									<?php }}?>
+								</select>
 							</td>
 					    </tr>
 						<tr>	
@@ -1590,7 +1595,7 @@ function setHourDefault(){
 		// dijit.byId('study_hour').attr('value','');
 	// }
 	
-	
+	/*
 	if(session==1){
 		dijit.byId('study_hour').attr('value','7:30AM - 10:45AM');
 	}else if(session==2){
@@ -1602,6 +1607,7 @@ function setHourDefault(){
 	}else{
 		dijit.byId('study_hour').attr('value','');
 	}
+	*/
 }
 //save daata when sub button print 
 function printSubmit(){

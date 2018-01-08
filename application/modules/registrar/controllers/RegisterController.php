@@ -84,6 +84,7 @@ class Registrar_RegisterController extends Zend_Controller_Action {
        
        $dbg = new Application_Model_DbTable_DbGlobal();
        $this->view->branch_info = $dbg->getBranchInfo();
+       $this->view->all_time = $dbg->getAllTime();
        
        $key = new Application_Model_DbTable_DbKeycode();
        $this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -164,7 +165,8 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$this->view->branch_info = $dbg->getBranchInfo();
-    	 
+    	$this->view->all_time = $dbg->getAllTime();
+    	
     	$key = new Application_Model_DbTable_DbKeycode();
     	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
     }

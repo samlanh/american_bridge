@@ -399,10 +399,15 @@ fieldset{  background:none;}
 								</select>
 							</td>
 						</tr>
-						<tr>	
-							<td><?php echo $tr->translate("TIME");?>*</td>
+						<tr>
+							<td style="white-space: nowrap;"><?php echo $tr->translate("TIME");?></td>
 							<td>
-								<input type="text" class="fullside" dojoType="dijit.form.TextBox" name="study_time" id="study_time" /> 
+							    <select dojoType="dijit.form.FilteringSelect" class="fullside" id="study_time" name="study_time">
+									<option value="">select time</option>
+									<?php if(!empty($this->all_time)){foreach($this->all_time as $time){?>
+										<option value="<?php echo $time['name']?>" <?php if($time['name'] == $this->row_gep['time']){echo "selected='selected'";}?>><?php echo $time['name']?></option>
+									<?php }}?>
+								</select>
 							</td>
 						</tr>
 						<tr>
@@ -708,6 +713,7 @@ fieldset{  background:none;}
 	}
 
 	function setStudyTime(){
+		/*
 		session = dijit.byId('session').get('value');
 		if(session==1){
 			dijit.byId('study_time').attr('value','8:00AM - 10:30AM ');
@@ -718,6 +724,7 @@ fieldset{  background:none;}
 		}else{
 			dijit.byId('study_time').attr('value','');
 		}
+		*/
 	}
 
 	function changControll(){

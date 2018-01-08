@@ -159,6 +159,9 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 			$_currency_type->setValue($data['curr_type']);
 			//$_branch_id->setValue($data['branch_id']);
 			$title->setValue($data['title']);
+			$name->setValue($data['name']);
+			$phone->setValue($data['phone']);
+			$_sex->setValue($data['sex']);
 			$_category->setValue($data['cat_id']);
 			$total_amount->setValue($data['total_amount']);
 			//$convert_to_dollar->setValue($data['amount_in_dollar']);
@@ -172,7 +175,7 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 			//$_sex->setValue($data['sex']);
 			//$name->setValue($data['name']);
 			//$phone->setValue($data['phone']);
-			$_fixed_id->setValue($data['fixedasset_id']);
+			//$_fixed_id->setValue($data['fixedasset_id']);
 		}
 		
 		$this->addElements(array($_fixed_id,$name,$phone,$_sex,$_branch_id,$_category,$_cat_expend,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,

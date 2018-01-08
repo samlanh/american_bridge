@@ -832,6 +832,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  sp.receipt_number,
 				  sp.year as academic_year,
 				  sp.session,
+				  sp.time,
 				  sp.degree,
 				  sp.grade,
 				  sp.room_id,
