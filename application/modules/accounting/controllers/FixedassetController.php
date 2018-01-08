@@ -55,7 +55,7 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","FIXED_ASSETNAME","ASSET_COST","USEFULL_LIFE","SALVAGEVALUE","PAID_MONTH","TOTA_AMOUNT","STATUS","NOTE");
 			$link=array(
-					'module'=>'accounting','controller'=>'fixedasset','action'=>'edit',
+					'module'=>'accounting','controller'=>'fixedasset','action'=>'index',
 			);
 			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('fixed_assetname'=>$link,'fixed_asset_type'=>$link,'asset_cost'=>$link));
 		}catch (Exception $e){

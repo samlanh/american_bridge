@@ -3,7 +3,7 @@
 	$this->headTitle('Report Student Balance'); 
 	echo $this->headTitle(''); 
 	$frm=$this->form_search;
-   
+   //print_r($this->row);
 ?>	
 <div style="width: 28cm;margin: 0 auto;">
 <form  id='foundation_class' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -46,27 +46,40 @@
 							<tr style="font-size:13px; height: 20px;border: 1px solid #000;background-color: #ccc;line-height: 30px;font-weight: bold;" align="center" >
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("N_O");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("BRANCH_NAME");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("FIXED_ASSETNAME");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("ASSET_COST");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("ASSET_NAME");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("USEFULL_LIFE");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("SALVAGEVALUE");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("TOTA_PAID_INMONT");?></td>
-								<td style="border: 1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("TOTAL_AMOUNT");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("DEPRECIATION_START_DATE");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("DEPRECIATION_END_DATE");?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("IS_PAID");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("USER");?></td>
 							</tr>
-						 <?php $i=0;if(!empty($this->row)) foreach ($this->row As $key=>$rs){?>
+						 <?php $i=0;if(!empty($this->row)) foreach ($this->row As $key=>$rs){
+						    if($rs['total_after']!=0){$i=$i+1;
+						         if($rs['is_closing']==0){
+						         	$comp=$tr->translate("Coplete");
+						         }else{
+						         	$comp=$tr->translate(" Not Coplete");
+						         }
+						 	?>
 							<tr style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
-								<td style="border: 1px solid #000;"><?php echo $key+$i;?></td>
+								<td style="border: 1px solid #000;"><?php echo $i;?></td>
 								<td style="border: 1px solid #000;"><a style=" color: #000;" href="<?php //echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['branch_name'];?></a></td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['fixed_assetname'];?>  </td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['asset_cost'];?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['usefull_life'];?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['salvagevalue'];?>  </td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['total_amount'];?>  </td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['note'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['paid_month'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['total_after'];?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($rs['start_date']));?>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime( $rs['end_date']));?>  </td>
+								
+								<td style="border: 1px solid #000;">&nbsp;<?php echo $comp;?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['USER'];?>  </td>
 							</tr>
-						 <?php }?>
+						 <?php }
+						 }?>
 						</table>	
 					</td>
 				</tr>
