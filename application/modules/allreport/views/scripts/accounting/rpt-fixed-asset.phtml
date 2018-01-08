@@ -66,9 +66,9 @@
 						 	?>
 							<tr style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
 								<td style="border: 1px solid #000;"><?php echo $i;?></td>
-								<td style="border: 1px solid #000;"><a style=" color: #000;" href="<?php //echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['branch_name'];?></a></td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['fixed_assetname'];?>  </td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['usefull_life'];?>  </td>
+								<td style="border: 1px solid #000;"><a style=" color: #000;" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['branch_name'];?></a></td>
+								<td style="border: 1px solid #000;">&nbsp;<a style=" color: #000;" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['fixed_assetname'];?></a>  </td>
+								<td style="border: 1px solid #000;">&nbsp;<a style=" color: #000;" href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['usefull_life'];?></a> </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['salvagevalue'];?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['paid_month'];?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['total_after'];?>  </td>

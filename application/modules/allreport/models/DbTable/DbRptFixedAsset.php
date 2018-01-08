@@ -42,13 +42,15 @@ class Allreport_Model_DbTable_DbRptFixedAsset extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT f.id,
 				(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=f.branch_id AND  STATUS=1 LIMIT 1)AS branch_name,
+				f.asset_code,
 				f.fixed_assetname,
 				f.asset_cost,f.usefull_life,f.salvagevalue,f.total_amount,f.note,
-		 		(SELECT CONCAT(first_name,' ',last_name) AS `name` FROM rms_users WHERE id = f.user_id LIMIT 1) AS USER,
-                       
-                 fd.total_depre ,fd.times_depre AS `month`,
-                 
-				 f.status FROM ln_fixed_asset AS f,ln_fixed_assetdetail AS fd
+				
+				(SELECT CONCAT(first_name,' ',last_name) AS `name` FROM rms_users WHERE id = f.user_id LIMIT 1) AS USER,
+			
+				fd.total_depre AS total_after,fd.times_depre,fd.for_month,fd.is_closing,f.status
+			
+				 FROM ln_fixed_asset AS f,ln_fixed_assetdetail AS fd
 				 WHERE f.id=fd.asset_id 
 				 AND fd.asset_id=$id";
     	return $db->fetchAll($sql);
