@@ -18,11 +18,11 @@ class Allreport_Model_DbTable_DbRptFixedAsset extends Zend_Db_Table_Abstract
 		       (SELECT CONCAT(first_name,' ',last_name) AS `name` FROM rms_users WHERE id = fs.user_id LIMIT 1) AS USER
 		       FROM ln_fixed_asset AS fs,ln_fixed_assetdetail AS fsd
 		       WHERE fs.id=fsd.asset_id ";
-//     	$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
-//     	$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-//     	$where = "  where 1 and ".$from_date." AND ".$to_date;
+    	$from_date =(empty($search['start_date']))? '1': " fs.start_date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " fs.start_date <= '".$search['end_date']." 23:59:59'";
+    	$where = " and ".$from_date." AND ".$to_date;
     	$order=" GROUP BY fsd.is_closing=1,fsd.asset_id ORDER BY id DESC";
-    	$where="";
+    	 
     	if(!empty($search['txtsearch'])){
     		$s_where = array();
     		$s_search = addslashes(trim($search['txtsearch']));
@@ -35,6 +35,7 @@ class Allreport_Model_DbTable_DbRptFixedAsset extends Zend_Db_Table_Abstract
     	if($search['branch'] >0){
     		$where.= " AND fs.branch_id = ".$search['branch'];
     	}
+    	echo $sql.$where;
     	return $db->fetchAll($sql.$where.$order);
     }
      

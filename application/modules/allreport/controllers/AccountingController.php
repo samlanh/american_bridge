@@ -2016,7 +2016,6 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 			$db = new Allreport_Model_DbTable_DbRptFixedAsset();
 			if($this->getRequest()->isPost()){
 				$search=$this->getRequest()->getPost();
-				$this->view->search = $search;
 			}
 			else{
 				$search = array(
@@ -2026,6 +2025,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'end_date'=>date('Y-m-d'),
 				);
 			}
+			$this->view->search = $search;
 			$rs_rows= $db->getAllFixedAsset($search);//call frome model
 			$this->view->row = $rs_rows;
 		}catch(Exception $e){

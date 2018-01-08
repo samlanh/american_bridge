@@ -38,7 +38,7 @@
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("IS_CLOSING");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("USER");?></td>
 							</tr>
-						 <?php $i=1;if(!empty($this->row)) foreach ($this->row As $key=>$rs){
+						 <?php $total=0;$i=1;if(!empty($this->row)) foreach ($this->row As $key=>$rs){
 						        if($rs['is_closing']==0){
 						        	$is_close=$tr->translate("PAID");
 						        }else{
@@ -50,37 +50,20 @@
 								<td style="border: 1px solid #000;"><a style=" color: #000;" href="<?php //echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-fixed-asset-detail'), null, true)?>/id/<?php echo $rs['id']?>" ><?php echo $rs['branch_name'];?></a></td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['asset_code'];?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['fixed_assetname'];?>  </td>
-								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['total_after'];?>  </td>
-								
-							 
+								<td style="border: 1px solid #000;"><?php if($rs['total_after']!=0)echo '$&nbsp;'.number_format($rs['total_after'],2);?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime( $rs['for_month']));?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $is_close;?>  </td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $rs['USER'];?>  </td>
 							</tr>
-						 <?php }?>
+						 <?php $total=$total+$rs['total_after'];
+						 }?>
+						 <tr align="center" >
+							<td colspan="4" align="right" style="border-bottom:1px solid #fff;border-right:1px solid #fff;border-left:1px solid #fff;"><?php echo $tr->translate("TOTAL");?>:</td>
+							<td style="border-bottom:1px solid #fff;border-right:1px solid #fff;border-left:1px solid #fff;font-family:'Times New Roman';font-weight: 900;">$&nbsp;<?php echo number_format($total,2)?></td>
+							<td colspan="3" style="border-bottom:1px solid #fff;border-right:1px solid #fff;border-left:1px solid #fff;"> </td>
+						</tr>
 						</table>	
 					</td>
-				</tr>
-				<tr>
-					<td colspan="3">&nbsp;</td>
-				</tr>
-			<!-- 
-				<tr>
-					<td colspan="2"></td>
-					<td>
-						<table border="1" align="right" style="width:50%; margin-right:0.5%; white-space:nowrap;border-collapse: collapse;border: 1px #000 solid;">
-							<tr style="font-size:13px; background:#ccc; height: 20px;width: 400px;" align="center">
-								<th>&nbsp;Total Balance Remain&nbsp;</th>
-							</tr>
-							<tr align="center" style=" height:18px; font-size:13px; padding: 1px;font-weight: bold;" >
-								<td style="color: red;">$ <?php //echo number_format($totalbalance,2);?></td>
-							</tr>
-						  </table>
-					</td>
-				</tr>
-				 -->
-				<tr>
-					<td colspan="3">&nbsp;</td>
 				</tr>
 				<tr>
 					<td colspan="3">&nbsp;</td>
