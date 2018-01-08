@@ -18,10 +18,8 @@
 					</td>
 					<td align="center" width="44%">
 						<strong style="font-weight:bold;font-family: Arial Black;color:#000; font-size: 16px;font-family:'Khmer MEF2';"><?php echo $tr->translate("REPORT_FIXED_ASSET_DETAIL")?></strong><br />
-						<span style="font-weight: bold;font-size: 14px;">From &nbsp;<?php echo date("d-M-Y",strtotime($this->search['start_date']));?> &nbsp;To&nbsp; <?php echo date("d-M-Y",strtotime($this->search['end_date']));?></span><br />
-						<?php if(!empty($this->search['payfor_type'])){?>
-						<span style="font-weight: bold;font-size: 14px;"><?php echo $payfor_type[$this->search['payfor_type']];?></span>
-						<?php }?>
+						<span style="font-weight: bold;font-size: 14px;"><?php echo $tr->translate("START_DATE");?> &nbsp;<?php echo date("d-M-Y",strtotime($this->row[0]['start_date']));?>   &nbsp;<?php echo $tr->translate("END_DATE");?>&nbsp;<?php echo date("d-M-Y",strtotime($this->row[0]['end_date']));?></span><br />
+						 
 					</td>
 					<td width="28%" align="right">
 					</td>
@@ -34,8 +32,7 @@
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("BRANCH_NAME");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("FIXED_CODE");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("FIXED_ASSETNAME");?></td>
-								 <td style="border: 1px solid #000;"><?php echo $tr->translate("PAID_MONTH");?></td>
-								
+								<td style="border: 1px solid #000;"><?php echo $tr->translate("PAID_MONTH");?></td>
 								 
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("PAID_DATE");?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate("IS_CLOSING");?></td>

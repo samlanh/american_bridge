@@ -44,7 +44,7 @@ class Allreport_Model_DbTable_DbRptFixedAsset extends Zend_Db_Table_Abstract
 				(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=f.branch_id AND  STATUS=1 LIMIT 1)AS branch_name,
 				f.asset_code,
 				f.fixed_assetname,
-				f.asset_cost,f.usefull_life,f.salvagevalue,f.total_amount,f.note,
+				f.asset_cost,f.usefull_life,f.salvagevalue,f.total_amount,f.note,f.start_date,f.end_date,
 				
 				(SELECT CONCAT(first_name,' ',last_name) AS `name` FROM rms_users WHERE id = f.user_id LIMIT 1) AS USER,
 			
