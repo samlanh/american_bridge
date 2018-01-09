@@ -22,12 +22,14 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     					"adv_search"=>'',
     					"category"=>'',
     					"branch"=>'',
+    					'asset_id'=>'',
     					"currency_type"=>-1,
     					"status"=>-1,
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
     		}
+    		$this->view->search=$formdata;
     		
 			$rs_rows= $db->getAllExpense($formdata);//call frome model
     		$glClass = new Application_Model_GlobalClass();
@@ -47,6 +49,8 @@ class Registrar_ExpenseController extends Zend_Controller_Action
     	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
+    	$db = new Allreport_Model_DbTable_DbRptOtherExpense();
+    	$this->view->fix_asset=$db->getAllFixAssetName();
     }
     public function addAction()
     {

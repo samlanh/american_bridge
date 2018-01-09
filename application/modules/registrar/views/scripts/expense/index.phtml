@@ -14,11 +14,20 @@
         <td><?php echo $frm->getElement('branch');?></td>
    		<td><?php echo $frm->getElement('currency_type');?></td>
    		<td><?php echo $frm->getElement('cat_expend');?></td>
+   		<td>
+			<select name="asset_id" id="asset_id" dojoType="dijit.form.FilteringSelect" class="fullside"  >
+				<option value=""><?php echo $tr->translate('FIXED_ASSET')?></option>
+				<?php if(!empty($this->fix_asset)){foreach ($this->fix_asset as $category){?>
+					<option value="<?php echo $category['id']?>" <?php if($category['id']==$this->search['asset_id']){echo "selected='selected'";}?>><?php echo $category['name']?></option>	
+				<?php }}?>
+			</select>
+		</td>
    </tr>
    <tr>
-        <td><?php echo $frm->getElement('status');?></td>
+   		
    		<td><?php echo $frm->getElement('start_date');?></td>
    		<td><?php echo $frm->getElement('end_date');?></td>
+   		<td><?php echo $frm->getElement('status');?></td>
    		<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
    </tr>
 </table>

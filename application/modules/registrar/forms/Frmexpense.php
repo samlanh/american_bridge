@@ -155,7 +155,7 @@ Class Registrar_Form_Frmexpense extends Zend_Dojo_Form {
 		$_fixed_id->setMultiOptions($opt);
 		
 		if($data!=null){
-			print_r($data);
+			//print_r($data);
 			$_branch_id->setValue($data['branch_id']);
 			$_category->setValue($data['cat_id']);
 			$_currency_type->setValue($data['curr_type']);

@@ -19,7 +19,7 @@
 				<select name="asset_id" id="asset_id" dojoType="dijit.form.FilteringSelect" class="fullside" >
 					<option value=""><?php echo $tr->translate('FIXED_ASSET')?></option>
 					<?php if(!empty($this->fix_asset)){foreach ($this->fix_asset as $category){?>
-						<option value="<?php echo $category['id']?>" <?php if($category['id']==$this->search['cate_expense']){echo "selected='selected'";}?>><?php echo $category['name']?></option>	
+						<option value="<?php echo $category['id']?>" <?php if($category['id']==$this->search['asset_id']){echo "selected='selected'";}?>><?php echo $category['name']?></option>	
 					<?php }}?>
 				</select>
 			</td>

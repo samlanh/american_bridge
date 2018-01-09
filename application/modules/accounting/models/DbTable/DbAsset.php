@@ -108,6 +108,9 @@ function updatasset($data){
 	$this->update($arr, $where);
 	$sql = " DELETE FROM ln_fixed_assetdetail WHERE asset_id=".$data["id"];
 	$db->query($sql);
+	//delelet ln_income_expense
+	$sql = " DELETE FROM ln_income_expense WHERE fixedasset_id=".$data["id"];
+	$db->query($sql);
 	
 	$time = $data['usefull_life'];
 	$next_payment = $data['start_date'];

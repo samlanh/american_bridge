@@ -74,10 +74,10 @@
 									   <tr>
 											<td><?php echo $tr->translate("FIXED_ASSET")?></td>
 											<td><?php echo $frm->getElement('fixed_id');?>
-												<br/> <input type="text" name="new_fixeddetail_id" id="new_fixeddetail_id"  value="" />
-												<br/> <input type="text" name="old_fixeddetail_id" id="old_fixeddetial_id"  value="<?php echo $this->row['fixedetail_id']?>" />
-												<br/> <input type="text" name="old_total_paid" id="old_total_paid"  value="<?php echo $this->row['total_amount']?>" />
-												<br/> <input type="text" name="old_fixedasset_id" id="old_fixedasset_id"  value="<?php echo $this->row['fixedasset_id']?>" />
+												 <input type="hidden" name="new_fixeddetail_id" id="new_fixeddetail_id"  value="" />
+												 <input type="hidden" name="old_fixeddetail_id" id="old_fixeddetial_id"  value="<?php echo $this->row['fixedetail_id']?>" />
+												  <input type="hidden" name="old_total_paid" id="old_total_paid"  value="<?php echo $this->row['total_amount']?>" />
+												  <input type="hidden" name="old_fixedasset_id" id="old_fixedasset_id"  value="<?php echo $this->row['fixedasset_id']?>" />
 											</td>
 										</tr>
 										<tr>
@@ -85,13 +85,14 @@
 											<td><?php echo $frm->getElement('invoice');?></td>
 										</tr>
 										<tr>
-											<td><?php echo $tr->translate("TOTAL_EXPENSE")?></td>
-											<td><?php echo $frm->getElement('total_amount');?></td>
-										</tr>
-										<tr>
 											<td><?php echo $tr->translate("EXPENSE_TITLE")?></td>
 											<td><?php echo $frm->getElement('title');?></td>
 										</tr>
+										<tr>
+											<td><?php echo $tr->translate("TOTAL_EXPENSE")?></td>
+											<td><?php echo $frm->getElement('total_amount');?></td>
+										</tr>
+										
 										<tr>
 											<td><?php echo $tr->translate("STATUS")?></td>
 											<td><?php echo $frm->getElement('Stutas');?></td>
@@ -217,7 +218,8 @@
 <script>
 $( document ).ready(function() {
     dijit.byId("cate_expense").attr("value",'<?php echo $this->row['cat_id']?>');
-     
+    getFixedAssetTotalPaid();
+    dijit.byId("total_amount").attr("value",'<?php echo $this->row['total_amount']?>');
 });
 
 var url_fixedasset = '<?php echo $this->url(array("module"=>"registrar","controller"=>"expense","action"=>"get-totalasset")); ?>';
@@ -227,6 +229,15 @@ function getFixedAssetTotalPaid(){
 	if(fixed_id==''){
 		dijit.byId("total_amount").attr("value",'');
 		dijit.byId("total_amount").attr("readonly",false);
+		$("#old_fixedasset_id").val('');
+		$("#new_fixeddetail_id").val('');
+		return false;
+	}
+
+	if($("#old_fixedasset_id").val()==dijit.byId("fixed_id").get("value")){
+		dijit.byId("total_amount").set('readonly', true);
+		dijit.byId("total_amount").attr("value",$("#old_total_paid").val());
+		$("#new_fixeddetail_id").val($("#old_fixeddetial_id").val());
 		return false;
 	}
 		dojo.xhrPost({
