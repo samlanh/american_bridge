@@ -112,13 +112,22 @@ tr.row_control {
 					$uniform_fee=0;
 					$book_fee=0;
 					$grand_total=0;
+					$stu_name="";
 				?>		
 						
 				<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;?>
+				
+					<?php 
+						$stu_name = $rs['stu_khname'];
+						if($stu_name==""){
+							$stu_name = $rs['stu_enname'];
+						}
+					?>
+				
  					<tr id="row" align="center" class="hover" >
 						<td class="padd"><?php echo $i;?></td>
 						<td class="padd"><?php echo $rs['receipt_number'];?></td>
-						<td class="padd"><?php echo $rs['stu_enname']."-".$rs['stu_khname'];?></td>
+						<td class="padd"><?php echo $stu_name;?></td>
 						<td class="padd"><?php echo $rs['sex'];?></td>
 						<td class="padd"><?php echo $rs['grade'];?></td>
 						
@@ -131,16 +140,16 @@ tr.row_control {
  					
 					<?php 
 					
-						if($rs['service_id']==1){ // uniform
+						if($rs['product_type']==1){ // uniform
 							$uniform_fee = $uniform_fee + $rs['paidamount'];
 						}
-						else if($rs['service_id']==82){ // book
+						else if($rs['product_type']==2){ // book
 							$book_fee = $book_fee + $rs['paidamount'];
 						}
-						else if($rs['service_id']==83){ // study material
+						else if($rs['product_type']==3){ // study material
 							$study_material_fee = $study_material_fee + $rs['paidamount'];
 						}
-						else if($rs['service_id']==84){ // other fee
+						else if($rs['product_type']==4){ // other fee
 							$other_fee = $other_fee + $rs['paidamount'];
 						}
 						

@@ -618,6 +618,9 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	sp.is_subspend,
 			    	 
 			    	spd.service_id,
+					
+					(select product_type from rms_program_name as pn where pn.service_id = spd.service_id) as product_type,
+					
 			    	(select title from rms_program_name where rms_program_name.service_id = spd.service_id) as service_name,
 			    	spd.`note`,
 			    	spd.`start_date`,
@@ -660,7 +663,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     	$where = " AND ".$from_date." AND ".$to_date;
     
     
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`id` ASC ";
     
     
     	if(empty($search)){

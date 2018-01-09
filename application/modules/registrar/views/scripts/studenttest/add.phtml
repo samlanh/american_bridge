@@ -348,19 +348,22 @@ echo $this->headTitle($tr->translate('ADD_STUDENT_TEST'));
 											<td align="center" width="25%">អ្នកផ្ដល់ពត៌មាន/Receptionist</td>
 										</tr>
 										<tr>
-											<td align="center" height="40px">&nbsp;</td>
-											<td align="center" height="40px">&nbsp;</td>
-											<td align="center" height="40px">&nbsp;</td>
-											<td align="center" height="40px">
-											&nbsp;
-											 <?php 
-											   $session_user=new Zend_Session_Namespace('auth');
-									           $last_name=$session_user->last_name;
-									           $username = $session_user->first_name;
-											   echo "".$last_name." ".$username;
-											?>
-											&nbsp;
+											<td colspan="4">&nbsp;</td>
+										</tr>
+										<tr>
+											<td align="center" >&nbsp;</td>
+											<td align="center" >&nbsp;</td>
+											<td align="center" >
+												&nbsp;
+												 <?php 
+												   $session_user=new Zend_Session_Namespace('auth');
+												   $last_name=$session_user->last_name;
+												   $username = $session_user->first_name;
+												   echo "".$last_name." ".$username;
+												?>
+												&nbsp;
 											</td>
+											<td align="center" >&nbsp;</td>
 										</tr>
 									</table>
 								</td>

@@ -868,7 +868,7 @@ function getMonthByNumber(m){
 					<td colspan="8">
 						<table width="100%" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
 							<tr>
-								<td width="15%">លេខទូរស័ព្ទ/Phone Number</td>
+								<td width="15%">លេខទូរសព្ទ/Phone Number</td>
 								<td width="50%">
 									&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
 									<div class="underline">
@@ -1040,7 +1040,7 @@ function getMonthByNumber(m){
 								<td width="25%" align="center">ប្រធានគណនេយ្យ/Accounting Manager</td>
 								<td width="25%" align="center">អ្នកបង់ប្រាក់/Payer</td>
 								<td width="25%" align="center">បេឡា/Cashier</td>
-								<td width="25%" align="center">អ្នកផ្តល់ពត៌មាន​/Receiptionist</td>
+								<td width="25%" align="center">អ្នកផ្តល់ព័ត៌មាន​/Receiptionist</td>
 							</tr>
 							
 							
@@ -1092,7 +1092,7 @@ function getMonthByNumber(m){
 										$phone = explode(",", $this->branch_info['branch_tel']);
 									}
 								?>
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office
+									លេខទូរសព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office
 									<div style=" width: 50%; text-align: left;">
 									<?php if (!empty($phone)) foreach ($phone as $ss){?>
 										- <?php echo $ss;?> <br />
@@ -1108,7 +1108,7 @@ function getMonthByNumber(m){
 		</div>
 		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
 		<button dojoType="dijit.form.Button" label="Cancel" iconClass="dijitEditorIcon dijitEditorIconCancel"
-				showLabel="true" type="button" onclick="hideDialog();">Cancel</button>
+				showLabel="true" type="button" onclick="hidePopupReceipt();">Cancel</button>
 		<button dojoType="dijit.form.Button" label="Print" iconClass="dijitEditorIcon dijitEditorIconPrint"
 				showLabel="true" type="button" onclick="printSubmit();">Print</button>
 	</div>
@@ -1228,7 +1228,7 @@ function showPopupDept() {
 		dijit.byId("popup_dept").show();
 	}
 }
-function hideDialog() {		
+function hidePopupReceipt() {		
 	dijit.byId("terms").hide();
 }
 

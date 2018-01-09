@@ -943,7 +943,7 @@ fieldset{  background:none;}
 			if(payment_term==5){
 				pay_term = dijit.byId('amount_section').get('value') + dijit.byId('payment_term').attr('displayedValue');
 			}else{
-				pay_term = dijit.byId('payment_term').attr('displayedValue');
+				pay_term = "1 "+dijit.byId('payment_term').attr('displayedValue');
 			}
 			
 			dojo.byId("lb_payment_term").innerHTML = pay_term;
@@ -1194,7 +1194,7 @@ fieldset{  background:none;}
 				</tr>
 				
 				<tr>
-					<td colspan="2">លេខទូរស័ព្ទ/Phone Number</td>
+					<td colspan="2">លេខទូរសព្ទ/Phone Number</td>
 					<td colspan="4" align="left">
 						&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
 						<div class="underline" style="text-align: left;">&nbsp;.............................................................................</div>
@@ -1343,7 +1343,7 @@ fieldset{  background:none;}
 								<td width="25%" align="center">ប្រធានគណនេយ្យ/Accounting Manager</td>
 								<td width="25%" align="center">អ្នកបង់ប្រាក់/Payer</td>
 								<td width="25%" align="center">បេឡា/Cashier</td>
-								<td width="25%" align="center">អ្នកផ្តល់ពត៌មាន​/Receiptionist</td>
+								<td width="25%" align="center">អ្នកផ្តល់ព័ត៌មាន​/Receiptionist</td>
 							</tr>
 							
 							
@@ -1395,7 +1395,7 @@ fieldset{  background:none;}
 										$phone = explode(",", $this->branch_info['branch_tel']);
 									}
 								?>
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
+									លេខទូរសព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office <br />
 									<div style=" width: 50%; text-align: left;">
 									<?php if (!empty($phone)) foreach ($phone as $ss){?>
 										- <?php echo $ss;?> <br />

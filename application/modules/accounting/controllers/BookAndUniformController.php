@@ -67,7 +67,8 @@ class Accounting_BookAndUniformController extends Zend_Controller_Action {
 			try{
 				$data = $this->getRequest()->getPost();
 				$data["id"]=$id;
-				$row=$db->updateservice($data);
+				//$row=$db->updateservice($data);
+				$row=$db->addservice($data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/accounting/bookanduniform/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAIL");

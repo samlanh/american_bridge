@@ -435,7 +435,7 @@ var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','contr
 					<td colspan="8">
 						<table width="100%" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
 							<tr>
-								<td width="15%">លេខទូរស័ព្ទ/Phone Number</td>
+								<td width="15%">លេខទូរសព្ទ/Phone Number</td>
 								<td width="50%">
 									&nbsp;:&nbsp; <label id="lb_phone" class="data" ></label>
 									<div class="underline">
@@ -608,7 +608,7 @@ var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','contr
 								<td width="" align="center">គណនេយ្យចំណូល<br />Accountant</td>
 								<td width="" align="center">អ្នកបង់ប្រាក់<br />Payer</td>
 								<td width="" align="center">បេឡា<br />Cashier</td>
-								<td width="" align="center">អ្នកផ្តល់ពត៌មាន​<br />Receiptionist</td>
+								<td width="" align="center">អ្នកផ្តល់ព័ត៌មាន​<br />Receiptionist</td>
 							</tr>
 							
 							<tr>
@@ -658,7 +658,7 @@ var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','contr
 										$phone = explode(",", $this->branch_info['branch_tel']);
 									}
 								?>
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
+									លេខទូរសព្ទ/Tel: ការិយាល័យផ្តល់ព័ត៌មាន/Information office <br />
 									<div style=" width: 50%; text-align: left;">
 									<?php if (!empty($phone)) foreach ($phone as $ss){?>
 										- <?php echo $ss;?> <br />
@@ -696,7 +696,7 @@ function clearControll(){
 }
 //save daata when sub button print 
 function printSubmit(){
-	//$('#office_receipt').submit();
+	$('#office_receipt').submit();
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();

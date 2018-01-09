@@ -21,6 +21,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql="SELECT b.* FROM `rms_branch` AS b WHERE b.`br_id`=$branch_id LIMIT 1";
 		return $db->fetchRow($sql);
 	}
+	
+	function getAllTime(){
+		$db =$this->getAdapter();
+		$sql="SELECT CONCAT(from_time,'-',to_time) as name FROM rms_time WHERE status=1 ";
+		return $db->fetchAll($sql);
+	}
+	
 	public function init()
 	{
 		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
