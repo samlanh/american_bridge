@@ -86,7 +86,10 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	}
 	function getexpensebyid($id){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM $this->_name where id=$id ";
+		$sql=" SELECT ie.id,ie.branch_id,ie.cat_id,ie.curr_type,ie.for_date,ie.desc,
+				ie.fixedasset_id,ie.invoice,ie.total_amount,ie.title,ie.status,ie.fixedetail_id
+				FROM ln_income_expense AS ie 
+				WHERE ie.id=$id ";
 		return $db->fetchRow($sql);
 	}
 	
@@ -103,7 +106,10 @@ class Registrar_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					id,
 					(select branch_namekh from rms_branch where br_id = branch_id) as branch,
 					invoice,
-					title,
+					CASE 
+					 WHEN fixedasset_id = 0 THEN title
+					 ELSE (SELECT CONCAT(f.fixed_assetname,'(fixed asset)') FROM ln_fixed_asset AS f WHERE f.id= ln_income_expense.fixedasset_id LIMIT 1)
+					 END AS title,
 					(SELECT c.category_name FROM rms_cate_income_expense As c WHERE c.id=ln_income_expense.cat_id AND c.parent=0 LIMIT 1) as cat_name,
 					(SELECT curr_nameen FROM `ln_currency` WHERE ln_currency.id =curr_type) AS currency_type, 
 					total_amount,

@@ -74,9 +74,10 @@
 									   <tr>
 											<td><?php echo $tr->translate("FIXED_ASSET")?></td>
 											<td><?php echo $frm->getElement('fixed_id');?>
-												 <input type="hidden" name="hid_fixed_id" id="hid_fixed_id"  value="" />
-												 <input type="hidden" name="old_fixed_id" id="old_fixed_id"  value="<?php echo $this->row['fixedetail_id']?>" />
-												 <input type="hidden" name="old_total_paid" id="old_total_paid"  value="<?php echo $this->row['total_amount']?>" />
+												<br/> <input type="text" name="new_fixeddetail_id" id="new_fixeddetail_id"  value="" />
+												<br/> <input type="text" name="old_fixeddetail_id" id="old_fixeddetial_id"  value="<?php echo $this->row['fixedetail_id']?>" />
+												<br/> <input type="text" name="old_total_paid" id="old_total_paid"  value="<?php echo $this->row['total_amount']?>" />
+												<br/> <input type="text" name="old_fixedasset_id" id="old_fixedasset_id"  value="<?php echo $this->row['fixedasset_id']?>" />
 											</td>
 										</tr>
 										<tr>
@@ -237,11 +238,11 @@ function getFixedAssetTotalPaid(){
 			load: function(data) {
 				if(data){
 					dijit.byId("total_amount").attr("value",data.total_depre);
-					$("#hid_fixed_id").val(data.id);
+					$("#new_fixeddetail_id").val(data.id);
 					 
 				}else{
 					dijit.byId("total_amount").attr("value",'');
-					$("#hid_fixed_id").val('');
+					$("#new_fixeddetail_id").val('');
 				}
 			},
 			error: function(err) {

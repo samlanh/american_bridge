@@ -165,7 +165,7 @@ function getAllAsset($search=null){
 	$sql=" SELECT a.id,
 			(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=branch_id AND  rms_branch.status=1 LIMIT 1)AS branch_name,
 			a.fixed_assetname,
-			 a.asset_cost,a.usefull_life,a.salvagevalue,a.paid_month,
+			 a.asset_cost,CONCAT(FORMAT(a.usefull_life,0),' Month'),a.salvagevalue,a.paid_month,
 	                 SUM(asetd.total_depre) AS total_amount,	 
 			 a.note,a.status 
 			 FROM ln_fixed_asset AS a,ln_fixed_assetdetail AS asetd
