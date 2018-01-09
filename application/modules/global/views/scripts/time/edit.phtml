@@ -1,0 +1,41 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('TIME')); 
+?>	
+<?php  $update_room= $this->update_room;?>
+<form  id='update_room' action="<?php echo $this->url(array('module'=>'global','controller'=>'time','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+<table cellspacing="10" width="40%" style="margin: 0 auto;">
+	<tr>
+		<td>
+			<fieldset style="background-color:menu;">
+				<legend align="center" ><strong><?php echo $tr->translate("TIME");?></strong></legend>
+				<table style="margin: 0 auto; width: 95%;" cellspacing="10">
+					<tr>
+						<td style="width: 100px"><?php echo $tr->translate("FROM_TIME")?></td>
+						<td><input type="text" name="from_time" id="from_time" value="<?php echo $this->row['from_time']?>" dojoType="dijit.form.TextBox" class="fullside" /></td>
+					</tr>
+					<tr>
+						<td ><?php echo $tr->translate("TO_TIME")?></td>
+						<td><input type="text" name="to_time" id="to_time" value="<?php echo $this->row['to_time']?>" dojoType="dijit.form.TextBox" class="fullside" /></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate('STATUS');?></td>
+						<td>
+							<select name="status" id="status" dojoType="dijit.form.FilteringSelect" required="true" class="fullside">
+	    						<option value="1" <?php if ($this->row["status"]==1){echo "selected='selected'";}?> >Active</option>
+	    						<option value="0" <?php if ($this->row["status"]==0){echo "selected='selected'";}?> >Deactive</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<input type="submit" value="save_new" name="save_new" label="<?php echo $tr->translate('GO_EDIT');?>" dojoType="dijit.form.Button" 
+								iconClass="dijitEditorIcon dijitEditorIconSave" />
+						</td>
+					</tr>
+				</table>	
+			</fieldset>		
+		</td>
+	</tr>
+</table>	
+</form>
