@@ -46,18 +46,21 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 			    			$search = array(
 			    					'title' => '',
 			    					'branch' => '',
-			    					'status' => -1);
+			    					'status' => -1,
+			    					'start_date'=> date('Y-m-d'),
+			    					'end_date'=>date('Y-m-d'),
+			    					);
 			    		}
 			$rs_rows= $db->getAllAsset($search);
 			
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","FIXED_ASSETNAME","ASSET_COST","USEFULL_LIFE","SALVAGEVALUE","PAID_MONTH","TOTA_AMOUNT","STATUS","NOTE");
+			$collumns = array("BRANCH_NAME","FIXED_ASSETNAME","ASSET_COST","USEFULL_LIFE","SALVAGEVALUE","PAID_MONTH","TOTAL_AMOUNT","START_DATE","END_DATE","NOTE","STATUS");
 			$link=array(
 					'module'=>'accounting','controller'=>'fixedasset','action'=>'edit',
 			);
-			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('fixed_assetname'=>$link,'fixed_asset_type'=>$link,'asset_cost'=>$link));
+			$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('fixed_assetname'=>$link,'branch_name'=>$link,'asset_cost'=>$link));
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			echo $e->getMessage();
@@ -73,6 +76,12 @@ class accounting_FixedAssetController extends Zend_Controller_Action {
 		$form->FrmSearchRegister();
 		Application_Model_Decorator::removeAllDecorator($form);
 		$this->view->frm_fixedasset=$form;
+		
+		$frm = new Registrar_Form_FrmSearchexpense();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		 
 	}
 		public function editAction()
 		{

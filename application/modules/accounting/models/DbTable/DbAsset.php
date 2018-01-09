@@ -168,27 +168,32 @@ function getAllAsset($search=null){
 	$sql=" SELECT a.id,
 			(SELECT CONCAT(branch_namekh) FROM rms_branch WHERE rms_branch.br_id=branch_id AND  rms_branch.status=1 LIMIT 1)AS branch_name,
 			a.fixed_assetname,
-			 a.asset_cost,CONCAT(FORMAT(a.usefull_life,0),' Month'),a.salvagevalue,a.paid_month,
-	                 SUM(asetd.total_depre) AS total_amount,	 
-			 a.note,a.status 
+			 CONCAT('($)',a.asset_cost),CONCAT(FORMAT(a.usefull_life,0),' Month'),CONCAT('($)',a.salvagevalue),CONCAT('($)',a.paid_month),
+	                 CONCAT('($)',SUM(asetd.total_depre)) AS total_amount,	 
+			 a.start_date,a.end_date,a.note,a.status 
 			 FROM ln_fixed_asset AS a,ln_fixed_assetdetail AS asetd
-			 WHERE a.id=asetd.asset_id GROUP  BY asetd.asset_id ";
-	$where = ' ';
-
+			 WHERE a.id=asetd.asset_id ";
+	$from_date =(empty($search['start_date']))? '1': " a.start_date >= '".$search['start_date']." 00:00:00'";
+	$to_date = (empty($search['end_date']))? '1': " a.start_date <= '".$search['end_date']." 23:59:59'";
+	$where = " AND ".$from_date." AND ".$to_date;
+	
 	if(!empty($search['branch'])){
-		$where.= " AND branch_id = ".$search['branch'];
+		$where.=" AND a.branch_id = ".$search['branch'];
 	}
 	if(!empty($search['title'])){
 		$s_where = array();
 		$s_search = str_replace(' ', '', addslashes(trim($search['title'])));
-		$s_where[] = "REPLACE(asset_code,' ','')LIKE '%{$s_search}%'";
-		$s_where[] = "REPLACE(asset_code,' ','')  LIKE '%{$s_search}%'";
-		$s_where[] = "REPLACE(asset_cost,' ','')  LIKE '%{$s_search}%'";
-		$s_where[] = "REPLACE(usefull_life,' ','')  LIKE '%{$s_search}%'";
-		$s_where[] = "REPLACE(salvagevalue,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(a.fixed_assetname,' ','')LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(a.asset_code,' ','')LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(a.asset_code,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(a.asset_cost,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(a.usefull_life,' ','')  LIKE '%{$s_search}%'";
+		$s_where[] = "REPLACE(a.salvagevalue,' ','')  LIKE '%{$s_search}%'";
 		$where.=' AND ('.implode(' OR ',$s_where).')';
 	}
-	$order="	ORDER BY id DESC";
+	 
+	$order=" GROUP  BY asetd.asset_id  ";
+	//echo $sql.$where;
 	return $db->fetchAll($sql.$where.$order);
    
 }

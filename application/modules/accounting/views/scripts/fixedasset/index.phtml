@@ -6,13 +6,13 @@ $frms = $this->frm_fixedasset;
 ?>
 <form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
    <div dojoType="dijit.layout.AccordionPane">
-   <table  width=50%>
+   <table  width=100%>
    <tr>
    <td  ><?php echo $frms->getElement('title');?></td>
     <td><?php echo $frms->getElement("branch");?></td>
     
-   <td  ><?php //echo $frms->getElement('payment_method');?></td>
-   <td><?php //echo $frm->getElement('status');?></td>
+   <td ><?php  echo $frm->getElement('start_date');?></td>
+   <td><?php   echo $frm->getElement('end_date');?></td>
    <td ><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button></td>
    </tr>
    </table>
