@@ -10,8 +10,7 @@
 	    <tr>
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
 	    	<td><?php echo $frm->getElement('branch');?></td>
-	    	<td> <?php echo $frm->getElement("start_date");?></td>
-	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+	    	
 	    	<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
@@ -21,6 +20,12 @@
 			 	</select>
 			 </td>	
 	    	<td><?php echo $frm->getElement('user');?></td>
+	    </tr>
+	   	<tr>	
+	   		<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+	    	<td> <?php echo $frm->getElement("from_receipt");?></td>
+	   	  	<td> <?php echo $frm->getElement("to_receipt");?></td>
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -144,7 +149,7 @@ tr.row_control {
 						}
 				?>
 						
- 					<tr id="row" align="center" class="hover" >
+ 					<tr id="row" align="center" class="hover" <?php if($rs['is_void']==1){echo "style='color:red;'";}?>>
  					
 						<td class="padd"><?php echo $i;?></td>
 						<td class="padd"><?php echo $rs['receipt_number'];?></td>
@@ -166,18 +171,20 @@ tr.row_control {
  					</tr>
  					
 					<?php 
-						$stu_id=$rs['student_id'];
-					
-						$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
+						if($rs['is_void']==0){
+							$stu_id=$rs['student_id'];
 						
-						$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
-						
-						$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
-						
-						$total_other_fee = $total_other_fee + $rs['other_fee'];
-						
-						if($rs['is_complete']==0){
-							$total_balance = $total_balance + $rs['grand_total_balance'];
+							$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
+							
+							$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
+							
+							$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
+							
+							$total_other_fee = $total_other_fee + $rs['other_fee'];
+							
+							if($rs['is_complete']==0){
+								$total_balance = $total_balance + $rs['grand_total_balance'];
+							}
 						}
 					?> 					
  					

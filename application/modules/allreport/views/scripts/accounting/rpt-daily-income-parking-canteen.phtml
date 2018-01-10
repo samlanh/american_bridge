@@ -4,12 +4,10 @@
 ?>	
 <title><?php echo $tr->translate('Daily Income Canteen');?></title>
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-parking-canteen')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-	<table width="95%">
+	<table width="100%">
 	    <tr>
 	    	<td><input type="text" name="txtsearch" id="txtsearch" class="fullside" value="<?php echo $this->search['txtsearch'];?>" dojoType="dijit.form.TextBox" /> </td>
 	    	<td><?php echo $frm->getElement('branch');?></td>
-	    	<td> <?php echo $frm->getElement("start_date");?></td>
-	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
 	    	<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
@@ -19,6 +17,12 @@
 			 	</select>
 			</td>
 	    	<td><?php echo $frm->getElement('user');?></td>
+	    </tr>
+	    <tr>	
+	    	<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("from_receipt");?></td>
+	   	  	<td> <?php echo $frm->getElement("to_receipt");?></td>
 	    	<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
 	    </tr>
 	</table>
@@ -114,7 +118,7 @@
 					<?php if(!empty($this->rs)){foreach ($this->rs as $rs){$i++;
 						
 					?>
-	 					<tr id="row" align="center" class="hover" >
+	 					<tr id="row" align="center" class="hover" <?php if($rs['status']==0){echo "style='color:red;'";}?>>
 							<td class="padd"><?php echo $i;?></td>
 							<td class="padd"><?php echo $rs['rent_receipt_no'];?></td>
 							<td class="padd"><?php echo $rs['customer_code'];?></td>
@@ -132,7 +136,9 @@
 	 					</tr>
 	 						
 	 					<?php 
-	 						$grand_total = $rs['rent_paid'] + $rs['water_exc_rate'] + $rs['fire_exc_rate'] + $rs['hygiene_price'] + $rs['other_price'];
+		 					if($rs['status']==1){
+		 						$grand_total = $rs['rent_paid'] + $rs['water_exc_rate'] + $rs['fire_exc_rate'] + $rs['hygiene_price'] + $rs['other_price'];
+		 					}
 	 					?>	
 	 						
 	 				<?php }}?>

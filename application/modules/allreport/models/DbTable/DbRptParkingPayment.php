@@ -31,7 +31,8 @@ class Allreport_Model_DbTable_DbRptParkingPayment extends Zend_Db_Table_Abstract
 		       		total_fee,
 		       		pd.note,
 		      		(SELECT CONCAT(first_name) FROM rms_users WHERE rms_users.id=pd.user_id LIMIT 1) AS user_name,
-		      		pd.create_date
+		      		pd.create_date,
+		      		pd.status
 				FROM
 				  	`rms_parking` AS p,
 				  	rms_parking_detail as pd
@@ -59,7 +60,11 @@ class Allreport_Model_DbTable_DbRptParkingPayment extends Zend_Db_Table_Abstract
     	}
     	$where .= " AND ".$from_date." AND ".$to_date;
     	
-    	$order=" ORDER BY pd.`id` DESC";
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_no between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
+    	
+    	$order=" ORDER BY pd.`id` ASC";
     	
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);

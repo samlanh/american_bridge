@@ -24,8 +24,6 @@
 			 	</select>
 			</td>
 			<td> <?php echo $frm->getElement("user");?></td>
-		</tr>
-		<tr>	
 			<td>
 				<select name="cate_income" id="cate_income" dojoType="dijit.form.FilteringSelect" class="fullside" >
 					<option value="">select category</option>
@@ -34,9 +32,12 @@
 					<?php }}?>
 				</select>
 			</td>
-			
+		</tr>
+		<tr>	
 			<td> <?php echo $frm->getElement("start_date");?></td>
 	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("from_receipt");?></td>
+	   	  	<td> <?php echo $frm->getElement("to_receipt");?></td>
 			<td>
 				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
 			</td>
@@ -71,7 +72,12 @@
 				</tr>
 				
 				<style>
-					table tr th{background-color: #ccc;}										
+					table tr th{background-color: #ccc;}	
+					.style_tr{
+						font-size:12px;
+						height: 20px;
+						border: 1px solid #000;"
+					}									
 				</style>
 				
 				<tr>
@@ -91,7 +97,7 @@
 								<td style="border: 1px solid #000;"><?php echo $tr->translate('USER')?></td>
 							</tr>
 						<?php $i=0;$total_income_dollar=0;$total_income_riel=0; foreach ($this->row AS $row) { $i++;?>
-							<tr class="hover" style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
+							<tr class="hover style_tr"  align="center" <?php if($row['status']==0){echo "style='color:red;'";}?>>
 								<td style="border: 1px solid #000;"><?php echo $i;?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['branch'];?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['title'];?></td>
@@ -106,10 +112,12 @@
 							</tr>
 							
 							<?php 
-								if($row['curr_type']==1){
-									$total_income_dollar = $total_income_dollar + $row['total_amount'];
-								}else{
-									$total_income_riel = $total_income_riel + $row['total_amount'];
+								if($row['status']==1){
+									if($row['curr_type']==1){
+										$total_income_dollar = $total_income_dollar + $row['total_amount'];
+									}else{
+										$total_income_riel = $total_income_riel + $row['total_amount'];
+									}
 								}
 							?>
 						<?php } 

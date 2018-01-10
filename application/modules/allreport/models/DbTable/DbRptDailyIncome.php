@@ -49,6 +49,8 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	sp.`admin_fee`,
 			    	sp.`other_fee`,
 			    		
+			    	sp.is_void,
+			    	
 			    	sp.`grand_total_payment`,
 			    	sp.`grand_total_paid_amount`,
 			    	sp.`grand_total_balance`,
@@ -69,7 +71,6 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	AND st.`stu_id`=sp.`student_id`
 			    	AND sp.`payfor_type`=6
 			    	AND spd.`service_id`=4
-			    	and sp.is_void=0
 			    	$branch_id
     		";
     	 
@@ -90,10 +91,14 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 16:00:01'";
     		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
     	}
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     	 
+    	
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_number between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     	 
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`id` ASC,sp.`grade` ASC,sp.id ASC ";
     		
     	 
     	if(empty($search)){
@@ -169,6 +174,8 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 					sp.`note`,
 					sp.is_subspend,
 					
+					sp.is_void,
+					
 					spd.`start_date`,
 					spd.`validate`,
 					spd.`payment_term`,
@@ -183,7 +190,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 					AND st.`stu_id`=sp.`student_id`
 					AND sp.`payfor_type`=2
 					AND spd.`service_id`=4
-					and sp.is_void=0
+					
 					$branch_id
     		  ";
     	
@@ -204,10 +211,13 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 16:00:01'";
     		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
     	}
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     	
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_number between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     	
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`id` ASC ";
 					
     	
     	if(empty($search)){
@@ -317,10 +327,13 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 16:00:01'";
     		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
     	}
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_number between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`id` ASC,sp.`grade` ASC ";
     
     
     	if(empty($search)){
@@ -376,7 +389,7 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 			    	st.`stu_khname`,
 			    	(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code = st.`sex`) AS sex,
 			    	(select title from rms_program_name as p where p.service_id = s.service_id) as service_name,
-			    	(select carid from rms_car where rms_car.id = (select car_id from rms_program_name where rms_program_name.service_id = spd.service_id)) as car_id,
+			    	(select carid from rms_car where rms_car.id = s.car_id) as car_id,
 			    	
 			    	st.`tel`,
 			    	sp.`create_date`,
@@ -436,10 +449,13 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 16:00:01'";
     		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
     	}
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_number between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`id` ASC ";
     
     
     	if(empty($search)){
@@ -546,10 +562,13 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     		$from_date =(empty($search['start_date']))? '1': "sp.create_date >= '".$search['start_date']." 16:00:01'";
     		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
     	}
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_number between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     
-    	$order=" ORDER BY sp.`student_id` ASC,sp.`grade` ASC,sp.id ASC ";
+    	$order=" ORDER BY sp.`id` ASC,sp.`grade` ASC,sp.id ASC ";
     
     
     	if(empty($search)){
@@ -660,8 +679,11 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
     		$to_date = (empty($search['end_date']))? '1': "sp.create_date <= '".$search['end_date']." 23:59:59'";
     	}
     	
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where .= " AND ".$from_date." AND ".$to_date;
     
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND receipt_number between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     
     	$order=" ORDER BY sp.`id` ASC ";
     
@@ -743,7 +765,12 @@ class Allreport_Model_DbTable_DbRptDailyIncome extends Zend_Db_Table_Abstract
 		    	$from_date =(empty($search['start_date']))? '1': "cp.create_date >= '".$search['start_date']." 16:00:01'";
 		    	$to_date = (empty($search['end_date']))? '1': "cp.create_date <= '".$search['end_date']." 23:59:59'";
 	    }
-	    $where = " AND ".$from_date." AND ".$to_date;
+	    $where .= " AND ".$from_date." AND ".$to_date;
+	    
+	    if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+	    	$where .= " AND rent_receipt_no between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+	    }
+	    
 	    $order=" ORDER BY cp.id ASC ";
 	    
 	    if(empty($search)){

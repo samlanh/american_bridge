@@ -21,7 +21,7 @@
 ?>
 <div style="width: 28cm;margin: 0 auto;">
 <form  id='foundation_class' action="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-parking-payment')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-	<table>	
+	<table width="100%">	
 		<tr>
 			<td>
 				<input dojoType="dijit.form.TextBox" class="fullside" id="txtsearch" name="txtsearch" placeholder="Search....." value="<?php echo $this->search['txtsearch'];?>" type="text">
@@ -40,12 +40,12 @@
 			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
 			 	</select>
 			</td>
-			<td>
-				<?php echo $frm->getElement("start_date");?>
-			</td>
-			<td>
-				<?php echo $frm->getElement("end_date");?>
-			</td>
+		</tr>
+	    <tr>	
+			<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("from_receipt");?></td>
+	   	  	<td> <?php echo $frm->getElement("to_receipt");?></td>
 			<td>
 				<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" name="search"  type="submit"><?php echo $tr->translate("SEARCH");?></button>
 			</td>
@@ -71,6 +71,12 @@
 			  
 			table { page-break-inside:auto }
 			tr{ page-break-inside:avoid; page-break-after:auto; }
+			
+			.style_tr{
+				font-size:12px;
+				height: 20px;
+				border: 1px solid #000;"
+			}	
 		</style>
 		<div id="exportExcel">
 			<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;">
@@ -109,7 +115,7 @@
 							</thead>
 						<?php $i=0;$grand_total=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
 							?>
-							<tr class="hover" style="font-size:12px; height: 20px;border: 1px solid #000;" align="center" >
+							<tr class="hover style_tr" align="center" <?php if($row['status']==0){echo "style='color:red;'";}?>>
 								<td style="border: 1px solid #000;"><?php echo $i;?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['receipt_no'];?></td>
 								<td style="border: 1px solid #000;">&nbsp;<?php echo $row['customer_code'];?>&nbsp;</td>
@@ -125,7 +131,9 @@
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?></td>
  							</tr>
 							<?php 
-								$grand_total = $grand_total + $row['total_fee'];
+									if($row['status']==1){
+										$grand_total = $grand_total + $row['total_fee'];
+									}
 								}}
 							?>	 
 						</table>

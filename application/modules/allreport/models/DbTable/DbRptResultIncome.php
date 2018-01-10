@@ -346,7 +346,7 @@ class Allreport_Model_DbTable_DbRptResultIncome extends Zend_Db_Table_Abstract
 			    	and sp.is_void=0
 			    	$branch_id
     			";
-    	 
+    	
     	$where = " ";
     	 
     	if($search['shift']==0){

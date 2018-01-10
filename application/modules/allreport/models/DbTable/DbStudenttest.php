@@ -39,7 +39,11 @@ class Allreport_Model_DbTable_DbStudenttest extends Zend_Db_Table_Abstract
 			$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
 		}
 		
-		$where = " and ".$from_date." AND ".$to_date;
+		$where .= " and ".$from_date." AND ".$to_date;
+		
+		if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+			$where .= " AND receipt between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+		}
 		
 		if (!empty($search['txtsearch'])){
 		$s_where = array();
@@ -59,7 +63,7 @@ class Allreport_Model_DbTable_DbStudenttest extends Zend_Db_Table_Abstract
 		if($search['user'] > 0){
 			$where.= " AND `user_id` = ".$search['user'];
 		}
-		$order=" order by id desc ";
+		$order=" order by id ASC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
  

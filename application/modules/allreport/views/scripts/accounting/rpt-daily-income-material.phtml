@@ -12,8 +12,7 @@
 	    	<td>
 	    		<?php echo $frm->getElement('branch');?>
 	    	</td>
-	    	<td> <?php echo $frm->getElement("start_date");?></td>
-	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+	    	
 	    	<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
@@ -23,6 +22,12 @@
 			 	</select>
 			</td>
 			<td><?php echo $frm->getElement('user');?></td>	
+		</tr>
+	    <tr>	
+	    	<td> <?php echo $frm->getElement("start_date");?></td>
+	   	  	<td> <?php echo $frm->getElement("end_date");?></td>
+			<td> <?php echo $frm->getElement("from_receipt");?></td>
+	   	  	<td> <?php echo $frm->getElement("to_receipt");?></td>
 	    	<td>
 	    		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 	    	</td>

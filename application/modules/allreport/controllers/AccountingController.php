@@ -1098,16 +1098,17 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>0,
 						'user'			=>0,
 						'shift'			=>0,
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
 				);
 			}
-	
 			
 			$db = new Allreport_Model_DbTable_DbRptDailyIncome();
 			$this->view->rs = $db->getDailyIncomeEnglishFulltime($search);
 	
-			// 			print_r($this->view->rs);
+			//print_r($this->view->rs);
 				
 			$this->view->search = $search;
 			
@@ -1139,6 +1140,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>0,
 						'user'			=>0,
 						'shift'			=>0,
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
 				);
@@ -1180,6 +1183,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>0,
 						'user'			=>0,
 						'shift'			=>0,
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
 				);
@@ -1218,6 +1223,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>0,
 						'user'			=>0,
 						'shift'			=>0,
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
 				);
@@ -1256,6 +1263,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>0,
 						'user'			=>0,
 						'shift'			=>0,
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
 				);
@@ -1294,6 +1303,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'branch'		=>0,
 						'user'			=>0,
 						'shift'			=>0,
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'	=>date("Y-m-d"),
 						'end_date'		=>date("Y-m-d"),
 				);
@@ -1647,6 +1658,8 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'shift'		=>0,
 						'cate_income'=>"",
 						'user'		=>'',
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'=>date('Y-m-d'),
 						'end_date'	=>date('Y-m-d'),
 				);
@@ -1952,7 +1965,9 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 						'txtsearch' =>'',
 						'branch'	=>'',
 						'shift'		=>'',
-						'user'	=>'',
+						'user'		=>'',
+						'from_receipt'	=>'',
+						'to_receipt'	=>'',
 						'start_date'=>date('Y-m-d'),
 						'end_date'	=>date('Y-m-d'),
 				);
@@ -1984,13 +1999,15 @@ class Allreport_AccountingController extends Zend_Controller_Action {
     		}
     		else{
     			$search = array(
-    					'txtsearch'=>'',
-    					'degree'=>0,
-    					'start_date'=> date('Y-m-d'),
-    					'end_date'=>date('Y-m-d'),
-    					'user'=>'',
-    					'branch'=>'',
-    					'shift'=>0,
+    					'txtsearch'		=>'',
+    					'degree'		=>0,
+    					'start_date'	=> date('Y-m-d'),
+    					'end_date'		=> date('Y-m-d'),
+    					'from_receipt'	=>'',
+    					'to_receipt'	=>'',
+    					'user'			=>'',
+    					'branch'		=>'',
+    					'shift'			=>0,
     			);
     		}
     		$this->view->search = $search;

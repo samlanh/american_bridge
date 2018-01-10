@@ -33,7 +33,8 @@ class Allreport_Model_DbTable_DbRptAttCar extends Zend_Db_Table_Abstract
 				  spd.qty,
 				  spd.`start_date`,
 				  spd.`validate`,
-				  c.`carid`,
+				  ser.`car_id`,
+				  c.carid,
 				  c.`drivername`,
 				  c.tel
 				FROM
@@ -50,13 +51,13 @@ class Allreport_Model_DbTable_DbRptAttCar extends Zend_Db_Table_Abstract
 				  AND sp.id=spd.`payment_id`
 				  AND spd.`service_id`=ser.`service_id`
 				  AND spd.`is_start`=1
-				  AND c.id = pn.`car_id`  
+				  AND c.id = ser.`car_id`  
 				  AND sp.`student_id`=ser.`stu_id`
 				  $branch_id
     		  ";
     	
     	$where = " ";
-    	$order=" ORDER BY c.`carid` ASC";
+    	$order=" ORDER BY c.`carid` ASC , ser.id ASC ";
     	
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);

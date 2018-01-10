@@ -22,11 +22,11 @@ class Allreport_Model_DbTable_DbRptOtherIncome extends Zend_Db_Table_Abstract
     			 from 
     				ln_income  
     			WHERE 
-    				status=1 
+    				1
     				$branch_id  
     		";
     	
-    	$where= ' ';
+    	$where = ' ';
     	
     	$order=" ORDER BY id DESC ";
     	
@@ -47,6 +47,9 @@ class Allreport_Model_DbTable_DbRptOtherIncome extends Zend_Db_Table_Abstract
     	}
     	$where .= " AND ".$from_date." AND ".$to_date;
     	
+    	if(!empty($search['from_receipt']) && !empty($search['to_receipt'])){
+    		$where .= " AND invoice between '".$search['from_receipt']."' AND '".$search['to_receipt']."'";
+    	}
     	
     	if(empty($search)){
     		return $db->fetchAll($sql.$order);

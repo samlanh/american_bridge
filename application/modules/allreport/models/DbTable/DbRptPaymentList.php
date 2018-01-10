@@ -1361,7 +1361,7 @@ class Allreport_Model_DbTable_DbRptPaymentList extends Zend_Db_Table_Abstract
 			    	(SELECT name_en FROM rms_view WHERE TYPE=2 AND key_code = st.`sex`) AS sex,
 			    	st.`tel`,
 			    	
-			    	(select carid from rms_car where rms_car.id = (select car_id from rms_program_name where rms_program_name.service_id = spd.service_id)) as car_id,
+			    	(select carid from rms_car where rms_car.id = (select car_id from rms_service as s where s.stu_id = sp.student_id and type=4)) as car_id,
 			    	(select title from rms_program_name where rms_program_name.service_id = spd.service_id) as service_name,
 			    	
 			    	sp.`create_date`,
