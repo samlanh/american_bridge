@@ -193,7 +193,7 @@ tr.row_control {
 		 					
 		 				<?php }}
 		 						
-		 						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee + $total_balance;
+		 						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee - $total_balance;
 		 				?>
 		 				
 		 				
@@ -262,7 +262,7 @@ tr.row_control {
 											
 											<tr class="hover">
 												<td style="border-top:2px solid #000;">
-													&nbsp;Grand Total
+													&nbsp; Total
 												</td>
 												<td style="border-top:2px solid #000;">
 													<?php echo "$ ".number_format($grand_total,2);?>
@@ -340,13 +340,13 @@ tr.row_control {
 								
 								<tr>
 									<td colspan="2">
-										<table width="100%" border="0">
-											<tr align="center">
+										<table width="100%" border="0" style="white-space: nowrap;font-size: 13px;">
+											<tr align="center" >
 												<td width="15%">Auditor</td>
 												<td width="18%">Senior Accountant</td>
 												<td width="18%">Accountant Income</td>
 												<td width="16%">Madam</td>
-												<td width="18%">School Principle</td>
+												<td width="18%">School Principal</td>
 												<td width="15%">Cashier</td>
 											</tr>
 											<tr>

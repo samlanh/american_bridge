@@ -110,11 +110,19 @@ tr.row_control {
 		 					 </tr>
 	 					 </thead>
 	 					 <?php $i=0; $grand_total = 0; if (!empty($this->row)) foreach ($this->row as $rs){ $i++;?>
+						 
+						 <?php 
+							$stu_name = $rs['en_name'];
+							if($stu_name == ""){
+								$stu_name = $rs['kh_name'];
+							}
+						 ?>
+						 
 	 					 <tr id="row" align="center" class="hover">
 	 					 	<td class="padd">&nbsp;<?php echo $i;?>&nbsp;</td>
 							<td class="padd">&nbsp;<?php echo $rs['receipt'];?>&nbsp;</td>
 							<td class="padd">&nbsp;<?php echo $rs['serial'];?>&nbsp;</td>
-							<td align="left" class="padd">&nbsp;<?php echo $rs['en_name'];?>&nbsp;</td>
+							<td align="left" class="padd">&nbsp;<?php echo $stu_name;?>&nbsp;</td>
 							<td class="padd">&nbsp;<?php echo $rs['sex'];?>&nbsp;</td>
 							<td class="padd">&nbsp;<?php echo $rs['degree'];?>&nbsp;</td>
 							<td class="padd">&nbsp;<?php echo $rs['grade_result_title'];?>&nbsp;</td>
@@ -134,7 +142,7 @@ tr.row_control {
 					<table width="60%" border="1" style="white-space: nowrap;margin: 0 auto; text-align: center;margin-top: 20px;border-collapse: collapse;border: 1px solid #000;">
 						<tr style="background: #c1d0f3;">
 							<td align="center">
-								<?php echo $tr->translate("GRAND_TOTAL");?>&nbsp;&nbsp;&nbsp;
+								Grand Total 
 							</td>
 							<td width="25%">
 								Rate
@@ -194,18 +202,53 @@ tr.row_control {
 			<tr>
 				<td colspan="3">
 					<table width="100%" border="0" style="white-space: nowrap;font-size: 13px;">
+						<tr align="center">
+							<td width="15%">Auditor</td>
+							<td width="18%">Senior Accountant</td>
+							<td width="18%">Accountant Income</td>
+							<td width="16%">Madam</td>
+							<td width="18%">School Principal</td>
+							<td width="15%">Cashier</td>
+						</tr>
 						<tr>
-							<td align="center" width="25%">
-								<span style="font-size: 14px;"><?php echo $tr->translate("APPROVED_BY"); ?></span>
+							<td colspan="6">&nbsp;</td>
+						</tr>
+						<tr align="center">
+							<td>
+								<div style="font-size: 13px;line-height: 20px;">
+									Name:..............................<br />
+									Date:........../........../..........
+								</div>
 							</td>
-							<td align="center" width="25%">
-								<span style="font-size: 14px;"><?php echo $tr->translate("VERIFIED_BY"); ?></span>
+							<td>
+								<div style="font-size: 13px;line-height: 20px;">
+									Name:..............................<br />
+									Date:........../........../..........
+								</div>
 							</td>
-							<td align="center" width="25%">
-								<span style="font-size: 14px;"><?php echo $tr->translate("CHECKED_BY"); ?></span>
+							<td>
+								<div style="font-size: 13px;line-height: 20px;">
+									Name:..............................<br />
+									Date:........../........../..........
+								</div>
 							</td>
-							<td align="center"  width="25%">
-								<span style="font-size: 14px;text-align: right;"><?php echo $tr->translate("PREPARED_BY"); ?></span>
+							<td>
+								<div style="font-size: 13px;line-height: 20px;">
+									Name:..............................<br />
+									Date:........../........../..........
+								</div>
+							</td>
+							<td>
+								<div style="font-size: 13px;line-height: 20px;">
+									Name:..............................<br />
+									Date:........../........../..........
+								</div>
+							</td>
+							<td>
+								<div style="font-size: 13px;line-height: 20px;">
+									Name:..............................<br />
+									Date:........../........../..........
+								</div>
 							</td>
 						</tr>
 					</table>							

@@ -191,7 +191,7 @@ tr.row_control {
 	 					
 	 				<?php }}
 	 				
-	 						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee + $total_balance;
+	 						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee - $total_balance;
 	 				?>
 	 				
 					</table>	
@@ -257,7 +257,7 @@ tr.row_control {
 									
 									<tr class="hover">
 										<td style="border-top:2px solid #000;">
-											&nbsp;ទឹកប្រាក់សរុបរួម
+											&nbsp;ទឹកប្រាក់សរុប
 										</td>
 										<td style="border-top:2px solid #000;">
 											<?php echo "$ ".number_format($grand_total,2);?>
