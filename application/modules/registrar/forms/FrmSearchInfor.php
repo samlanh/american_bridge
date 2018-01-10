@@ -425,8 +425,22 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		if(!empty($all_branch))foreach ($all_branch As $row)$opt_branch[$row['id']]=$row['name'];
 		$_branch->setMultiOptions($opt_branch);
 		
+		$from_receipt = new Zend_Dojo_Form_Element_TextBox('from_receipt');
+		$from_receipt->setAttribs(array(
+				'dojoType'=>$this->text,
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("from receipt")));
+		$from_receipt->setValue($request->getParam("from_receipt"));
 		
-		$this->addElements(array($lunch_service,$transport_service,$_degree_ft,$_degree_kh_ft,$_degree_en_ft,$_grade_en_ft,$_grade_kh_ft,$_room,$_branch,$_degree_all,$service_product,$start_date,$user,$end_date,$sess_gep,$_title,$_degree_gep,$generation,$_session,$_time,$_grade_all,$_grade_ft,$_grade_kid,$_status,$_grade_gep,$service,$pay_term));
+		$to_receipt = new Zend_Dojo_Form_Element_TextBox('to_receipt');
+		$to_receipt->setAttribs(array(
+				'dojoType'=>$this->text,
+				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("to receipt")));
+		$to_receipt->setValue($request->getParam("to_receipt"));
+		
+		
+		$this->addElements(array($from_receipt,$to_receipt,$lunch_service,$transport_service,$_degree_ft,$_degree_kh_ft,$_degree_en_ft,$_grade_en_ft,$_grade_kh_ft,$_room,$_branch,$_degree_all,$service_product,$start_date,$user,$end_date,$sess_gep,$_title,$_degree_gep,$generation,$_session,$_time,$_grade_all,$_grade_ft,$_grade_kid,$_status,$_grade_gep,$service,$pay_term));
 		return $this;
 	} 
 
