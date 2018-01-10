@@ -213,8 +213,20 @@ fieldset{  background:none;}
 								<input id="service" />
 							</td>
 						</tr>
+						
+						<tr>
+							<td><?php echo $tr->translate('CAR');?></td>
+							<td>
+								<select class="fullside" class="fullside" name="car_id" id="car_id" onchange="getservicefee();getValidate(1);" dojoType="dijit.form.FilteringSelect" type="text"   >
+									<option value="">Select Car</option>
+									<?php if(!empty($this->all_car)){foreach ($this->all_car as $key => $all_car){?>
+										<option value="<?php echo $all_car['id']?>" <?php if($all_car['id']==$this->row['car_id']){echo 'selected="selected"';}?> ><?php echo $all_car['name'];?></option>
+									<?php  }}?>
+								</select>
+							</td>
+						</tr>
+						
 						<tr>	
-							<input type="hidden" name="car_id" id="car_id" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="balance_id" id="balance_id" dojoType="dijit.form.TextBox" />
 							
@@ -509,7 +521,7 @@ fieldset{  background:none;}
 		dijit.byId("reciept_no").set('readOnly',true);
 		dijit.byId("discount_fix").set('readOnly',true);
 		
-		
+		dijit.byId("car_id").set('readOnly',true);
 	}
 
 	function setID(){

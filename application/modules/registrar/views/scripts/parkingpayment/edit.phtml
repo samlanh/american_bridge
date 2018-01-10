@@ -207,6 +207,15 @@ dojo.require("dojo.data.ItemFileWriteStore");
 										<td><input type="text" name="note" class="fullside" id="note"   dojoType="dijit.form.TextBox" /> </td> 
 									</tr>
 									<tr>
+										<td><?php echo $tr->translate("STATUS");?></td>
+										<td>
+											<select dojoType='dijit.form.FilteringSelect' id="status" name="status"   class="fullside"  ​​  placeholder=" ">
+												<option value="1" ><?php echo $tr->translate("ACTIVE");?></option>
+												<option  value="0"><?php echo $tr->translate("DEACTIVE");?> </option>
+											</select>
+										</td>
+									</tr>
+									<tr>
 										<td colspan="2">
 											<input name="readmoney" id="readmoney" type="text" readOnly class="fullside" dojoType="dijit.form.TextBox" />
 										</td>
@@ -270,6 +279,8 @@ function setValue(){
 	dijit.byId('all_total_amount').attr('value','<?php echo $this->row['total_fee']?>');
 	dijit.byId('receipt_no').attr('value','<?php echo $this->row['receipt_no']?>');
 	dijit.byId('note').attr('value','<?php echo $this->row['note']?>');
+	
+	dijit.byId('status').attr('value','<?php echo $this->row['parking_status']?>');
 }
 
 function setReadonlyPageEdit(){

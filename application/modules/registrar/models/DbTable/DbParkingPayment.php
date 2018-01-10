@@ -202,6 +202,8 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 					
 					"branch_id"     	=> 	$this->getBranchId(),
 					"user_id"     		=> 	$this->getUserId(),
+					
+					"status"        	=> 	$data['status'],
 			);
 			$this->_name="rms_parking_detail";
 			$where=" id = ".$data['id'];
@@ -217,7 +219,8 @@ class Registrar_Model_DbTable_DbParkingPayment extends Zend_Db_Table_Abstract
 	function getParkingById($id){
 		$db=$this->getAdapter();
 		$sql="SELECT 
-					*
+					*,
+					pd.status as parking_status
 		      	FROM 
 		      		rms_parking AS p,
 		      		rms_parking_detail AS pd

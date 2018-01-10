@@ -90,7 +90,7 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 				
 		if($data['student_type']!=1){ 
 			//get id service ដែលយើងបង់ ដើម្បី update វាទៅ Finish រួចចាំ insert new service and new validate
-			$finish = $this->setServiceToFinish($stu_id, $data['service'],0);
+			$finish = $this->setServiceToFinish($stu_id, $data['old_service'],0);
 			if(!empty($finish)){
 				$this->_name = "rms_student_paymentdetail";
 				$array=array(

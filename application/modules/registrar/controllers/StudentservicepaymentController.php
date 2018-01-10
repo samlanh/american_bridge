@@ -83,7 +83,7 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
        array_unshift($service, array ( 'id' => -1, 'name' => 'Select Service') );
        $this->view->service = $service;
        
-        
+       $this->view->all_car = $db->getAllCar();
        
        $servicetype = $db->getAllServiceType();
        array_unshift($servicetype, array ( 'id' => -1, 'name' => 'បន្ថែមថ្មី') );
@@ -159,6 +159,8 @@ class Registrar_StudentservicepaymentController extends Zend_Controller_Action {
     	$service = $db->getAllService();
     	array_unshift($service, array ('id' => -1, 'name' => 'Select Service') );
     	$this->view->service = $service;
+    	
+    	$this->view->all_car = $db->getAllCar();
     	
     	$this->view->all_stu_name =  $db->getAllStudentName();
     	$this->view->old_stu_name = $db->getAllOldStudentName();
