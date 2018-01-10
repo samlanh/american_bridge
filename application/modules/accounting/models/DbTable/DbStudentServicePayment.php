@@ -56,14 +56,15 @@ function addStudentServicePayment($data){
 			//$new_car_id = $this->getNewCarId();
 			$new_car_id = $data['new_car_id'];
 			$array = array(
-				'branch_id'=>$data['branch'],
-				'type'=>4,
-				'stu_id'=>$data['student_name_new'],
-				'stu_code'=>$new_car_id,
+				'branch_id'	=>$data['branch'],
+				'type'		=>4,
+				'stu_id'	=>$data['student_name_new'],
+				'stu_code'	=>$new_car_id,
 				'service_id'=>$data['service'],
+				'car_id'	=>$data['car_id'],
 				'create_date'=>$data['create_date'],
-				'reg_from'			=>1,
-				'is_new'=>1,
+				'reg_from'	=>1,
+				'is_new'	=>1,
 				);
 			$this->insert($array);
 		}else{
@@ -80,9 +81,10 @@ function addStudentServicePayment($data){
 			
 			$array = array(
 				'service_id'=>$data['service'],
+				'car_id'	=>$data['car_id'],
 				'is_suspend'=>0,
 				'is_comeback'=>$is_comeback,
-				'is_new'=>$is_new,
+				'is_new'	=>$is_new,
 			);
 			$where = " type=4 and stu_id = ".$stu_id;
 			$this->update($array, $where);
@@ -94,7 +96,7 @@ function addStudentServicePayment($data){
 				
 		if($data['student_type']!=1){
 			//get id service ដែលយើងបង់ ដើម្បី update វាទៅ Finish រួចចាំ insert new service and new validate
-			$finish = $this->setServiceToFinish($stu_id, $data['service'],0);
+			$finish = $this->setServiceToFinish($stu_id, $data['old_service'],0);
 			if(!empty($finish)){
 				$this->_name = "rms_student_paymentdetail";
 				$array=array(
@@ -447,7 +449,8 @@ function addStudentServicePayment($data){
     	$db=$this->getAdapter();
     	$sql="select 
     				*,
-    				(select stu_code from rms_service where student_id = stu_id and rms_service.type=4 limit 1) as code 
+    				(select stu_code from rms_service where student_id = stu_id and rms_service.type=4 limit 1) as code,
+    				(select car_id from rms_service where student_id = stu_id and type=4 limit 1) as car_id  
     			from 
     				rms_student_payment AS sp,
     				rms_student_paymentdetail as spd
@@ -604,7 +607,8 @@ function addStudentServicePayment($data){
 	    			stu_khname,
 	    			sex,
 		    		tel,
-		    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as service_id
+		    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as service_id,
+		    		(select sv.car_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as car_id
 	    		 from 
 	    			rms_student as s
 	    		 where
@@ -838,6 +842,12 @@ function addStudentServicePayment($data){
     			where 
     				branch_id = $branch_id 
     		";
+    	return $db->fetchAll($sql);
+    }
+    
+    function getAllCar(){
+    	$db=$this->getAdapter();
+    	$sql="select id,carid as name from rms_car where status = 1 ";
     	return $db->fetchAll($sql);
     }
 	

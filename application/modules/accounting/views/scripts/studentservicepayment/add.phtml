@@ -48,7 +48,6 @@
 				if(dijit.byId('student_type').get('value')!=1){
 					//getStartDateService();
 				}
-				getCarIdByService();
 		    } 
 		}, "service");
 
@@ -391,10 +390,23 @@ fieldset{  background:none;}
 							<td> 
 								<input id="service" />
 							</td>
-							<input type="hidden" name="car_id" id="car_id" dojoType="dijit.form.TextBox" />
+							<input type="hidden" name="old_service" id="old_service" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="balance_id" id="balance_id" dojoType="dijit.form.TextBox" />
 						</tr>
+						
+						<tr>
+							<td><?php echo $tr->translate('CAR');?></td>
+							<td>
+								<select class="fullside" class="fullside" name="car_id" id="car_id" onchange="getservicefee();getValidate(1);" dojoType="dijit.form.FilteringSelect" type="text"   >
+									<option value="">Select Car</option>
+									<?php if(!empty($this->all_car)){foreach ($this->all_car as $key => $all_car){?>
+										<option value="<?php echo $all_car['id']?>"><?php echo $all_car['name'];?></option>
+									<?php  }}?>
+								</select>
+							</td>
+						</tr>
+						
 						<tr>		
 							<td><?php echo $tr->translate('PAYMENT_TERM');?></td>
 							<td>
@@ -973,7 +985,7 @@ function getStudentInfo(){
 		dijit.byId('stu_drop_name').attr('value',studentid);
 	}
 	
-	if(studentid!=''){
+	if(studentid>0){
 		dojo.xhrPost({
 			url:url_student_info,
 			content:{
@@ -987,7 +999,9 @@ function getStudentInfo(){
 				dijit.byId("sex").attr("value",data.sex);
 				dijit.byId("phone").attr("value",data.tel);
 				if(stu_type!=1){
+					dijit.byId("old_service").attr("value",data.service_id);
 					dijit.byId("service").attr("value",data.service_id);
+					dijit.byId("car_id").attr("value",data.car_id);
 					getStartDateService();
 				}
 			},
@@ -1389,29 +1403,6 @@ function displayNoneAddRow(){
 	
 }
 
-var url_getCarIdByService = '<?php echo $this->url(array('module'=>'accounting','controller'=>'studentservicepayment','action'=>'get-car-id-by-service')); ?>';
-function getCarIdByService(){
-	service_id = dijit.byId('service').get('value');
-	if(service_id>0){
-		dojo.xhrPost({
-			url:url_getCarIdByService,
-			content:{
-				'service_id':service_id,
-				},
-			handleAs:"json",
-			load: function(data) {
-				//alert(data);
-				if(data){
-					dijit.byId('car_id').attr('value',data);
-				}
-			},
-			error: function(err) {
-				//alert(err);
-			}
-		});
-	}
-	
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

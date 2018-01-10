@@ -374,6 +374,7 @@ fieldset{  background:none;}
 							</td>
 						</tr>
 						<tr>	
+							<input type="hidden" name="old_service" id="old_service" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="service_cate" id="service_cate" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="balance_id" id="balance_id" dojoType="dijit.form.TextBox" />
 							<td ><?php echo $tr->translate('PAYMENT_TERM');?></td>
@@ -917,6 +918,7 @@ function getStudentInfo(){
 				dijit.byId("sex").attr("value",data.sex);
 				dijit.byId("phone").attr("value",data.tel);
 				if(stu_type!=1){
+					dijit.byId("old_service").attr("value",data.service_id);
 					dijit.byId("service").attr("value",data.service_id);
 				}
 			},
