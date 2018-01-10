@@ -72,9 +72,6 @@ public function addAction(){
 	array_unshift($rs, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
 	$this->view->service = $rs;
 		
-	$this->view->all_car = $db->getAllCar();
-	
-	
 	$frm=new Accounting_Form_FrmProgram();
 	$this->view->frm=$frm->addProgramName();
 	Application_Model_Decorator::removeAllDecorator($frm->addProgramName());
@@ -102,8 +99,6 @@ public function editAction(){
 	$rs= $db->getServiceType(1);
 	array_unshift($rs, array ( 'id' => -1,'name' => 'បន្ថែមថ្មី'));
 	$this->view->service = $rs;
-	
-	$this->view->all_car = $db->getAllCar();
 	
 	$obj=new Accounting_Form_FrmProgram();
 	$frm=$obj->addProgramName($row);

@@ -27,14 +27,8 @@ dojo.ready(function(){
 		    if(service_id==-1){
 		   		dijit.byId("popup_dept").show();
 		    }
-
-		    showCar();
 	    } 
 	}, "title");
-
-	showCar();
-
-	
 }); 
 </script>
 <?php  $item= $this->frm;?>
@@ -52,23 +46,6 @@ dojo.ready(function(){
 							</td>
 						</tr>
 						
-						<tr>
-							<td style="width:100px">
-								<div id="show_car_label">
-									<?php echo $tr->translate("CAR")?>
-								</div>
-							</td>
-							<td>
-								<div id="show_car">
-									<select name="car" id="car"  dojoType="dijit.form.FilteringSelect" class="fullside"  >
-										<option value="-1">----- select car ------</option>
-										<?php if(!empty($this->all_car)){foreach ($this->all_car as $car){?>
-										<option value="<?php echo $car['id']?>"><?php echo $car['name']?></option>
-										<?php }}?>
-									</select>
-								</div>
-							</td>
-						</tr>
 						
 						<tr>
 							<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
@@ -101,18 +78,6 @@ dojo.ready(function(){
 
 
 <script>
-
-function showCar(){
-	service_type = dijit.byId('title').get('value');
-	//alert(service_type);
-	if(service_type==3){
-		document.getElementById('show_car').style.display="block";
-		document.getElementById('show_car_label').style.display="block";
-	}else{
-		document.getElementById('show_car').style.display="none";
-		document.getElementById('show_car_label').style.display="none";
-	}
-}
 
 
 var url_add_lang = '<?php echo $this->url(array("module"=>"global","controller"=>"service","action"=>"submit")); ?>';

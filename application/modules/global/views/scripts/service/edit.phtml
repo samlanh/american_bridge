@@ -52,24 +52,6 @@ dojo.ready(function(){
 						</tr>
 						
 						<tr>
-							<td style="width:100px">
-								<div id="show_car_label">
-									<?php echo $tr->translate("CAR")?>
-								</div>
-							</td>
-							<td>
-								<div id="show_car">
-									<select name="car" id="car"  dojoType="dijit.form.FilteringSelect" class="fullside"  >
-										<option value="-1">----- select car ------</option>
-										<?php if(!empty($this->all_car)){foreach ($this->all_car as $car){?>
-										<option value="<?php echo $car['id']?>" <?php if($car['id']==$this->row['car_id']){echo 'selected="selected"';}?>><?php echo $car['name']?></option>
-										<?php }}?>
-									</select>
-								</div>
-							</td>
-						</tr>							
-						
-						<tr>
 							<td style="width:100px"><?php echo $tr->translate("PROGRAM_TITLE")?></td>
 							<td><?php  echo $item->getElement('add_title');?></td>
 						</tr>

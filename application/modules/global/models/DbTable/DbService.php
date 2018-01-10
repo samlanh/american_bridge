@@ -24,7 +24,6 @@ class Global_Model_DbTable_DbService extends Zend_Db_Table_Abstract
     				'type'=>2,
     				'ser_cate_id'=>$_data['title'],
     				'description'=>$_data['description'],
-    				'car_id'=>$_data['car'],
     				'create_date'=>Zend_Date::now(),
     				'status'=>$_data['status'],
     				'user_id'=>$this->getUserId(),
@@ -57,7 +56,6 @@ class Global_Model_DbTable_DbService extends Zend_Db_Table_Abstract
     	$_arr=array(
 	    			'title'=>$_data['add_title'],
 	    			'ser_cate_id'=>$_data['title'],
-    				'car_id'=>$_data['car'],
     				'description'=>$_data['description'],
     				'status'=>$_data['status'],
     				'user_id'=>$this->getUserId()
