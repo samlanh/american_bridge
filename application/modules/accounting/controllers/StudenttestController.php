@@ -15,7 +15,6 @@ class Accounting_StudenttestController extends Zend_Controller_Action
     		$db = new Accounting_Model_DbTable_DbStudentTest();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
-    			$this->view->adv_search = $search;
     		}
     		else{
     			$search = array(
@@ -25,6 +24,7 @@ class Accounting_StudenttestController extends Zend_Controller_Action
     			);
     		}
     		
+    		$this->view->adv_search = $search;
     		
 			$rs_rows= $db->getAllStudentTest($search);//call frome model
     		$list = new Application_Form_Frmtable();
@@ -96,8 +96,6 @@ class Accounting_StudenttestController extends Zend_Controller_Action
 		$this->view->branch_info = $dbg->getBranchInfo();
 		$this->view->branch_id = $dbg->getAllBranch();
 		
-		$key = new Application_Model_DbTable_DbKeycode();
-		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
 		
     }
@@ -107,7 +105,7 @@ class Accounting_StudenttestController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
     		$data=$this->getRequest()->getPost();
     		$db = new Accounting_Model_DbTable_DbStudentTest();
-    		$receipt_no = $db->getNewReceiptNumber(0);
+    		$receipt_no = $db->getNewReceiptNumber($data['branch_id']);
     		print_r(Zend_Json::encode($receipt_no));
     		exit();
     	}

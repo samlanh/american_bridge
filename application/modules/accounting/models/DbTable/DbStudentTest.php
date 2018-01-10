@@ -11,9 +11,19 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 		return $session_user->branch_id;
 	}
 	function addStudentTest($data){
+		
+		if($data['shift']==1){
+			$create_date = date("Y-m-d 09:00:00",strtotime($data['create_date']));
+		}else if($data['shift']==2){
+			$create_date = date("Y-m-d 14:00:00",strtotime($data['create_date']));
+		}else if($data['shift']==3){
+			$create_date = date("Y-m-d 19:00:00",strtotime($data['create_date']));
+		}
+		
+		
 		$array = array(
-					'branch_id'	=>$this->getBranchId(),
-					'receipt'=>$data['receipt'],
+					'branch_id'	=>$data['branch'],
+					'receipt'	=>$data['receipt'],
 					'kh_name'	=>$data['kh_name'],
 					'en_name'	=>$data['en_name'],
 					'sex'		=>$data['sex'],
@@ -27,7 +37,7 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					'address'	=>$data['address'],
 					'user_id'	=>$this->getUserId(),
 					'total_price'=>$data['test_cost'],
-					'create_date'=>date('Y-m-d H:i:s'),
+					'create_date'=>$create_date,
 				);
 		$this->insert($array);
  	}
@@ -39,7 +49,8 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 		}
 		
 		$array = array(
-					'branch_id'	=>$this->getBranchId(),
+					'branch_id'	=>$data['branch'],
+					'receipt'	=>$data['receipt'],
 					'kh_name'	=>$data['kh_name'],
 					'en_name'	=>$data['en_name'],
 					'sex'		=>$data['sex'],
@@ -100,7 +111,7 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 				where
 					status=1
 					and register=0 
-				$branch_id
+					$branch_id
 				";
 		
 		if (!empty($search['txtsearch'])){

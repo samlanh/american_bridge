@@ -38,7 +38,7 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 </script>
  
  
-<form id='frm_teststudent' action="<?php echo $this->url(array('module'=>'registrar','controller'=>'studenttest','action'=>'edit')); ?>" 
+<form id='frm_teststudent' action="<?php echo $this->url(array('module'=>'accounting','controller'=>'studenttest','action'=>'edit')); ?>" 
 				dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 	<script type="dojo/method" event="onSubmit">			
 			if(this.validate()) {
@@ -57,6 +57,18 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 							<tr>
 								<td valign="top" width="33%">
 									<table cellspacing="5"  width="100%">
+										<tr>
+											<td><?php echo $tr->translate("BRANCH");?></td>
+											<td>
+												<select name="branch" id="branch" class="fullside" autoComplete="false" queryExpr="*${0}*" readonly onchange="getReceiptNumber();" dojoType="dijit.form.FilteringSelect" type="text" >
+													<option value="-1">----- select branch -----</option>
+													<?php if(!empty($this->branch_id)){foreach ($this->branch_id as $branch){?>
+													<option value="<?php echo $branch['id'];?>" <?php if($this->rs['branch_id']==$branch['id']){echo 'selected="selected"';}?>><?php echo $branch['name'];?></option>
+													<?php }}?>
+												</select>
+											</td>
+										</tr>
+										
 										<tr>
 											<td><?php echo $tr->translate("NAME_KH")?></td>
 											<td><input value="<?php echo $this->rs['kh_name']?>" type="text" name="kh_name" id="kh_name" required="1" class="fullside" dojoType="dijit.form.ValidationTextBox"   />
@@ -128,10 +140,6 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 											 <td><input onkeyup="readMoneyInKhmer();" value="<?php echo $this->rs['total_price']?>" type="text" readonly name="test_cost" required="1"  id="test_cost" class="fullside" dojoType="dijit.form.NumberTextBox"   /></td>
 										</tr>
 										<tr>
-											<td></td>
-											<td><input type="text" class="fullside" name="readmoney" id="readmoney" readonly dojoType="dijit.form.TextBox" /></td>
-										</tr>
-										<tr>
 											<td><?php echo $tr->translate("STATUS")?></td>
 											<td>
 												<select type="text" name="status" id="status"  class="fullside" dojoType="dijit.form.FilteringSelect" >
@@ -197,404 +205,19 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 		</tr>		
 		<tr>
 			<td align="center">
-				<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button"
-					 iconClass="dijitIconClear"/>
 				<input label="<?php echo $tr->translate("GO_EDIT")?>" onclick="submitData();" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button"  type="submit" iconClass="dijitIconNewTask"/>
-				<input label="<?php echo $tr->translate("PRINT")?>" name='print' id='print' value='print' dojoType="dijit.form.Button" onclick="printReceipt('');" type="button" iconClass="dijitIconNewTask"/>
 			</td>
 		</tr>	
 	</table>
 </form>
-<div class="dijitHidden" style="width: 25cm !important; height: 11cm ; padding: 0px; margin: 0px;">
-<?php $keycode = $this->keycode;?>
-<div data-dojo-type="dijit.Dialog" style="width:25cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("OFFICIAL_RECEIPT");?>'" id="terms" >
-		<div id="PrintReceipt" style="width: 23cm !important; height: 12cm ; padding: 0px; margin: 0px;">
-			<table border="0" width="100%" class="print" cellspacing="0"  cellpadding="0" style="white-space: nowrap;font-size:12px;font-family:'Khmer OS Battambang';line-height: 23px;">
-				<tr>
-				    <td  align="center" style="">
-						<table width="100%" border="0" style="white-space:nowrap; font-family:Khmer OS Battambang;margin-top:-15px;font-weight:bold;line-height: 20px;">
-							<tr>
-								<td width="25%" align="left" style="font-size:11px;">
-									<div style="font-size:15px;"><?php if (!empty($this->branch_info['branch_namekh'])){ echo $this->branch_info['branch_namekh'];}?></div><?php //echo date('l , jS / m / Y , H:i:s ',strtotime(Zend_Date::now()));?>
-								</td>
-								<td width="50%" align="center">
-									<img style="width: 20%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
-								</td>
-								<td width="25%" align="center" style="font-size:17px;color:red;"><label id="lb_receipt_type" style="color:#000;font-size:16px;"></label><div style="margin-top:-5px;">N<sup>o</sup> : <label id="lb_receipt_no" class="receiptno" >0121</label></div></td>
-							</tr>
-						</table>
-				    </td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-				</tr>
-				<tr >
-					<td >
-						<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;margin-top: -25px;">
-							<tr>
-								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
-								<td width="20%" align="center" style="font-size:16px;">បង្កាន់ដៃទទួលប្រាក់ RECEIPT</td>
-								<td width="40%"><img style="width: 100%;height:4px;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/double_underline.png'?>"></td>
-							</tr>
-						</table>
-					</td>
-					
-				</tr>
-				<tr>
-					<td  valign="top">
-						<table width="100%" style="font-family:Khmer OS Battambang, Times New Roman; font-size:12px;white-space:nowrap;line-height: 18px;">
-							<style>
-								.fontbig{
-									font-size: 15px;	
-								}
-								.fonttel{
-									font-size: 18px;	
-								}
-								.pleft{
-									width: 110px;	
-								}
-								.label{ font-weight: bold;font-size: 22px;}
-								.value{ font:bold 12px 'Khmer OS Battambang';border: 1px solid rgba(14, 0, 107, 1); height: 25px; padding: 0 2px;width: 98%; display: block;
-										margin-top: -25px; line-height: 25px;
-									    text-align: center;
-										}
-								.values{ border: 1px solid rgba(14, 0, 107, 1);; height: 25px; padding: 0 10px;display: block;
-										line-height: 25px;}
-								.h{ margin-top: -8px;/*margin-left:4px;*/}
-				​​               .print td{ font:bold 12px 'Khmer OS Battambang';}
-							   .khmerbold{font:bold 12px 'Khmer OS Battambang';}
-							   .khmer{font:12px 'Khmer OS Battambang';}
-							   .one{white-space:nowrap;}
-							   
-								.underline{    
-										margin-top: -3px;
-										    text-align: center;
-										    border-bottom: dashed 1px #918f8f;
-										    line-height: 0px;
-										}
-								.data{font-size:13px;font-weight:bold;}
-								.data1{font-size:12px;font-weight:bold;}
-								.receiptno{font-size:15px;font-weight:bold;}
-								.tab_row{ margin-top: -8px;}
-								.fonteng{font-size:12px;}
-							</style>
-							<tr>
-								<td width="15%"></td>
-								<td width="20%"></td>
-								<td width="15%"></td>
-								<td width="20%"></td>
-								<td width="5%"></td>
-								<td width="5%"></td>
-								<td width="5%"></td>
-								<td width="15%"></td>
-							</tr>
-							<tr>
-								<td>ឈ្មោះភាសាខ្មែរ/Name in Khmer</td>
-								<td align="center">
-									<label id="lb_studentkh" class="data">Ning Ly</label>
-									<div class="underline"></div>
-								</td>
-								<td align="center"> អក្សរឡាតាំង/Latin&nbsp;</td>
-								<td align="center">
-									<label id="lb_studenten" class="data">Ning Ly</label>
-									<div class="underline"></div>
-								</td>
-								<td align="center">ភេទ/Sex</td>
-								<td align="center">
-									<label id="lb_gender" class="data">ប្រុស</label>
-									<div class="underline"></div>
-								</td>
-								
-								<td align="center">&nbsp;ថ្ងៃ ខែ ឆ្នំាកំណើត/Date of Birth&nbsp;</td>
-								<td align="center">
-									<label id="lb_dob" class="data">F0002</label>
-									<div class="underline"></div>
-								</td>
-							</tr>
-							<tr>
-								<td>&nbsp;ឤសយដ្ឋាន/Address	&nbsp;</td>
-								<td colspan="7">
-									<label id="lb_address" class="data">F0002</label>
-									<div class="underline"></div>
-								</td>
-							</tr>
-							<tr>
-								<td>&nbsp;លេខទូរស័ព្ទ/Phone Number	&nbsp;</td>
-								<td colspan="7">
-									<label id="lb_phone" class="data">F0002</label>
-									<div class="underline"></div>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="8">
-									<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
-										<tr>
-											<td width="33.33%"><label id="fulltime_eng"><img style="width: 15px;height:15px;margin-bottom:-3px;" src="<?php echo $this->baseUrl().'/images/checked.png'?>"></label> តេស្តកម្រិតអង់គ្លេសពេញម៉ោង Full-Time English Test</td>
-											<td width="33.33%"><label id="parttime_eng"><img style="width: 15px;height:15px;margin-bottom:-3px;" src="<?php echo $this->baseUrl().'/images/uncheck.png'?>"></label> តេស្តកម្រិតអង់គ្លេសក្រៅម៉ោង Part-Time English Test</td>
-											<td width="33.33%"><label id="other_opt"><img style="width: 15px;height:15px;margin-bottom:-3px;" src="<?php echo $this->baseUrl().'/images/uncheck.png'?>"></label> តេស្តផ្សេងៗ Other Test</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="8" style="border:1px solid #000;">
-									<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 18px;">
-										<tr>
-											<td width="20%"></td>
-											<td width="30%"></td>
-											<td width="30%"></td>
-											<td width="20%"></td>
-										</tr>
-										<tr>
-											<td>&nbsp;ថ្លៃតេស្ដ/ Test Fee&nbsp;</td>
-											<td align="center">
-												<label id="lb_price"  class="data">100</label>
-												<div class="underline"></div>
-											</td>
-											<td>&nbsp;ទឹកប្រាក់ទទួលបានសរុប/Total Received Amount&nbsp;</td>
-											<td align="center">
-												<label id="lb_total_amount"  class="data">100</label>
-												<div class="underline"></div>
-											</td>
-										</tr>
-										<tr>
-											<td>&nbsp;ទឹកប្រាក់ទទួលបានជាអក្សរ/In Words&nbsp;</td>
-											<td colspan="3">
-												<label id="lb_total_inword"  class="data">100</label>
-												<div class="underline"></div>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="8" style="border:1px solid #000;padding-bottom: 10px;">
-									<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 18px;">
-										<tr>
-											<td width="10%"></td>
-											<td width="20%"></td>
-											<td width="10%"></td>
-											<td width="10%"></td>
-											<td width="10%"></td>
-											<td width="10%"></td>
-											<td width="10%"></td>
-											<td width="20%"></td>
-										</tr>
-										<tr>
-											<td colspan="8" align="center">លទ្ធផលតេស្ដ/ Result Test</td>
-										</tr>
-										<tr>
-											<td>&nbsp;កម្រិត/Level&nbsp;</td>
-											<td>
-												<label id="lb_degree"  class="data">&nbsp;</label>
-												<div class="underline"></div>
-											</td>
-											<td>&nbsp;បន្ទប់/Room&nbsp;</td>
-											<td>
-												<label id="lb_room"  class="data">&nbsp;</label>
-												<div class="underline"></div>
-											</td>
-											<td>&nbsp;ម៉ោងសិក្សា/Time&nbsp;</td>
-											<td >
-												<label id="lb_time_study"  class="data">&nbsp;</label>
-												<div class="underline"></div>
-											</td>
-											<td>&nbsp;ឈ្មោះគ្រូ/Teacher's name&nbsp;</td>
-											<td >
-												<label id="lb_teachername"  class="data">&nbsp;</label>
-												<div class="underline"></div>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="8" align="right">
-									<table width="30%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
-										<tr>
-											<td width="30%">&nbsp;រាជធានីភ្នំពេញ ថ្ងៃទី &nbsp;</td>
-											<td width="70%" align="center">
-												<label id="lb_dates"><?php echo date('d / M / Y',strtotime(Zend_Date::now()));?></label>
-												<div class="underline"></div>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="8">
-									<table width="100%" style="white-space:nowrap; font-size:12px;font-family:'Khmer OS Battambang';line-height: 21px;">
-										<tr style="font-family:Khmer OS Muol,'Arial Black';">
-											<td align="center" width="25%">ប្រធានគណនេយ្យ/Accounting Manager</td>
-											<td align="center" width="25%">អ្នកបង់ប្រាក់/Payer</td>
-											<td align="center" width="25%">បេឡា/Cashier</td>
-											<td align="center" width="25%">អ្នកផ្ដល់ពត៌មាន/Receptionist</td>
-										</tr>
-										<tr>
-											<td colspan="4">&nbsp;</td>
-										</tr>
-										<tr>
-											<td align="center" >&nbsp;</td>
-											<td align="center" >&nbsp;</td>
-											<td align="center" >
-											&nbsp;
-											 <?php 
-											   $session_user=new Zend_Session_Namespace('auth');
-									           $last_name=$session_user->last_name;
-									           $username = $session_user->first_name;
-											   echo "".$last_name." ".$username;
-											?>
-											&nbsp;
-											</td>
-										</tr>
-										<td align="center" >&nbsp;</td>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="8" align="center" style="border-top: 1px solid #000;">&nbsp;</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" >
-						<table width="100%" style="margin-top:-20px; font-family:Khmer OS Battambang, Times New Roman; font-size:10px;white-space:nowrap;line-height: 15px;">
-							<tr>
-								<td colspan="2" valign="top" style="font-family:Khmer OS Muol;"><u>បញ្ជាក់ៈ Note</u></td>
-							</tr>
-							
-							<tr>
-								<td width="70%" valign="top" >
-									<table width="100%" style="white-space:nowrap; font-size:10px;font-family:Khmer OS Battambang,Times New Roman;line-height: 15px;">
-										<tr>
-											<td colspan="2" style="white-space: pre;"><?php if (!empty($this->data['note_receipt_studenttest'])){echo $this->data['note_receipt_studenttest'];}?></td>
-										</tr>
-									</table>
-								</td>
-								<td width="30%" valign="top" align="center"> 
-								<?php 
-									$phone ="";
-									if (!empty($this->branch_info['branch_tel'])){
-										$phone = explode(",", $this->branch_info['branch_tel']);
-									}
-								?>
-									លេខទូរស័ព្ទ/Tel: ការិយាល័យផ្តល់ពត៌មាន/Information office <br />
-									<div style=" width: 50%; text-align: left;">
-									<?php if (!empty($phone)) foreach ($phone as $ss){?>
-										- <?php echo $ss;?> <br />
-									<?php }?>
-									</div>
-								</td>
-								
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
-		<div>
-		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconCancel"
-				type="button" onclick="hideDialog();">Cancel</button>
-		<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
-				 type="button" onclick="printSubmit();"><?php echo $tr->translate("SAVE_PRINT");?></button>
-		
-		</div>
-	</div>
-</div>
-<script>
-function submitData(){
-	if(dijit.byId('frm_teststudent').validate()) {
-		dijit.byId('savenew').set('disabled',true);
-		dijit.byId('frm_teststudent').submit();
-	}
-}
-function printReceipt(new_receipt){
-	if(dijit.byId('frm_teststudent').validate()) {
-		readMoneyInKhmer();
-		getDegreeType();
-		checked =  "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/checked.png'?>'>";
-		uncheck = "<img style='width: 15px;height:15px;margin-bottom:-3px;' src='<?php echo $this->baseUrl().'/images/uncheck.png'?>'>";
-		var degree_type = dijit.byId('degree_type').get('value');
-		if(degree_type==1){
-			dojo.byId("fulltime_eng").innerHTML = uncheck;
-			dojo.byId("parttime_eng").innerHTML = uncheck;
-			dojo.byId("other_opt").innerHTML = checked;
-		}else if(degree_type==2){
-			dojo.byId("fulltime_eng").innerHTML = checked;
-			dojo.byId("parttime_eng").innerHTML = uncheck;
-			dojo.byId("other_opt").innerHTML = uncheck;
-		}else if(degree_type==3){
-			dojo.byId("fulltime_eng").innerHTML = uncheck;
-			dojo.byId("parttime_eng").innerHTML = checked;
-			dojo.byId("other_opt").innerHTML = uncheck;
-		}
-	//dojo.byId("lb_receipt").innerHTML = dijit.byId("receipt").get('value');
-		dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt").get('value');
-	dojo.byId("lb_studentkh").innerHTML = "&nbsp;"+dijit.byId("kh_name").get('value');
-	dojo.byId("lb_studenten").innerHTML = "&nbsp;"+dijit.byId("en_name").get('value');
-   // dojo.byId("lb_serial").innerHTML = dijit.byId("serial").get('value');
-	//dojo.byId("lb_degree").innerHTML = dijit.byId("degree").attr('displayedValue');
-	dojo.byId("lb_gender").innerHTML = "&nbsp;"+dijit.byId("sex").attr('displayedValue');
-	dojo.byId("lb_price").innerHTML = "&nbsp;$ "+dijit.byId("test_cost").get('value').toFixed(2);
-	dojo.byId("lb_total_amount").innerHTML = "&nbsp;$ "+dijit.byId("test_cost").get('value').toFixed(2);
-	dojo.byId("lb_dob").innerHTML = "&nbsp;"+dijit.byId("dob").get('value');
-	dojo.byId("lb_address").innerHTML = "&nbsp;"+dijit.byId("address").get('value');
-	dojo.byId("lb_phone").innerHTML = "&nbsp;"+dijit.byId("phone").get('value');
-	//dojo.byId("lb_note").innerHTML = dijit.byId("note").get('value');
-	dojo.byId("lb_total_inword").innerHTML = dijit.byId('readmoney').get('value');
-	var d = dijit.byId("dob").get('value');
-	 if(d!=null){
-		 var day = d.getDate();
-		 var mon = d.toDateString().substr(4,3);
-		 var year = d.getFullYear();
-		 dojo.byId("lb_dob").innerHTML  = day+'/'+mon+'/'+year;
-	 }else{
-		 dojo.byId("lb_dob").innerHTML  = '';
-	}
-	dijit.byId("terms").show();	
-	}
-}
-function readMoneyInKhmer(){
-	netTotal = dijit.byId("test_cost").get('value').toFixed(2);
-	var str = netTotal.toString();
-	str_cent = 'សេន';
-	first_decimal = str.substr(-2);
-	last_decimal = str.substr(-1);
-	
-	if(first_decimal>0){string='ដុល្លា និង ';last_string="សេន"}else{string="";str_cent="";last_string="ដុល្លាគត់";}
-	if(first_decimal!='00' && first_decimal<10 ){str_zero = "សូន្យ";}else{str_zero='';}
-	first_money_decimal = read_in_khmer_from_10_to_99(first_decimal);
-	last_money_decimal = read_in_khmer_from_0_to_9(last_decimal);
-	money_khmer=read_money_in_khmer(netTotal);
 
-	if(first_decimal>0){string_en='dot';}else{string_en="";str_cent_en=""}
-	if(first_decimal!='00' && first_decimal<10 ){str_zero_en = "Zero";}else{str_zero_en='';}
-	first_money_decimal_en = read_in_english_from_10_to_99(first_decimal);
-	last_money_decimal_en = read_in_english_from_0_to_9(last_decimal);
-	money_english=read_money_in_english(netTotal);
-	
-	//read_eng = money_english.trim()+string+ first_money_decimal+str_zero+last_money_decimal+last_string;
-	//read_eng = '( '+money_english.trim()+string_en+ first_money_decimal_en+str_zero_en+last_money_decimal_en+' Dollar Only )';
-	
-	dijit.byId('readmoney').attr('value',money_khmer.trim()+string+ first_money_decimal+str_zero+last_money_decimal+last_string);
-}
+<script>
+
 function submitData(){
 	if(dijit.byId('frm_teststudent').validate()) {
 		dijit.byId('savenew').set('disabled',true);
 		dijit.byId('frm_teststudent').submit();
 	}
-}
-function printSubmit(){
-	window.frames["print_frame"].document.body.innerHTML = dojo.byId('PrintReceipt').innerHTML;
-    window.frames["print_frame"].window.focus();
-    window.frames["print_frame"].window.print();
-    submitData();
-}
-function hideDialog(){
-	dijit.byId('terms').hide();
-	//submitData();
 }
 
 var url_get_grade = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-grade')); ?>';
