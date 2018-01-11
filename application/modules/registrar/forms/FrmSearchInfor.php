@@ -374,9 +374,9 @@ class Registrar_Form_FrmSearchInfor extends Zend_Dojo_Form
 		$pay_term->setMultiOptions($opt_term);
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status_search');
-		$_status->setAttribs(array('dojoType'=>$this->filter,));
+		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
 		$_status_opt = array(
-				-1=>$this->tr->translate("ALL_STATUS"),
+				''=>$this->tr->translate("ALL_STATUS"),
 				1=>$this->tr->translate("ACTIVE"),
 				0=>$this->tr->translate("DACTIVE"));
 		$_status->setMultiOptions($_status_opt);

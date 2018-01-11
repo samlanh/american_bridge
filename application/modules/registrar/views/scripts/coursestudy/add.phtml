@@ -140,6 +140,7 @@
 		dijit.byId("dept").set('readOnly',true);
 		dijit.byId("grade").set('readOnly',true);
 		dijit.byId("session").set('readOnly',true);
+		dijit.byId("room").set('readOnly',false);
 		dijit.byId("study_time").set('readOnly',true);
 		dijit.byId("payment_term").set('readOnly',true);
 		dijit.byId("amount_section").set('readOnly',true);
@@ -152,6 +153,7 @@
 		dijit.byId("dept").set('readOnly',false);
 		dijit.byId("grade").set('readOnly',false);
 		dijit.byId("session").set('readOnly',false);
+		dijit.byId("room").set('readOnly',false);
 		dijit.byId("study_time").set('readOnly',false);
 		dijit.byId("payment_term").set('readOnly',false);
 		dijit.byId("amount_section").set('readOnly',false);
@@ -219,7 +221,6 @@
 				    	  setReadOnly();
 				     }else {
 				    	 dijit.byId('ids').attr('value','');
-				    	// paymentTerms();
 				    	 dijit.byId('tuitionfee').attr('value','0'); 
 				    	 dijit.byId('total').attr('value','0'); 
 				    	 dijit.byId('books').attr('value','0');

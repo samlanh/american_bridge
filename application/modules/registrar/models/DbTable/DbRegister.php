@@ -38,6 +38,13 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 		
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
+		
+		if($data['dob']==""){
+			$dob = null;
+		}else{
+			$dob = $data['dob'];
+		}
+		
 			try{
 				if($data['student_type']==1){//new student
 					$this->_name = "rms_student";
@@ -58,7 +65,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],
-							'dob'			=>$data['dob'],
+							'dob'			=>$dob,
 							'room'			=>$data['room'],
 							
 							'session'		=>$data['session'],
@@ -117,7 +124,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'sex'		=>$data['sex'],
 							'tel'		=>$data['phone'],
 							'address'	=>$data['address'],
-							'dob'		=>$data['dob'],
+							'dob'		=>$dob,
 							'room'		=>$data['room'],
 							'academic_year'=>$data['study_year'],
 							'stu_type'	=>$stu_type,
@@ -897,6 +904,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  spd.validate,
 				  spd.balance,
 				  sp.year,
+				  sp.time,
 				  spd.payment_term,
 				  sp.session
 				FROM
@@ -906,6 +914,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 				  AND spd.service_id = $serviceid 
 				  AND sp.student_id = $studentid 
 				  AND is_complete = 0 
+				  AND is_void = 0 
 				  AND spd.type = $type
     			limit 1
     		";
@@ -1084,7 +1093,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	}
     	
     	$sql="SELECT s.stu_id As stu_id,s.stu_code As stu_code FROM rms_student AS s
-    	      WHERE s.stu_type=3 AND s.status=1 and reg_from=0 $is_suspend $branch_id ORDER BY stu_id DESC  ";
+    	      WHERE s.stu_type=3 AND s.status=1  $is_suspend $branch_id ORDER BY stu_id DESC  ";
     	return $db->fetchAll($sql);
     }
     //select Gep old student by id 
@@ -1103,7 +1112,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission('s.branch_id');
     	
     	$sql="SELECT s.stu_id As stu_id,CONCAT(s.stu_khname,'-',s.stu_enname) As name FROM rms_student AS s
-    	WHERE s.stu_type=3 AND s.status=1 and reg_from=0 $is_suspend $branch_id ORDER BY stu_id DESC ";
+    	WHERE s.stu_type=3 AND s.status=1 $is_suspend $branch_id ORDER BY stu_id DESC ";
     	return $db->fetchAll($sql);
     }
     //select Gep old student by name
@@ -1136,7 +1145,6 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     			WHERE 
     				s.stu_type!=3 
     				AND s.status=1 
-    				and reg_from=0 
     				$is_suspend 
     				$branch_id  
     			ORDER BY 
@@ -1162,7 +1170,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     	$branch_id = $_db->getAccessPermission('s.branch_id');
     	
     	$sql="SELECT s.stu_id As stu_id,CONCAT(s.stu_enname,'-',s.stu_khname) as name FROM rms_student AS s
-    	WHERE s.stu_type!=3 AND s.status=1 and reg_from=0 $is_suspend $branch_id  ORDER BY stu_id DESC ";
+    	WHERE s.stu_type!=3 AND s.status=1 $is_suspend $branch_id  ORDER BY stu_id DESC ";
     	return $db->fetchAll($sql);
     }
     

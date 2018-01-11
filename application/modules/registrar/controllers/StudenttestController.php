@@ -15,16 +15,18 @@ class Registrar_StudenttestController extends Zend_Controller_Action
     		$db = new Registrar_Model_DbTable_DbStudentTest();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
-    			$this->view->adv_search = $search;
     		}
     		else{
     			$search = array(
-    					'txtsearch'=>'',
-    					'start_date'=> date('Y-m-d'),
-    					'end_date'=>date('Y-m-d'),
+    					'txtsearch'		=>'',
+    					'branch'		=>'',
+    					'status_search'	=>'',
+    					'start_date'	=> date('Y-m-d'),
+    					'end_date'		=>date('Y-m-d'),
     			);
     		}
     		
+    		$this->view->adv_search = $search;
     		
 			$rs_rows= $db->getAllStudentTest($search);//call frome model
     		$list = new Application_Form_Frmtable();
@@ -37,6 +39,12 @@ class Registrar_StudenttestController extends Zend_Controller_Action
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
+    	
+    	$form=new Registrar_Form_FrmSearchInfor();
+    	$form->FrmSearchRegister();
+    	Application_Model_Decorator::removeAllDecorator($form);
+    	$this->view->form_search=$form;
+    	
     }
     public function addAction()
     {

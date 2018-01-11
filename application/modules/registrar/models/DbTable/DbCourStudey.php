@@ -33,6 +33,12 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$stu_code=$data['stu_id'];
 		$receipt=$data['reciept_no'];
 		
+		if($data['dob']==""){
+			$dob = null;
+		}else{
+			$dob = $data['dob'];
+		}
+		
 		//print_r($this->getBranchId());exit();
 		try{
 			if($data['student_type']==1){ // new student
@@ -44,7 +50,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'stu_khname'=>$data['kh_name'],
 						'stu_enname'=>$data['en_name'],
 							
-						'dob'=>$data['dob'],
+						'dob'=>$dob,
 						'tel'=>$data['phone'],
 						'address'=>$data['address'],
 							
@@ -91,7 +97,7 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 						'sex'		=>$data['sex'],
 						'tel'		=>$data['phone'],
 						'address'	=>$data['address'],
-						'dob'		=>$data['dob'],
+						'dob'		=>$dob,
 						'academic_year'=>$data['study_year'],
 						'stu_type'	=>3,
 						'is_stu_new' =>$is_stu_new,

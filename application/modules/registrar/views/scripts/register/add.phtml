@@ -261,6 +261,7 @@
 				    	  dijit.byId('not').attr('value',data.sms);
 				    	  dijit.byId('study_year').attr('value',data.year);
 				    	  dijit.byId('session').attr('value',data.session);
+						  dijit.byId('study_hour').attr('value',data.time);
 				    	  dijit.byId('payment_term').attr('value',data.payment_term);
 				    	  dijit.byId('start_date').attr('value',data.start_date);
 				    	  dijit.byId('end_date').attr('value',data.validate);
@@ -287,6 +288,7 @@
 		dijit.byId("dept").set('readOnly',true);
 		dijit.byId("grade").set('readOnly',true);
 		dijit.byId("session").set('readOnly',true);
+		dijit.byId("room").set('readOnly',true);
 		dijit.byId("study_hour").set('readOnly',true);
 		dijit.byId("payment_term").set('readOnly',true);
 	}
@@ -298,6 +300,7 @@
 		dijit.byId("dept").set('readOnly',false);
 		dijit.byId("grade").set('readOnly',false);
 		dijit.byId("session").set('readOnly',false);
+		dijit.byId("room").set('readOnly',false);
 		dijit.byId("study_hour").set('readOnly',false);
 		dijit.byId("payment_term").set('readOnly',false);
 	}
@@ -444,6 +447,9 @@
 			if(payment_term == 5){
 				start_date = dijit.byId('start_date').get('value');
 				end_date = dijit.byId('end_date').get('value');
+				
+				amount_day = dijit.byId('amount_section').get('value');
+				/*
 				//alert(start_date+" , "+end_date)
 				
 				//day = end_date - start_date;
@@ -455,7 +461,18 @@
 				}else{
 					dijit.byId('amount_section').attr('value',0);
 				}
-				calculateTotalFee();netTotal();
+				*/
+				
+				start_day = start_date.getDate();
+				//alert(start_day);
+				
+				end_day = 30 - start_day +2;
+				//alert(end_day);
+				
+				
+				
+				
+				//calculateTotalFee();netTotal();
 			}
 		}
 	}
