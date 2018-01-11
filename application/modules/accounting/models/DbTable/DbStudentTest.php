@@ -12,14 +12,13 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 	}
 	function addStudentTest($data){
 		
-		if($data['shift']==1){
-			$create_date = date("Y-m-d 09:00:00",strtotime($data['create_date']));
-		}else if($data['shift']==2){
-			$create_date = date("Y-m-d 14:00:00",strtotime($data['create_date']));
-		}else if($data['shift']==3){
-			$create_date = date("Y-m-d 19:00:00",strtotime($data['create_date']));
-		}
+		//print_r($data);exit();
 		
+		if($data['dob']==""){
+			$dob = null;
+		}else{
+			$dob = $data['dob'];
+		}
 		
 		$array = array(
 					'branch_id'	=>$data['branch'],
@@ -27,7 +26,7 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					'kh_name'	=>$data['kh_name'],
 					'en_name'	=>$data['en_name'],
 					'sex'		=>$data['sex'],
-					'dob'		=>$data['dob'],
+					'dob'		=>$dob,
 					'phone'		=>$data['phone'],
 // 					'old_school'=>$data['old_school'],
 // 					'old_grade'	=>$data['old_grade'],
@@ -37,7 +36,7 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					'address'	=>$data['address'],
 					'user_id'	=>$this->getUserId(),
 					'total_price'=>$data['test_cost'],
-					'create_date'=>$create_date,
+					'create_date'=>$data['create_date'],
 				);
 		$this->insert($array);
  	}
@@ -48,13 +47,19 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 			$updated_result = 1;
 		}
 		
+		if($data['dob']==""){
+			$dob = null;
+		}else{
+			$dob = $data['dob'];
+		}
+		
 		$array = array(
 					'branch_id'	=>$data['branch'],
 					'receipt'	=>$data['receipt'],
 					'kh_name'	=>$data['kh_name'],
 					'en_name'	=>$data['en_name'],
 					'sex'		=>$data['sex'],
-					'dob'		=>$data['dob'],
+					'dob'		=>$dob,
 					'phone'		=>$data['phone'],
 // 					'old_school'=>$data['old_school'],
 // 					'old_grade'	=>$data['old_grade'],
@@ -93,8 +98,10 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " create_date <= '".$search['end_date']." 23:59:59'";
 		
 		$where = " and ".$from_date." AND ".$to_date;
+		
 		$sql="  SELECT 
 					id,
+					(select branch_namekh from rms_branch where br_id = branch_id limit 1) as branch,
 					receipt,
 					kh_name,
 					en_name,
@@ -105,12 +112,11 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 					note,
 					total_price,
 					(SELECT first_name FROM `rms_users` WHERE id=rms_student_test.user_id LIMIT 1),
-					(select name_en from rms_view where type=14 and key_code=updated_result) as result_status
+					(select name_en from rms_view where type=1 and key_code=rms_student_test.status LIMIT 1) as status
 				FROM 
 					rms_student_test
 				where
-					status=1
-					and register=0 
+					register=0 
 					$branch_id
 				";
 		
@@ -119,10 +125,17 @@ class Accounting_Model_DbTable_DbStudentTest extends Zend_Db_Table_Abstract
 				$s_search = trim(addslashes($search['txtsearch']));
 				$s_where[] = " kh_name LIKE '%{$s_search}%'";
 				$s_where[] = " en_name LIKE '%{$s_search}%'";
-				$s_where[] = " old_school LIKE '%{$s_search}%'";
-				$s_where[] = " old_grade LIKE '%{$s_search}%'";
+				$s_where[] = " receipt LIKE '%{$s_search}%'";
 				$where .=' AND ('.implode(' OR ',$s_where).')';
 		}      
+		
+		if(!empty($search['branch'])){
+			$where.=" AND branch_id=".$search['branch'];
+		}
+		if($search['status_search']!=""){
+			$where.=" AND status=".$search['status_search'];
+		}
+		
 		$order=" order by id desc ";
 		return $db->fetchAll($sql.$where.$order);
 	}	

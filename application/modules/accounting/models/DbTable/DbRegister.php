@@ -112,6 +112,13 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 		
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
+		
+		if($data['dob']==""){
+			$dob = null;
+		}else{
+			$dob = $data['dob'];
+		}
+		
 			try{
 				if($data['student_type']==1){//new
 					$this->_name = "rms_student";
@@ -131,7 +138,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'stu_enname'	=>$data['en_name'],
 							'sex'			=>$data['sex'],
 					
-							'dob'			=>$data['dob'],
+							'dob'			=>$dob,
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],
 					
@@ -185,10 +192,10 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'degree'	=>$data['dept'],
 							'grade'		=>$data['grade'],
 							'room'		=>$data['room'],
-							'stu_enname'	=>$data['name_en'],
-							'stu_khname'	=>$data['name_kh'],
+							'stu_enname'	=>$data['en_name'],
+							'stu_khname'	=>$data['kh_name'],
 							'sex'			=>$data['sex'],
-							'dob'			=>$data['dob'],
+							'dob'			=>$dob,
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],
 							'academic_year'=>$data['study_year'],

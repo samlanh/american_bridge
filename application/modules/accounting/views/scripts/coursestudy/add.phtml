@@ -296,66 +296,116 @@
 			});
 		}	
 	}
+	
+	// set field to readonly when balance>0 for get all old information of student
+	function setReadOnly(){
+		dijit.byId("start_date").set('readOnly',true);
+		dijit.byId("end_date").set('readOnly',true);
+		dijit.byId("study_year").set('readOnly',true);
+		dijit.byId("dept").set('readOnly',true);
+		dijit.byId("grade").set('readOnly',true);
+		dijit.byId("session").set('readOnly',true);
+		dijit.byId("room").set('readOnly',true);
+		dijit.byId("study_time").set('readOnly',true);
+		dijit.byId("payment_term").set('readOnly',true);
+		dijit.byId("amount_section").set('readOnly',true);
+	}
+	// Remove field readonly when balance <= 0 for get all old information of student
+	function removeReadOnly(){
+		dijit.byId("start_date").set('readOnly',false);
+		dijit.byId("end_date").set('readOnly',false);
+		dijit.byId("study_year").set('readOnly',false);
+		dijit.byId("dept").set('readOnly',false);
+		dijit.byId("grade").set('readOnly',false);
+		dijit.byId("session").set('readOnly',false);
+		dijit.byId("room").set('readOnly',false);
+		dijit.byId("study_time").set('readOnly',false);
+		dijit.byId("payment_term").set('readOnly',false);
+		dijit.byId("amount_section").set('readOnly',false);
+	}
+	
+	
+	
 	function paymentTerm(){
 		study_year=dijit.byId('study_year').get('value');
 		payment_term=dijit.byId('payment_term').get('value');
 		levele=dijit.byId('grade').get('value');
-		if(study_year!='' && payment_term !='' && levele !='' ){
-			getPaymentTerms(study_year,levele,payment_term);
-		}
-		getDateTerm(1);
-	}
-///get price balance where complete=0
-	function getPriceBalance(){
-		student_type=dijit.byId('student_type').get('value');
-		old_studens=dijit.byId('old_studens').get('value');
-		if(student_type==3){
-			if(old_studens != -1){
-				getBalancePrice(4,old_studens); // 4 is register service
+		
+		student_type = dijit.byId('student_type').get('value');
+		
+		if(student_type!=1){
+			if(student_type==3){
+				stu_id = dijit.byId('old_studens').get('value');
+			}else{
+				stu_id = dijit.byId('drop_studens').get('value');
+			}
+			
+			if(stu_id != -1 ){
+				getBalancePrice(4,stu_id);
+			}
+		}else{
+			if(study_year!='' && payment_term !='' && levele !='' ){
+				getPaymentTerms(study_year,levele,payment_term);
 			}
 		}
+		
+		
+		getDateTerm(1);
 	}
+	
+	function paymentTerms(){
+		generat=dijit.byId('study_year').get('value');
+		payment_term=dijit.byId('payment_term').get('value');
+		grade=dijit.byId('grade').get('value');
+		if(generat!='' && payment_term !='' && grade !=''){
+			getPaymentTerms(generat,payment_term,grade);
+		}
+	}
+	
+	
 	//get price balance
 	var url_balance = '<?php echo $this->url(array('module'=>'registrar','controller'=>'coursestudy','action'=>'get-banlance-price')); ?>';
 	function getBalancePrice(servce_id,student_id){
-			type=2; // 2 is GEP register
-			dojo.xhrPost({
-				url:url_balance,
-				content:{
-					'servce_id':servce_id,
-					'student_id':student_id,
-					'type':type,
-					},
-				handleAs:"json",
-				load: function(data) {
-				      if(data){
-						  dijit.byId('ids').attr('value',data.id);
-				    	  dijit.byId('not').attr('value',data.sms);
-				    	  dijit.byId('study_year').attr('value',data.year);
-				    	  dijit.byId('session').attr('value',data.session);
-				    	  dijit.byId('payment_term').attr('value',data.payment_term);
-				    	  dijit.byId('start_date').attr('value',data.start_date);
-				    	  dijit.byId('end_date').attr('value',data.validate);
-				    	  dijit.byId('tuitionfee').attr('value',data.balance);
-				     	  dijit.byId('total').attr('value',data.balance);
-				    	  dijit.byId('books').attr('value',data.balance);
-				     }else {
-				    	 dijit.byId('ids').attr('value','');
-				    	// paymentTerms();
-				    	 dijit.byId('tuitionfee').attr('value','0'); 
-				    	 dijit.byId('total').attr('value','0'); 
-				    	 dijit.byId('discount').attr('value','0');
-				    	 dijit.byId('books').attr('value','0');
-					     dijit.byId('remaining').attr('value','0');
-					     dijit.byId('remark').attr('value','0');
-					    // dijit.byId('char_price').attr('value','0');
-					     dijit.byId('not').attr('value','');
-				      }
+		type=2; // 2 is GEP register
+		dojo.xhrPost({
+			url:url_balance,
+			content:{
+				'servce_id':servce_id,
+				'student_id':student_id,
+				'type':type,
 				},
-				error: function(err) {
-					//alert(err);
-				}
-			});
+			handleAs:"json",
+			load: function(data) {
+				  if(data){
+					  dijit.byId('ids').attr('value',data.id);
+					  dijit.byId('not').attr('value',data.sms);
+					  dijit.byId('study_year').attr('value',data.year);
+					  dijit.byId('session').attr('value',data.session);
+					  dijit.byId('study_time').attr('value',data.time);
+					  dijit.byId('payment_term').attr('value',data.payment_term);
+					  dijit.byId('start_date').attr('value',data.start_date);
+					  dijit.byId('end_date').attr('value',data.validate);
+					  dijit.byId('tuitionfee').attr('value',data.balance);
+					  dijit.byId('total').attr('value',data.balance);
+					  dijit.byId('books').attr('value',data.balance);
+					  
+					  setReadOnly();
+					  netTotal();
+					  
+				 }else {
+					 dijit.byId('ids').attr('value','');
+					 dijit.byId('tuitionfee').attr('value','0'); 
+					 dijit.byId('total').attr('value','0'); 
+					 dijit.byId('books').attr('value','0');
+					 dijit.byId('not').attr('value','');
+					 removeReadOnly();
+					 paymentTerms();
+				  }
+			},
+			error: function(err) {
+				//alert(err);
+			}
+		});
 	}
 	var payment_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 	var url_getpaymentterm = '<?php echo $this->url(array('module'=>'accounting','controller'=>'coursestudy','action'=>'get-payment-gep')); ?>';
@@ -394,12 +444,7 @@
 				    	//dijit.byId('remaining').attr('value','0');
 				    	//dijit.byId('remark').attr('value','0');
 				      }else {
-						 dijit.byId('tuitionfee').attr('value','0'); 
-						 dijit.byId('total').attr('value','0'); 
-						 //dijit.byId('discount').attr('value','0');
-						 dijit.byId('books').attr('value','0');
-						 dijit.byId('remaining').attr('value','0');
-						 //dijit.byId('remark').attr('value','0');
+						  
 					  }
 					  getTotale();
 				      netTotal();
@@ -878,7 +923,7 @@ fieldset{  background:none;}
 		
 		<tr>
 			<td colspan="3" align="center">
-				<input type="button" name="save_close" id="save_close"  onclick="submitDataClose();" value="រក្សាទុក &ចាកចេញ" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
+				<input type="submit" name="save_close" id="save_close"  onclick="" value="រក្សាទុក &ចាកចេញ" label="<?php echo $tr->translate('SAVE_CLOSE');?>"  dojoType="dijit.form.Button" 
 				 iconClass="dijitEditorIcon dijitEditorIconSave" />
 				<input type="button" name="save_new" id="save_new" onclick="submitDataAddNew();" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_NEW');?>"  dojoType="dijit.form.Button" 
 				 iconClass="dijitEditorIcon dijitEditorIconSave" />

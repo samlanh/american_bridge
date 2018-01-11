@@ -414,6 +414,7 @@
 				    	  dijit.byId('not').attr('value',data.sms);
 				    	  dijit.byId('study_year').attr('value',data.year);
 				    	  dijit.byId('session').attr('value',data.session);
+						  dijit.byId('study_hour').attr('value',data.time);
 				    	  dijit.byId('payment_term').attr('value',data.payment_term);
 				    	  dijit.byId('start_date').attr('value',data.start_date);
 				    	  dijit.byId('end_date').attr('value',data.validate);
@@ -439,6 +440,7 @@
 		dijit.byId("dept").set('readOnly',true);
 		dijit.byId("grade").set('readOnly',true);
 		dijit.byId("session").set('readOnly',true);
+		dijit.byId("room").set('readOnly',true);
 		dijit.byId("study_hour").set('readOnly',true);
 		dijit.byId("payment_term").set('readOnly',true);
 	}
@@ -450,6 +452,7 @@
 		dijit.byId("dept").set('readOnly',false);
 		dijit.byId("grade").set('readOnly',false);
 		dijit.byId("session").set('readOnly',false);
+		dijit.byId("room").set('readOnly',false);
 		dijit.byId("study_hour").set('readOnly',false);
 		dijit.byId("payment_term").set('readOnly',false);
 	}
@@ -597,6 +600,7 @@
 				 dijit.byId('end_date').attr('value',epx_date); 
 			 }	
 		}else{
+			/*
 			payment_term = dijit.byId('payment_term').get('value');
 			if(payment_term == 5){
 				start_date = dijit.byId('start_date').get('value');
@@ -614,6 +618,7 @@
 				}
 				calculateTotalFee();netTotal();
 			}
+			*/
 		}
 	}
 
@@ -716,10 +721,10 @@ fieldset{  background:none;}
 								</select>
 							</td>
 						</tr>
+						<input type="text" name="id_balance_record" id="id_balance_record" dojoType="dijit.form.TextBox" />
 						<tr>
 							<td width="20%"><?php echo $tr->translate("STUDENT_TYPE");?></td>
 							<td width="80%">
-								<input type="hidden" name="id_balance_record" id="id_balance_record" dojoType="dijit.form.TextBox" />
 								<?php echo $register->getElement('student_type');?>
 							</td>
 						</tr>

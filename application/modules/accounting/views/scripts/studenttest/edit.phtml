@@ -140,6 +140,10 @@ echo $this->headTitle($tr->translate('EDIT_STUDENT_TEST'));
 											 <td><input onkeyup="readMoneyInKhmer();" value="<?php echo $this->rs['total_price']?>" type="text" readonly name="test_cost" required="1"  id="test_cost" class="fullside" dojoType="dijit.form.NumberTextBox"   /></td>
 										</tr>
 										<tr>
+											 <td><?php echo $tr->translate("CREATE_DATE")?></td>
+											 <td><input type="text" name="create_date" required="true" constraints="{datePattern:'dd/MM/yyyy'}" value="<?php echo date("Y-m-d",strtotime($this->rs['create_date']))?>" id="create_date" class="fullside" dojoType="dijit.form.DateTextBox"   /></td>
+										</tr>
+										<tr>
 											<td><?php echo $tr->translate("STATUS")?></td>
 											<td>
 												<select type="text" name="status" id="status"  class="fullside" dojoType="dijit.form.FilteringSelect" >

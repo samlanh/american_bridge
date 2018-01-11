@@ -22,7 +22,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     	return $db->fetchOne($sql);
     }
 	function addStudentGep($data){
-// 		print_r($data);exit();
+		//print_r($data);exit();
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
@@ -34,6 +34,12 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$stu_code = $data['stu_id'];
 		$receipt = $data['reciept_no'];
 		
+		if($data['dob']==""){
+			$dob = null;
+		}else{
+			$dob = $data['dob'];
+		}
+		
 			try{
 				if($data['student_type']==1){ // New student
 					$this->_name="rms_student";
@@ -43,7 +49,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'stu_khname'	=>$data['kh_name'],
 							'stu_enname'	=>$data['en_name'],
 							'sex'			=>$data['sex'],
-							'dob'			=>$data['dob'],
+							'dob'			=>$dob,
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],
 								
@@ -53,7 +59,7 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'room'			=>$data['room'],
 								
 							'is_stu_new' 	=>1,
-							'stu_type'		=>3,
+							'stu_type'		=>3, // parttime
 							'create_date'	=>$data['create_date'],
 							'user_id'		=>$this->getUserId(),
 							'branch_id'		=>$data['branch'],
@@ -91,12 +97,12 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 							'stu_khname'	=>$data['kh_name'],
 							'stu_enname'	=>$data['en_name'],
 							'sex'			=>$data['sex'],
-							'dob'			=>$data['dob'],
+							'dob'			=>$dob,
 							'tel'			=>$data['phone'],
 							'address'		=>$data['address'],
 							
 							'academic_year'=>$data['study_year'],
-							'stu_type'	=>3,
+							'stu_type'	=>3,  // parttime
 							
 							'is_stu_new' =>$is_stu_new,
 							'is_subspend'=>0,
@@ -906,11 +912,11 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     
     function getAllStudentByBranch($branch_id){
     	$db = $this->getAdapter();
-    	$sql="select stu_id as id , CONCAT(stu_khname,'-',stu_enname) as name from rms_student where is_subspend=0 and status=1 and degree NOT IN(1,2,3,4,5,6) and branch_id = $branch_id ";
+    	$sql="select stu_id as id , CONCAT(stu_khname,'-',stu_enname) as name from rms_student where is_subspend=0 and status=1 and stu_type=3 and branch_id = $branch_id ";
     	$stu_name =  $db->fetchAll($sql);
     
     	 
-    	$sql1="select stu_id as id , stu_code name from rms_student where is_subspend=0 and status=1 and degree NOT IN(1,2,3,4,5,6) and branch_id = $branch_id ";
+    	$sql1="select stu_id as id , stu_code name from rms_student where is_subspend=0 and status=1 and stu_type=3 and branch_id = $branch_id ";
     	$stu_code =  $db->fetchAll($sql1);
     	//return $stu_code;
     	 
@@ -925,11 +931,11 @@ class Accounting_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
     
     function getAllStudentDropByBranch($branch_id){
     	$db = $this->getAdapter();
-    	$sql="select stu_id as id , CONCAT(stu_khname,'-',stu_enname) as name from rms_student where is_subspend!=0 and status=1 and degree NOT IN(1,2,3,4,5,6) and branch_id = $branch_id ";
+    	$sql="select stu_id as id , CONCAT(stu_khname,'-',stu_enname) as name from rms_student where is_subspend!=0 and status=1 and stu_type=3 and branch_id = $branch_id ";
     	$stu_name =  $db->fetchAll($sql);
     
     
-    	$sql1="select stu_id as id , stu_code name from rms_student where is_subspend!=0 and status=1 and degree NOT IN(1,2,3,4,5,6) and branch_id = $branch_id ";
+    	$sql1="select stu_id as id , stu_code name from rms_student where is_subspend!=0 and status=1 and stu_type=3 and branch_id = $branch_id ";
     	$stu_code =  $db->fetchAll($sql1);
     	//return $stu_code;
     

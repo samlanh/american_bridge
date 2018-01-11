@@ -18,9 +18,11 @@ class Accounting_StudenttestController extends Zend_Controller_Action
     		}
     		else{
     			$search = array(
-    					'txtsearch'=>'',
-    					'start_date'=> date('Y-m-d'),
-    					'end_date'=>date('Y-m-d'),
+    					'txtsearch'		=>'',
+    					'branch'		=>'',
+    					'status_search'	=>'',
+    					'start_date'	=> date('Y-m-d'),
+    					'end_date'		=>date('Y-m-d'),
     			);
     		}
     		
@@ -28,15 +30,23 @@ class Accounting_StudenttestController extends Zend_Controller_Action
     		
 			$rs_rows= $db->getAllStudentTest($search);//call frome model
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("RECEIPT_NO","NAME_KH","NAME_EN","SEX","DOB","PHONE","DEGREE","NOTE","PRICE","BY_USER","STATUS");
+    		$collumns = array("BRANCH","RECEIPT_NO","NAME_KH","NAME_EN","SEX","DOB","PHONE","DEGREE","NOTE","PRICE","BY_USER","STATUS");
     		$link=array(
     				'module'=>'accounting','controller'=>'studenttest','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(0, $collumns,$rs_rows,array('receipt'=>$link,'kh_name'=>$link,'en_name'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		echo $e->getMessage();
     	}
+    	
+    	
+    	$form=new Registrar_Form_FrmSearchInfor();
+    	$form->FrmSearchRegister();
+    	Application_Model_Decorator::removeAllDecorator($form);
+    	$this->view->form_search=$form;
+    	
+    	
     }
     public function addAction()
     {

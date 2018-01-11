@@ -104,18 +104,8 @@ echo $this->headTitle($tr->translate('ADD_STUDENT_TEST'));
 											 <td><input type="text" name="test_cost" required="true"  id="test_cost" class="fullside" dojoType="dijit.form.NumberTextBox"   /></td>
 										</tr>
 										<tr>
-											 <td><?php echo $tr->translate("SHIFT")?></td>
-											 <td>
-												<select type="text" name="shift" required="true"  id="shift" class="fullside" dojoType="dijit.form.FilteringSelect" >
-													<option value="1">shift 1</option>
-													<option value="2">shift 2</option>
-													<option value="3">shift 3</option>
-												</select>
-											 </td>
-										</tr>
-										<tr>
 											 <td><?php echo $tr->translate("CREATE_DATE")?></td>
-											 <td><input type="text" name="create_date" required="true"  id="create_date" class="fullside" dojoType="dijit.form.DateTextBox"   /></td>
+											 <td><input type="text" name="create_date" required="true" constraints="{datePattern:'dd/MM/yyyy'}" id="create_date" class="fullside" dojoType="dijit.form.DateTextBox"   /></td>
 										</tr>
 									</table>
 								</td>
@@ -134,8 +124,8 @@ echo $this->headTitle($tr->translate('ADD_STUDENT_TEST'));
 		</tr>		
 		<tr>
 			<td align="center">
-				<input label="<?php echo $tr->translate("SAVE_CLOSE")?>" name='saveclose' id='saveclose' value='saveclose' dojoType="dijit.form.Button" type="submit"  iconClass="dijitEditorIcon dijitEditorIconSave"/>
-				<input label="<?php echo $tr->translate("SAVE_NEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" type="submit" iconClass="dijitEditorIcon dijitEditorIconSave"/>
+				<input label="<?php echo $tr->translate("SAVE_CLOSE")?>" name='saveclose' id='saveclose' value='saveclose' dojoType="dijit.form.Button" type="submit" onclick="" iconClass="dijitEditorIcon dijitEditorIconSave"/>
+				<input label="<?php echo $tr->translate("SAVE_NEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" type="button" onclick="submitDataAddNew();" iconClass="dijitEditorIcon dijitEditorIconSave"/>
 			</td>
 		</tr>	
 	</table>
