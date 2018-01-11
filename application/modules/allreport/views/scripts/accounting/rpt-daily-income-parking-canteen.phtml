@@ -11,11 +11,11 @@
 	    	<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
-			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
-			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
-			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:30am</option>
+			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:30pm</option>
+			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>07:00pm</option>
 			 	</select>
-			</td>
+			</td>	
 	    	<td><?php echo $frm->getElement('user');?></td>
 	    </tr>
 	    <tr>	
@@ -65,7 +65,7 @@
 		tr{ page-break-inside:avoid; page-break-after:auto; }
 	</style>
 	<?php 
-		$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
+		$shift = array(1=>"10:30am",2=>"04:30pm",3=>"07:00pm");
 	?>
 
 		<table style="background:#fff;width:90%; margin: 0 auto;width: 100%;font-family:'Khmer OS Battambang';">
@@ -98,6 +98,7 @@
 								<td rowspan="2" class="padd">Total in<br />USD</td>
 								<td rowspan="2" class="padd">Remark</td>
 								<td rowspan="2" class="padd">Create Date</td>
+								<td rowspan="2" class="padd">Status</td>
 		 					 </tr>
 							 <tr id="row" align="center" style="background: #c1d0f3;font-weight: bold;font-size: 12px; line-height: 16px;">
 								<td colspan="1" class="padd">Canteen Rental</td>
@@ -133,6 +134,7 @@
 							<td class="padd"><?php echo "$ ".$rs['all_total_amount'];?></td>
 							<td class="padd"><?php echo $rs['note'];?></td>
 							<td class="padd"><?php echo date("d-M-Y",strtotime($rs['create_date']));?></td>
+							<td class="padd"><?php if($rs['status']==0){echo "Void";};?></td>
 	 					</tr>
 	 						
 	 					<?php 

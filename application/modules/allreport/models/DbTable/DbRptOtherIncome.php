@@ -35,14 +35,14 @@ class Allreport_Model_DbTable_DbRptOtherIncome extends Zend_Db_Table_Abstract
     		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
     	}else if($search['shift']==1){
     		$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 10:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 10:30:00'";
     	}
     	else if($search['shift']==2){
-    		$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 10:00:01'";
-    		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 16:00:00'";
+    		$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 10:30:01'";
+    		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 16:30:00'";
     	}
     	else if($search['shift']==3){
-    		$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 16:00:01'";
+    		$from_date =(empty($search['start_date']))? '1': "create_date >= '".$search['start_date']." 16:30:01'";
     		$to_date = (empty($search['end_date']))? '1': "create_date <= '".$search['end_date']." 23:59:59'";
     	}
     	$where .= " AND ".$from_date." AND ".$to_date;

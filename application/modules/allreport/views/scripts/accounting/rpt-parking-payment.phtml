@@ -111,6 +111,7 @@
 									<td style="border: 1px solid #000;"><?php echo $tr->translate("NOTE");?></td>
 									<td style="border: 1px solid #000;"><?php echo $tr->translate("USER");?></td>
 									<td style="border: 1px solid #000;"><?php echo $tr->translate("CREATE_DATE");?></td>
+									<td style="border: 1px solid #000;"><?php echo $tr->translate("STATUS");?></td>
 								</tr>
 							</thead>
 						<?php $i=0;$grand_total=0; if(!empty($this->row)){foreach ($this->row AS $row) { $i++;
@@ -129,6 +130,7 @@
 								<td align="left" style="border: 1px solid #000;">&nbsp;<?php echo $row['note'];?></td>
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo $row['user_name'];?></td>
 								<td align="center" style="border: 1px solid #000;">&nbsp;<?php echo date("d-M-Y",strtotime($row['create_date']));?></td>
+ 								<td class="padd"><?php if($row['status']==0){echo "Void";};?></td>
  							</tr>
 							<?php 
 									if($row['status']==1){

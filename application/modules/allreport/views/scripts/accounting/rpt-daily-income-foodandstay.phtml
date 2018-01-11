@@ -14,11 +14,11 @@
 	    	<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
-			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
-			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
-			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:30am</option>
+			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:30pm</option>
+			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>07:00pm</option>
 			 	</select>
-			 </td>	
+			</td>	
 	    	<td><?php echo $frm->getElement('user');?></td>
 	    </tr>
 	   	<tr>	
@@ -75,7 +75,7 @@ tr.row_control {
 				<img style="width:70%;" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
 			</td>
 			<?php 
-				$shift = array(1=>"10:00am",2=>"04:00pm",3=>"06:30pm");
+				$shift = array(1=>"10:30am",2=>"04:30pm",3=>"07:00pm");
 			?>
 			<td align="center" width="70%" style="font-family: Khmer OS Battambang,Times New Roman;color:#000; font-size: 14px;">
 				<strong  style="font-weight:bold;color:#000; font-size: 17px;font-family: Khmer OS Battambang,Times New Roman;​"><?php echo $tr->translate("Daily Income Report(Food & Stay Fee)");?></strong><br />
@@ -104,6 +104,7 @@ tr.row_control {
 							<td rowspan="2" class="padd">Total in<br />USD</td>
 							<td rowspan="2" class="padd">Remark</td>
 							<td rowspan="2" class="padd">Create Date</td>
+							<td rowspan="2" class="padd">Status</td>
 	 					 </tr>
 						 <tr id="row" align="center" style="background: #c1d0f3; line-height: 14px;">
 							<td rowspan="1" class="padd">Food & Stay Fee</td>
@@ -168,23 +169,29 @@ tr.row_control {
 						
 						<td class="padd"><?php echo $rs['note'];?></td>
 						<td class="padd"><?php echo date("d-M-Y",strtotime($rs['create_date']));?></td>
+						<td class="padd"><?php if($rs['is_void']==1){echo "Void";};?></td>
  					</tr>
  					
 					<?php 
 						if($rs['is_void']==0){
 							$stu_id=$rs['student_id'];
 						
-							$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
+							//$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'];
 							
-							$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
-							
-							$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
+							//$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
+							$total_admin_fee = 0;
+								
+							//$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
+							$total_study_material_fee=0;
 							
 							$total_other_fee = $total_other_fee + $rs['other_fee'];
 							
 							if($rs['is_complete']==0){
 								$total_balance = $total_balance + $rs['grand_total_balance'];
 							}
+							
+							$total_study_fee = $total_study_fee + $rs['grand_total_paid_amount'] - $rs['other_fee'] + $total_balance;
+							
 						}
 					?> 					
  					

@@ -18,9 +18,9 @@
 			<td>
 			 	<select name="shift"  id="shift" dojoType="dijit.form.FilteringSelect" class="fullside" >
 			 		<option value="0" <?php if($this->search['shift']==0){echo 'selected="selected"';}?>>Shift</option>
-			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:00am</option>
-			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:00pm</option>
-			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>06:30pm</option>
+			 		<option value="1" <?php if($this->search['shift']==1){echo 'selected="selected"';}?>>10:30am</option>
+			 		<option value="2" <?php if($this->search['shift']==2){echo 'selected="selected"';}?>>04:30pm</option>
+			 		<option value="3" <?php if($this->search['shift']==3){echo 'selected="selected"';}?>>07:00pm</option>
 			 	</select>
 			</td>
 			<td> <?php echo $frm->getElement("user");?></td>
@@ -60,14 +60,21 @@
 		
 			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%">
 				<tr >
-					<td width="15%" align="center">
+					<td width="20%" align="center">
 						<img style="width: 60%;" alt="<?php ?>" src="<?php echo $this->baseUrl().'/images/logo.png'?>">
 					</td>
-					<td width="70%" align="center">
+					
+					<?php 
+						$shift = array(1=>"10:30am",2=>"04:30pm",3=>"07:00pm");
+					?>
+					
+					<td width="60%" align="center">
 						<strong style="padding-left: 30px;font-weight:bold;font-family: Arial Black;color:#000; font-size: 18px;font-family:'Khmer MEF2';"><?php echo $tr->translate('RPT_OTHER_INCOME')?></strong><br />
-						<strong style="padding-left: 15px;font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong>
+						<strong style="padding-left: 15px;font-weight:bold;font-family: Arial Black;color:#000; font-size: 13px;font-family:'Khmer MEF2';">For Date <?php echo date("d-M-Y",strtotime($this->search["start_date"]))?> to <?php echo date("d-M-Y",strtotime($this->search["end_date"]));?></strong><br />   
+						<?php if($this->search['shift']>0){echo "Time : ".$shift[$this->search['shift']]." , "."Shift : ".$this->search['shift'];}?>
 					</td>
-					<td width="15%" align="center">
+					<td width="20%" align="center">
+						<?php if($this->search['branch']>0 && !empty($this->row)){echo "Branch : ".$this->row[0]['branch'];}?>
 					</td>
 				</tr>
 				
@@ -95,6 +102,7 @@
 								<td style="border: 1px solid #000;"><?php echo $tr->translate('FOR_DATE')?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate('CREATE_DATE')?></td>
 								<td style="border: 1px solid #000;"><?php echo $tr->translate('USER')?></td>
+								<td style="border: 1px solid #000;"><?php echo $tr->translate('STATUS')?></td>
 							</tr>
 						<?php $i=0;$total_income_dollar=0;$total_income_riel=0; foreach ($this->row AS $row) { $i++;?>
 							<tr class="hover style_tr"  align="center" <?php if($row['status']==0){echo "style='color:red;'";}?>>
@@ -102,13 +110,14 @@
 								<td style="border: 1px solid #000;"><?php echo $row['branch'];?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['title'];?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['invoice'];?></td>
-								<td align="canter" style="border: 1px solid #000;"><?php echo $row['income_category'];?></td>	
-								<td align="canter" style="border: 1px solid #000;"><?php echo $row['curr_name'];?></td>	
+								<td align="center" style="border: 1px solid #000;"><?php echo $row['income_category'];?></td>	
+								<td align="center" style="border: 1px solid #000;"><?php echo $row['curr_name'];?></td>	
 								<td style="border: 1px solid #000;"><?php echo $row['total_amount'];?><?php if($row['curr_type']==1){echo ' $';}else{echo ' រៀល';}?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['desc'];?></td>
 								<td style="border: 1px solid #000;"><?php echo date('d-m-Y',strtotime($row['for_date']));?></td>
 								<td style="border: 1px solid #000;"><?php echo date('d-m-Y',strtotime($row['create_date']));?></td>
 								<td style="border: 1px solid #000;"><?php echo $row['name'];?></td>
+								<td class="padd"><?php if($row['status']==0){echo "Void";};?></td>
 							</tr>
 							
 							<?php 
