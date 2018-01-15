@@ -44,7 +44,7 @@
   $rpt_all_amount_student=$this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-all-amount-student'), null, true);
   ?>
   
-  <div style=" width: 100%;height: 220px;">
+  <div style=" width: 100%;height: 330px;">
     <h3  style="font-family:Times New Roman,'khmer os muol light';font-size:18px;text-align: center;border-bottom:2px solid #F1F1F1;color: #666;padding:2px 0;"><?php echo $tr->translate("DIALY_INCOME_RPT");?></h3><hr>
   	<ul class="link-rpt">
   	    <li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-english-fulltime'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_ENGLISH_FULLTIME');?></a></li>
@@ -52,11 +52,17 @@
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-english-parttime'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_ENGLISH_PARTTIME');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-transport'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_TRANSPORTATION');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-foodandstay'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_FOOD_AND_STAY');?></a></li>
+  		
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-material'), null, true);?>"><?php echo $tr->translate('DIALY_INCOME_STUDY_MATERIAL');?></a></li>
+  		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-studenttest'), null, true);?>"><?php echo $tr->translate('Daily Income Report(Student Test)');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-parking-canteen'), null, true);?>"><?php echo $tr->translate('Daily Income Canteen');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-parking-payment'), null, true);?>"><?php echo $tr->translate('PARKING_PAYMENT_REPORT');?></a></li>
+  		
+		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-submit-daily-income'), null, true);?>"><?php echo $tr->translate('របាយការណ៍បិទបញ្ជីលុយខ្មែរ និង ដុល្លា');?></a></li>
+		  		
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-result-income'), null, true);?>"><?php echo $tr->translate('RESULT_INCOME_RPT');?></a></li>
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-summary-total-income'), null, true);?>"><?php echo $tr->translate('SUMMARY_TOTAL_INCOME');?></a></li>
+  		
   		
   	</ul>
   </div>
@@ -76,7 +82,7 @@
   		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-invoice-transport'), null, true);?>"><?php echo $tr->translate('INVOICE_TRANSPORT_REPORT');?></a></li>
   		<li><a href="<?php echo $rpt_student_balance;?>"><?php echo $tr->translate('STUDENT_BALANCE_REPORT');?></a></li>
   		
-  		<li><a href="<?php echo $this->url(array('module'=>'allreport','controller'=>'accounting','action'=>'rpt-daily-income-studenttest'), null, true);?>"><?php echo $tr->translate('Daily Income Report(Student Test)');?></a></li>
+  		
   	</ul>
   </div>
   

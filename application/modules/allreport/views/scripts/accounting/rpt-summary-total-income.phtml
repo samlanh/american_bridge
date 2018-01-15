@@ -461,12 +461,21 @@
 	 					?>
 	 					
 	 					<tr style="font-size: 18px; font-weight: bold;background: #c1d0f3;">
-	 						<td align="center">Grand Total</td>
+	 						<td align="center">Total</td>
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total,2);?></td>
 	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total_in_dollar,2);?></td>
 	 						<td>&nbsp;&nbsp;<?php echo number_format($grand_total_in_riel,2)." ៛";?></td>
 	 						<td></td>
 	 					</tr>
+						
+						<tr style="font-size: 18px; font-weight: bold;background: yellow;">
+	 						<td align="center">Grand Total</td>
+	 						<td style="border-left:1px solid yellow;"></td>
+	 						<td>&nbsp;&nbsp;<?php echo "$ ".number_format($grand_total_in_dollar,2);?></td>
+	 						<td>&nbsp;&nbsp;<?php echo number_format($grand_total_in_riel,2)." ៛";?></td>
+	 						<td></td>
+	 					</tr>
+						
 					</table>	
 					
 					

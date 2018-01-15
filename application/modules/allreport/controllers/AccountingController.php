@@ -2097,7 +2097,7 @@ class Allreport_AccountingController extends Zend_Controller_Action {
 				$search=$this->getRequest()->getPost();
 			}else{
 				$search=array(
-						'txtsearch' =>'',
+						'type'		=>'',
 						'branch'	=>'',
 						'shift'		=>'',
 						'user'		=>'',

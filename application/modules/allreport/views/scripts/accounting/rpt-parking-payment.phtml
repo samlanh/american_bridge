@@ -64,6 +64,23 @@
 
 <div style="border: 1px dotted #000;background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 	<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'parking')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	
+	<script type="dojo/method" event="onSubmit">   
+
+		if(this.validate()) {
+			shift = dijit.byId('shift_id').get('value');
+			if(shift>0){
+				return true;
+			}else{
+				alert("Please select shift !!!");
+				dijit.byId('shift').focus();
+    			return false;
+			}
+    	}else {
+    		return false;
+    	}
+	</script>
+	
 	<div id="divPrint">
 		<style>
 			table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}

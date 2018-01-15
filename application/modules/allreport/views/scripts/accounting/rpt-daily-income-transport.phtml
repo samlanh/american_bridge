@@ -39,6 +39,23 @@ tr.row_control {
 
 <div style="border: 1px dotted #000;background: #fff; margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
 	<form  action="<?php echo $this->url(array('module'=>'allreport','controller'=>'submitdailyincome','action'=>'car')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	
+	<script type="dojo/method" event="onSubmit">   
+
+		if(this.validate()) {
+			shift = dijit.byId('shift_id').get('value');
+			if(shift>0){
+				return true;
+			}else{
+				alert("Please select shift !!!");
+				dijit.byId('shift').focus();
+    			return false;
+			}
+    	}else {
+    		return false;
+    	}
+	</script>
+	
 	<div id="divPrint">
 	<style>
 		table{ page-break-inside:auto }
@@ -192,12 +209,6 @@ tr.row_control {
 							
 								//$total_study_fee = $total_study_fee + $rs['tuition_fee_after_discount'] ;
 								
-								//$total_admin_fee = $total_admin_fee + $rs['admin_fee'];
-								$total_admin_fee = 0;
-								
-	// 							$total_study_material_fee = $total_study_material_fee + $rs['material_fee'];
-								$total_study_material_fee=0;
-								
 								$total_other_fee = $total_other_fee + $rs['other_fee'];
 								
 								if($rs['is_complete']==0){
@@ -209,7 +220,7 @@ tr.row_control {
 							}
 						?> 					
 	 				<?php }}
-	 						$grand_total = $total_study_fee + $total_admin_fee + $total_study_material_fee + $total_other_fee - $total_balance;
+	 						$grand_total = $total_study_fee +  $total_other_fee - $total_balance;
 	 				?>
 	 				
 					</table>	

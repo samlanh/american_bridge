@@ -110,6 +110,11 @@ class Allreport_Model_DbTable_DbSubmitDailyIncome extends Zend_Db_Table_Abstract
     	if($search['shift'] > 0){
     		$where.= " AND shift = ".$search['shift'];
     	}
+    	
+    	if($search['type'] > 0){
+    		$where.= " AND payfor_type = ".$search['type'];
+    	}
+    	
     	//echo $sql.$where;
     	return $db->fetchAll($sql.$where.$order);
     	

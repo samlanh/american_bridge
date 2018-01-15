@@ -20,16 +20,24 @@
 			 	</select>
 			</td>
 			<td><?php echo $frm->getElement('user');?></td>
-		</tr>
-		<tr>	
-	    	<td>
-				<select name="degree" id="degree" class="fullside" dojoType="dijit.form.FilteringSelect"  >
-					<option value="0"><?php echo $tr->translate("DEGREE")?></option>
-					<?php if(!empty($this->degree)){foreach($this->degree as $rs){?>
-						<option value="<?php echo $rs['id'];?>"><?php echo $rs['name'];?></option>
-					<?php }}?>
+			<td>
+				<select name="type" id="type" class="fullside" dojoType="dijit.form.FilteringSelect"  >
+					<option value="">select type</option>
+					<option value="1">ខ្មែរពេញម៉ោង</option>
+					<option value="6">Englist Fulltime</option>
+					<option value="2">Englist Parttime and Other</option>
+					<option value="3">Transportation</option>
+					<option value="4">Food and Stay</option>
+					<option value="5">Product</option>
+					<option value="10">សិស្សធ្វើតេស្ត</option>
+					<option value="8">ផ្ញើរកង់ ម៉ូតូ និង អេតចាយ</option>
+					<option value="7">ជួលតូប</option>
+					<option value="9">ចំណូលផ្សេងៗ</option>
+					
 				</select>
 			</td>
+		</tr>
+		<tr>	
 			<td><?php echo $frm->getElement('start_date');?></td>
 			<td><?php echo $frm->getElement('end_date');?></td>
 			<td><button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button> </td>
@@ -111,11 +119,11 @@ tr.row_control {
 	 					 
 	 					 <?php 
 	 					 	if($rs['shift'] == 1){
-	 					 		$shift = "វេនទី ".$rs['shift']."(10:00am)";
+	 					 		$shift = "វេនទី ".$rs['shift']."(10:30am)";
 	 					 	}else if($rs['shift'] == 2){
-	 					 		$shift = "វេនទី ".$rs['shift']."(04:00pm)";
+	 					 		$shift = "វេនទី ".$rs['shift']."(04:30pm)";
 	 					 	}else if($rs['shift'] == 3){
-	 					 		$shift = "វេនទី ".$rs['shift']."(06:30pm)";
+	 					 		$shift = "វេនទី ".$rs['shift']."(07:00pm)";
 	 					 	}
 	 					 	
 	 					 	if($rs['payfor_type'] == 1 ){
