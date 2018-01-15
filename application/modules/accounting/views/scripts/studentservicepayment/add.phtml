@@ -479,7 +479,7 @@ fieldset{  background:none;}
 						<tr>
 							<td><?php echo $tr->translate('SERVICE_FEE');?></td>
 							<td> 
-								<input class="fullside" value="0" name="service_fee" id="service_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.TextBox" type="text" >
+								<input class="fullside" value="0" name="service_fee" id="service_fee" readOnly onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.TextBox" type="text" >
 							</td>
 						</tr>
 						<tr>
@@ -860,11 +860,7 @@ function getStartDateService(){
 					//alert(data);
 					if(data){
 						dijit.byId('start_date').attr('value',data);
-						getValidate(1);
-					}else{
-						//getCurrentDate();
-					}	
-					
+					}
 				},
 				error: function(err) {
 					alert(err);
@@ -1002,7 +998,12 @@ function getStudentInfo(){
 					dijit.byId("old_service").attr("value",data.service_id);
 					dijit.byId("service").attr("value",data.service_id);
 					dijit.byId("car_id").attr("value",data.car_id);
+					
+					dijit.byId("year").attr("value",data.year_service);
+					
 					getStartDateService();
+					
+					getservicefee();
 				}
 			},
 			error: function(err) {
@@ -1040,6 +1041,7 @@ function getservicefee(){
 			load: function(data) {
 				if(data.balance>0){
 					clear();
+					//alert(data.validate);
 					dijit.byId("service_fee").attr("value",data.balance);
 					dijit.byId("other").attr("value",'លុយជំពាក់ពីមុន');
 					dijit.byId("start_date").attr("value",data.start_date);
@@ -1052,7 +1054,6 @@ function getservicefee(){
 					clear();
 					dijit.byId("service_fee").attr("value",data.price_fee);
 					calculateTotalPayment();
-					//getCurrentDate();
 					removeDateReadOnly();
 				}
 			},
@@ -1073,33 +1074,26 @@ function clear(){
 	//dijit.byId("other").attr("value",'');
 }
 function setDateReadOnly(){
-	//document.getElementById('start_date').readOnly = true;
-	//document.getElementById("start_date").setAttribute("readonly", true);
+	dijit.byId("year").set('readOnly',true);
+	dijit.byId("service").set('readOnly',true);
+	dijit.byId("car_id").set('readOnly',true);
+	dijit.byId("term").set('readOnly',true);
+	dijit.byId("qty").set('readOnly',true);
 	dijit.byId("start_date").set('readOnly',true);
 	dijit.byId("end_date").set('readOnly',true);
 }
 function removeDateReadOnly(){
+	dijit.byId("year").set('readOnly',false);
+	dijit.byId("service").set('readOnly',false);
+	dijit.byId("car_id").set('readOnly',false);
+	dijit.byId("term").set('readOnly',false);
+	dijit.byId("qty").set('readOnly',false);
 	dijit.byId("start_date").set('readOnly',false);
 	dijit.byId("end_date").set('readOnly',false);
 }
-function getCurrentDate(){
-	var currentDate = new Date();
-    var day = currentDate.getDate();
-	if(day<10){
-		day='0'+day;
-	}
-    var month = currentDate.getMonth() + 1;
-	if(month<10){
-		month='0'+month;
-	}
-    var year = currentDate.getFullYear();
-    var my_date = day+"/"+month+"/"+year;
-    document.getElementById("start_date").value = my_date;
-    getValidate();
-}
 
 function getValidate(type){
-	 
+	 if(dijit.byId('balance_id').get('value') > 0 ){return false;}
 	 if(type==1){
 		 term = dijit.byId('term').get('value');
 		 qty = dijit.byId('qty').get('value');
@@ -1171,6 +1165,7 @@ function getValidate(type){
 			dijit.byId('end_date').attr('value',epx_date); 
 		 }
 	 }else{
+		 /*
 		 term = dijit.byId('term').get('value');
 		 if(term == 5){
 			start_date = dijit.byId('start_date').get('value');
@@ -1184,6 +1179,7 @@ function getValidate(type){
 			}
 			calculateTotalPayment();netTotal();
 		}
+		*/
 	 }
 }
 function getValue(){

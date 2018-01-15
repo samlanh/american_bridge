@@ -167,11 +167,11 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 						$payfor_type = 6;  // english fulltime
 					}
 					
-					// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
-					if($data['old_degree']==$data['dept']){
-						$stu_code = $data['old_stu_code'];
-					}else{
+			// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
+					if($data['old_degree']!=$data['dept'] && $data['degree_type'] == 1 ){
 						$stu_code = $register->getNewAccountNumber($data['dept'],$data['branch']);
+					}else{
+						$stu_code = $data['old_stu_code'];
 					}
 					////////////////////////////////////////////////////////////////////////
 					
@@ -351,10 +351,11 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							$stu_type=2;
 						}
 							
-						if($data['old_degree']==$data['dept']){
-							$stu_code = $data['old_stu_code'];
-						}else{
+				// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
+						if($data['old_degree']!=$data['dept'] && $data['degree_type'] == 1 ){
 							$stu_code = $register->getNewAccountNumber($data['dept'],$data['branch']);
+						}else{
+							$stu_code = $data['old_stu_code'];
 						}
 				
 						$arr=array(
@@ -402,7 +403,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					$this->insert($arr);
 						
 				}else{ // old student
-					if($data['old_degree']!=$data['dept']){
+					if($data['old_degree']!=$data['dept'] && $data['degree_type'] == 1 ){
 						$sql="select id from rms_student_id where stu_id = $id and degree = ".$data['old_degree']." and status=1 ";
 						$finished_degree_id = $db->fetchOne($sql);
 						if(!empty($finished_degree_id)){
@@ -553,7 +554,7 @@ class Accounting_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 			}catch (Exception $e){
 				$db->rollBack();//អោយវាវិលត្រលប់ទៅដើមវីញពេលណាវាជួបErrore
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-				echo $e->getMessage();
+				echo $e->getMessage();exit();
 			}
 		}
 		

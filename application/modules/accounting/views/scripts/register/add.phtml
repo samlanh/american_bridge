@@ -38,7 +38,7 @@
 		    	
 		    	setHourDefault();
 				
-				oldStudentChangeDegree();
+				//oldStudentChangeDegree();
 		    }
 		}, "dept");
 		
@@ -670,6 +670,7 @@
 				     if(data){
 				    	  dijit.byId('degree_type').attr('value',data);
 				     }
+					 oldStudentChangeDegree();
 					 getNewReceiptNo('');
 				},
 				error: function(err) {
@@ -721,7 +722,7 @@ fieldset{  background:none;}
 								</select>
 							</td>
 						</tr>
-						<input type="text" name="id_balance_record" id="id_balance_record" dojoType="dijit.form.TextBox" />
+						<input type="hidden" name="id_balance_record" id="id_balance_record" dojoType="dijit.form.TextBox" />
 						<tr>
 							<td width="20%"><?php echo $tr->translate("STUDENT_TYPE");?></td>
 							<td width="80%">
@@ -789,7 +790,7 @@ fieldset{  background:none;}
 							<input type="hidden" name="old_stu_code" id="old_stu_code" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="old_degree" id="old_degree" dojoType="dijit.form.TextBox" />
 							<input type="hidden" name="old_grade" id="old_grade" dojoType="dijit.form.TextBox" />
-							<input type="hidden" name="degree_type" id="degree_type" dojoType="dijit.form.TextBox" />
+							<input type="text" name="degree_type" id="degree_type" dojoType="dijit.form.TextBox" />
 							
 							<td><?php echo $tr->translate("DEGREE");?><label class="red">*</label></td>
 							<td><input id="dept" /></td>
@@ -965,7 +966,7 @@ fieldset{  background:none;}
 		
 		<tr>
 			<td colspan="3" align="center">
-				<input type="button" name="save_close" id="save_close" onclick="submitDataClose();" value="រក្សាទុក  &ចាកចេញ" label="<?php echo $tr->translate('SAVE_CLOSE');?>"   dojoType="dijit.form.Button" 
+				<input type="submit" name="save_close" id="save_close" onclick="" value="រក្សាទុក  &ចាកចេញ" label="<?php echo $tr->translate('SAVE_CLOSE');?>"   dojoType="dijit.form.Button" 
 				 iconClass="dijitEditorIcon dijitEditorIconSave" />
 				<input type="button" name="save_new" id="save_new" onclick="submitDataAddNew();" value="រក្សាទុក" label="<?php echo $tr->translate('SAVE_NEW');?>"  dojoType="dijit.form.Button" 
 				 iconClass="dijitEditorIcon dijitEditorIconSave" />
@@ -1458,23 +1459,30 @@ function oldStudentChangeDegree(){
 	student_type = dijit.byId('student_type').get('value');
 	old_degree = dijit.byId('old_degree').get('value');
 	degree = dijit.byId('dept').get('value');
+	degree_type = dijit.byId('degree_type').get('value');
 	
 	if(student_type!=1 ){
-		if(old_degree!=degree){
-			 document.getElementById('student_old').style.display="none";
-			 document.getElementById('id_stu').style.display="block";
-			 document.getElementById('drop_stu_code').style.display="none";
-		}else{
-			if(student_type==3){
-				 document.getElementById('student_old').style.display="block";
-				 document.getElementById('id_stu').style.display="none";
-				 document.getElementById('drop_stu_code').style.display="none";
-			}else{
-				 document.getElementById('student_old').style.display="none";
-				 document.getElementById('id_stu').style.display="none";
-				 document.getElementById('drop_stu_code').style.display="block"; 
+		
+		if(student_type==3){ // old student
+				if(old_degree!=degree && degree_type==1){ // 1 = khmer degree ( change for khmer student only )
+					 document.getElementById('student_old').style.display="none";
+					 document.getElementById('id_stu').style.display="block";
+				}
+				else{
+					 document.getElementById('student_old').style.display="block";
+					 document.getElementById('id_stu').style.display="none";
+				} 
+			}else{ // drop student 
+				if(old_degree!=degree && degree_type==1){ // 1 = khmer degree ( change for khmer student only )
+					 document.getElementById('drop_stu_code').style.display="none";
+					 document.getElementById('id_stu').style.display="block";
+				}
+				else{
+					 document.getElementById('drop_stu_code').style.display="block";
+					 document.getElementById('id_stu').style.display="none";
+				} 
 			}
-		} 
+		
 	}
 }
 

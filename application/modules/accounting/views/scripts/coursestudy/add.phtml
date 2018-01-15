@@ -358,7 +358,7 @@
 		payment_term=dijit.byId('payment_term').get('value');
 		grade=dijit.byId('grade').get('value');
 		if(generat!='' && payment_term !='' && grade !=''){
-			getPaymentTerms(generat,payment_term,grade);
+			getPaymentTerms(generat,grade,payment_term);
 		}
 	}
 	
@@ -417,7 +417,7 @@
     	// dijit.byId('remaining').attr('value',0);
     	// dijit.byId('remark').attr('value',0);
     	//dijit.byId('char_price').attr('value',0);
-
+		//alert(1);
     	if(payment_term==5){ // if pay by section => show amount of section 
 			document.getElementById('amount_section').style.display="block";
 			document.getElementById('label_amount').style.display="block";
@@ -426,6 +426,9 @@
 			document.getElementById('amount_section').style.display="none";
 			document.getElementById('label_amount').style.display="none";
 		}
+		
+		alert(study_year+",grade="+levele+",term="+payment_term);
+		
 			dojo.xhrPost({
 				url:url_getpaymentterm,
 				content:{
@@ -435,6 +438,7 @@
 					},
 				handleAs:"json",
 				load: function(data) {
+					alert(data);
 				      if(data){
 				    	dijit.byId('tuitionfee').attr('value',data.tuition_fee);
 				    	dijit.byId('total').attr('value',data.tuition_fee);

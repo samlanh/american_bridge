@@ -595,7 +595,8 @@ class Accounting_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstr
 	    			stu_khname,
 	    			sex,
 		    		tel,
-		    		(select sv.service_id from rms_service as sv where sv.type=5 and sv.stu_id = s.stu_id ) as service_id
+		    		(select sv.service_id from rms_service as sv where sv.type=5 and sv.stu_id = s.stu_id ) as service_id,
+		    		(select year from rms_student_payment as sp where sp.student_id = s.stu_id and sp.payfor_type=4 and sp.is_void=0 order by sp.id DESC limit 1) as year_service
 	    		 from 
 	    			rms_student as s
 	    		 where

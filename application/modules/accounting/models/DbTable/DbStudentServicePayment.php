@@ -608,7 +608,8 @@ function addStudentServicePayment($data){
 	    			sex,
 		    		tel,
 		    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as service_id,
-		    		(select sv.car_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as car_id
+		    		(select sv.car_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as car_id,
+		    		(select year from rms_student_payment as sp where sp.student_id = s.stu_id and sp.payfor_type=3 and sp.is_void=0 order by sp.id DESC limit 1) as year_service
 	    		 from 
 	    			rms_student as s
 	    		 where
