@@ -137,9 +137,11 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$_dob->setValue(date("Y-m-d"));
 		
 		$_invoice_no = new Zend_Dojo_Form_Element_TextBox('reciept_no');
-		$_invoice_no->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',
+		$_invoice_no->setAttribs(array(
+				'dojoType'=>$this->tvalidate,
+				'class'=>'fullside',
 				'required'=>'true',
-				//'readonly'=>'true',
+				'readonly'=>'true',
 				'style'=>'color:red;'
 				));
 		$reciept=new Registrar_Model_DbTable_DbRegister();
@@ -186,8 +188,12 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 				'Onchange'=>"getNewStudent();"));
 		
 		$_studid = new Zend_Dojo_Form_Element_TextBox('stu_id');
-		$_studid->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',
-				'style'=>'color:red;'));
+		$_studid->setAttribs(array(
+				'dojoType'=>$this->text,
+				'class'=>'fullside',
+				'style'=>'color:red;',
+				'readonly'=>'true',
+				));
 		
 		$_sex =  new Zend_Dojo_Form_Element_FilteringSelect('sex');
 		$_sex->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
@@ -235,7 +241,7 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 				
 				//'onkeyup'=>'CheckAmount();',
 				'onkeyup'=>'getDisccount();getTotale();netTotal();',
-				//'readOnly'=>'true'
+				'readOnly'=>'true'
 				));
 
 		$_disc_percent = new Zend_Dojo_Form_Element_NumberTextBox('discount');
@@ -271,7 +277,8 @@ Class Registrar_Form_FrmRegister extends Zend_Dojo_Form {
 		$remaining->setAttribs(array(
 				'dojoType'=>$this->text,
 				'class'=>'fullside',
-				'style'=>'color:blue'
+				'style'=>'color:blue',
+				'readOnly'=>'true'
 		));
 		$remaining->setValue(0);
 		

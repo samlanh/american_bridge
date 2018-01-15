@@ -46,10 +46,6 @@
 			    }
 		    	getservicefee();
 				getServiceCate(service);
-				if(dijit.byId('student_type').get('value')!=1){
-					//alert("do get start date");
-					//getStartDateService();
-				}
 		    } 
 		}, "service");
 
@@ -153,7 +149,7 @@ fieldset{  background:none;}
 							<td><?php echo $tr->translate("STUDENT_ID");?></td>
 							<td>
 								<div id="new_id">
-									<input type="text" name="new_car_id" style="color:red;" id="new_car_id" class="fullside" dojoType="dijit.form.TextBox" >     
+									<input type="text" name="new_car_id" style="color:red;" readOnly id="new_car_id" class="fullside" dojoType="dijit.form.TextBox" >     
 								</div>
 								<div id="old_id">
 									<select name="old_car_id" id="old_car_id" onChange="getStudentInfo();" autoComplete="false" queryExpr="*${0}*" class="fullside" dojoType="dijit.form.FilteringSelect" >
@@ -258,12 +254,12 @@ fieldset{  background:none;}
 						
 						<tr>
 							<td width="20%"><?php echo $tr->translate("RECEIPT_NO");?></td>
-							<td width="80%"><input type="text" name="receipt_no" style="color:red;" id="receipt_no"  class="fullside" dojoType="dijit.form.TextBox" > </td>
+							<td width="80%"><input type="text" name="receipt_no" style="color:red;" id="receipt_no" readOnly class="fullside" dojoType="dijit.form.TextBox" > </td>
 						</tr>
 						<tr>
 							<td><?php echo $tr->translate('SERVICE_FEE');?></td>
 							<td> 
-								<input class="fullside" value="0" name="service_fee" id="service_fee" onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
+								<input class="fullside" value="0" name="service_fee" id="service_fee" readOnly onkeyup="calculateTotalPayment();netTotal();" dojoType="dijit.form.NumberTextBox" type="text" >
 							</td>
 						</tr>
 						<tr>
@@ -595,8 +591,6 @@ function getNewLunchId(condition){
 function printSave(new_stu_id,new_receipt_no){		
 	if(dijit.byId('office_receipt').validate()) {
 		 
-		 //degree = dijit.byId('dept').get('value');
-
 		 stu_type = dijit.byId('student_type').get('value');
 		 
 		 if(stu_type==1){
@@ -607,28 +601,29 @@ function printSave(new_stu_id,new_receipt_no){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		 
-		 // if(stu_type==1){
-			 // if(new_stu_id==''){
-				 // getNewLunchId(1);
-			 // }else{
-				 // dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-				 // dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-			 // }
-		 // }else{
-			 // if(new_receipt_no==''){
-				// getNewReceiptNo(1,1); 
-			 // }
+		 if(stu_type==1){
+			 if(new_stu_id==''){
+				 getNewLunchId(1);
+			 }else{
+				 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+				 dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+			 }
+		 }else{
+			 if(new_receipt_no==''){
+				getNewReceiptNo(1,1); 
+			 }
 			 
-			 // dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+			 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
 
-			// if(stu_type==3){// old student
-				// stu_id = dijit.byId("old_car_id").attr('displayedValue');
-			// }else{ // drop student
-				// stu_id = dijit.byId("drop_car_id").attr('displayedValue');
-			// }
-			 // dojo.byId("lb_stu_id").innerHTML = stu_id;
-		 // }
+			 if(stu_type==3){// old student
+				stu_id = dijit.byId("old_car_id").attr('displayedValue');
+			 }else{ // drop student
+				stu_id = dijit.byId("drop_car_id").attr('displayedValue');
+			 }
+			 dojo.byId("lb_stu_id").innerHTML = stu_id;
+		 }
 		 
+		 /*
 		 dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt_no").get('value');
 		 if(stu_type==3){// old student
 			stu_id = dijit.byId("old_car_id").attr('displayedValue');
@@ -638,6 +633,7 @@ function printSave(new_stu_id,new_receipt_no){
 			stu_id = dijit.byId("new_car_id").get('value');
 		 }
 		 dojo.byId("lb_stu_id").innerHTML = stu_id;
+		 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');
@@ -1165,7 +1161,7 @@ function getStartDateService(){
 						//alert("have = "+data);
 						dijit.byId('start_date').attr('value',data);
 					}else{
-						dijit.byId('start_date').attr('value','<?php echo date('Y-m-d')?>');
+						//dijit.byId('start_date').attr('value','<?php echo date('Y-m-d')?>');
 						//alert("dont have");
 					}
 					
@@ -1202,7 +1198,6 @@ function getServiceCate(service_id){
 
 var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','controller'=>'coursestudy','action'=>'get-receipt-no')); ?>';
 	function getNewReceiptNo(new_stu_id,condition){
-		
 		dojo.xhrPost({
 			url:url_getreceiptno,
 			content:{
@@ -1216,13 +1211,11 @@ var url_getreceiptno = '<?php echo $this->url(array('module'=>'registrar','contr
 				if(condition==1){ 
 					printSave(new_stu_id,data);
 				}
-				
 			},
 			error: function(err) {
 				alert(err);
 			}
 		});
-			
 	}
 
 function showPopupDept() {
@@ -1303,7 +1296,12 @@ function getStudentInfo(){
 				if(stu_type!=1){
 					dijit.byId("old_service").attr("value",data.service_id);
 					dijit.byId("service").attr("value",data.service_id);
+					
+					dijit.byId("study_year").attr("value",data.year_service);
+					
 					getStartDateService();
+					
+					getservicefee();
 				}
 			},
 			error: function(err) {
@@ -1319,9 +1317,11 @@ function getservicefee(){
 	if(student_type==1){
 		studentid = dijit.byId('student_name_new').get('value');
 	}else if(student_type==3){
-		studentid = dijit.byId('student_name_old').get('value');
+		studentid = dijit.byId('old_car_id').get('value');
+		dijit.byId('student_name_old').attr('value',studentid);
 	}else if(student_type==4){
-		studentid = dijit.byId('drop_name').get('value');
+		studentid = dijit.byId('drop_car_id').get('value');
+		dijit.byId('drop_name').attr('value',studentid);
 	}
 	
 	service = dijit.byId('service').get('value');
@@ -1346,6 +1346,7 @@ function getservicefee(){
 					dijit.byId("start_date").attr("value",data.start_date);
 					dijit.byId("end_date").attr("value",data.validate);
 					dijit.byId("balance_id").attr("value",data.id);
+					
 					calculateTotalPayment();
 					setDateReadOnly();
 					//alert(1);
@@ -1353,7 +1354,6 @@ function getservicefee(){
 					clear();
 					dijit.byId("service_fee").attr("value",data.price_fee);
 					calculateTotalPayment();
-					//getCurrentDate();
 					removeDateReadOnly();
 				}
 			},
@@ -1363,45 +1363,35 @@ function getservicefee(){
 		});
 	}
 }
+
 function clear(){
 	dijit.byId("balance_id").attr("value",'');
 	dijit.byId("service_fee").attr("value",0);
-	//dijit.byId("discount").attr("value",0);
 	dijit.byId("total_payment").attr("value",0);
 	dijit.byId("paid_amount").attr("value",0);
 	dijit.byId("balance").attr("value",0);
-	//dijit.byId("return").attr("value",0);
-	//dijit.byId("other").attr("value",'');
 }
+
 function setDateReadOnly(){
-	//document.getElementById('start_date').readOnly = true;
-	//document.getElementById("start_date").setAttribute("readonly", true);
 	dijit.byId("start_date").set('readOnly',true);
 	dijit.byId("end_date").set('readOnly',true);
+	dijit.byId("study_year").set('readOnly',true);
+	dijit.byId("service").set('readOnly',true);
+	dijit.byId("term").set('readOnly',true);
+	dijit.byId("qty").set('readOnly',true);
 }
 function removeDateReadOnly(){
 	dijit.byId("start_date").set('readOnly',false);
 	dijit.byId("end_date").set('readOnly',false);
-}
-function getCurrentDate(){
-	var currentDate = new Date();
-
-    var day = currentDate.getDate();
-	if(day<10){
-		day='0'+day;
-	}
-    var month = currentDate.getMonth() + 1;
-	if(month<10){
-		month='0'+month;
-	}
-    var year = currentDate.getFullYear();
-    var my_date = day+"/"+month+"/"+year;
-    document.getElementById("start_date").value = my_date;
-    getValidate();
+	
+	dijit.byId("study_year").set('readOnly',false);
+	dijit.byId("service").set('readOnly',false);
+	dijit.byId("term").set('readOnly',false);
+	dijit.byId("qty").set('readOnly',false);
 }
 
 function getValidate(type){
-	 
+	 if(dijit.byId('balance_id').get('value') > 0 ){return false;}	
 	 if(type==1){
 		 term = dijit.byId('term').get('value');
 		 qty = dijit.byId('qty').get('value');
@@ -1474,7 +1464,7 @@ function getValidate(type){
 		 }
 		 
 	 }else{
-		 term = dijit.byId('term').get('value');
+		 /*term = dijit.byId('term').get('value');
 		 if(term == 5){
 			start_date = dijit.byId('start_date').get('value');
 			end_date = dijit.byId('end_date').get('value');
@@ -1491,6 +1481,7 @@ function getValidate(type){
 			}
 			calculateTotalPayment();netTotal();
 		}
+		*/
 	 }
 }
 function getValue(){

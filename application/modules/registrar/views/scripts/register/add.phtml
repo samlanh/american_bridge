@@ -35,7 +35,7 @@
 		    	getStudentNo(dept_id,'');
 				
 		    	//setHourDefault();
-				oldStudentChangeDegree();
+				//oldStudentChangeDegree();
 		    }
 		}, "dept");
 		
@@ -267,6 +267,7 @@
 				    	  dijit.byId('end_date').attr('value',data.validate);
 				    	  setReadOnly();
 				    	  netTotal();
+						  setStartDate(data.start_date,data.validate);
 				     }else {
 				    	 dijit.byId('id_balance_record').attr('value','');
 				    	 removeReadOnly();
@@ -280,6 +281,11 @@
 		}
 	}
 
+	function setStartDate(start_date , end_date){
+		dijit.byId('start_date').attr('value',start_date);
+		dijit.byId('end_date').attr('value',end_date);
+	}
+	
 	// set field to readonly when balance>0 for get all old information of student
 	function setReadOnly(){
 		dijit.byId("start_date").set('readOnly',true);
@@ -489,6 +495,7 @@
 				load: function(data) {
 				     if(data){
 				    	  dijit.byId('degree_type').attr('value',data);
+						  oldStudentChangeDegree();
 						  getNewReceiptNo("");
 				     }
 				},
@@ -1053,45 +1060,45 @@ function printSave(new_stu_id,new_receipt_no){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		 
-		 // if(stu_type==1){ 
-			 // if(new_stu_id==''){
-				 // getStudentNo(degree,1);
-			 // }else{
-				 // dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-				 // dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-			 // }
-		 // }else{
-			 // if(old_degree!=degree){ // old student change degree => generate new stu_code by degree
-				 // if(new_stu_id==''){
-					// getStudentNo(degree,1);
-				 // }else{
-					// dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-					// dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-				 // }
-			 // }else{  // generate new receipt before print
-				// if(new_receipt_no==''){
-					// getNewReceiptNo(1);
-				// }else{
-					// dojo.byId("lb_receipt_no").innerHTML =  new_receipt_no;
-					// if(stu_type==3){// old student
-						// stu_id = dijit.byId("old_studens").attr('displayedValue');
-					// }else{ // drop student
-						// stu_id = dijit.byId("drop_studens").attr('displayedValue');
-					// }
-					// dojo.byId("lb_stu_id").innerHTML = stu_id;
-				// } 
-				
-			 // }
-		 // }
+		 if(stu_type==1){ 
+			 if(new_stu_id==''){
+				 getStudentNo(degree,1);
+			 }else{
+				 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+				 dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+			 }
+		 }else{
+			 if(old_degree!=degree){ // old student change degree => generate new stu_code by degree
+				 if(new_stu_id==''){
+					getStudentNo(degree,1);
+				 }else{
+					dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+					dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+				 }
+			 }else{  //generate new receipt before print
+				if(new_receipt_no==''){
+					getNewReceiptNo(1);
+				}else{
+					dojo.byId("lb_receipt_no").innerHTML =  new_receipt_no;
+					if(stu_type==3){// old student
+						stu_id = dijit.byId("old_studens").attr('displayedValue');
+					}else{ // drop student
+						stu_id = dijit.byId("drop_studens").attr('displayedValue');
+					}
+					dojo.byId("lb_stu_id").innerHTML = stu_id;
+				} 
+			 }
+		 }
 	
+		/*
 		dojo.byId("lb_receipt_no").innerHTML =  dijit.byId("reciept_no").get('value');
 		if(stu_type==3){// old student
-			if(old_degree!=degree){	
+			if(old_degree!=degree && degree_type==1){	
 				stu_id = dijit.byId("stu_id").get('value')
 			}else{
 				stu_id = dijit.byId("old_studens").attr('displayedValue');
 			}
-		}else if(stu_type==4){ // drop student
+		}else if(stu_type==4 && degree_type==1){ // drop student
 			if(old_degree!=degree){	
 				stu_id = dijit.byId("stu_id").get('value')
 			}else{
@@ -1101,7 +1108,7 @@ function printSave(new_stu_id,new_receipt_no){
 			stu_id = dijit.byId("stu_id").get('value');
 		}
 		dojo.byId("lb_stu_id").innerHTML = stu_id;	
-	
+		*/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 		
 		 dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');
@@ -1628,9 +1635,7 @@ function setHourDefault(){
 }
 //save daata when sub button print 
 function printSubmit(){
-	
 	$('#office_receipt').submit();
-	 
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
@@ -1685,6 +1690,7 @@ function clearControll(){
 	dijit.byId('kh_name').attr('value','');
 	dijit.byId('en_name').attr('value','');
 }
+
 ///get Gerneral old student
 function getGeneralOldStudentById(type){
 	var url_getalldstudent = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-general-old-student')); ?>';
@@ -1871,27 +1877,30 @@ function oldStudentChangeDegree(){
 	student_type = dijit.byId('student_type').get('value');
 	old_degree = dijit.byId('old_degree').get('value');
 	degree = dijit.byId('dept').get('value');
+	degree_type = dijit.byId('degree_type').get('value');
 	
 	if(student_type!=1 ){
-		if(student_type==3){ // old student
-			if(old_degree!=degree){
-				 document.getElementById('student_old').style.display="none";
-				 document.getElementById('id_stu').style.display="block";
+		
+			if(student_type==3){ // old student
+				if(old_degree!=degree && degree_type==1){ // 1 = khmer degree ( change for khmer student only )
+					 document.getElementById('student_old').style.display="none";
+					 document.getElementById('id_stu').style.display="block";
+				}
+				else{
+					 document.getElementById('student_old').style.display="block";
+					 document.getElementById('id_stu').style.display="none";
+				} 
+			}else{ // drop student 
+				if(old_degree!=degree && degree_type==1){ // 1 = khmer degree ( change for khmer student only )
+					 document.getElementById('drop_stu_code').style.display="none";
+					 document.getElementById('id_stu').style.display="block";
+				}
+				else{
+					 document.getElementById('drop_stu_code').style.display="block";
+					 document.getElementById('id_stu').style.display="none";
+				} 
 			}
-			else{
-				 document.getElementById('student_old').style.display="block";
-				 document.getElementById('id_stu').style.display="none";
-			} 
-		}else{ // drop student 
-			if(old_degree!=degree){
-				 document.getElementById('drop_stu_code').style.display="none";
-				 document.getElementById('id_stu').style.display="block";
-			}
-			else{
-				 document.getElementById('drop_stu_code').style.display="block";
-				 document.getElementById('id_stu').style.display="none";
-			} 
-		}
+		
 	}
 	
 }

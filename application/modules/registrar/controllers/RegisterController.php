@@ -56,6 +56,7 @@ class Registrar_RegisterController extends Zend_Controller_Action {
     public function addAction(){
       if($this->getRequest()->isPost()){
       	$_data = $this->getRequest()->getPost();
+      	//print_r($_data);exit();
       	try {
       		$db = new Registrar_Model_DbTable_DbRegister();
       		$db->addRegister($_data);

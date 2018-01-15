@@ -39,19 +39,13 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		$receipt = new Registrar_Model_DbTable_DbRegister();
-		//$receipt_no = $receipt->getRecieptNo(4,0);
-		$receipt_no = $data['receipt_no'];
+		$receipt_no = $receipt->getRecieptNo(4,0);
+		//$receipt_no = $data['receipt_no'];
 		
-		// សិក្សាពេល User ច្រលំចុច submit 2 ដង​​ អោយវាចូលតែ1
-// 		$rs = $this->getStudentExist($data['reciept_no'],$data['studentid']);
-// 		if(!empty($rs)){
-// 			return -1;
-// 		}
-
 		$this->_name = "rms_service";
 		if($data['student_type']==1){
-			//$new_lunch_id = $this->getNewLunchId();
-			$new_lunch_id = $data['new_car_id'];
+			$new_lunch_id = $this->getNewLunchId(0);
+			//$new_lunch_id = $data['new_car_id'];
 			$array = array(
 				'branch_id'=>$this->getBranchId(),
 				'type'=>5,
@@ -593,7 +587,8 @@ class Registrar_Model_DbTable_DbStudentLunchPayment extends Zend_Db_Table_Abstra
 	    			stu_khname,
 	    			sex,
 		    		tel,
-		    		(select sv.service_id from rms_service as sv where sv.type=5 and sv.stu_id = s.stu_id ) as service_id
+		    		(select sv.service_id from rms_service as sv where sv.type=5 and sv.stu_id = s.stu_id ) as service_id,
+		    		(select year from rms_student_payment as sp where sp.student_id = s.stu_id and sp.payfor_type=4 and sp.is_void=0 order by sp.id DESC limit 1) as year_service
 	    		 from 
 	    			rms_student as s
 	    		 where

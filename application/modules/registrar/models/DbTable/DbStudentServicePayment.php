@@ -39,13 +39,13 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		$receipt = new Registrar_Model_DbTable_DbRegister();
-		//$receipt_no = $receipt->getRecieptNo(3,0);
-		$receipt_no = $data['reciept_no'];
+		$receipt_no = $receipt->getRecieptNo(3,0);
+		//$receipt_no = $data['reciept_no'];
 
 		$this->_name = "rms_service";
 		if($data['student_type']==1){ // new student
-			//$new_car_id = $this->getNewCarId();
-			$new_car_id = $data['new_car_id'];
+			$new_car_id = $this->getNewCarId(0);
+			//$new_car_id = $data['new_car_id'];
 			$array = array(
 				'branch_id'	=>$this->getBranchId(),
 				'type'		=>4,
@@ -131,97 +131,97 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
 		$this->_name = 'rms_student_payment';
 		try{
 			$arr=array(
-					'student_id'		=>$student_id,
-					'receipt_number'	=>$receipt_no,
-					
-					'buy_product'		=>$buy_product,
-					
-					'year'				=>$data['study_year'],
-					
-					'exchange_rate'		=>$data['ex_rate'],
-					'tuition_fee'		=>$tuitionfee,
-					'other_fee'			=>$data['other_fee'],
-					
-					'discount_percent'	=>$data['discount'],
-					'discount_fix'		=>$data['discount_fix'],
-					
-					'tuition_fee_after_discount'=>($tuitionfee-$data['discount_fix']) - (($tuitionfee-$data['discount_fix'])*($data['discount']/100)),
-					
-					'total_payment'		=>$data['total_payment'],
-					'receive_amount'	=>$data['paid_amount'],
-					'paid_amount'		=>$data['paid_amount'],
-					'balance_due'		=>$data['balance'],
-					
-					//'amount_in_khmer'	=>$data['char_price'],
-					'note'				=>$data['other'],
-					'time_for_car'		=>$data['time_identity'],
-					
-					'grand_total_payment'			=>$data['grand_total'],
-					'grand_total_payment_in_riel'	=>$data['convert_to_riels'],
-					'grand_total_paid_amount'		=>$data['total_received'],
-					'grand_total_balance'			=>$data['total_balance'],
-					
-					'is_new'			=>$is_new,
-					'student_type'		=>$data['student_type'],
-					'payfor_type'		=>3 , // transport payment
-					'create_date'		=>date("Y-m-d H:i:s"),
-					'user_id'			=>$this->getUserId(),
-					'branch_id'			=>$this->getBranchId(),
+				'student_id'		=>$student_id,
+				'receipt_number'	=>$receipt_no,
+				
+				'buy_product'		=>$buy_product,
+				
+				'year'				=>$data['study_year'],
+				
+				'exchange_rate'		=>$data['ex_rate'],
+				'tuition_fee'		=>$tuitionfee,
+				'other_fee'			=>$data['other_fee'],
+				
+				'discount_percent'	=>$data['discount'],
+				'discount_fix'		=>$data['discount_fix'],
+				
+				'tuition_fee_after_discount'=>($tuitionfee-$data['discount_fix']) - (($tuitionfee-$data['discount_fix'])*($data['discount']/100)),
+				
+				'total_payment'		=>$data['total_payment'],
+				'receive_amount'	=>$data['paid_amount'],
+				'paid_amount'		=>$data['paid_amount'],
+				'balance_due'		=>$data['balance'],
+				
+				//'amount_in_khmer'	=>$data['char_price'],
+				'note'				=>$data['other'],
+				'time_for_car'		=>$data['time_identity'],
+				
+				'grand_total_payment'			=>$data['grand_total'],
+				'grand_total_payment_in_riel'	=>$data['convert_to_riels'],
+				'grand_total_paid_amount'		=>$data['total_received'],
+				'grand_total_balance'			=>$data['total_balance'],
+				
+				'is_new'			=>$is_new,
+				'student_type'		=>$data['student_type'],
+				'payfor_type'		=>3 , // transport payment
+				'create_date'		=>date("Y-m-d H:i:s"),
+				'user_id'			=>$this->getUserId(),
+				'branch_id'			=>$this->getBranchId(),
+			);
+			$payment_id = $this->insert($arr);
+				
+			// សិក្សា​ថា​តើមាន balance រឺអត់
+			$this->_name='rms_student_paymentdetail';
+			$balance = $data['total_payment'] - $data['paid_amount'];
+			if($balance>0){
+				$is_complete = 0;
+				$comment = 'មិនទាន់បង់';
+			}else{
+				$is_complete = 1;
+				$comment = 'បង់រួច';
+			}
+			
+			$array = array(
+					'payment_id'	=>$payment_id,
+					'type'			=>3,	// car service
+					'service_id'	=>$data['service'],
+					'payment_term'	=>$data['term'],
+					'fee'			=>$data['service_fee'],
+					'qty'			=>$data['qty'],
+					'other_fee'		=>$data['other_fee'],
+					'discount_percent'=>$data['discount'],
+					'discount_fix'	=>$data['discount_fix'],
+					'subtotal'		=>$data['total_payment'],
+					'paidamount'	=>$data['paid_amount'],
+					'balance'		=>$balance,
+					'start_date'	=>$data['start_date'],
+					'validate'		=>$data['end_date'],
+					'references'	=>'from service payment',
+					'note'			=>$data['other'],
+					'user_id'		=>$this->getUserId(),
+					'is_complete'	=>$is_complete,
+					'comment'		=>$comment,
+					'is_parent'		=>$finish,
 				);
-				$payment_id = $this->insert($arr);
-				
-				// សិក្សា​ថា​តើមាន balance រឺអត់
-				$this->_name='rms_student_paymentdetail';
-				$balance = $data['total_payment'] - $data['paid_amount'];
-				if($balance>0){
-					$is_complete = 0;
-					$comment = 'មិនទាន់បង់';
-				}else{
-					$is_complete = 1;
-					$comment = 'បង់រួច';
-				}
-				
-				$array = array(
-						'payment_id'	=>$payment_id,
-						'type'			=>3,	// car service
-						'service_id'	=>$data['service'],
-						'payment_term'	=>$data['term'],
-						'fee'			=>$data['service_fee'],
-						'qty'			=>$data['qty'],
-						'other_fee'		=>$data['other_fee'],
-						'discount_percent'=>$data['discount'],
-						'discount_fix'	=>$data['discount_fix'],
-						'subtotal'		=>$data['total_payment'],
-						'paidamount'	=>$data['paid_amount'],
-						'balance'		=>$balance,
-						'start_date'	=>$data['start_date'],
-						'validate'		=>$data['end_date'],
-						'references'	=>'from service payment',
-						'note'			=>$data['other'],
-						'user_id'		=>$this->getUserId(),
-						'is_complete'	=>$is_complete,
-						'comment'		=>$comment,
-						'is_parent'		=>$finish,
-						);
 			$this->insert($array);
 			
 			if(!empty($data['buy_product'])){
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
 					$array = array(
-							'payment_id'	=>$payment_id,
-							'service_id'	=>$data['product_'.$i],
-							'fee'			=>$data['price_'.$i],
-							'qty'			=>$data['qty_'.$i],
-							'discount_percent'	=>$data['discount_'.$i],
-							'subtotal'		=>$data['subtotal_'.$i],
-							'paidamount'	=>$data['subtotal_'.$i],
-							'balance'		=>0,
-							'note'			=>$data['remark'.$i],
-							'type'			=>4, // 4 => type of product
-							'is_complete'   =>1,
-							'comment'		=>'បង់រួច',
-							'user_id'		=>$this->getUserId(),
+						'payment_id'	=>$payment_id,
+						'service_id'	=>$data['product_'.$i],
+						'fee'			=>$data['price_'.$i],
+						'qty'			=>$data['qty_'.$i],
+						'discount_percent'	=>$data['discount_'.$i],
+						'subtotal'		=>$data['subtotal_'.$i],
+						'paidamount'	=>$data['subtotal_'.$i],
+						'balance'		=>0,
+						'note'			=>$data['remark'.$i],
+						'type'			=>4, // 4 => type of product
+						'is_complete'   =>1,
+						'comment'		=>'បង់រួច',
+						'user_id'		=>$this->getUserId(),
 					);
 					$this->insert($array);
 				}
@@ -587,8 +587,9 @@ class Registrar_Model_DbTable_DbStudentServicePayment extends Zend_Db_Table_Abst
     			stu_khname,
     			sex,
 	    		tel,
-	    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as service_id,
-	    		(select sv.car_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id ) as car_id
+	    		(select sv.service_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id limit 1 ) as service_id,
+	    		(select sv.car_id from rms_service as sv where sv.type=4 and sv.stu_id = s.stu_id limit 1) as car_id,
+	    		(select year from rms_student_payment as sp where sp.student_id = s.stu_id and sp.payfor_type=3 and sp.is_void=0 order by sp.id DESC limit 1) as year_service
     		 from 
     			rms_student as s
     		 where

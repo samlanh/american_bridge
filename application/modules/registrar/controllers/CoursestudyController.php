@@ -67,8 +67,7 @@ class Registrar_CoursestudyController extends Zend_Controller_Action {
       		}
       	} catch (Exception $e) {
       		Application_Form_FrmMessage::message($this->tr->translate('INSERT_FAIL'));
-      		$err =$e->getMessage();
-      		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+      		echo $e->getMessage();exit();
       	}
       }
        $frm = new Registrar_Form_FrmCourseStudy();

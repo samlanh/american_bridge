@@ -45,9 +45,9 @@ class Registrar_Model_DbTable_DbUniformAndBook extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		$register = new Registrar_Model_DbTable_DbRegister();
-		//$receipt_no = $register->getRecieptNo(5,0);
+		$receipt_no = $register->getRecieptNo(5,0);
 		
-		$receipt_no = $data['receipt_no'];
+// 		$receipt_no = $data['receipt_no'];
 		
 		try{
 			$arr=array(

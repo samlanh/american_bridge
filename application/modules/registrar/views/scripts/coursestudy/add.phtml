@@ -990,39 +990,38 @@ function printSave(new_stu_id,new_receipt_no){
 		 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		 
-		 // if(stu_type==1){
-			 // if(new_stu_id==''){
-				 // getStudentNo(degree,1);
-			 // }else{
-				 // dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-				 // dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-			 // }
-		 // }else{
-			// if(old_degree!=degree){ // old student change degree => generate new stu_code by degree
+		 if(stu_type==1){
+			 if(new_stu_id==''){
+				 getStudentNo(degree,1);
+			 }else{
+				 dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+				 dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+			 }
+		 }else{
+			if(old_degree!=degree){ // old student change degree => generate new stu_code by degree
 				 
-				 // if(new_stu_id==''){
-					// getStudentNo(degree,1);
-				 // }else{
-					// dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-					// dojo.byId("lb_stu_id").innerHTML = new_stu_id;
-				 // }
+				 if(new_stu_id==''){
+					getStudentNo(degree,1);
+				 }else{
+					dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+					dojo.byId("lb_stu_id").innerHTML = new_stu_id;
+				 }
 			 
-			 // }else{  // generate new receipt before print
-				// if(new_receipt_no==''){
-					// getNewReceiptNo(1);
-				// }else{
-					// dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-					// if(stu_type==3){// old student
-						// stu_id = dijit.byId("old_studens").attr('displayedValue');
-					// }else{ // drop student
-						// stu_id = dijit.byId("drop_studens").attr('displayedValue');
-					// }
-					// dojo.byId("lb_stu_id").innerHTML = stu_id;
-				// } 
-				
-			 // }
-		 // }
-		 
+			}else{  // generate new receipt before print
+				if(new_receipt_no==''){
+					getNewReceiptNo(1);
+				}else{
+					dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+					if(stu_type==3){// old student
+						stu_id = dijit.byId("old_studens").attr('displayedValue');
+					}else{ // drop student
+						stu_id = dijit.byId("drop_studens").attr('displayedValue');
+					}
+					dojo.byId("lb_stu_id").innerHTML = stu_id;
+				}
+			}
+		}
+		/* 
 		dojo.byId("lb_receipt_no").innerHTML =  dijit.byId("reciept_no").get('value');;
 		if(stu_type==3){// old student
 			stu_id = dijit.byId("old_studens").attr('displayedValue');
@@ -1032,7 +1031,8 @@ function printSave(new_stu_id,new_receipt_no){
 			stu_id = dijit.byId("stu_id").get('value');
 		}
 		dojo.byId("lb_stu_id").innerHTML = stu_id;
-		 
+		*/
+		
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		
 		 dojo.byId("lb_kh_name").innerHTML = dijit.byId("kh_name").get('value');

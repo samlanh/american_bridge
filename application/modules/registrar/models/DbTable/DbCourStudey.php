@@ -27,11 +27,11 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
 		
 		$register = new Registrar_Model_DbTable_DbRegister();
-// 		$stu_code = $register->getNewAccountNumber($data['dept'],0);
-// 		$receipt = $register->getRecieptNo(2,0);
+		$stu_code = $register->getNewAccountNumber($data['dept'],0);
+		$receipt = $register->getRecieptNo(2,0);
 
-		$stu_code=$data['stu_id'];
-		$receipt=$data['reciept_no'];
+// 		$stu_code=$data['stu_id'];
+// 		$receipt=$data['reciept_no'];
 		
 		if($data['dob']==""){
 			$dob = null;
@@ -44,26 +44,26 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 			if($data['student_type']==1){ // new student
 				$this->_name="rms_student";
 				$arr=array(
-						'branch_id'=>$this->getBranchId(),
-						'stu_code'=>$stu_code,
-						'academic_year'=>$data['study_year'],
-						'stu_khname'=>$data['kh_name'],
-						'stu_enname'=>$data['en_name'],
+						'branch_id'		=>$this->getBranchId(),
+						'stu_code'		=>$stu_code,
+						'academic_year'	=>$data['study_year'],
+						'stu_khname'	=>$data['kh_name'],
+						'stu_enname'	=>$data['en_name'],
 							
-						'dob'=>$dob,
-						'tel'=>$data['phone'],
-						'address'=>$data['address'],
+						'dob'			=>$dob,
+						'tel'			=>$data['phone'],
+						'address'		=>$data['address'],
 							
-						'session'=>$data['session'],
-						'sex'=>$data['sex'],
-						'degree'=>$data['dept'],
-						'grade'=>$data['grade'],
-						'room'=>$data['room'],
+						'session'		=>$data['session'],
+						'sex'			=>$data['sex'],
+						'degree'		=>$data['dept'],
+						'grade'			=>$data['grade'],
+						'room'			=>$data['room'],
 						
 						'is_stu_new' 	=>1,
-						'stu_type'=>3,
-						'create_date'=>date("Y-m-d H:i:s"),
-						'user_id'=>$this->getUserId(),
+						'stu_type'		=>3,
+						'create_date'	=>date("Y-m-d H:i:s"),
+						'user_id'		=>$this->getUserId(),
 				);
 				$id= $this->insert($arr);
 					
@@ -142,15 +142,15 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 					
 					'buy_product'=>$buy_product,
 					
-					'year'=>$data['study_year'],
-					'degree'=>$data['dept'],
-					'grade'=>$data['grade'],
-					'session'=>$data['session'],
-					'time'=>$data['study_time'],
+					'year'		=>$data['study_year'],
+					'degree'	=>$data['dept'],
+					'grade'		=>$data['grade'],
+					'session'	=>$data['session'],
+					'time'		=>$data['study_time'],
 					
 					'payment_term'=>$data['payment_term'],
 					'price_per_sec'	=>$price_per_sec,
-					'amount_sec'	=>$amount_sec,
+					'amount_sec'=>$amount_sec,
 					
 					'exchange_rate'		=>$data['ex_rate'],
 					'tuition_fee'		=>$tuitionfee,
@@ -171,14 +171,14 @@ class Registrar_Model_DbTable_DbCourStudey extends Zend_Db_Table_Abstract
 					'grand_total_paid_amount'		=>$data['total_received'],
 					'grand_total_balance'			=>$data['total_balance'],
 					
-					'is_new'=>$is_new,
-					'note'=>$data['not'],
-					'room_id'=>$data['room'],
-					'student_type'=>$data['student_type'],
-					'create_date'=>	date('Y-m-d H:i:s'),
-					'payfor_type'=>2,
-					'user_id'=>$this->getUserId(),
-					'branch_id'=>$this->getBranchId(),
+					'is_new'		=>$is_new,
+					'note'			=>$data['not'],
+					'room_id'		=>$data['room'],
+					'student_type'	=>$data['student_type'],
+					'create_date'	=>	date('Y-m-d H:i:s'),
+					'payfor_type'	=>2,
+					'user_id'		=>$this->getUserId(),
+					'branch_id'		=>$this->getBranchId(),
 			);
 			$paymentid=$this->insert($arr);
 			

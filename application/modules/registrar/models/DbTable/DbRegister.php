@@ -30,11 +30,17 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
     
 	function addRegister($data){
 		
-		//$stu_code = $this->getNewAccountNumber($data['dept'],0);
-		//$receipt_no = $this->getRecieptNo($type,0);
+		if($data['degree_type']==1){
+			$payfor_type = 1;
+		}else{
+			$payfor_type = 6;
+		}
 		
-		$stu_code=$data['stu_id'];
-		$receipt_no=$data['reciept_no'];
+		$stu_code = $this->getNewAccountNumber($data['dept'],0);
+		$receipt_no = $this->getRecieptNo($payfor_type,0);
+		
+		//$stu_code=$data['stu_id'];
+		//$receipt_no=$data['reciept_no'];
 		
 		$db = $this->getAdapter();//ស្ពានភ្ជាប់ទៅកាន់Data Base
 		$db->beginTransaction();//ទប់ស្កាត់មើលការErrore , មានErrore វាមិនអោយចូល
@@ -94,10 +100,10 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					}
 					
 					// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
-					if($data['old_degree']==$data['dept']){
-						$stu_code = $data['old_stu_code'];
-					}else{
+					if($data['old_degree']!=$data['dept'] && $data['degree_type'] == 1 ){
 						$stu_code = $this->getNewAccountNumber($data['dept'],0);
+					}else{
+						$stu_code = $data['old_stu_code'];
 					}
 				////////////////////////////////////////////////////////////////////////
 					
@@ -225,11 +231,13 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							'stu_id'		=>$id,
 							'stu_type'		=>$stu_type,
 							'stu_code'		=>$stu_code,
+							
 							'academic_year'	=>$data['study_year'],
 							'degree'		=>$data['dept'],
 							'grade'			=>$data['grade'],
 							'session'		=>$data['session'],
 							'room'			=>$data['room'],
+							
 							'user_id'		=>$this->getUserId(),
 							'branch_id'		=>$this->getBranchId(),
 							'payment_id'	=>$paymentid,
@@ -270,10 +278,11 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 							$stu_type=2;
 						}
 							
-						if($data['old_degree']==$data['dept']){
-							$stu_code = $data['old_stu_code'];
-						}else{
+				// សិក្សាប្រសិនបើប្តូរ រឺ ឡើងកម្រិត Generate new stu_code ឲ្យ , else stu_code នៅដដែល
+						if($data['old_degree']!=$data['dept'] && $data['degree_type'] == 1 ){
 							$stu_code = $this->getNewAccountNumber($data['dept'],0);
+						}else{
+							$stu_code = $data['old_stu_code'];
 						}
 				
 						$arr=array(
@@ -321,7 +330,7 @@ class Registrar_Model_DbTable_DbRegister extends Zend_Db_Table_Abstract
 					$this->insert($arr);
 				 
 				}else{ // old student
-					if($data['old_degree']!=$data['dept']){
+					if($data['old_degree']!=$data['dept'] && $data['degree_type'] == 1 ){
 						$sql="select id from rms_student_id where stu_id = $id and degree = ".$data['old_degree']." and status=1 ";
 						$finished_degree_id = $db->fetchOne($sql);
 						if(!empty($finished_degree_id)){

@@ -59,7 +59,7 @@
 							</td>
 							
 							<td align="right" style="width: 12%"><?php echo $tr->translate("RECEIPT_NO");?></td>
-							<td align="center" style="width: 37%"><input type="text" name="receipt_no" style="color:red;" id="receipt_no" class="fullside" dojoType="dijit.form.TextBox" > </td>
+							<td align="center" style="width: 37%"><input type="text" name="receipt_no" style="color:red;" readonly id="receipt_no" class="fullside" dojoType="dijit.form.TextBox" > </td>
 						</tr>
 						<tr>
 							
@@ -234,13 +234,13 @@ function printSave(new_receipt_no){
 		dojo.byId("lb_sex").innerHTML = dijit.byId("sex").attr('displayedValue');
 		dojo.byId("lb_phone").innerHTML = dijit.byId("phone").attr('displayedValue');
 		
-		// if(new_receipt_no==''){
-			// getNewReceiptNo(1);
-		// }else{
-			// dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
-		// }
+		if(new_receipt_no==''){
+			getNewReceiptNo(1);
+		}else{
+			dojo.byId("lb_receipt_no").innerHTML = new_receipt_no;
+		}
 		
-		dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt_no").get('value');
+		//dojo.byId("lb_receipt_no").innerHTML = dijit.byId("receipt_no").get('value');
 		
 		dojo.byId("lb_stu_type").innerHTML = "សិស្សចាស់/Old Student";
 		dojo.byId("lb_receipt_type").innerHTML = "Material";
