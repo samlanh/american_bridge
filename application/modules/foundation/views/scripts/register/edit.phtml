@@ -39,6 +39,7 @@ dojo.ready(function(){
 	    onChange: function() {  
 	    }
 	}, "grade");
+	getDegreeType();
 	getallGrade();
 
 
@@ -180,10 +181,68 @@ var url_dept = '<?php echo $this->url(array('module'=>'foundation','controller'=
 			document.getElementById('show_branch').style.display="none";
 		}
 	}
+
+	var url_getstuno = '<?php echo $this->url(array('module'=>'foundation','controller'=>'register','action'=>'get-stu-no')); ?>';
+	function getStudentNo(){
+		degree = dijit.byId('degree').get('value');
+		branch = dijit.byId('branch').get('value');
+		if(degree>0 && branch>0){
+			dojo.xhrPost({
+				url:url_getstuno,
+				content:{
+					'degree':degree,
+					'branch':branch
+					},
+				handleAs:"json",
+				load: function(data) {
+					dijit.byId('student_id').attr('value',data);   
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
 	
 	
-	
-	
+	var url_get_degree_type = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'get-degree-type')); ?>';
+	function getDegreeType(){
+		degree = dijit.byId('degree').get('value');
+		if(degree>0){	
+			dojo.xhrPost({
+				url:url_get_degree_type,
+				content:{
+					'degree':degree,
+					},
+				handleAs:"json",
+				load: function(data) {
+				     if(data){
+				    	  dijit.byId('degree_type').attr('value',data);
+						  oldStudentChangeDegree();
+				     }
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+
+	function oldStudentChangeDegree(){
+
+		old_stu_code = dijit.byId('old_stu_code').get('value');
+		old_degree = dijit.byId('old_degree').get('value');
+		degree = dijit.byId('degree').get('value');
+		degree_type = dijit.byId('degree_type').get('value');
+		
+		if(old_degree!=degree && degree_type==1){ // 1 = khmer degree ( change for khmer student only )
+			getStudentNo();
+		}else{
+			 dijit.byId('student_id').attr('value',old_stu_code);
+		} 
+			
+		
+	}
 	
 	
 </script>
@@ -272,7 +331,7 @@ var url_dept = '<?php echo $this->url(array('module'=>'foundation','controller'=
 									</td>
 									<td>
 										<div id="show_branch">
-											<select name="branch" id="branch" onchange="getStudentNo();" dojoType="dijit.form.FilteringSelect" class="fullside" >
+											<select name="branch" id="branch" dojoType="dijit.form.FilteringSelect" class="fullside" >
 												<option value="-1">----- select branch -----</option>
 												<?php if(!empty($this->branch))foreach ($this->branch as $branch){?>
 												<option value="<?php echo $branch['id']?>" <?php if($branch['id']==$this->rs['branch_id']) echo 'selected="selected"'?>><?php echo $branch['name']?></option>
@@ -293,13 +352,16 @@ var url_dept = '<?php echo $this->url(array('module'=>'foundation','controller'=
 									</td>
 					      			
 									<td><?php echo $tr->translate("DEGREE");?>*</td>
+									<input type="hidden" name="degree_type" id="degree_type" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="old_degree" id="old_degree" value="<?php echo $this->rs['degree'];?>" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="old_grade" id="old_grade" value="<?php echo $this->rs['grade'];?>" dojoType="dijit.form.TextBox" />
+									<input type="hidden" name="old_stu_code" id="old_stu_code" value="<?php echo $this->rs['stu_code'];?>" dojoType="dijit.form.TextBox" />
 									<td>
-										<select class="fullside" tabindex="16" name="degree" id="degree" dojoType="dijit.form.FilteringSelect" onchange="getallGrade();">
+										<select class="fullside" tabindex="16" name="degree" id="degree" dojoType="dijit.form.FilteringSelect" onchange="getallGrade();getDegreeType();">
 											<?php if(!empty($this->degree))foreach ($this->degree as $row){?>
 											<option value="<?php echo $row['dept_id']?>"<?php if($row['dept_id']==$this->rs['degree']) echo 'selected="selected"'?>><?php echo $row['en_name']?></option>
 											<?php }?>
 										</select>
-									
 									</td>
 									<td><?php echo $tr->translate("GRADE");?>*</td>
 									<td>
@@ -308,7 +370,7 @@ var url_dept = '<?php echo $this->url(array('module'=>'foundation','controller'=
 								</tr>
 								<tr>
 									<td title="បញ្ជូលលេខសំគាល់និស្សិត"><?php echo $tr->translate("STUDENT_ID");?>*</td>
-									<td><input class="fullside"  style="color: red;" tabindex="15" dojoType="dijit.form.TextBox" readonly="readonly" id="student_id" name="student_id" value="<?php echo $this->rs['stu_code']; ?>" type="text" ></td>
+									<td><input class="fullside"  style="color: red;" tabindex="15" dojoType="dijit.form.TextBox"  id="student_id" name="student_id" value="<?php echo $this->rs['stu_code']; ?>" type="text" ></td>
 									
 									<td><?php echo $tr->translate("ROOM_NAME");?>*</td>
 									<td>

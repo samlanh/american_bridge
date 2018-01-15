@@ -38,7 +38,7 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 				
 				(SELECT `major_enname` FROM `rms_major` WHERE `major_id`=s.grade) AS grade,
 				
-				(SELECT	`rms_view`.`name_en` FROM `rms_view` WHERE ((`rms_view`.`type` = 4) AND (`rms_view`.`key_code` = `s`.`session`)) LIMIT 1) AS `session`,
+				(SELECT	`rms_view`.`name_kh` FROM `rms_view` WHERE ((`rms_view`.`type` = 4) AND (`rms_view`.`key_code` = `s`.`session`)) LIMIT 1) AS `session`,
 				(select room_name from rms_room where room_id = s.room) as room,
 				(SELECT name_kh FROM `rms_view` WHERE TYPE=1 AND key_code = STATUS) AS status
 				
@@ -108,124 +108,118 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 	public function addStudent($_data){
-			$id = $this->getStudentExist($_data['name_en'],$_data['name_kh'],$_data['sex'],$_data['grade'],$_data['date_of_birth'],$_data['session']);	
-			if(!empty($id)){
-				return -1;
-			}
+		$id = $this->getStudentExist($_data['name_en'],$_data['name_kh'],$_data['sex'],$_data['grade'],$_data['date_of_birth'],$_data['session']);	
+		if(!empty($id)){
+			return -1;
+		}
 			
-			if($_data['degree']<=3){
-				$stu_type=1;
-			}else if($_data['degree']>3 && $_data['degree']<=7){
-				$stu_type=2;
-			}else{
-				$stu_type=3;
-			}
+		if($_data['degree_type']==1){ // khmer fulltime
+			$stu_type=1;
+		}else if($_data['degree_type']==2){ // english fulltime 
+			$stu_type=2;
+		}else{ // english parttime
+			$stu_type=3;
+		}
 			
-			$user_level = $this->getUserLevel();
-			if($user_level==1 || $user_level==2){
-				$branch = $_data['branch'];
-			}else{
-				$branch = $this->getBranchId();
-			}
+		$user_level = $this->getUserLevel();
+		if($user_level==1 || $user_level==2){
+			$branch = $_data['branch'];
+		}else{
+			$branch = $this->getBranchId();
+		}
+		
+		$code = new Registrar_Model_DbTable_DbRegister();
+		$stu_code = $code->getNewAccountNumber($_data['degree'], $branch);
 			
-			$code = new Registrar_Model_DbTable_DbRegister();
-			$stu_code = $code->getNewAccountNumber($_data['degree'], $branch);
 			
+		try{	
+			$_db= $this->getAdapter();
+			$_arr= array(
+					'branch_id'		=>$branch,
+					'stu_type'		=>$stu_type,
+					'user_id'		=>$this->getUserId(),
+					
+					'stu_enname'	=>$_data['name_en'],
+					'stu_khname'	=>$_data['name_kh'],
+					'sex'			=>$_data['sex'],
+					'nationality'	=>$_data['studen_national'],
+					'dob'			=>$_data['date_of_birth'],
+					'tel'			=>$_data['st_phone'],
+					'email'			=>$_data['st_email'],
+					'pob'			=>$_data['place_of_birth'],
+					
+					'home_num'		=>$_data['home_note'],
+					'street_num'	=>$_data['way_note'],
+					'village_name'	=>$_data['village_note'],
+					'commune_name'	=>$_data['commun_note'],
+					'district_name'	=>$_data['distric_note'],
+					'province_id'	=>$_data['student_province'],
+					
+					'academic_year'	=>$_data['academic_year'],
+					'stu_code'		=>$stu_code,
+					'degree'		=>$_data['degree'],
+					'grade'			=>$_data['grade'],
+					'room'			=>$_data['room'],
+					'session'		=>$_data['session'],
+					//'school_location'=>$_data['school_location'],
 			
-			try{	
-				$_db= $this->getAdapter();
-				$_arr= array(
-						'branch_id'		=>$branch,
-						'stu_type'		=>$stu_type,
-						'user_id'		=>$this->getUserId(),
-						
-						'stu_enname'	=>$_data['name_en'],
-						'stu_khname'	=>$_data['name_kh'],
-						'sex'			=>$_data['sex'],
-						'nationality'	=>$_data['studen_national'],
-						'dob'			=>$_data['date_of_birth'],
-						'tel'			=>$_data['st_phone'],
-						'email'			=>$_data['st_email'],
-						'pob'			=>$_data['place_of_birth'],
-						
-						'home_num'		=>$_data['home_note'],
-						'street_num'	=>$_data['way_note'],
-						'village_name'	=>$_data['village_note'],
-						'commune_name'	=>$_data['commun_note'],
-						'district_name'	=>$_data['distric_note'],
-						'province_id'	=>$_data['student_province'],
-						
-						'academic_year'	=>$_data['academic_year'],
-						'stu_code'		=>$stu_code,
-						'degree'		=>$_data['degree'],
-						'grade'			=>$_data['grade'],
-						'room'			=>$_data['room'],
-						'session'		=>$_data['session'],
-						//'school_location'=>$_data['school_location'],
-				
-						'father_enname'	=>$_data['fa_name_en'],
-						'father_khname'	=>$_data['fa_name_kh'],
-						'father_dob'	=>$_data['fa_dob'],
-						'father_nation'	=>$_data['fa_national'],
-						'father_job'	=>$_data['fa_job'],
-						'father_phone'	=>$_data['fa_phone'],
-						
-						'mother_khname'	=>$_data['mom_name_kh'],
-						'mother_enname'	=>$_data['mom_name_en'],
-						'mother_dob'	=>$_data['mom_dob'],
-						'mother_nation'	=>$_data['mom_nation'],
-						'mother_job'	=>$_data['mo_job'],
-						'mother_phone'	=>$_data['mon_phone'],
+					'father_enname'	=>$_data['fa_name_en'],
+					'father_khname'	=>$_data['fa_name_kh'],
+					'father_dob'	=>$_data['fa_dob'],
+					'father_nation'	=>$_data['fa_national'],
+					'father_job'	=>$_data['fa_job'],
+					'father_phone'	=>$_data['fa_phone'],
+					
+					'mother_khname'	=>$_data['mom_name_kh'],
+					'mother_enname'	=>$_data['mom_name_en'],
+					'mother_dob'	=>$_data['mom_dob'],
+					'mother_nation'	=>$_data['mom_nation'],
+					'mother_job'	=>$_data['mo_job'],
+					'mother_phone'	=>$_data['mon_phone'],
 
-						'guardian_enname'=>$_data['guardian_name_en'],
-						'guardian_khname'=>$_data['guardian_name_kh'],
-						'guardian_dob'	=>$_data['guardian_dob'],
-						'guardian_nation'=>$_data['guardian_national'],
-// 						'guardian_document'=>$_data['guardian_identity'],
-						'guardian_job'	=>$_data['gu_job'],
-						'guardian_tel'	=>$_data['guardian_phone'],
-// 						'guardian_email'=>$_data['guardian_email'],
-						
-						'status'		=>$_data['status'],
-						'remark'		=>$_data['remark'],
-						'create_date'	=>date("Y-m-d H:i:s"),
-						
-						);
-				$id = $this->insert($_arr);
-				
-				$this->_name='rms_study_history';
-				$arr= array(
-						'branch_id'		=>$branch,
-						'stu_type'		=>$stu_type,
-						'stu_id'	=>$id,
-						
-						'stu_code'	=>$stu_code,
-						'academic_year'	=>$_data['academic_year'],
-						'degree'	=>$_data['degree'],
-						'grade'		=>$_data['grade'],
-						'room'			=>$_data['room'],
-						'session'	=>$_data['session'],
-						
-						//'status'	=>$_data['status'],
-// 						'remark'	=>$_data['remark'],
-						'user_id'	=>$this->getUserId(),
-						);
-				
-				$this->insert($arr);
-				//$_db->commit();
-			}catch(Exception $e){
-				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-				echo $e->getMessage();
-			}
+					'guardian_enname'=>$_data['guardian_name_en'],
+					'guardian_khname'=>$_data['guardian_name_kh'],
+					'guardian_dob'	=>$_data['guardian_dob'],
+					'guardian_nation'=>$_data['guardian_national'],
+					'guardian_job'	=>$_data['gu_job'],
+					'guardian_tel'	=>$_data['guardian_phone'],
+					
+					'status'		=>$_data['status'],
+					'remark'		=>$_data['remark'],
+					'create_date'	=>date("Y-m-d H:i:s"),
+					
+				);
+			$id = $this->insert($_arr);
+			
+			$this->_name='rms_study_history';
+			$arr= array(
+					'branch_id'		=>$branch,
+					'stu_type'		=>$stu_type,
+					'stu_id'		=>$id,
+					
+					'stu_code'		=>$stu_code,
+					'academic_year'	=>$_data['academic_year'],
+					'degree'		=>$_data['degree'],
+					'grade'			=>$_data['grade'],
+					'room'			=>$_data['room'],
+					'session'		=>$_data['session'],
+					
+					'user_id'		=>$this->getUserId(),
+					);
+			
+			$this->insert($arr);
+		}catch(Exception $e){
+			echo $e->getMessage();
+		}
 	}
 	public function updateStudent($_data){
 		$db = $this->getAdapter();
 		
-		if($_data['degree']<=3){
+		if($_data['degree_type']==1){ // khmer fulltime
 			$stu_type=1;
-		}else if($_data['degree']>3 && $_data['degree']<=7){
+		}else if($_data['degree_type']==2){ // english fulltime 
 			$stu_type=2;
-		}else{
+		}else{ // english parttime
 			$stu_type=3;
 		}
 		
@@ -256,7 +250,6 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 					'grade'			=>$_data['grade'],
 					'room'			=>$_data['room'],
 					'session'		=>$_data['session'],
-					//'school_location'=>$_data['school_location'],
 					
 					'father_enname'	=>$_data['fa_name_en'],
 					'father_khname'	=>$_data['fa_name_kh'],
@@ -276,10 +269,8 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 					'guardian_khname'=>$_data['guardian_name_kh'],
 					'guardian_dob'	=>$_data['guardian_dob'],
 					'guardian_nation'=>$_data['guardian_national'],
-// 					'guardian_document'=>$_data['guardian_identity'],
 					'guardian_job'	=>$_data['gu_job'],
 					'guardian_tel'	=>$_data['guardian_phone'],
-// 					'guardian_email'=>$_data['guardian_email'],
 					
 					'status'		=>$_data['status'],
 					'remark'		=>$_data['remark'],
@@ -289,27 +280,81 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 			$where=$this->getAdapter()->quoteInto("stu_id=?", $_data["id"]);
 			$this->update($_arr, $where);
 			
+			$id = $_data["id"];
 			
 			$this->_name='rms_study_history';
-			$arr= array(
+			
+			if($_data['degree_type']==1){ // khmer FT
+				$stu_type=1;
+			}else if($_data['degree_type']==2){ // Eng FT
+				$stu_type=2;
+			}else{ // english parttime
+				$stu_type=3;
+			}
+			
+			if($_data['old_grade']!=$_data['grade']){
+					
+				if($_data['old_degree']!=$_data['degree']){
+					$sql="select id from rms_study_history where stu_id=$id and is_finished_grade=0 and degree=".$_data['old_degree'];
+					$finished_record = $db->fetchOne($sql);
+					if(!empty($finished_record)){
+						$array=array(
+								'is_finished_grade'=>1,
+								'is_finished_degree'=>1
+						);
+						$where=" id = $finished_record ";
+						$this->update($array, $where);
+					}
+				}else if($_data['old_grade']!=$_data['grade']){
+			
+					$sql="select id from rms_study_history where stu_id=$id and is_finished_grade=0 and grade=".$_data['old_grade'];
+					$finished_record = $db->fetchOne($sql);
+					if(!empty($finished_record)){
+						$array=array(
+								'is_finished_grade'=>1,
+						);
+						$where=" id = $finished_record ";
+						$this->update($array, $where);
+					}
+				}
+			
+				$arr=array(
+					'stu_id'		=>$id,
+					'stu_type'		=>$stu_type,
+					'stu_code'		=>$_data['student_id'],
+					'academic_year'	=>$_data['academic_year'],
+					'degree'		=>$_data['degree'],
+					'grade'			=>$_data['grade'],
+					'session'		=>$_data['session'],
+					'room'			=>$_data['room'],
+					'user_id'		=>$this->getUserId(),
+		
+					'id_record_finished'=>$finished_record,
+		
+					'branch_id'		=>$_data['branch'],
+				);
+				$this->insert($arr);
+			
+			}else{
+				$arr= array(
 					'stu_type'		=>$stu_type,
 					'branch_id'		=>$_data['branch'],
 					
-					'stu_code'=>$_data['student_id'],
+					'stu_code'		=>$_data['student_id'],
 					'academic_year'	=>$_data['academic_year'],
-					'degree'=>$_data['degree'],
-					'grade'=>$_data['grade'],
-					'room'=>$_data['room'],
-					'session'=>$_data['session'],
-					'status'=>$_data['status'],
-					'user_id'=>$this->getUserId(),
-					
-			);
-			$where=$this->getAdapter()->quoteInto("stu_id=?", $_data["id"]);
-			$this->update($arr, $where);
+					'degree'		=>$_data['degree'],
+					'grade'			=>$_data['grade'],
+					'room'			=>$_data['room'],
+					'session'		=>$_data['session'],
+					'status'		=>$_data['status'],
+					'user_id'		=>$this->getUserId(),
+				);
+				$where=" stu_id=$id and is_finished_grade=0";
+				$this->update($arr, $where);
+			}
 			
 		}catch(Exception $e){
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			echo $e->getMessage();
 		}
 	}
 	function getStudyHishotryById($id){
@@ -320,7 +365,7 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 	}
 	function getAllGrade($grade_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT major_id As id,major_enname As name FROM rms_major WHERE dept_id=".$grade_id;
+		$sql = "SELECT major_id As id,major_enname As name FROM rms_major WHERE dept_id=$grade_id and is_active=1 and major_enname!='' ";
 		$order=' ORDER BY id DESC';
 		return $db->fetchAll($sql.$order);
 	}
@@ -363,13 +408,22 @@ class Foundation_Model_DbTable_DbStudent extends Zend_Db_Table_Abstract
 	
 	function getAllYear(){
 		$db = $this->getAdapter();
-		$sql = "select id,CONCAT(from_academic,'-',to_academic,'(',(select branch_namekh from rms_branch where br_id = branch_id),')')as years,(select name_en from rms_view where type=7 and key_code=time) as time from rms_tuitionfee ";
-		$group = " group by from_academic,to_academic,generation,time ";
-		return $db->fetchAll($sql);
+		$sql = "select 
+					id,
+					CONCAT(from_academic,'-',to_academic,'(',(select branch_namekh from rms_branch where br_id = branch_id),')')as years,
+					(select name_en from rms_view where type=7 and key_code=time) as time
+				 from 
+					rms_tuitionfee 
+				 where 
+				 	status=1 
+				 	and finished = 0 		
+			";
+		$group = " group by from_academic,to_academic,generation,time,branch_id ";
+		return $db->fetchAll($sql.$group);
 	}
 	public function getAllDegree(){
 		$db = $this->getAdapter();
-		$sql ="SELECT dept_id AS id, en_name AS NAME,en_name,dept_id,shortcut FROM rms_dept WHERE is_active=1  ORDER BY id DESC";
+		$sql ="SELECT dept_id AS id, en_name AS NAME,en_name,dept_id,shortcut FROM rms_dept WHERE is_active=1  ORDER BY id ASC ";
 		return $db->fetchAll($sql);
 	}
 	
